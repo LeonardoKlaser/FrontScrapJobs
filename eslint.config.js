@@ -1,23 +1,65 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
-import { globalIgnores } from 'eslint/config'
+import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import globals from 'globals';
+import { defineConfig, globalIgnores } from 'eslint/config';
+import prettier from 'eslint-plugin-prettier'
 
 export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      js.configs.recommended,
-      tseslint.configs.recommended,
-      reactHooks.configs['recommended-latest'],
-      reactRefresh.configs.vite,
-    ],
-    languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
+  globalIgnores(['dist', 'coverage', 'node_modules', 'eslint.config.js']),
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  defineConfig({
+    files: ['**/*.{js,cjs,mjs,ts,tsx}'],
+    plugins: {
+      '@typescript-eslint': tseslint.plugin,
+      prettier
     },
-  },
-])
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: globals.browser,
+      parserOptions: {
+        project: ['./tsconfig.app.json', './tsconfig.node.json'],
+        tsconfigRootDir: new URL('.', import.meta.url).pathname,
+      },
+    },
+    rules: {
+      indent: ['error', 2, { SwitchCase: 1 }],
+      semi: ['error', 'never'],
+      'comma-dangle': ['error', 'never'],
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { args: 'none', ignoreRestSiblings: true }
+      ],
+      'max-len': [
+        'error',
+        {
+          code: 100,
+          tabWidth: 2,
+          ignoreUrls: true,
+          ignoreStrings: false,
+          ignoreTemplateLiterals: false,
+          ignoreComments: false
+        }
+      ],
+      'no-trailing-spaces': 'error',
+      'no-multiple-empty-lines': [
+        'error',
+        { max: 1, maxEOF: 0, maxBOF: 0 }
+      ],
+      'eol-last': ['error', 'always'],
+      'no-console': 'off',
+      'prettier/prettier': [
+        'error',
+        {
+          semi: false,
+          singleQuote: true,
+          trailingComma: 'none',
+          tabWidth: 2,
+          printWidth: 100,
+          endOfLine: 'lf'
+        }
+      ]
+    }
+  }),
+]);

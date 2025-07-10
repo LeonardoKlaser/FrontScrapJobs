@@ -1,15 +1,11 @@
-import { Button } from "@/components/ui/button"
+import { Suspense } from 'react'
+import { RouterProvider } from 'react-router'
+import { router } from './router/routes'
 
-function App() {
+export function App() {
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center">
-      <Button
-        onClick={() => alert("sou gay")}
-      >
-        Clica no pai
-      </Button>
-    </div>
+    <Suspense fallback={<p>Loading...</p>}>
+      <RouterProvider router={router} />
+    </Suspense>
   )
 }
-
-export default App
