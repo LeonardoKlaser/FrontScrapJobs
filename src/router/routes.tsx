@@ -8,6 +8,7 @@ import { PublicLayout } from '@/layouts/PublicLayout'
 import { Landing } from '@/pages/Landing'
 import { authLoader } from './loaders/authLoader'
 import { PATHS } from './paths'
+import Register from '@/pages/Register'
 
 const aboutLazy = async () => {
   const { About } = await import('@/pages/About')
@@ -35,13 +36,15 @@ export const router = createBrowserRouter([
     element: <PublicLayout />,
     children: [
       { index: true, element: <Landing /> },
-      { path: PATHS.login, element: <Login /> }
+      { path: PATHS.login, element: <Login /> },
+      { path: PATHS.register, element: <Register /> }
     ]
   },
   {
     path: PATHS.app.home,
     element: <MainLayout />,
     loader: authLoader,
+    shouldRevalidate: () => true,
     children: [
       {
         index: true,

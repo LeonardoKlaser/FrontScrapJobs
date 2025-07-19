@@ -1,6 +1,7 @@
 export const PATHS = {
   landing: '/',
   login: '/login',
+  register: '/register',
   app: {
     home: '/app',
     about: '/app/about'
