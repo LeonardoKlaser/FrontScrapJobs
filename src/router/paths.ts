@@ -4,7 +4,7 @@ export const PATHS = {
   register: '/register',
   app: {
     home: '/app',
-    about: '/app/about'
+    curriculum: '/app/curriculum'
     // job: (id: string) => `/app/jobs/${id}`
   },
   notFound: '*'

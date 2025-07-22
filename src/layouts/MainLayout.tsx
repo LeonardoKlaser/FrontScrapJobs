@@ -1,6 +1,6 @@
 import { ModeToggle } from '@/components/common/mode-toggle'
 import { AppNavigation } from '@/components/common/navigation-menu'
-import { Outlet, useNavigate } from 'react-router'
+import { Outlet } from 'react-router'
 
 export function MainLayout() {
   return (

@@ -10,22 +10,22 @@ import { authLoader } from './loaders/authLoader'
 import { PATHS } from './paths'
 import Register from '@/pages/Register'
 
-const aboutLazy = async () => {
-  const { About } = await import('@/pages/About')
+const curriculumLazy = async () => {
+  const { Curriculum } = await import('@/pages/Curriculum')
 
   return {
-    element: <About />
+    element: <Curriculum />
     // loader: async () => ({
     //   user: fetch('/api/me').then(r => r.json())
     // })
   }
 }
 
-// export function AboutWrapper() {
+// export function CurriculumWrapper() {
 //   const { user } = useLoaderData()
 //   return (
 //     <Suspense fallback={<InlineSkeleton />}>
-//       <Await resolve={user}>{u => <About user={u} />}</Await>
+//       <Await resolve={user}>{u => <Curriculum user={u} />}</Await>
 //     </Suspense>
 //   )
 // }
@@ -51,8 +51,8 @@ export const router = createBrowserRouter([
         element: <Home />
       },
       {
-        path: PATHS.app.about,
-        lazy: aboutLazy
+        path: PATHS.app.curriculum,
+        lazy: curriculumLazy
       }
     ]
   },

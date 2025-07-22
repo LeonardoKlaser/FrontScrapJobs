@@ -10,7 +10,7 @@ import { PATHS } from '@/router/paths'
 
 const items = [
   { title: 'Início', href: PATHS.app.home },
-  { title: 'Sobre', href: PATHS.app.about }
+  { title: 'Currículo', href: PATHS.app.curriculum }
 ]
 
 export function AppNavigation() {
