@@ -1,14 +1,12 @@
-import { ModeToggle } from '@/components/common/mode-toggle'
-import { AppNavigation } from '@/components/common/navigation-menu'
+import { AppHeader } from '@/components/common/app-header'
 import { Outlet } from 'react-router'
 
 export function MainLayout() {
   return (
     <div>
-      <AppNavigation />
-      <ModeToggle />
+      <AppHeader />
 
-      <main style={{ padding: 24 }}>
+      <main className="px-6 py-6">
         <Outlet />
       </main>
     </div>
