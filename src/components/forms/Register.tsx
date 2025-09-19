@@ -1,52 +1,58 @@
+// src/components/forms/Register.tsx
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { RegisterSchema, type RegisterInput } from '@/validators/auth'
+import { useAuth } from '@/hooks/useAuth'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import { ArrowRightIcon, Loader2Icon } from 'lucide-react'
-import { Button } from '../ui/button'
-import { Input } from '../ui/input'
+import { useNavigate } from 'react-router'
+import { PATHS } from '@/router/paths'
 
 export function RegisterForm() {
-  const loading = false
+  const { register: registerUser, loading, error } = useAuth()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<RegisterInput>({
+    resolver: zodResolver(RegisterSchema),
+    mode: 'onChange'
+  })
+
+  const navigate = useNavigate()
+
+  const onSubmit = async (data: RegisterInput) => {
+    const ok = await registerUser(data)
+    if (ok) navigate(PATHS.app.home, { replace: true })
+  }
 
   return (
-    <form className="mx-auto flex w-full max-w-md flex-col gap-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto flex w-full max-w-md flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <label htmlFor="name" className="text-sm">
-          Nome
-        </label>
-        <Input id="name" type="text" placeholder="seu nome completo" />
+        <label className="text-sm">Nome</label>
+        <Input type="text" placeholder="Seu nome completo" {...register('name')} />
+        {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="cpf" className="text-sm">
-          CPF
-        </label>
-        <Input
-          id="cpf"
-          type="text"
-          inputMode="numeric"
-          placeholder="000.000.000-00"
-          maxLength={14}
-        />
+        <label className="text-sm">E-mail</label>
+        <Input type="email" placeholder="seu@email.com" {...register('email')} />
+        {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="email" className="text-sm">
-          E-mail
-        </label>
-        <Input id="email" type="email" placeholder="seu@email.com" />
+        <label className="text-sm">Senha</label>
+        <Input type="password" placeholder="senha" {...register('password')} />
+        {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
       </div>
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="password" className="text-sm">
-          Senha
-        </label>
-        <Input id="password" type="password" placeholder="senha" />
+       <div className="flex flex-col gap-1">
+        <label className="text-sm">Confirmar Senha</label>
+        <Input type="password" placeholder="Confirme a senha"/>
       </div>
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="confirm-password" className="text-sm">
-          Confirmar senha
-        </label>
-        <Input id="confirm-password" type="password" placeholder="repita a senha" />
-      </div>
+      {error && <p className="text-sm text-red-500">{error}</p>}
 
       <Button disabled={loading}>
         {loading ? <Loader2Icon className="h-4 w-4 animate-spin" /> : 'Cadastrar'}
