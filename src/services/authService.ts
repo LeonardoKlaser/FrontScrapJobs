@@ -3,6 +3,12 @@ import { api } from './api'
 import type { RegisterInput } from '@/validators/auth'
 import axios from 'axios'
 
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
 export const authService = {
   login: async (credentials: LoginInput): Promise<{ token: string }> => {
     try{
@@ -28,5 +34,29 @@ export const authService = {
      throw new Error('Não foi possível conectar ao servidor.')
    }
     
+  },
+
+  getMe: async(): Promise<User> => {
+    try{
+      const {data} = await api.get('/api/me')
+    return data
+    }catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+       throw new Error(error.response.data.error || 'Não foi possível criar a conta.')
+     }
+     throw new Error('Não foi possível conectar ao servidor.')
+   }
+    
+  },
+
+  logout: async() => {
+    try{
+      await api.post('/api/logout')
+    }catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+       throw new Error(error.response.data.error || 'Não foi possível criar a conta.')
+     }
+     throw new Error('Não foi possível conectar ao servidor.')
+   } 
   }
 }

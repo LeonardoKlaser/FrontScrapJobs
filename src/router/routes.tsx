@@ -9,6 +9,7 @@ import { Landing } from '@/pages/Landing'
 import { authLoader } from './loaders/authLoader'
 import { PATHS } from './paths'
 import Register from '@/pages/Register'
+import type { QueryClient } from '@tanstack/react-query'
 
 const curriculumLazy = async () => {
   const { Curriculum } = await import('@/pages/Curriculum')
@@ -30,7 +31,7 @@ const curriculumLazy = async () => {
 //   )
 // }
 
-export const router = createBrowserRouter([
+export const createRouter = (queryClient: QueryClient) => createBrowserRouter([
   {
     path: PATHS.landing,
     element: <PublicLayout />,
@@ -43,7 +44,7 @@ export const router = createBrowserRouter([
   {
     path: PATHS.app.home,
     element: <MainLayout />,
-    loader: authLoader,
+    loader: authLoader(queryClient),
     shouldRevalidate: () => true,
     children: [
       {

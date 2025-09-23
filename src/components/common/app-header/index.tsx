@@ -10,6 +10,8 @@ import { Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ModeToggle } from '@/components/common/mode-toggle'
 import { PATHS } from '@/router/paths'
+import { useUser } from '@/hooks/useUser'
+import { useAuth } from '@/hooks/useAuth'
 
 const items = [
   { title: 'Início', href: PATHS.app.home },
@@ -18,6 +20,8 @@ const items = [
 
 export function AppHeader() {
   const [open, setOpen] = useState(false)
+  const { data: user, isLoading } = useUser()
+  const { logout } = useAuth()
 
   return (
     <header
@@ -54,6 +58,12 @@ export function AppHeader() {
 
         <div className="flex items-center gap-2">
           <ModeToggle />
+
+          {!isLoading && user && (
+            <Button size="sm" variant="outline" onClick={() => logout()}>
+              Sair
+            </Button>
+          )}
 
           <Button
             size="icon"

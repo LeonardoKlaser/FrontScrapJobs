@@ -1,14 +1,23 @@
-import { getToken } from '@/utils/session'
 import { redirect } from 'react-router'
 import { PATHS } from '../paths'
+import type { QueryClient } from '@tanstack/react-query'
+import { authService, type User } from '@/services/authService'
 
-export async function authLoader({ request }: { request: Request }) {
-  const token = getToken()
-  if (!token) {
-    const url = new URL(request.url)
+export const authLoader = (queryClient: QueryClient) => async () =>  {
+  try{
+    const user = queryClient.getQueryData<User>(['user'])
 
-    throw redirect(`${PATHS.login}?from=${encodeURIComponent(url.pathname + url.search)}`)
+  if (user){
+    return user
   }
 
-  return null
+  const freshUser = await authService.getMe()
+  queryClient.setQueryData(['user'], freshUser)
+
+  return freshUser
+  }catch(error){
+    const url = new URL(window.location.href)
+    throw redirect(`${PATHS.login}?from=${encodeURIComponent(url.pathname + url.search)}`)
+  }
+  
 }
