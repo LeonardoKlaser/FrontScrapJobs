@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button'
 import { ArrowRightIcon, Loader2Icon } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router'
 import { PATHS } from '@/router/paths'
-import { authService } from '@/services/authService'
 
 export function AuthForm() {
   const { login, loading, error } = useAuth()
