@@ -5,6 +5,7 @@ import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { CompanySubscriptionPopup } from "@/components/companyPopup"
 
 // Mock data for companies with their logos
 const companies = [
@@ -32,10 +33,17 @@ const companies = [
 
 export default function EmpresasPage() {
   const [searchTerm, setSearchTerm] = useState("")
+  const [selectedCompany, setSelectedCompany] = useState<any>(null)
+  const [isPopupOpen, setPopupOpen] = useState(false)
 
   const filteredCompanies = useMemo(() => {
     return companies.filter((company) => company.name.toLowerCase().includes(searchTerm.toLowerCase()))
   }, [searchTerm])
+
+  const handleCompanyClick = (company : any) => {
+    setSelectedCompany(company)
+    setPopupOpen(true)
+  }
 
   return (
     <div className="scrapjobs-theme min-h-screen">
@@ -99,6 +107,7 @@ export default function EmpresasPage() {
                 key={company.id}
                 className="scrapjobs-card company-card-hover p-6 text-center cursor-pointer fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
+                onClick={() => handleCompanyClick(company)}
               >
                 <div className="flex flex-col items-center space-y-4">
                   <div className="w-20 h-20 flex items-center justify-center">
@@ -144,6 +153,11 @@ export default function EmpresasPage() {
           <p className="text-[#e0e0e0]/60">© 2025 ScrapJobs. Todos os direitos reservados.</p>
         </div>
       </footer>
+      <CompanySubscriptionPopup
+        company={selectedCompany}
+        isOpen={isPopupOpen}
+        onClose={() => setPopupOpen(false)}
+      />
     </div>
   )
 }

@@ -15,7 +15,8 @@ import { useAuth } from '@/hooks/useAuth'
 
 const items = [
   { title: 'Início', href: PATHS.app.home },
-  { title: 'Currículo', href: PATHS.app.curriculum }
+  { title: 'Currículo', href: PATHS.app.curriculum },
+  { title: 'Empresas', href: PATHS.app.listSites }
 ]
 
 export function AppHeader() {

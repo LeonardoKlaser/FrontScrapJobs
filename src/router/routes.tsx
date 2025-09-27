@@ -10,52 +10,56 @@ import { authLoader } from './loaders/authLoader'
 import { PATHS } from './paths'
 import Register from '@/pages/Register'
 import type { QueryClient } from '@tanstack/react-query'
+import EmpresasPage from '@/pages/ListSites'
+import AdminDashboard from '@/pages/adminDashboard'
+import AdicionarSitePage from '@/pages/addNewSite'
 
 const curriculumLazy = async () => {
   const { Curriculum } = await import('@/pages/Curriculum')
 
   return {
     element: <Curriculum />
-    // loader: async () => ({
-    //   user: fetch('/api/me').then(r => r.json())
-    // })
   }
 }
 
-// export function CurriculumWrapper() {
-//   const { user } = useLoaderData()
-//   return (
-//     <Suspense fallback={<InlineSkeleton />}>
-//       <Await resolve={user}>{u => <Curriculum user={u} />}</Await>
-//     </Suspense>
-//   )
-// }
-
-export const createRouter = (queryClient: QueryClient) => createBrowserRouter([
-  {
-    path: PATHS.landing,
-    element: <PublicLayout />,
-    children: [
-      { index: true, element: <Landing /> },
-      { path: PATHS.login, element: <Login /> },
-      { path: PATHS.register, element: <Register /> }
-    ]
-  },
-  {
-    path: PATHS.app.home,
-    element: <MainLayout />,
-    loader: authLoader(queryClient),
-    shouldRevalidate: () => true,
-    children: [
-      {
-        index: true,
-        element: <Home />
-      },
-      {
-        path: PATHS.app.curriculum,
-        lazy: curriculumLazy
-      }
-    ]
-  },
-  { path: PATHS.notFound, element: <NotFound /> }
-])
+export const createRouter = (queryClient: QueryClient) =>
+  createBrowserRouter([
+    {
+      path: PATHS.landing,
+      element: <PublicLayout />,
+      children: [
+        { index: true, element: <Landing /> },
+        { path: PATHS.login, element: <Login /> },
+        { path: PATHS.register, element: <Register /> }
+      ]
+    },
+    {
+      path: PATHS.app.home,
+      element: <MainLayout />,
+      loader: authLoader(queryClient),
+      shouldRevalidate: () => true,
+      children: [
+        {
+          index: true,
+          element: <Home />
+        },
+        {
+          path: PATHS.app.curriculum,
+          lazy: curriculumLazy
+        },
+        {
+          path: PATHS.app.listSites,
+          element: <EmpresasPage />
+        },
+        {
+          path: PATHS.app.adminDashboard,
+          element: <AdminDashboard />
+        },
+        {
+          path: PATHS.app.addNewSite,
+          element: <AdicionarSitePage />
+        }
+      ]
+    },
+    { path: PATHS.notFound, element: <NotFound /> }
+  ])
