@@ -13,6 +13,7 @@ import type { QueryClient } from '@tanstack/react-query'
 import EmpresasPage from '@/pages/ListSites'
 import AdminDashboard from '@/pages/adminDashboard'
 import AdicionarSitePage from '@/pages/addNewSite'
+import AccountPage from '@/pages/accountPage'
 
 const curriculumLazy = async () => {
   const { Curriculum } = await import('@/pages/Curriculum')
@@ -58,6 +59,10 @@ export const createRouter = (queryClient: QueryClient) =>
         {
           path: PATHS.app.addNewSite,
           element: <AdicionarSitePage />
+        },
+        {
+          path: PATHS.app.accountPage,
+          element: <AccountPage/>
         }
       ]
     },
