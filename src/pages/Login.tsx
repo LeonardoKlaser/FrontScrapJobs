@@ -1,17 +1,17 @@
 import { AuthForm } from '@/components/forms/Auth'
-import { useAuth } from '@/hooks/useAuth'
 import { PATHS } from '@/router/paths'
 import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router'
 import Logo from '@/assets/logo_dark_contornado.png'
+import { useUser } from '@/hooks/useUser'
 
 export default function Login() {
-  const { token } = useAuth()
+  const { data: user } = useUser()
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (token) navigate(PATHS.app.home)
-  }, [token, navigate])
+    if (user) navigate(PATHS.app.home)
+  }, [user, navigate])
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4 dark:bg-gray-900">

@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { loginSchema, type LoginInput } from '@/validators/auth'
 import { useAuth } from '@/hooks/useAuth'
-import { Input } from '@/components/ui/input' // shadcn/ui
+import { Input } from '@/components/ui/input' 
 import { Button } from '@/components/ui/button'
 import { ArrowRightIcon, Loader2Icon } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router'
