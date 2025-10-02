@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -12,32 +12,10 @@ import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { HelpCircle, CheckCircle, XCircle } from "lucide-react"
+import { HelpCircle, CheckCircle, XCircle, ImagePlus } from "lucide-react"
 import { Tooltip } from "@/components/tooltip"
-
-type ScrapingType = "css" | "api"
-
-interface FormData {
-  site_name: string
-  base_url: string
-  is_active: boolean
-  scraping_type: ScrapingType
-  // CSS Selectors
-  job_list_item_selector: string
-  title_selector: string
-  link_selector: string
-  link_attribute: string
-  location_selector: string
-  next_page_selector: string
-  job_description_selector: string
-  job_requisition_id_selector: string
-  // API Configuration
-  api_endpoint_template: string
-  api_method: string
-  api_headers_json: string
-  api_payload_template: string
-  json_data_mappings: string
-}
+import { useAddSiteConfig } from "@/hooks/useAddSiteConfig"
+import { type FormData, type ScrapingType } from "@/services/siteCareerService"
 
 export default function AdicionarSitePage() {
   const [formData, setFormData] = useState<FormData>({
@@ -59,39 +37,12 @@ export default function AdicionarSitePage() {
     api_payload_template: "",
     json_data_mappings: "",
   })
-
-  const [feedback, setFeedback] = useState<{
-    type: "success" | "error" | null
-    message: string
-  }>({ type: null, message: "" })
-
-  const handleInputChange = (field: keyof FormData, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    // Basic validation
-    if (!formData.site_name || !formData.base_url) {
-      setFeedback({
-        type: "error",
-        message: "Falha ao adicionar o site. Verifique os campos obrigatórios.",
-      })
-      return
-    }
-
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      setFeedback({
-        type: "success",
-        message: `Site ${formData.site_name} adicionado com sucesso!`,
-      })
-
-      // Reset form after success
-      setTimeout(() => {
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const { mutate: addSite, isPending, isSuccess, isError, error } = useAddSiteConfig();
+  
+  useEffect(() => {
+    if (isSuccess) {
+      const timer = setTimeout(() => {
         setFormData({
           site_name: "",
           base_url: "",
@@ -110,49 +61,61 @@ export default function AdicionarSitePage() {
           api_headers_json: "",
           api_payload_template: "",
           json_data_mappings: "",
-        })
-        setFeedback({ type: null, message: "" })
-      }, 3000)
-    } catch (error) {
-      setFeedback({
-        type: "error",
-        message: "Falha ao adicionar o site. Verifique os campos.",
-      })
+        });
+        setLogoFile(null);
+      }, 3000);
+      return () => clearTimeout(timer);
     }
+  }, [isSuccess]);
+
+  const handleInputChange = (field: keyof FormData, value: string | boolean) => {
+    setFormData((prev) => ({ ...prev, [field]: value }))
+  }
+  
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setLogoFile(e.target.files[0]);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!formData.site_name || !formData.base_url) {
+      alert("Por favor, preencha os campos obrigatórios: Nome do Site e URL Base.");
+      return;
+    }
+    
+    addSite({ formData, logoFile });
   }
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="border-b border-border bg-card">
         <div className="container mx-auto px-6 py-4">
           <h1 className="text-2xl font-semibold text-foreground">Adicionar Novo Site para Monitoramento</h1>
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="container mx-auto px-6 py-8">
         <div className="max-w-4xl mx-auto">
           <form onSubmit={handleSubmit} className="space-y-8">
-            {/* Feedback Messages */}
-            {feedback.type && (
-              <Alert
-                className={
-                  feedback.type === "success" ? "border-success bg-success/10" : "border-destructive bg-destructive/10"
-                }
-              >
-                {feedback.type === "success" ? (
-                  <CheckCircle className="h-4 w-4 text-success" />
-                ) : (
-                  <XCircle className="h-4 w-4 text-destructive" />
-                )}
-                <AlertDescription className={feedback.type === "success" ? "text-success" : "text-destructive"}>
-                  {feedback.message}
-                </AlertDescription>
-              </Alert>
+          {isSuccess && (
+                <Alert className="border-success bg-success/10">
+                    <CheckCircle className="h-4 w-4 text-success" />
+                    <AlertDescription className="text-success">
+                    Site adicionado com sucesso!
+                    </AlertDescription>
+                </Alert>
             )}
-
-            {/* Seção 1: Informações Básicas */}
+            {isError && (
+                <Alert className="border-destructive bg-destructive/10">
+                    <XCircle className="h-4 w-4 text-destructive" />
+                    <AlertDescription className="text-destructive">
+                    {error?.message || "Ocorreu um erro ao adicionar o site."}
+                    </AlertDescription>
+                </Alert>
+            )}
             <Card>
               <CardHeader>
                 <CardTitle>Informações Básicas</CardTitle>
@@ -355,7 +318,6 @@ export default function AdicionarSitePage() {
               </Card>
             )}
 
-            {/* Seção 4: Configuração de API */}
             {formData.scraping_type === "api" && (
               <Card>
                 <CardHeader>
@@ -430,10 +392,28 @@ export default function AdicionarSitePage() {
               </Card>
             )}
 
+              <div className="space-y-2">
+                <Label htmlFor="logo_upload">Logo da Empresa</Label>
+                <div className="flex items-center gap-4">
+                    <Input
+                        id="logo_upload"
+                        type="file"
+                        accept="image/png, image/jpeg, image/svg+xml"
+                        onChange={handleFileChange}
+                        className="hidden"
+                    />
+                    <Button type="button" variant="outline" onClick={() => document.getElementById('logo_upload')?.click()}>
+                        <ImagePlus className="h-4 w-4 mr-2" />
+                        Escolher Imagem
+                    </Button>
+                    {logoFile && <span className="text-sm text-muted-foreground">{logoFile.name}</span>}
+                </div>
+              </div>
+
             {/* Seção 5: Ações */}
             <div className="flex justify-end">
-              <Button type="submit" size="lg" className="bg-primary hover:bg-primary/90">
-                Salvar Configuração do Site
+              <Button type="submit" size="lg" className="bg-primary hover:bg-primary/90" disabled={isPending}>
+                {isPending ? "Salvando..." : "Salvar Configuração do Site"}
               </Button>
             </div>
           </form>
