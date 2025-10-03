@@ -22,7 +22,7 @@ export default function AdicionarSitePage() {
     site_name: "",
     base_url: "",
     is_active: true,
-    scraping_type: "css",
+    scraping_type: "CSS",
     job_list_item_selector: "",
     title_selector: "",
     link_selector: "",
@@ -47,7 +47,7 @@ export default function AdicionarSitePage() {
           site_name: "",
           base_url: "",
           is_active: true,
-          scraping_type: "css",
+          scraping_type: "CSS",
           job_list_item_selector: "",
           title_selector: "",
           link_selector: "",
@@ -85,7 +85,8 @@ export default function AdicionarSitePage() {
       alert("Por favor, preencha os campos obrigatórios: Nome do Site e URL Base.");
       return;
     }
-    
+    console.log(formData)
+    console.log(logoFile)
     addSite({ formData, logoFile });
   }
 
@@ -173,12 +174,12 @@ export default function AdicionarSitePage() {
                     onValueChange={(value: ScrapingType) => handleInputChange("scraping_type", value)}
                   >
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="css" id="css" />
-                      <Label htmlFor="css">CSS Selectors (Coleta via seletores CSS)</Label>
+                      <RadioGroupItem value="CSS" id="CSS" />
+                      <Label htmlFor="CSS">CSS Selectors (Coleta via seletores CSS)</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="api" id="api" />
-                      <Label htmlFor="api">API (Coleta via chamada de API)</Label>
+                      <RadioGroupItem value="API" id="API" />
+                      <Label htmlFor="API">API (Coleta via chamada de API)</Label>
                     </div>
                   </RadioGroup>
                 </div>
@@ -186,7 +187,7 @@ export default function AdicionarSitePage() {
             </Card>
 
             {/* Seção 3: Configuração de Seletores CSS */}
-            {formData.scraping_type === "css" && (
+            {formData.scraping_type === "CSS" && (
               <Card>
                 <CardHeader>
                   <CardTitle>Configuração de Seletores CSS</CardTitle>
@@ -318,7 +319,7 @@ export default function AdicionarSitePage() {
               </Card>
             )}
 
-            {formData.scraping_type === "api" && (
+            {formData.scraping_type === "API" && (
               <Card>
                 <CardHeader>
                   <CardTitle>Configuração de API</CardTitle>

@@ -5,9 +5,10 @@ export interface SiteCareer {
   SiteId: number;
   SiteName: string;
   BaseURL: string;
+  LogoURL: string;
 }
 
-export type ScrapingType = "css" | "api"
+export type ScrapingType = "CSS" | "API"
 
 export interface FormData {
   base_url: string;
@@ -49,18 +50,26 @@ export const SiteCareerService = {
   addSiteConfig: async(formData : FormData, logoFile: File | null) => {
     const data = new FormData();
 
-    data.append("config", JSON.stringify(formData));
+    try{
+      data.append("siteData", JSON.stringify(formData));
 
     if(logoFile){
       data.append('logo', logoFile)
     }
 
-    const response = await api.post('/api/add-site', data, {
+    const response = await api.post('/siteCareer', data, {
       headers: {
         'Content-Type': 'multipart/form-data',
       }
     });
 
     return response.data;
+    }catch(error){
+      if (axios.isAxiosError(error) && error.response) {
+        console.log(error.response.data.error || 'Não foi possível recuperar dados do dashboard.')
+        throw new Error(error.response.data.error || 'Não foi possível recuperar dados do dashboard.')
+      }
+      throw new Error('Não foi possível conectar ao servidor.')
+    }
   },
 }

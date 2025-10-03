@@ -63,13 +63,13 @@ export default function EmpresasPage() {
                 onClick={() => handleCompanyClick(company)}
               >
                 <div className="flex flex-col items-center space-y-4">
-                  {/* <div className="w-20 h-20 flex items-center justify-center">
+                  <div className="w-20 h-20 flex items-center justify-center">
                     <img
-                      src={company.logo || "/placeholder.svg"}
-                      alt={`${company.name} logo`}
+                      src={company.LogoURL || "/placeholder.svg"}
+                      alt={`${company.SiteName} logo`}
                       className="max-w-full max-h-full object-contain"
                     />
-                  </div> */}
+                  </div> 
                   <h3 className="text-[#e0e0e0] font-semibold text-sm">{company.SiteName}</h3>
                 </div>
               </Card>
