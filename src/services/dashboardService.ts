@@ -2,12 +2,6 @@ import { api } from './api'
 import axios from 'axios'
 import type { DashboardData } from '@/models/dashboard';
 
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-}
-
 export const DashboardService = {
 
   getDashboardData: async(): Promise<DashboardData> => {

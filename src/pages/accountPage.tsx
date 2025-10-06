@@ -1,24 +1,26 @@
 "use client"
 
 import { useState } from "react"
-import { User, CreditCard, Shield, Bell, LogOut } from "lucide-react"
+import { User, CreditCard, LogOut } from "lucide-react"
 import { ProfileSection } from "@/components/accountPage//profile-section"
 import { PlanSection } from "@/components/accountPage/plan-section"
-import { SecuritySection } from "@/components/accountPage/security-section"
-import { NotificationsSection } from "@/components/accountPage/notifications-section"
+// import { SecuritySection } from "@/components/accountPage/security-section"
+// import { NotificationsSection } from "@/components/accountPage/notifications-section"
 import { cn } from "@/lib/utils"
+import { useUser } from "@/hooks/useUser"
 
 type Tab = "perfil" | "plano" | "seguranca" | "notificacoes"
 
 const menuItems = [
   { id: "perfil" as Tab, label: "Perfil", icon: User },
   { id: "plano" as Tab, label: "Plano e Faturamento", icon: CreditCard },
-  { id: "seguranca" as Tab, label: "Segurança", icon: Shield },
-  { id: "notificacoes" as Tab, label: "Notificações", icon: Bell },
+  // { id: "seguranca" as Tab, label: "Segurança", icon: Shield },
+  // { id: "notificacoes" as Tab, label: "Notificações", icon: Bell },
 ]
 
 export default function AccountPage() {
   const [activeTab, setActiveTab] = useState<Tab>("perfil")
+  const {data: user} = useUser();
 
   const handleLogout = () => {
     console.log("Logout clicked")
@@ -88,10 +90,10 @@ export default function AccountPage() {
 
           <main className="flex-1 min-w-0">
             <div className="space-y-6">
-              {activeTab === "perfil" && <ProfileSection />}
+              {activeTab === "perfil" && <ProfileSection id={user?.id} user_name={user?.user_name} email={user?.email} />}
               {activeTab === "plano" && <PlanSection />}
-              {activeTab === "seguranca" && <SecuritySection />}
-              {activeTab === "notificacoes" && <NotificationsSection />}
+              {/* {activeTab === "seguranca" && <SecuritySection />} */}
+              {/* {activeTab === "notificacoes" && <NotificationsSection />} */}
 
             </div>
           </main>

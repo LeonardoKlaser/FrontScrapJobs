@@ -2,12 +2,7 @@ import type { LoginInput } from '@/validators/auth'
 import { api } from './api'
 import type { RegisterInput } from '@/validators/auth'
 import axios from 'axios'
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-}
+import type { User } from '@/models/user'
 
 export const authService = {
   login: async (credentials: LoginInput): Promise<{ token: string }> => {

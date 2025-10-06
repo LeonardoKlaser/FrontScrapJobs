@@ -6,7 +6,7 @@ export interface LatestJob {
     location: string;
     company: string;
     job_link: string;
-  }
+}
   
   export interface MonitoredURL {
     site_name: string;
