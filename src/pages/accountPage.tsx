@@ -90,8 +90,8 @@ export default function AccountPage() {
 
           <main className="flex-1 min-w-0">
             <div className="space-y-6">
-              {activeTab === "perfil" && <ProfileSection id={user?.id} user_name={user?.user_name} email={user?.email} />}
-              {activeTab === "plano" && <PlanSection />}
+              {activeTab === "perfil" && <ProfileSection id={user?.id} user_name={user?.user_name} email={user?.email} plan={user?.plan}/>}
+              {activeTab === "plano" && <PlanSection user={user} />}
               {/* {activeTab === "seguranca" && <SecuritySection />} */}
               {/* {activeTab === "notificacoes" && <NotificationsSection />} */}
 
