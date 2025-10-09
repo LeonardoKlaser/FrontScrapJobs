@@ -25,6 +25,11 @@ export function AppHeader() {
   const { data: user, isLoading } = useUser()
   const { logout } = useAuth()
 
+  const handleLogout = () => {
+    logout()
+    window.location.reload()
+  }
+
   return (
     <header
       className="sticky top-0 z-40 w-full border-b
@@ -62,7 +67,7 @@ export function AppHeader() {
           <ModeToggle />
 
           {!isLoading && user && (
-            <Button size="sm" variant="outline" onClick={() => logout()}>
+            <Button size="sm" variant="outline" onClick={handleLogout}>
               Sair
             </Button>
           )}

@@ -8,6 +8,7 @@ import { PlanSection } from "@/components/accountPage/plan-section"
 // import { NotificationsSection } from "@/components/accountPage/notifications-section"
 import { cn } from "@/lib/utils"
 import { useUser } from "@/hooks/useUser"
+import { useAuth } from "@/hooks/useAuth"
 
 type Tab = "perfil" | "plano" | "seguranca" | "notificacoes"
 
@@ -21,9 +22,11 @@ const menuItems = [
 export default function AccountPage() {
   const [activeTab, setActiveTab] = useState<Tab>("perfil")
   const {data: user} = useUser();
+  const { logout } = useAuth()
 
   const handleLogout = () => {
-    console.log("Logout clicked")
+    logout()
+    window.location.reload()
   }
 
   return (

@@ -6,6 +6,7 @@ export interface SiteCareer {
   SiteName: string;
   BaseURL: string;
   LogoURL: string;
+  IsSubscribed: boolean;
 }
 
 export type ScrapingType = "CSS" | "API"
@@ -70,6 +71,18 @@ export const SiteCareerService = {
         throw new Error(error.response.data.error || 'Não foi possível recuperar dados do dashboard.')
       }
       throw new Error('Não foi possível conectar ao servidor.')
+    }
+  },
+
+  requestSite: async (url: string) => {
+    try {
+      const { data } = await api.post('api/request-site', { url });
+      return data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw new Error(error.response.data.error || 'Não foi possível enviar a solicitação.');
+      }
+      throw new Error('Não foi possível conectar ao servidor.');
     }
   },
 }
