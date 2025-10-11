@@ -1,13 +1,6 @@
+import type { SiteCareer, UserSiteRequest } from '@/models/siteCareer';
 import { api } from './api'
 import axios from 'axios'
-
-export interface SiteCareer {
-  SiteId: number;
-  SiteName: string;
-  BaseURL: string;
-  LogoURL: string;
-  IsSubscribed: boolean;
-}
 
 export type ScrapingType = "CSS" | "API"
 
@@ -77,6 +70,17 @@ export const SiteCareerService = {
   requestSite: async (url: string) => {
     try {
       const { data } = await api.post('api/request-site', { url });
+      return data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw new Error(error.response.data.error || 'Não foi possível enviar a solicitação.');
+      }
+      throw new Error('Não foi possível conectar ao servidor.');
+    }
+  },
+  registerUserSite: async (request: UserSiteRequest) => {
+    try {
+      const { data } = await api.post('/userSite',  request );
       return data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

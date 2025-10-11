@@ -1,123 +1,138 @@
-"use client"
-
-import * as React from "react"
-import { Check, Loader2 } from "lucide-react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
+import { Loader2 } from "lucide-react"
+import { useState } from "react"
+import { Input } from "./ui/input"
+import { Label } from "./ui/label"
 
-interface Company {
-  id: string
-  name: string
-  logo: string
-}
-
-interface CompanySubscriptionPopupProps {
-  company: Company | null
+interface RegistrationModalProps {
   isOpen: boolean
   onClose: () => void
+  companyName: string | undefined
+  companyLogo: string | undefined
+  remainingSlots: number
+  isAlreadyRegistered: boolean | undefined
+  isLoading: boolean
+  onRegister: (targetWords: string[]) => void
 }
 
-type ButtonState = "initial" | "loading" | "success"
+export function RegistrationModal({
+  isOpen,
+  onClose,
+  companyName,
+  companyLogo,
+  remainingSlots,
+  isAlreadyRegistered,
+  isLoading,
+  onRegister,
+}: RegistrationModalProps) {
+  const [keywords, setKeywords] = useState("")
+  const hasNoSlots = remainingSlots === 0 && !isAlreadyRegistered
 
-export function CompanySubscriptionPopup({ company, isOpen, onClose }: CompanySubscriptionPopupProps) {
-  const [buttonState, setButtonState] = React.useState<ButtonState>("initial")
+  const isRegisterButtonDisabled = hasNoSlots || isLoading || (!keywords.trim() && !isAlreadyRegistered)
 
-  React.useEffect(() => {
-    if (isOpen) {
-      setButtonState("initial")
-    }
-  }, [isOpen])
+  const handleRegisterClick = () => {
+    if (!keywords.trim()) return 
+    const targetWords = keywords
+      .split(",")
+      .map((word) => word.trim())
+      .filter(Boolean)
 
-  const handleSubscribe = async () => {
-    if (buttonState !== "initial") return
-
-    setButtonState("loading")
-
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-
-    setButtonState("success")
-
-    setTimeout(() => {
-      onClose()
-    }, 2500)
+    onRegister(targetWords)
   }
 
-  const getButtonContent = () => {
-    switch (buttonState) {
-      case "loading":
-        return (
-          <>
-            <Loader2 className="size-4 animate-spin" />
-            <span className="sr-only">Carregando...</span>
-          </>
-        )
-      case "success":
-        return (
-          <>
-            <Check className="size-4" />
-            Inscrito com Sucesso!
-          </>
-        )
-      default:
-        return "Confirmar Inscrição"
-    }
+  const handleClose = () => {
+    setKeywords("")
+    onClose()
   }
-
-  const getButtonClassName = () => {
-    switch (buttonState) {
-      case "success":
-        return "bg-[var(--color-company-success-green)] text-black hover:bg-[var(--color-company-success-green)]/90"
-      default:
-        return "bg-[var(--color-company-accent-blue)] text-white hover:bg-[var(--color-company-accent-blue)]/90"
-    }
-  }
-
-  if (!company) return null
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent
-        className={cn(
-          "bg-[var(--color-company-card-bg)] border-[var(--color-company-accent-blue)] text-[var(--color-company-text-light)]",
-          "max-w-md mx-auto",
-        )}
-        showCloseButton={true}
-      >
-        <DialogHeader className="items-center text-center space-y-4">
-          <div className="flex justify-center">
-            <div className="size-20 rounded-lg overflow-hidden bg-white/10 flex items-center justify-center">
-              <img
-                src={company.logo || "/placeholder.svg"}
-                alt={`${company.name} logo`}
-                className="size-16 object-contain"
-                onError={(e) => {
-                  // Fallback to placeholder if image fails to load
-                  const target = e.target as HTMLImageElement
-                  target.src = `/placeholder.svg?height=64&width=64&query=${encodeURIComponent(company.name + " company logo")}`
-                }}
-              />
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent className="sm:max-w-[500px] p-0">
+        <Card className="border-0 shadow-none">
+          <CardHeader className="text-center space-y-4 pb-4">
+            <div className="flex justify-center">
+              <div className="relative h-10 w-auto max-w-[200px]">
+                <img
+                  src={companyLogo || "/placeholder.svg"}
+                  alt={`${companyName} logo`}
+                  width={200}
+                  height={40}
+                  className="object-contain max-h-10 w-auto"
+                />
+              </div>
             </div>
-          </div>
+            <DialogTitle className="text-2xl font-bold">{companyName}</DialogTitle>
+          </CardHeader>
 
-          <DialogTitle className="text-xl font-semibold text-[var(--color-company-text-light)]">
-            {company.name}
-          </DialogTitle>
+          <CardContent className="space-y-4">
+            {isAlreadyRegistered ? (
+              <p className="text-center text-muted-foreground">
+                Você já está inscrito para receber alertas de vagas do(a){" "}
+                <span className="font-semibold text-foreground">{companyName}</span>.
+              </p>
+            ) : hasNoSlots ? (
+              <p className="text-center text-muted-foreground">Você atingiu o limite de empresas do seu plano.</p>
+            ) : (
+              <>
+                <p className="text-center text-muted-foreground">
+                  Para receber alertas, insira as palavras-chave ou cargos de interesse.
+                </p>
+                {/* NOVO CAMPO DE INPUT */}
+                <div className="space-y-2">
+                  <Label htmlFor="keywords" className="text-muted-foreground">
+                    Palavras-chave (separe com vírgulas)
+                  </Label>
+                  <Input
+                    id="keywords"
+                    placeholder="Ex: Desenvolvedor Front-end, React, Pleno"
+                    value={keywords}
+                    onChange={(e) => setKeywords(e.target.value)}
+                    className="py-6"
+                    disabled={isLoading}
+                  />
+                </div>
+              </>
+            )}
 
-          <p className="text-sm text-[var(--color-company-text-light)]/80 text-balance">
-            Deseja receber notificações de novas vagas para esta empresa?
-          </p>
-        </DialogHeader>
+            {!isAlreadyRegistered && (
+              <div className="flex items-center justify-center gap-3 p-4 bg-muted/50 rounded-lg">
+                <span className="text-sm font-medium">Slots de Inscrição Disponíveis:</span>
+                <Badge variant="secondary" className="text-lg font-bold px-3 py-1">
+                  {remainingSlots}
+                </Badge>
+              </div>
+            )}
+          </CardContent>
 
-        <div className="flex justify-center pt-4">
-          <Button
-            onClick={handleSubscribe}
-            disabled={buttonState !== "initial"}
-            className={cn("w-full max-w-xs h-12 text-sm font-medium transition-all duration-200", getButtonClassName())}
-          >
-            {getButtonContent()}
-          </Button>
-        </div>
+          <CardFooter className="flex flex-col gap-2">
+            {isAlreadyRegistered ? (
+              <Button onClick={onClose} variant="outline" className="w-full bg-transparent">
+                Fechar
+              </Button>
+            ) : (
+              <>
+                <Button onClick={handleRegisterClick} disabled={isRegisterButtonDisabled} className="w-full">
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Registrando...
+                    </>
+                  ) : hasNoSlots ? (
+                    "Limite de Slots Atingido"
+                  ) : (
+                    "Confirmar Inscrição e Usar 1 Slot"
+                  )}
+                </Button>
+                <Button onClick={onClose} variant="ghost" className="w-full" disabled={isLoading}>
+                  Cancelar
+                </Button>
+              </>
+            )}
+          </CardFooter>
+        </Card>
       </DialogContent>
     </Dialog>
   )

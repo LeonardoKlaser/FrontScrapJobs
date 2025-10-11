@@ -6,21 +6,24 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label" 
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { CompanySubscriptionPopup } from "@/components/companyPopup"
+import { RegistrationModal } from "@/components/companyPopup"
 import { useSiteCareer } from "@/hooks/useSiteCareer"
 import { Badge } from "@/components/ui/badge"
 import { useRequestSite } from "@/hooks/useRequestSite"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import type { SiteCareer } from "@/models/siteCareer"
+import { useRegisterUserSite } from "@/hooks/useRegisterUserSite"
 
 
 export default function EmpresasPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [requestedUrl, setRequestedUrl] = useState("")
-  const [selectedCompany, setSelectedCompany] = useState<any>(null)
+  const [selectedCompany, setSelectedCompany] = useState<SiteCareer>()
   const [isPopupOpen, setPopupOpen] = useState(false)
   const { data } = useSiteCareer();
   const [filter, setFilter] = useState("all");
   const { mutate: requestSite, isPending, isSuccess, isError, error } = useRequestSite()
+  const { mutate: registerUserToSite, isPending: isRegisteringUser } = useRegisterUserSite()
 
   const filteredCompanies = useMemo(() => {
     return data
@@ -32,7 +35,7 @@ export default function EmpresasPage() {
     });  
   }, [searchTerm, data, filter]);
 
-  const handleCompanyClick = (company : any) => {
+  const handleCompanyClick = (company : SiteCareer) => {
     setSelectedCompany(company)
     setPopupOpen(true)
   }
@@ -46,6 +49,21 @@ export default function EmpresasPage() {
         },
       })
     }
+  }
+
+  const handleRegister = (targetWords: string[]) => {
+    if (!selectedCompany) return
+
+    const requestData = {
+      site_id: selectedCompany.SiteId,
+      target_words: targetWords,
+    }
+
+    registerUserToSite(requestData, {
+      onSuccess: () => {
+        setPopupOpen(false)
+      },
+    })
   }
 
   return (
@@ -75,9 +93,8 @@ export default function EmpresasPage() {
                 className="pl-10 bg-[#1e1e1e] border-[#333333] text-[#e0e0e0] placeholder:text-[#e0e0e0]/60 focus:border-[#007bff] focus:ring-[#007bff]"
               />
             </div>
-            <div className="flex items-center justify-center mb-8">
-          </div>
-          <div className="bg-card border border-border rounded-lg p-1 flex">
+            <div className="flex items-center justify-center mb-8"/>
+            <div className="bg-card border border-border rounded-lg p-1 flex">
             <button
               onClick={() => setFilter("all")}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-all relative ${
@@ -109,8 +126,7 @@ export default function EmpresasPage() {
               )}
             </button>
           </div>
-        </div>
-
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {filteredCompanies?.map((company, index) => (
               <Card
@@ -142,72 +158,77 @@ export default function EmpresasPage() {
       </section>
 
       <section className="py-20 px-4">
-      <div className="container mx-auto">
-        <Card className="max-w-3xl mx-auto bg-card/50 border-border/50">
-          <CardHeader className="text-center">
-            <CardTitle className="text-3xl md:text-4xl font-bold text-foreground">
-              Expanda seu Radar de Vagas
-            </CardTitle>
-            <CardDescription className="text-lg pt-2">
-              Não encontrou uma empresa? Adicione o portal de carreiras dela e não perca nenhuma oportunidade.
-            </CardDescription>
-          </CardHeader>
-          <form onSubmit={handleRequestSubmit} className="space-y-4">
-                {isSuccess && (
-                  <Alert className="border-green-500 bg-green-500/10">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
-                    <AlertDescription className="text-green-500">
-                      Solicitação enviada com sucesso!
-                    </AlertDescription>
-                  </Alert>
-                )}
-                {isError && (
-                  <Alert className="border-red-500 bg-red-500/10">
-                    <XCircle className="h-4 w-4 text-red-500" />
-                    <AlertDescription className="text-red-500">
-                      {error?.message || "Ocorreu um erro ao enviar a solicitação."}
-                    </AlertDescription>
-                  </Alert>
-                )}
-                <div className="flex flex-col sm:flex-row items-end gap-2">
-                  <div className="w-full space-y-2">
-                    <Label htmlFor="siteUrl" className="text-muted-foreground">
-                      Link do portal de carreiras
-                    </Label>
-                    <Input
-                      id="siteUrl"
-                      type="url"
-                      placeholder="https://exemplo.com/carreiras"
-                      className="py-6 text-base"
-                      value={requestedUrl}
-                      onChange={(e) => setRequestedUrl(e.target.value)}
-                      required
-                    />
+        <div className="container mx-auto">
+          <Card className="max-w-3xl mx-auto bg-card/50 border-border/50">
+            <CardHeader className="text-center">
+              <CardTitle className="text-3xl md:text-4xl font-bold text-foreground">
+                Expanda seu Radar de Vagas
+              </CardTitle>
+              <CardDescription className="text-lg pt-2">
+                Não encontrou uma empresa? Adicione o portal de carreiras dela e não perca nenhuma oportunidade.
+              </CardDescription>
+            </CardHeader>
+            <form onSubmit={handleRequestSubmit} className="space-y-4">
+                  {isSuccess && (
+                    <Alert className="border-green-500 bg-green-500/10">
+                      <CheckCircle className="h-4 w-4 text-green-500" />
+                      <AlertDescription className="text-green-500">
+                        Solicitação enviada com sucesso!
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                  {isError && (
+                    <Alert className="border-red-500 bg-red-500/10">
+                      <XCircle className="h-4 w-4 text-red-500" />
+                      <AlertDescription className="text-red-500">
+                        {error?.message || "Ocorreu um erro ao enviar a solicitação."}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                  <div className="flex flex-col sm:flex-row items-end gap-2">
+                    <div className="w-full space-y-2">
+                      <Label htmlFor="siteUrl" className="text-muted-foreground">
+                        Link do portal de carreiras
+                      </Label>
+                      <Input
+                        id="siteUrl"
+                        type="url"
+                        placeholder="https://exemplo.com/carreiras"
+                        className="py-6 text-base"
+                        value={requestedUrl}
+                        onChange={(e) => setRequestedUrl(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="w-full sm:w-auto px-8 py-3 text-base"
+                      disabled={isPending}
+                    >
+                      <span className="mr-2">{isPending ? "Enviando..." : "Enviar"}</span>
+                      <Send className="h-4 w-4" />
+                    </Button>
                   </div>
-                  <Button
-                    type="submit"
-                    size="lg"
-                    className="w-full sm:w-auto px-8 py-3 text-base"
-                    disabled={isPending}
-                  >
-                    <span className="mr-2">{isPending ? "Enviando..." : "Enviar"}</span>
-                    <Send className="h-4 w-4" />
-                  </Button>
-                </div>
-              </form>
-        </Card>
-      </div>
-    </section>
+                </form>
+          </Card>
+        </div>
+      </section>
 
       <footer className="border-t border-[#333333] bg-[#121212] py-8">
         <div className="container mx-auto px-4 text-center">
           <p className="text-[#e0e0e0]/60">© 2025 ScrapJobs. Todos os direitos reservados.</p>
         </div>
       </footer>
-      <CompanySubscriptionPopup
-        company={selectedCompany}
+      <RegistrationModal
         isOpen={isPopupOpen}
         onClose={() => setPopupOpen(false)}
+        companyName={selectedCompany?.SiteName}
+        companyLogo={selectedCompany?.LogoURL}
+        remainingSlots={1}
+        isAlreadyRegistered={selectedCompany?.IsSubscribed}
+        isLoading={isRegisteringUser}
+        onRegister={handleRegister}
       />
     </div>
   )
