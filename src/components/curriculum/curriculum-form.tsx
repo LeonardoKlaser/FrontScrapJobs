@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge"
 import { PlusCircle, Trash2, Loader2 } from "lucide-react"
 import type { Curriculum, Experience, Education } from "@/models/curriculum"
 import { curriculoService } from "@/services/curriculumService"
+import { useUpdateCurriculum } from "@/hooks/useCurriculum"
 
 interface CurriculumFormProps {
   curriculum?: Curriculum
@@ -33,6 +34,7 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
   const [isSaving, setIsSaving] = useState(false)
   const [skillInput, setSkillInput] = useState("")
   const [languageInput, setLanguageInput] = useState("")
+  const { mutate: updateCurriculum, isPending: isUpdating } = useUpdateCurriculum();
 
   useEffect(() => {
     if (curriculum) {
@@ -52,9 +54,13 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
 
   const handleSave = async () => {
     setIsSaving(true)
-    await curriculoService.newCurriculum(formData)
+    if (isEditing && curriculum) {
+      updateCurriculum({ ...formData, id: curriculum.id });
+    } else {
+      await curriculoService.newCurriculum(formData)    
+    }
+    
     setIsSaving(false)
-    console.log("Saving curriculum:", formData)
   }
 
   const addExperience = () => {
@@ -341,7 +347,7 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
 
         {/* Save Button */}
         <div className="pt-4">
-          <Button onClick={handleSave} disabled={isSaving || !formData.title} className="w-full" size="lg">
+          <Button onClick={handleSave} disabled={isSaving || isUpdating || !formData.title} className="w-full" size="lg">
             {isSaving ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -159,7 +159,7 @@ export default function EmpresasPage() {
 
       <section className="py-20 px-4">
         <div className="container mx-auto">
-          <Card className="max-w-3xl mx-auto bg-card/50 border-border/50">
+          <Card className="max-w-3xl mx-auto bg-card/50 border-border/50 px-20">
             <CardHeader className="text-center">
               <CardTitle className="text-3xl md:text-4xl font-bold text-foreground">
                 Expanda seu Radar de Vagas
