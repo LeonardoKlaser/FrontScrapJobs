@@ -1,48 +1,50 @@
-import { useState } from 'react'
-import { Trash } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { CurriculumUpload } from '@/components/forms/CurriculumUpload'
+import { useMemo, useState } from "react"
+import { CurriculumList } from "@/components/curriculum/curriculum-list"
+import { CurriculumForm } from "@/components/curriculum/curriculum-form"
+import type { Curriculum } from "@/models/curriculum"
+import { useCurriculum } from "@/hooks/useCurriculum"
 
 export function Curriculum() {
-  const [curriculums, setCurriculums] = useState<File[]>([])
+  const { data } = useCurriculum();
+  const curriculums = useMemo(() => {
+    return data 
+  }, [data]);
+  //const [curriculums] = useState<Curriculum[] | undefined >(data)
+  const [selectedCurriculumId, setSelectedCurriculumId] = useState<string | null>(null)
 
-  const handleAdd = (file: File) => {
-    setCurriculums((prev) => (prev.some((f) => f.name === file.name) ? prev : [...prev, file]))
+  const selectedCurriculum = curriculums?.find((cv) => cv.id === selectedCurriculumId)
+
+  const handleSelectCurriculum = (id: string) => {
+    setSelectedCurriculumId(id)
   }
 
-  const handleRemove = (file: File) => {
-    setCurriculums((prev) => prev.filter((x) => x.name !== file.name))
+  const handleCreateNew = () => {
+    setSelectedCurriculumId(null)
   }
 
   return (
-    <div className="flex flex-col gap-8 md:flex-row">
-      <div className="flex w-full flex-col items-center rounded-xl border p-6 shadow-sm md:w-1/3">
-        <h2 className="mb-4 text-lg font-semibold">Adicionar currículo</h2>
-        <CurriculumUpload onFileSelect={handleAdd} />
-      </div>
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto p-6">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-foreground mb-2">Gerenciador de Currículos</h1>
+          <p className="text-muted-foreground">Crie e gerencie múltiplos currículos para diferentes oportunidades</p>
+        </div>
 
-      <div className="w-full rounded-xl border p-6 shadow-sm md:w-2/3">
-        <h2 className="mb-4 text-lg font-semibold">Currículos adicionados</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6">
+          <div className="order-2 lg:order-1">
+            <CurriculumForm curriculum={selectedCurriculum} isEditing={selectedCurriculumId !== null} />
+          </div>
 
-        <ul className="space-y-3">
-          {curriculums.map((file) => (
-            <li
-              key={file.name}
-              className="flex items-center justify-between rounded-md bg-muted px-4 py-2"
-            >
-              <span className="truncate text-sm">{file.name}</span>
-
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="Remover"
-                onClick={() => handleRemove(file)}
-              >
-                <Trash className="h-4 w-4 text-destructive" />
-              </Button>
-            </li>
-          ))}
-        </ul>
+          {/* Right Column - List (30%) */}
+          <div className="order-1 lg:order-2">
+            <CurriculumList
+              curriculums={curriculums}
+              selectedId={selectedCurriculumId}
+              onSelect={handleSelectCurriculum}
+              onCreateNew={handleCreateNew}
+            />
+          </div>
+        </div>
       </div>
     </div>
   )
