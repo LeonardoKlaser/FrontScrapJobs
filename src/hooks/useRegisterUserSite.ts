@@ -13,3 +13,13 @@ export function useRegisterUserSite() {
     },
   })
 }
+
+export function useUnregisterUserSite() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (siteId: number) => SiteCareerService.unregisterUserFromSite(siteId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['siteCareerList'] });
+    },
+  })
+}

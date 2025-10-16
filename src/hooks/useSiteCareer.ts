@@ -7,4 +7,5 @@ export function useSiteCareer() {
     queryKey: ['siteCareerList'], 
     queryFn: SiteCareerService.getAllSiteCareer, 
   });
+  
 }

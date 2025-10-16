@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge"
 import { useRequestSite } from "@/hooks/useRequestSite"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import type { SiteCareer } from "@/models/siteCareer"
-import { useRegisterUserSite } from "@/hooks/useRegisterUserSite"
+import { useRegisterUserSite, useUnregisterUserSite } from "@/hooks/useRegisterUserSite"
 
 
 export default function EmpresasPage() {
@@ -24,6 +24,7 @@ export default function EmpresasPage() {
   const [filter, setFilter] = useState("all");
   const { mutate: requestSite, isPending, isSuccess, isError, error } = useRequestSite()
   const { mutate: registerUserToSite, isPending: isRegisteringUser } = useRegisterUserSite()
+  const { mutate: unregisterUser, isPending: isUnregistering } = useUnregisterUserSite();
 
   const filteredCompanies = useMemo(() => {
     return data
@@ -65,6 +66,16 @@ export default function EmpresasPage() {
       },
     })
   }
+
+  const handleUnregister = () => {
+    if (selectedCompany) {
+      unregisterUser(selectedCompany.SiteId, {
+        onSuccess: () => {
+          setPopupOpen(false)
+        }
+      })
+    }
+  };
 
   return (
     <div className="scrapjobs-theme min-h-screen">
@@ -229,6 +240,7 @@ export default function EmpresasPage() {
         isAlreadyRegistered={selectedCompany?.IsSubscribed}
         isLoading={isRegisteringUser}
         onRegister={handleRegister}
+        onUnRegister={handleUnregister}
       />
     </div>
   )

@@ -16,6 +16,7 @@ interface RegistrationModalProps {
   isAlreadyRegistered: boolean | undefined
   isLoading: boolean
   onRegister: (targetWords: string[]) => void
+  onUnRegister: () => void
 }
 
 export function RegistrationModal({
@@ -27,6 +28,7 @@ export function RegistrationModal({
   isAlreadyRegistered,
   isLoading,
   onRegister,
+  onUnRegister,
 }: RegistrationModalProps) {
   const [keywords, setKeywords] = useState("")
   const hasNoSlots = remainingSlots === 0 && !isAlreadyRegistered
@@ -46,6 +48,10 @@ export function RegistrationModal({
   const handleClose = () => {
     setKeywords("")
     onClose()
+  }
+
+  const handleUnregister = () => {
+    onUnRegister()
   }
 
   return (
@@ -69,10 +75,23 @@ export function RegistrationModal({
 
           <CardContent className="space-y-4">
             {isAlreadyRegistered ? (
-              <p className="text-center text-muted-foreground">
-                Você já está inscrito para receber alertas de vagas do(a){" "}
-                <span className="font-semibold text-foreground">{companyName}</span>.
-              </p>
+              <div>
+                <p className="text-center text-muted-foreground">
+                  Você já está inscrito para receber alertas de vagas do(a){" "}
+                  <span className="font-semibold text-foreground">{companyName}</span>.
+                </p>
+                <div className="py-4 text-center">
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Deseja se desvincular para parar de receber notificações de vagas da {companyName}?
+                  </p>
+                  <Button
+                    variant="destructive"
+                    onClick={handleUnregister}>
+                    "Desvincular"
+                  </Button>
+                </div>
+              </div>
+              
             ) : hasNoSlots ? (
               <p className="text-center text-muted-foreground">Você atingiu o limite de empresas do seu plano.</p>
             ) : (
@@ -104,6 +123,7 @@ export function RegistrationModal({
                   {remainingSlots}
                 </Badge>
               </div>
+              
             )}
           </CardContent>
 

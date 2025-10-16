@@ -89,4 +89,12 @@ export const SiteCareerService = {
       throw new Error('Não foi possível conectar ao servidor.');
     }
   },
+  unregisterUserFromSite: async (siteId: number): Promise<void> => {
+    try {
+      await api.delete(`/userSite/${siteId}`);
+    } catch (error) {
+      console.error('Error unregistering user from site:', error);
+      throw error;
+    }
+  },
 }
