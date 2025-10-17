@@ -14,6 +14,7 @@ import EmpresasPage from '@/pages/ListSites'
 import AdminDashboard from '@/pages/adminDashboard'
 import AdicionarSitePage from '@/pages/addNewSite'
 import AccountPage from '@/pages/accountPage'
+import CheckoutPage from '@/pages/checkout'
 
 const curriculumLazy = async () => {
   const { Curriculum } = await import('@/pages/Curriculum')
@@ -63,6 +64,10 @@ export const createRouter = (queryClient: QueryClient) =>
         {
           path: PATHS.app.accountPage,
           element: <AccountPage/>
+        },
+        {
+          path: 'checkout/:planId',
+          element: <CheckoutPage/>
         }
       ]
     },
