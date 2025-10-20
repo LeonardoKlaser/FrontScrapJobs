@@ -15,6 +15,7 @@ import AdminDashboard from '@/pages/adminDashboard'
 import AdicionarSitePage from '@/pages/addNewSite'
 import AccountPage from '@/pages/accountPage'
 import CheckoutPage from '@/pages/checkout'
+import PaymentConfirmationPage from '@/pages/paymentConfirmation'
 
 const curriculumLazy = async () => {
   const { Curriculum } = await import('@/pages/Curriculum')
@@ -32,7 +33,11 @@ export const createRouter = (queryClient: QueryClient) =>
       children: [
         { index: true, element: <Landing /> },
         { path: PATHS.login, element: <Login /> },
-        { path: PATHS.register, element: <Register /> }
+        { path: PATHS.register, element: <Register /> },
+        {
+          path: 'checkout/:planId',
+          element: <CheckoutPage/>
+        },
       ]
     },
     {
@@ -66,8 +71,8 @@ export const createRouter = (queryClient: QueryClient) =>
           element: <AccountPage/>
         },
         {
-          path: 'checkout/:planId',
-          element: <CheckoutPage/>
+          path: 'payment-confirmation', // Nova rota
+          element: <PaymentConfirmationPage />
         }
       ]
     },

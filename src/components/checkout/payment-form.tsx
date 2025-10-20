@@ -8,14 +8,8 @@ import { Label } from "@/components/ui/label"
 import { Spinner } from "@/components/ui/spinner"
 import { Lock, AlertCircle } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import type { Plan } from "@/models/plan"
 
-interface Plan {
-  id: string
-  name: string
-  price: number
-  currency: string
-  benefits: string[]
-}
 
 interface PaymentFormProps {
   plan: Plan

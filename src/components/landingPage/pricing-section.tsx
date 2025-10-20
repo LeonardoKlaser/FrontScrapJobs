@@ -1,20 +1,26 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Check } from "lucide-react"
-import type { Plan } from "@/models/plan"
-import { planService } from "@/services/planService"
+import { usePlans } from "@/hooks/usePlans"
+import { useNavigate } from "react-router"
+import { PATHS } from "@/router/paths"
 
 export function PricingSection() {
   const [isAnnual, setIsAnnual] = useState(false)
-  const [plans, setPlans] = useState<Plan[]>([]);
+  const { data: plans, isLoading } = usePlans()
+  const navigate = useNavigate()
 
-  useEffect(() => {
-    planService.getAllPlans().then(setPlans)
-  }, [])
+  const handleChoosePlan = (planId: number) => {
+    navigate(PATHS.checkout(planId.toString()))
+  }
+
+  if (isLoading) {
+    return <div>Carregando planos...</div>
+  }
 
   return (
     <section className="py-24 px-4">
@@ -52,7 +58,7 @@ export function PricingSection() {
           </div>
 
           <div className="flex justify-center gap-8">
-            {plans.map((plan) => (
+            {plans?.map((plan) => (
               <Card key={plan.id} className="bg-card border-border hover:border-primary/50 transition-all duration-300">
                 <CardHeader className="text-center pb-4">
                   <CardTitle className="text-2xl font-bold text-foreground">Plano {plan.name}</CardTitle>
@@ -77,7 +83,10 @@ export function PricingSection() {
                   </ul>
 
                   {/* CTA Button */}
-                  <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3 text-lg font-medium">
+                  <Button
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3 text-lg font-medium"
+                    onClick={() => handleChoosePlan(plan.id)}
+                  >
                     Começar a Automatizar
                   </Button>
 
