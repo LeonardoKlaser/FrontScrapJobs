@@ -5,9 +5,14 @@ import type { Plan } from '@/models/plan'
 
 interface PlanSummaryProps {
   plan: Plan
+  billingPeriod: 'monthly' | 'annual'
 }
 
-export function PlanSummary({ plan }: PlanSummaryProps) {
+export function PlanSummary({ plan, billingPeriod }: PlanSummaryProps) {
+  const isAnnual = billingPeriod === 'annual'
+  const totalPrice = isAnnual ? plan.price * 12 * 0.8 : plan.price
+  const periodLabel = isAnnual ? 'Pagamento único anual' : 'Pagamento único mensal'
+
   return (
     <Card className="sticky top-8 border-blue-500/20 bg-gradient-to-br from-card to-card/50">
       <CardHeader>
@@ -18,12 +23,14 @@ export function PlanSummary({ plan }: PlanSummaryProps) {
         {/* Price */}
         <div className="border-b border-border pb-6">
           <div className="flex items-baseline gap-2">
-            <span className="text-4xl font-bold text-foreground">{plan.price.toFixed(2)}</span>
-            <span className="text-muted-foreground">{plan.price}/mês</span>
+            <span className="text-4xl font-bold text-foreground">R$ {totalPrice.toFixed(2)}</span>
           </div>
-          <p className="text-sm text-muted-foreground mt-2">
-            Renovação automática. Cancele a qualquer momento.
-          </p>
+          <p className="text-sm text-muted-foreground mt-2">{periodLabel}</p>
+          {isAnnual && (
+            <p className="text-sm text-success mt-1">
+              Economia de R$ {(plan.price * 12 * 0.2).toFixed(2)} (20% de desconto)
+            </p>
+          )}
         </div>
 
         {/* Benefits */}

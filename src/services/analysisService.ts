@@ -1,0 +1,39 @@
+import { api } from './api'
+
+export interface MatchAnalysis {
+  overallScoreNumeric: number
+  overallScoreQualitative: string
+  summary: string
+}
+
+export interface Strength {
+  point: string
+  relevanceToJob: string
+}
+
+export interface Gap {
+  areaDescription: string
+  jobRequirementImpacted: string
+}
+
+export interface Suggestion {
+  suggestion: string
+  curriculumSectionToApply: string
+  exampleWording: string
+  reasoningForThisJob: string
+}
+
+export interface ResumeAnalysis {
+  matchAnalysis: MatchAnalysis
+  strengthsForThisJob: Strength[]
+  gapsAndImprovementAreas: Gap[]
+  actionableResumeSuggestions: Suggestion[]
+  finalConsiderations: string
+}
+
+export const analysisService = {
+  analyzeJob: async (jobId: number): Promise<ResumeAnalysis> => {
+    const { data } = await api.post('/api/analyze-job', { job_id: jobId })
+    return data
+  }
+}

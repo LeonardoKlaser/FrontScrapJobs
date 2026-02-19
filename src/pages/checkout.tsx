@@ -3,12 +3,13 @@
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { PlanSummary } from '@/components/checkout/plan-summary'
 import { PaymentForm } from '@/components/checkout/payment-form'
-import { useParams } from 'react-router'
+import { useParams, useSearchParams } from 'react-router'
 import { usePlans } from '@/hooks/usePlans'
-import { Spinner } from '@/components/ui/spinner' // Importe um componente de loading
+import { Spinner } from '@/components/ui/spinner'
 
 export default function CheckoutPage() {
   const params = useParams()
+  const [searchParams] = useSearchParams()
   const { data: plans, isLoading, isError } = usePlans()
 
   const planId = parseInt(params.planId || '', 10)
@@ -16,12 +17,11 @@ export default function CheckoutPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <Spinner fontSize={10} />
+        <Spinner className="size-10" />
       </div>
     )
   }
 
-  // 2. Lida com erro na busca dos planos
   if (isError || !plans) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -54,6 +54,14 @@ export default function CheckoutPage() {
     )
   }
 
+  const isBetaTester = plan.name === 'Beta Tester'
+  const periodParam = searchParams.get('period')
+  const billingPeriod: 'monthly' | 'annual' = isBetaTester
+    ? 'monthly'
+    : periodParam === 'annual'
+      ? 'annual'
+      : 'monthly'
+
   return (
     <div className="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -65,10 +73,10 @@ export default function CheckoutPage() {
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1">
-            <PlanSummary plan={plan} />
+            <PlanSummary plan={plan} billingPeriod={billingPeriod} />
           </div>
           <div className="lg:col-span-2">
-            <PaymentForm plan={plan} />
+            <PaymentForm plan={plan} billingPeriod={billingPeriod} />
           </div>
         </div>
       </div>

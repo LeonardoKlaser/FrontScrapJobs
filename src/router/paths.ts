@@ -1,7 +1,7 @@
 export const PATHS = {
   landing: '/',
   login: '/login',
-  register: '/register',
+
   checkout: (planId: string) => `/checkout/${planId}`,
   app: {
     home: '/app',
@@ -9,8 +9,8 @@ export const PATHS = {
     listSites: '/app/sites',
     adminDashboard: '/app/admin-dashboard',
     addNewSite: '/app/add-new-site',
-    accountPage: '/app/accountPage'
-    // job: (id: string) => `/app/jobs/${id}`
+    accountPage: '/app/accountPage',
+    paymentConfirmation: '/app/payment-confirmation'
   },
   notFound: '*'
 } as const

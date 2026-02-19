@@ -30,10 +30,10 @@ export default function Login() {
         <p className="mt-4 text-center text-sm text-muted-foreground">
           Primeira missão por aqui?{' '}
           <Link
-            to={PATHS.register}
+            to="/#pricing"
             className="ml-1 font-medium text-primary hover:underline dark:text-primary"
           >
-            Embarque para o Cadastro 🚀
+            Escolha um plano
           </Link>
         </p>
       </div>

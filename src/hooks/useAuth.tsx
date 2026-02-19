@@ -1,16 +1,16 @@
 import { PATHS } from '@/router/paths'
 import { authService } from '@/services/authService'
 import type { LoginInput } from '@/validators/auth'
-import type { RegisterInput } from '@/validators/auth'
 import { useQueryClient } from '@tanstack/react-query'
 import { useState, useCallback } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate, useSearchParams } from 'react-router'
 
 export function useAuth() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
 
   const login = useCallback(
     async (data: LoginInput): Promise<boolean> => {
@@ -19,7 +19,8 @@ export function useAuth() {
       try {
         await authService.login(data)
         await queryClient.invalidateQueries({ queryKey: ['user'] })
-        navigate(PATHS.app.home)
+        const redirectTo = searchParams.get('from') || PATHS.app.home
+        navigate(redirectTo)
         return true
       } catch (e: unknown) {
         if (e instanceof Error) {
@@ -32,30 +33,7 @@ export function useAuth() {
         setLoading(false)
       }
     },
-    [queryClient, navigate]
-  )
-
-  const register = useCallback(
-    async (data: RegisterInput): Promise<boolean> => {
-      setLoading(true)
-      setError(null)
-      try {
-        await authService.register(data)
-        await queryClient.invalidateQueries({ queryKey: ['user'] })
-        navigate(PATHS.app.home)
-        return true
-      } catch (e: unknown) {
-        if (e instanceof Error) {
-          setError(e.message)
-        } else {
-          setError('Erro inesperado')
-        }
-        return false
-      } finally {
-        setLoading(false)
-      }
-    },
-    [queryClient, navigate]
+    [queryClient, navigate, searchParams]
   )
 
   const logout = useCallback(async () => {
@@ -68,5 +46,5 @@ export function useAuth() {
     }
   }, [queryClient, navigate])
 
-  return { loading, error, login, logout, register }
+  return { loading, error, login, logout }
 }

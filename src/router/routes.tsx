@@ -8,7 +8,7 @@ import { PublicLayout } from '@/layouts/PublicLayout'
 import { Landing } from '@/pages/Landing'
 import { authLoader } from './loaders/authLoader'
 import { PATHS } from './paths'
-import Register from '@/pages/Register'
+
 import type { QueryClient } from '@tanstack/react-query'
 import EmpresasPage from '@/pages/ListSites'
 import AdminDashboard from '@/pages/adminDashboard'
@@ -33,7 +33,6 @@ export const createRouter = (queryClient: QueryClient) =>
       children: [
         { index: true, element: <Landing /> },
         { path: PATHS.login, element: <Login /> },
-        { path: PATHS.register, element: <Register /> },
         {
           path: 'checkout/:planId',
           element: <CheckoutPage />

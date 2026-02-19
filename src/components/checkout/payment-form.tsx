@@ -9,9 +9,11 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { AlertCircle, Lock, Eye, EyeOff } from 'lucide-react'
 import type { Plan } from '@/models/plan'
 import { api } from '@/services/api'
+import axios from 'axios'
 
 interface PaymentFormProps {
   plan: Plan
+  billingPeriod: 'monthly' | 'annual'
 }
 
 interface FormData {
@@ -28,7 +30,7 @@ interface FormErrors {
   [key: string]: string
 }
 
-export function PaymentForm({ plan }: PaymentFormProps) {
+export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -48,12 +50,21 @@ export function PaymentForm({ plan }: PaymentFormProps) {
     let formattedValue = value
 
     if (name === 'cpfCnpj') {
-      formattedValue = value
-        .replace(/\D/g, '')
-        .slice(0, 14)
-        .replace(/(\d{3})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
+      const digits = value.replace(/\D/g, '').slice(0, 14)
+      if (digits.length <= 11) {
+        // CPF: XXX.XXX.XXX-XX
+        formattedValue = digits
+          .replace(/(\d{3})(\d)/, '$1.$2')
+          .replace(/(\d{3})(\d)/, '$1.$2')
+          .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
+      } else {
+        // CNPJ: XX.XXX.XXX/XXXX-XX
+        formattedValue = digits
+          .replace(/(\d{2})(\d)/, '$1.$2')
+          .replace(/(\d{3})(\d)/, '$1.$2')
+          .replace(/(\d{3})(\d)/, '$1/$2')
+          .replace(/(\d{4})(\d{1,2})$/, '$1-$2')
+      }
     }
 
     if (name === 'phone') {
@@ -139,7 +150,9 @@ export function PaymentForm({ plan }: PaymentFormProps) {
         email: formData.email,
         password: formData.password,
         tax: formData.cpfCnpj.replace(/\D/g, ''),
-        cellphone: formData.phone.replace(/\D/g, '')
+        cellphone: formData.phone.replace(/\D/g, ''),
+        methods: [formData.paymentMethod === 'card' ? 'CREDIT_CARD' : 'PIX'],
+        billing_period: billingPeriod
       })
 
       const { url } = responsePayment.data
@@ -148,9 +161,13 @@ export function PaymentForm({ plan }: PaymentFormProps) {
         return
       }
     } catch (err) {
-      setErrors({
-        submit: err instanceof Error ? err.message : 'Erro ao processar registro'
-      })
+      const message =
+        axios.isAxiosError(err) && err.response?.data?.error
+          ? err.response.data.error
+          : err instanceof Error
+            ? err.message
+            : 'Erro ao processar registro'
+      setErrors({ submit: message })
     } finally {
       setIsLoading(false)
     }
@@ -166,7 +183,7 @@ export function PaymentForm({ plan }: PaymentFormProps) {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Error Alert */}
-          {Object.keys(errors).length > 0 && (
+          {Object.values(errors).some(Boolean) && (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
@@ -355,7 +372,10 @@ export function PaymentForm({ plan }: PaymentFormProps) {
                   name="paymentMethod"
                   value="pix"
                   checked={formData.paymentMethod === 'pix'}
-                  onChange={() => {}}
+                  onChange={() => {
+                    setFormData((prev) => ({ ...prev, paymentMethod: 'pix' }))
+                    setErrors((prev) => ({ ...prev, paymentMethod: '' }))
+                  }}
                   className="h-4 w-4"
                 />
                 <div>
@@ -380,7 +400,10 @@ export function PaymentForm({ plan }: PaymentFormProps) {
                   name="paymentMethod"
                   value="card"
                   checked={formData.paymentMethod === 'card'}
-                  onChange={() => {}}
+                  onChange={() => {
+                    setFormData((prev) => ({ ...prev, paymentMethod: 'card' }))
+                    setErrors((prev) => ({ ...prev, paymentMethod: '' }))
+                  }}
                   className="h-4 w-4"
                 />
                 <div>

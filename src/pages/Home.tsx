@@ -1,4 +1,5 @@
-import { FileText, Globe, BellRing, AlertTriangle, Plus, Loader2 } from 'lucide-react'
+import { useState } from 'react'
+import { FileText, Globe, BellRing, AlertTriangle, Plus, Loader2, Bot } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
@@ -10,6 +11,7 @@ import {
   TableCell
 } from '@/components/ui/table'
 import { useDashboard } from '@/hooks/useDashboard'
+import { AnalysisDialog } from '@/components/analysis/analysis-dialog'
 
 function StatsCard({
   title,
@@ -31,6 +33,7 @@ function StatsCard({
 
 export function Home() {
   const { data, isLoading, isError, error } = useDashboard()
+  const [selectedJobId, setSelectedJobId] = useState<number | null>(null)
 
   if (isLoading) {
     return (
@@ -92,6 +95,7 @@ export function Home() {
                   <TableHead>Empresa</TableHead>
                   <TableHead>Localização</TableHead>
                   <TableHead>Link</TableHead>
+                  <TableHead>Ação</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -109,6 +113,17 @@ export function Home() {
                       >
                         Ver vaga
                       </a>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="gap-1"
+                        onClick={() => setSelectedJobId(job.id)}
+                      >
+                        <Bot className="h-4 w-4" />
+                        Analisar com IA
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -160,6 +175,12 @@ export function Home() {
           </div>
         )}
       </div>
+
+      <AnalysisDialog
+        jobId={selectedJobId}
+        open={selectedJobId !== null}
+        onClose={() => setSelectedJobId(null)}
+      />
     </div>
   )
 }
