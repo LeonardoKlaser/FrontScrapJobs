@@ -359,7 +359,7 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
               <div
                 className={`flex items-center gap-3 rounded-lg border-2 p-4 cursor-pointer transition-colors ${
                   formData.paymentMethod === 'pix'
-                    ? 'border-blue-600 bg-blue-50 dark:bg-blue-950'
+                    ? 'border-primary bg-primary/10'
                     : 'border-border hover:border-muted-foreground'
                 }`}
                 onClick={() => {
@@ -387,7 +387,7 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
               <div
                 className={`flex items-center gap-3 rounded-lg border-2 p-4 cursor-pointer transition-colors ${
                   formData.paymentMethod === 'card'
-                    ? 'border-blue-600 bg-blue-50 dark:bg-blue-950'
+                    ? 'border-primary bg-primary/10'
                     : 'border-border hover:border-muted-foreground'
                 }`}
                 onClick={() => {
@@ -423,7 +423,7 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               {isLoading ? (
                 <>
@@ -441,7 +441,7 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
 
           {/* Security Text */}
           <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-            <Lock className="h-4 w-4 text-blue-600" />
+            <Lock className="h-4 w-4 text-primary" />
             <span>Seus dados são protegidos com criptografia SSL</span>
           </div>
         </form>
