@@ -4,9 +4,15 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import type { User } from '@/models/user'
+import { useNavigate } from 'react-router'
 
-export function PlanSection({ user }: { user: User | undefined }) {
-  const currentUsage = 2
+interface PlanSectionProps {
+  user: User | undefined
+  currentUsage?: number
+}
+
+export function PlanSection({ user, currentUsage = 0 }: PlanSectionProps) {
+  const navigate = useNavigate()
   const maxUsage = user?.plan?.max_sites ?? 0
   const usagePercentage = maxUsage > 0 ? (currentUsage / maxUsage) * 100 : 0
 
@@ -46,10 +52,16 @@ export function PlanSection({ user }: { user: User | undefined }) {
         </div>
       </CardContent>
       <CardFooter className="flex flex-col sm:flex-row gap-3">
-        <Button variant="outline" className="w-full sm:w-auto bg-transparent">
+        <Button
+          variant="outline"
+          className="w-full sm:w-auto bg-transparent"
+          onClick={() => navigate('/#pricing')}
+        >
           Gerenciar Assinatura
         </Button>
-        <Button className="w-full sm:w-auto">Fazer Upgrade</Button>
+        <Button className="w-full sm:w-auto" onClick={() => navigate('/#pricing')}>
+          Fazer Upgrade
+        </Button>
       </CardFooter>
     </Card>
   )

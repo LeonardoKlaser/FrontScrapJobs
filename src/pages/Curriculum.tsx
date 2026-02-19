@@ -5,11 +5,11 @@ import { useCurriculum } from '@/hooks/useCurriculum'
 
 export function Curriculum() {
   const { data: curriculums } = useCurriculum()
-  const [selectedCurriculumId, setSelectedCurriculumId] = useState<string | null>(null)
+  const [selectedCurriculumId, setSelectedCurriculumId] = useState<number | null>(null)
 
   const selectedCurriculum = curriculums?.find((cv) => cv.id === selectedCurriculumId)
 
-  const handleSelectCurriculum = (id: string) => {
+  const handleSelectCurriculum = (id: number) => {
     setSelectedCurriculumId(id)
   }
 

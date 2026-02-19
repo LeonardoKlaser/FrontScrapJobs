@@ -26,7 +26,7 @@ export function FaqSection() {
     {
       question: 'Quantas empresas posso monitorar?',
       answer:
-        'Não há limite! Você pode adicionar quantas empresas quiser à sua lista de monitoramento e receber alertas de todas elas.'
+        'Depende do seu plano! O plano Beta Tester permite até 3 sites, o Profissional até 15 e o Premium até 50 sites.'
     }
   ]
 
@@ -42,12 +42,14 @@ export function FaqSection() {
               Deixe a busca de emprego manual no passado. Concentre sua energia no que realmente
               importa: preparar-se para as entrevistas e conseguir o emprego dos seus sonhos.
             </p>
-            <Button
-              size="lg"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg font-medium"
-            >
-              Iniciar Meu Teste Gratuito
-            </Button>
+            <a href="#pricing">
+              <Button
+                size="lg"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg font-medium"
+              >
+                Iniciar Meu Teste Gratuito
+              </Button>
+            </a>
           </div>
 
           <div>

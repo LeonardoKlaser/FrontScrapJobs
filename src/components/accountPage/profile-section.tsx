@@ -15,7 +15,7 @@ export function ProfileSection({ user }: { user: User | undefined }) {
   }, [user?.user_name])
 
   const handleSave = () => {
-    console.log('Saving profile:', { name })
+    // TODO: Implement profile update API endpoint
   }
 
   return (
@@ -51,7 +51,9 @@ export function ProfileSection({ user }: { user: User | undefined }) {
         </div>
       </CardContent>
       <CardFooter>
-        <Button onClick={handleSave}>Salvar Alterações</Button>
+        <Button onClick={handleSave} disabled>
+          Salvar Alterações (em breve)
+        </Button>
       </CardFooter>
     </Card>
   )

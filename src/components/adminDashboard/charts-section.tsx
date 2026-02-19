@@ -31,7 +31,7 @@ const userAcquisitionData = [
 export function ChartsSection() {
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
-      <Card className="bg-[#1E1E1E] border-[#333333] p-4 md:p-6 hover:shadow-lg hover:shadow-[#007BFF]/10 transition-all duration-300">
+      <Card className="bg-card border-border p-4 md:p-6 hover:shadow-lg hover:shadow-[#007BFF]/10 transition-all duration-300">
         <h2 className="text-lg md:text-xl font-semibold text-[#007BFF] mb-4 md:mb-6 text-balance">
           Receita Mensal (Últimos 6 Meses)
         </h2>
@@ -42,24 +42,24 @@ export function ChartsSection() {
                 dataKey="month"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: '#E0E0E0', fontSize: 11 }}
+                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
               />
               <YAxis
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: '#E0E0E0', fontSize: 11 }}
-                tickFormatter={(value: any) => `R$ ${value}`}
+                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
+                tickFormatter={(value: number) => `R$ ${value}`}
                 width={60}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#1E1E1E',
-                  border: '1px solid #333333',
+                  backgroundColor: 'hsl(var(--card))',
+                  border: '1px solid hsl(var(--border))',
                   borderRadius: '8px',
-                  color: '#E0E0E0',
+                  color: 'hsl(var(--foreground))',
                   fontSize: '12px'
                 }}
-                formatter={(value: any) => [`R$ ${value}`, 'Receita']}
+                formatter={(value: number) => [`R$ ${value}`, 'Receita']}
               />
               <Line
                 type="monotone"
@@ -79,7 +79,7 @@ export function ChartsSection() {
         </div>
       </Card>
 
-      <Card className="bg-[#1E1E1E] border-[#333333] p-4 md:p-6 hover:shadow-lg hover:shadow-[#007BFF]/10 transition-all duration-300">
+      <Card className="bg-card border-border p-4 md:p-6 hover:shadow-lg hover:shadow-[#007BFF]/10 transition-all duration-300">
         <h2 className="text-lg md:text-xl font-semibold text-[#007BFF] mb-4 md:mb-6 text-balance">
           Novos Utilizadores vs. Cancelamentos (Mês)
         </h2>
@@ -90,20 +90,20 @@ export function ChartsSection() {
                 dataKey="month"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: '#E0E0E0', fontSize: 11 }}
+                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
               />
               <YAxis
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: '#E0E0E0', fontSize: 11 }}
+                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
                 width={30}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#1E1E1E',
-                  border: '1px solid #333333',
+                  backgroundColor: 'hsl(var(--card))',
+                  border: '1px solid hsl(var(--border))',
                   borderRadius: '8px',
-                  color: '#E0E0E0',
+                  color: 'hsl(var(--foreground))',
                   fontSize: '12px'
                 }}
               />

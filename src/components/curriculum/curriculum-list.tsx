@@ -8,8 +8,8 @@ import { Badge } from '../ui/badge'
 
 interface CurriculumListProps {
   curriculums: Curriculum[] | undefined
-  selectedId: string | null
-  onSelect: (id: string) => void
+  selectedId: number | null
+  onSelect: (id: number) => void
   onCreateNew: () => void
 }
 
@@ -20,9 +20,9 @@ export function CurriculumList({
   onCreateNew
 }: CurriculumListProps) {
   const { mutate: setActive, isPending } = useSetActiveCurriculum()
-  const [activatingId, setActivatingId] = useState<string | null>(null)
+  const [activatingId, setActivatingId] = useState<number | null>(null)
 
-  const handleSetActive = (e: React.MouseEvent, id: string) => {
+  const handleSetActive = (e: React.MouseEvent, id: number) => {
     e.stopPropagation()
     setActivatingId(id)
     setActive(id, {

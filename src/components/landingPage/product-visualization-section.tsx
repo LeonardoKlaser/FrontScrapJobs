@@ -56,7 +56,12 @@ export function ProductVisualizationSection() {
                     </ul>
                   </div>
 
-                  <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+                  <Button
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                    onClick={() =>
+                      document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
+                    }
+                  >
                     Candidatar-se Agora
                   </Button>
                 </div>

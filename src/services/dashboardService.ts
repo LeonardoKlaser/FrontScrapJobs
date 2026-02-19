@@ -2,7 +2,7 @@ import { api } from './api'
 import axios from 'axios'
 import type { DashboardData } from '@/models/dashboard'
 
-export const DashboardService = {
+export const dashboardService = {
   getDashboardData: async (): Promise<DashboardData> => {
     try {
       const { data } = await api.get('/api/dashboard')

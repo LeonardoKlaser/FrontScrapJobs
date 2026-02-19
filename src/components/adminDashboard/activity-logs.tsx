@@ -30,21 +30,21 @@ const errorLogs = [
 
 export function ActivityLogs() {
   return (
-    <Card className="bg-[#1E1E1E] border-[#333333] p-4 md:p-6 hover:shadow-lg hover:shadow-[#007BFF]/10 transition-all duration-300">
+    <Card className="bg-card border-border p-4 md:p-6 hover:shadow-lg hover:shadow-[#007BFF]/10 transition-all duration-300">
       <h2 className="text-lg md:text-xl font-semibold text-[#007BFF] mb-4 md:mb-6">
         Últimos Erros de Scraping
       </h2>
       <div className="overflow-x-auto">
         <table className="w-full min-w-[500px]">
           <thead>
-            <tr className="border-b border-[#333333]">
-              <th className="text-left py-3 px-2 md:px-4 text-[#E0E0E0] font-medium text-sm">
+            <tr className="border-b border-border">
+              <th className="text-left py-3 px-2 md:px-4 text-muted-foreground font-medium text-sm">
                 Horário
               </th>
-              <th className="text-left py-3 px-2 md:px-4 text-[#E0E0E0] font-medium text-sm">
+              <th className="text-left py-3 px-2 md:px-4 text-muted-foreground font-medium text-sm">
                 Nome do Site
               </th>
-              <th className="text-left py-3 px-2 md:px-4 text-[#E0E0E0] font-medium text-sm">
+              <th className="text-left py-3 px-2 md:px-4 text-muted-foreground font-medium text-sm">
                 Tipo de Erro
               </th>
             </tr>
@@ -53,11 +53,13 @@ export function ActivityLogs() {
             {errorLogs.map((log, index) => (
               <tr
                 key={index}
-                className="border-b border-[#333333] hover:bg-[#2A2A2A] transition-colors duration-200"
+                className="border-b border-border hover:bg-muted transition-colors duration-200"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <td className="py-3 px-2 md:px-4 text-[#E0E0E0] text-sm font-mono">{log.time}</td>
-                <td className="py-3 px-2 md:px-4 text-[#E0E0E0] text-sm font-medium">{log.site}</td>
+                <td className="py-3 px-2 md:px-4 text-foreground text-sm font-mono">{log.time}</td>
+                <td className="py-3 px-2 md:px-4 text-foreground text-sm font-medium">
+                  {log.site}
+                </td>
                 <td className="py-3 px-2 md:px-4 text-[#ff4444] text-sm">{log.error}</td>
               </tr>
             ))}

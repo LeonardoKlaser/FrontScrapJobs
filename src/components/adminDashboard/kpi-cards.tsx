@@ -17,16 +17,16 @@ function KPICard({ title, value, subtitle, icon, trend = 'neutral', delay = '0s'
       ? 'text-[#39ff14]'
       : trend === 'negative'
         ? 'text-[#ff4444]'
-        : 'text-[#E0E0E0]'
+        : 'text-foreground'
 
   return (
     <Card
-      className="bg-[#1E1E1E] border-[#333333] p-4 md:p-6 hover:shadow-lg hover:shadow-[#007BFF]/20 hover:border-[#007BFF]/30 transition-all duration-300 group cursor-pointer transform hover:scale-105"
+      className="bg-card border-border p-4 md:p-6 hover:shadow-lg hover:shadow-[#007BFF]/20 hover:border-[#007BFF]/30 transition-all duration-300 group cursor-pointer transform hover:scale-105"
       style={{ animationDelay: delay }}
     >
       <div className="flex items-start justify-between">
         <div className="space-y-2 flex-1 min-w-0">
-          <p className="text-[#E0E0E0] text-xs md:text-sm font-medium truncate">{title}</p>
+          <p className="text-muted-foreground text-xs md:text-sm font-medium truncate">{title}</p>
           <p className="text-xl md:text-2xl lg:text-3xl font-bold text-[#007BFF] group-hover:text-[#0056b3] transition-colors">
             {value}
           </p>

@@ -1,9 +1,9 @@
 export interface SiteCareer {
-  SiteId: number
-  SiteName: string
-  BaseURL: string
-  LogoURL: string
-  IsSubscribed: boolean
+  site_id: number
+  site_name: string
+  base_url: string
+  logo_url: string
+  is_subscribed: boolean
 }
 
 export interface UserSiteRequest {

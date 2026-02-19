@@ -9,8 +9,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { PlusCircle, Trash2, Loader2 } from 'lucide-react'
 import type { Curriculum, Experience, Education } from '@/models/curriculum'
-import { curriculoService } from '@/services/curriculumService'
+import { curriculumService } from '@/services/curriculumService'
 import { useUpdateCurriculum } from '@/hooks/useCurriculum'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface CurriculumFormProps {
   curriculum?: Curriculum
@@ -35,6 +36,7 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
   const [skillInput, setSkillInput] = useState('')
   const [languageInput, setLanguageInput] = useState('')
   const { mutate: updateCurriculum, isPending: isUpdating } = useUpdateCurriculum()
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     if (curriculum) {
@@ -58,7 +60,8 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
       if (isEditing && curriculum) {
         updateCurriculum({ ...formData, id: curriculum.id })
       } else {
-        await curriculoService.newCurriculum(formData)
+        await curriculumService.newCurriculum(formData)
+        queryClient.invalidateQueries({ queryKey: ['curriculumList'] })
       }
     } finally {
       setIsSaving(false)

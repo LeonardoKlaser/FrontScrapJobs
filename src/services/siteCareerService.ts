@@ -25,7 +25,7 @@ export interface SiteConfigFormData {
   json_data_mappings: string
 }
 
-export const SiteCareerService = {
+export const siteCareerService = {
   getAllSiteCareer: async (): Promise<SiteCareer[]> => {
     const { data } = await api.get('/api/getSites')
     return data

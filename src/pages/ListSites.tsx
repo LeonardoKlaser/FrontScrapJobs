@@ -6,11 +6,11 @@ import { Label } from '@/components/ui/label'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { RegistrationModal } from '@/components/companyPopup'
 import { useSiteCareer } from '@/hooks/useSiteCareer'
-import { Badge } from '@/components/ui/badge'
 import { useRequestSite } from '@/hooks/useRequestSite'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import type { SiteCareer } from '@/models/siteCareer'
 import { useRegisterUserSite, useUnregisterUserSite } from '@/hooks/useRegisterUserSite'
+import { useUser } from '@/hooks/useUser'
 
 export default function EmpresasPage() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -18,6 +18,7 @@ export default function EmpresasPage() {
   const [selectedCompany, setSelectedCompany] = useState<SiteCareer>()
   const [isPopupOpen, setPopupOpen] = useState(false)
   const { data } = useSiteCareer()
+  const { data: user } = useUser()
   const [filter, setFilter] = useState('all')
   const { mutate: requestSite, isPending, isSuccess, isError, error } = useRequestSite()
   const { mutate: registerUserToSite, isPending: isRegisteringUser } = useRegisterUserSite()
@@ -25,13 +26,20 @@ export default function EmpresasPage() {
 
   const filteredCompanies = useMemo(() => {
     return data
-      ?.filter((company) => company.SiteName.toLowerCase().includes(searchTerm.toLowerCase()))
+      ?.filter((company) => company.site_name.toLowerCase().includes(searchTerm.toLowerCase()))
       .filter((company) => {
-        if (filter === 'subscribed') return company.IsSubscribed
-        if (filter === 'not_subscribed') return !company.IsSubscribed
+        if (filter === 'subscribed') return company.is_subscribed
+        if (filter === 'not_subscribed') return !company.is_subscribed
         return true
       })
   }, [searchTerm, data, filter])
+
+  const subscribedCount = useMemo(() => {
+    return data?.filter((company) => company.is_subscribed).length ?? 0
+  }, [data])
+
+  const maxSites = user?.plan?.max_sites ?? 3
+  const remainingSlots = Math.max(0, maxSites - subscribedCount)
 
   const handleCompanyClick = (company: SiteCareer) => {
     setSelectedCompany(company)
@@ -53,7 +61,7 @@ export default function EmpresasPage() {
     if (!selectedCompany) return
 
     const requestData = {
-      site_id: selectedCompany.SiteId,
+      site_id: selectedCompany.site_id,
       target_words: targetWords
     }
 
@@ -66,7 +74,7 @@ export default function EmpresasPage() {
 
   const handleUnregister = () => {
     if (selectedCompany) {
-      unregisterUser(selectedCompany.SiteId, {
+      unregisterUser(selectedCompany.site_id, {
         onSuccess: () => {
           setPopupOpen(false)
         }
@@ -78,10 +86,10 @@ export default function EmpresasPage() {
     <div className="scrapjobs-theme min-h-screen">
       <section className="py-20 px-4">
         <div className="container mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-[#e0e0e0] mb-6 fade-in text-balance">
+          <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 fade-in text-balance">
             Monitore as Empresas dos Seus Sonhos
           </h1>
-          <p className="text-xl text-[#e0e0e0] max-w-4xl mx-auto leading-relaxed fade-in text-pretty">
+          <p className="text-xl text-foreground max-w-4xl mx-auto leading-relaxed fade-in text-pretty">
             Nossa plataforma monitora 24/7 as páginas de carreira das maiores empresas do mercado.
             Deixe o trabalho duro conosco e nunca mais perca uma oportunidade.
           </p>
@@ -92,34 +100,30 @@ export default function EmpresasPage() {
         <div className="container mx-auto">
           <div className="max-w-md mx-auto mb-12">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#e0e0e0] h-5 w-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-foreground h-5 w-5" />
               <Input
                 type="text"
                 placeholder="Buscar por uma empresa..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-[#1e1e1e] border-[#333333] text-[#e0e0e0] placeholder:text-[#e0e0e0]/60 focus:border-[#007bff] focus:ring-[#007bff]"
+                className="pl-10 bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-[#007bff] focus:ring-[#007bff]"
               />
             </div>
-            <div className="flex items-center justify-center mb-8" />
-            <div className="bg-card border border-border rounded-lg p-1 flex">
+            <div className="bg-card border border-border rounded-lg p-1 flex mt-4">
               <button
                 onClick={() => setFilter('all')}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-all relative ${
-                  filter == 'all'
+                  filter === 'all'
                     ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 Todas
-                {filter == 'all' && (
-                  <Badge className="absolute -top-2 -right-2 bg-success text-success-foreground text-xs" />
-                )}
               </button>
               <button
                 onClick={() => setFilter('subscribed')}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                  filter == 'subscribed'
+                  filter === 'subscribed'
                     ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
@@ -129,22 +133,19 @@ export default function EmpresasPage() {
               <button
                 onClick={() => setFilter('not_subscribed')}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-all relative ${
-                  filter == 'not_subscribed'
+                  filter === 'not_subscribed'
                     ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 Não inscrito
-                {filter == 'not_subscribed' && (
-                  <Badge className="absolute -top-2 -right-2 bg-success text-success-foreground text-xs" />
-                )}
               </button>
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {filteredCompanies?.map((company, index) => (
               <Card
-                key={company.SiteId}
+                key={company.site_id}
                 className="scrapjobs-card company-card-hover p-6 text-center cursor-pointer fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
                 onClick={() => handleCompanyClick(company)}
@@ -152,12 +153,12 @@ export default function EmpresasPage() {
                 <div className="flex flex-col items-center space-y-4">
                   <div className="w-20 h-20 flex items-center justify-center">
                     <img
-                      src={company.LogoURL || '/placeholder.svg'}
-                      alt={`${company.SiteName} logo`}
+                      src={company.logo_url || '/placeholder.svg'}
+                      alt={`${company.site_name} logo`}
                       className="max-w-full max-h-full object-contain"
                     />
                   </div>
-                  <h3 className="text-[#e0e0e0] font-semibold text-sm">{company.SiteName}</h3>
+                  <h3 className="text-foreground font-semibold text-sm">{company.site_name}</h3>
                 </div>
               </Card>
             ))}
@@ -165,7 +166,7 @@ export default function EmpresasPage() {
 
           {filteredCompanies?.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-[#e0e0e0]/60 text-lg">
+              <p className="text-muted-foreground text-lg">
                 Nenhuma empresa encontrada para "{searchTerm}"
               </p>
             </div>
@@ -232,18 +233,20 @@ export default function EmpresasPage() {
         </div>
       </section>
 
-      <footer className="border-t border-[#333333] bg-[#121212] py-8">
+      <footer className="border-t border-border bg-background py-8">
         <div className="container mx-auto px-4 text-center">
-          <p className="text-[#e0e0e0]/60">© 2025 ScrapJobs. Todos os direitos reservados.</p>
+          <p className="text-muted-foreground">
+            © {new Date().getFullYear()} ScrapJobs. Todos os direitos reservados.
+          </p>
         </div>
       </footer>
       <RegistrationModal
         isOpen={isPopupOpen}
         onClose={() => setPopupOpen(false)}
-        companyName={selectedCompany?.SiteName}
-        companyLogo={selectedCompany?.LogoURL}
-        remainingSlots={1}
-        isAlreadyRegistered={selectedCompany?.IsSubscribed}
+        companyName={selectedCompany?.site_name}
+        companyLogo={selectedCompany?.logo_url}
+        remainingSlots={remainingSlots}
+        isAlreadyRegistered={selectedCompany?.is_subscribed}
         isLoading={isRegisteringUser}
         onRegister={handleRegister}
         onUnRegister={handleUnregister}

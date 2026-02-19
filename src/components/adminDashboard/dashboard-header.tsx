@@ -13,19 +13,19 @@ export function DashboardHeader() {
         Dashboard de Monitorização
       </h1>
       <div className="flex items-center gap-2">
-        <span className="text-[#E0E0E0] text-sm">Período:</span>
+        <span className="text-foreground text-sm">Período:</span>
         <Select defaultValue="7days">
-          <SelectTrigger className="w-40 bg-[#1E1E1E] border-[#333333] text-white hover:bg-[#2A2A2A] transition-colors">
+          <SelectTrigger className="w-40 bg-card border-border text-foreground hover:bg-muted transition-colors">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="bg-[#1E1E1E] border-[#333333]">
-            <SelectItem value="24h" className="text-white hover:bg-[#333333] focus:bg-[#333333]">
+          <SelectContent className="bg-card border-border">
+            <SelectItem value="24h" className="text-foreground hover:bg-muted focus:bg-muted">
               Últimas 24h
             </SelectItem>
-            <SelectItem value="7days" className="text-white hover:bg-[#333333] focus:bg-[#333333]">
+            <SelectItem value="7days" className="text-foreground hover:bg-muted focus:bg-muted">
               Últimos 7 dias
             </SelectItem>
-            <SelectItem value="month" className="text-white hover:bg-[#333333] focus:bg-[#333333]">
+            <SelectItem value="month" className="text-foreground hover:bg-muted focus:bg-muted">
               Este Mês
             </SelectItem>
           </SelectContent>

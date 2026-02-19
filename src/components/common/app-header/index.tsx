@@ -25,9 +25,8 @@ export function AppHeader() {
   const { data: user, isLoading } = useUser()
   const { logout } = useAuth()
 
-  const handleLogout = () => {
-    logout()
-    window.location.reload()
+  const handleLogout = async () => {
+    await logout()
   }
 
   return (

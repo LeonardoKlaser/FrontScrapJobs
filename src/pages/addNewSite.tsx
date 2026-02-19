@@ -82,15 +82,16 @@ export default function AdicionarSitePage() {
     }
   }
 
+  const [validationError, setValidationError] = useState<string | null>(null)
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setValidationError(null)
 
     if (!formData.site_name || !formData.base_url) {
-      alert('Por favor, preencha os campos obrigatórios: Nome do Site e URL Base.')
+      setValidationError('Por favor, preencha os campos obrigatórios: Nome do Site e URL Base.')
       return
     }
-    console.log(formData)
-    console.log(logoFile)
     addSite({ formData, logoFile })
   }
 
@@ -107,6 +108,12 @@ export default function AdicionarSitePage() {
       <main className="container mx-auto px-6 py-8">
         <div className="max-w-4xl mx-auto">
           <form onSubmit={handleSubmit} className="space-y-8">
+            {validationError && (
+              <Alert className="border-destructive bg-destructive/10">
+                <XCircle className="h-4 w-4 text-destructive" />
+                <AlertDescription className="text-destructive">{validationError}</AlertDescription>
+              </Alert>
+            )}
             {isSuccess && (
               <Alert className="border-success bg-success/10">
                 <CheckCircle className="h-4 w-4 text-success" />

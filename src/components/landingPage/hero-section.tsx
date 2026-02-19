@@ -27,12 +27,14 @@ export function HeroSection() {
           </p>
 
           <div className="animate-fade-in-up">
-            <Button
-              size="lg"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg font-medium rounded-lg transition-all duration-200 hover:scale-105 animate-pulse-glow"
-            >
-              Iniciar Meu Teste Gratuito
-            </Button>
+            <a href="#pricing">
+              <Button
+                size="lg"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg font-medium rounded-lg transition-all duration-200 hover:scale-105 animate-pulse-glow"
+              >
+                Iniciar Meu Teste Gratuito
+              </Button>
+            </a>
           </div>
 
           <div className="mt-16 relative">

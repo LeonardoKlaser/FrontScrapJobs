@@ -1,23 +1,19 @@
 import { redirect } from 'react-router'
-import { PATHS } from '../paths'
 import type { QueryClient } from '@tanstack/react-query'
 import { authService } from '@/services/authService'
-import type { User } from '@/models/user'
 
-export const authLoader = (queryClient: QueryClient) => async () => {
-  try {
-    const user = queryClient.getQueryData<User>(['user'])
-
-    if (user) {
+export function authLoader(queryClient: QueryClient) {
+  return async ({ request }: { request: Request }) => {
+    const url = new URL(request.url)
+    try {
+      const user = await queryClient.fetchQuery({
+        queryKey: ['user'],
+        queryFn: () => authService.getMe(),
+        staleTime: 5 * 60 * 1000 // 5 minutes
+      })
       return user
+    } catch {
+      return redirect(`/login?from=${url.pathname}`)
     }
-
-    const freshUser = await authService.getMe()
-    queryClient.setQueryData(['user'], freshUser)
-
-    return freshUser
-  } catch {
-    const url = new URL(window.location.href)
-    throw redirect(`${PATHS.login}?from=${encodeURIComponent(url.pathname + url.search)}`)
   }
 }

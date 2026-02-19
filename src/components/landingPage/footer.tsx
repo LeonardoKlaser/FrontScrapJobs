@@ -23,7 +23,7 @@ export function Footer() {
           </div>
 
           <p className="text-sm text-muted-foreground">
-            © 2025 scrapJobs. Todos os direitos reservados.
+            © {new Date().getFullYear()} scrapJobs. Todos os direitos reservados.
           </p>
         </div>
       </div>

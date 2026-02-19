@@ -13,7 +13,7 @@ export interface Education {
 }
 
 export interface Curriculum {
-  id: string
+  id: number
   title: string
   is_active: boolean
   summary: string

@@ -19,8 +19,8 @@ export function useAuth() {
       try {
         await authService.login(data)
         await queryClient.invalidateQueries({ queryKey: ['user'] })
-        const redirectTo = searchParams.get('from') || PATHS.app.home
-        navigate(redirectTo)
+        const redirectTo = searchParams.get('from')
+        navigate(redirectTo && redirectTo.startsWith('/app') ? redirectTo : PATHS.app.home)
         return true
       } catch (e: unknown) {
         if (e instanceof Error) {

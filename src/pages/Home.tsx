@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { FileText, Globe, BellRing, AlertTriangle, Plus, Loader2, Bot } from 'lucide-react'
+import { useNavigate } from 'react-router'
+import { FileText, Globe, BellRing, Plus, Loader2, Bot } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
@@ -12,6 +13,7 @@ import {
 } from '@/components/ui/table'
 import { useDashboard } from '@/hooks/useDashboard'
 import { AnalysisDialog } from '@/components/analysis/analysis-dialog'
+import { PATHS } from '@/router/paths'
 
 function StatsCard({
   title,
@@ -34,6 +36,7 @@ function StatsCard({
 export function Home() {
   const { data, isLoading, isError, error } = useDashboard()
   const [selectedJobId, setSelectedJobId] = useState<number | null>(null)
+  const navigate = useNavigate()
 
   if (isLoading) {
     return (
@@ -67,8 +70,7 @@ export function Home() {
       title: 'Alertas enviados',
       value: data?.alerts_sent_count ?? 0,
       icon: BellRing
-    },
-    { title: 'Falhas de scraping', value: 0, icon: AlertTriangle }
+    }
   ]
 
   const latestJobs = data?.latest_jobs || []
@@ -136,7 +138,12 @@ export function Home() {
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">Suas URLs monitoradas</h2>
-          <Button size="sm" variant="outline" className="gap-1">
+          <Button
+            size="sm"
+            variant="outline"
+            className="gap-1"
+            onClick={() => navigate(PATHS.app.listSites)}
+          >
             <Plus className="h-4 w-4" /> Nova URL
           </Button>
         </div>
@@ -156,7 +163,7 @@ export function Home() {
               </TableHeader>
               <TableBody>
                 {monitoredUrls.map((url) => (
-                  <TableRow key={url.site_name}>
+                  <TableRow key={url.site_name + url.base_url}>
                     <TableCell>{url.site_name}</TableCell>
                     <TableCell className="max-w-xs truncate">
                       <a

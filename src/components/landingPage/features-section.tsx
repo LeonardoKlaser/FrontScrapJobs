@@ -1,4 +1,4 @@
-import { Clock, BarChart3, Mail, Infinity } from 'lucide-react'
+import { Clock, BarChart3, Mail, Infinity as InfinityIcon } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 
 export function FeaturesSection() {
@@ -23,7 +23,7 @@ export function FeaturesSection() {
       highlight: false
     },
     {
-      icon: Infinity,
+      icon: InfinityIcon,
       title: 'Monitoramento Ilimitado',
       description: 'Acompanhe todas as empresas da sua lista de desejos, sem restrições.',
       highlight: false

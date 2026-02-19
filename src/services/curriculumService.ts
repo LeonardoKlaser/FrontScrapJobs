@@ -2,7 +2,7 @@ import { api } from './api'
 import axios from 'axios'
 import type { Curriculum } from '@/models/curriculum'
 
-export const curriculoService = {
+export const curriculumService = {
   getCurriculums: async (): Promise<Curriculum[]> => {
     try {
       const { data } = await api.get('/curriculum')
@@ -41,7 +41,7 @@ export const curriculoService = {
     }
   },
 
-  setActiveCurriculum: async (curriculumId: string): Promise<void> => {
+  setActiveCurriculum: async (curriculumId: number): Promise<void> => {
     try {
       await api.patch(`/curriculum/${curriculumId}/active`)
     } catch (error) {

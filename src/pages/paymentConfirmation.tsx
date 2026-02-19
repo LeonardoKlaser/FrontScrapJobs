@@ -1,14 +1,13 @@
 import { useNavigate, useSearchParams } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { CheckCircle2 } from 'lucide-react'
-import { useMemo } from 'react'
 import { PATHS } from '@/router/paths'
 
 export default function PaymentConfirmationPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
 
-  const planName = useMemo(() => searchParams.get('plan') || 'Premium', [searchParams])
+  const planName = searchParams.get('plan') || 'seu plano'
 
   const handleDashboardClick = () => {
     navigate(PATHS.app.home)

@@ -1,3 +1,4 @@
+import React, { Suspense } from 'react'
 import { createBrowserRouter } from 'react-router'
 
 import { MainLayout } from '@/layouts/MainLayout'
@@ -11,11 +12,14 @@ import { PATHS } from './paths'
 
 import type { QueryClient } from '@tanstack/react-query'
 import EmpresasPage from '@/pages/ListSites'
-import AdminDashboard from '@/pages/adminDashboard'
 import AdicionarSitePage from '@/pages/addNewSite'
 import AccountPage from '@/pages/accountPage'
 import CheckoutPage from '@/pages/checkout'
 import PaymentConfirmationPage from '@/pages/paymentConfirmation'
+import { Spinner } from '@/components/ui/spinner'
+import { useUser } from '@/hooks/useUser'
+
+const AdminDashboard = React.lazy(() => import('@/pages/adminDashboard'))
 
 const curriculumLazy = async () => {
   const { Curriculum } = await import('@/pages/Curriculum')
@@ -23,6 +27,21 @@ const curriculumLazy = async () => {
   return {
     element: <Curriculum />
   }
+}
+
+// TODO: Admin guard needs backend support. The backend currently checks ADMIN_EMAIL
+// server-side but does not expose `is_admin` in the user response.
+// Once the backend sends `is_admin`, uncomment the role check below.
+function AdminGuard({ children }: { children: React.ReactNode }) {
+  const user = useUser()
+  if (user.isLoading)
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Spinner className="size-8" />
+      </div>
+    )
+  // if (!user.data?.is_admin) return <Navigate to={PATHS.app.home} replace />
+  return <>{children}</>
 }
 
 export const createRouter = (queryClient: QueryClient) =>
@@ -59,11 +78,27 @@ export const createRouter = (queryClient: QueryClient) =>
         },
         {
           path: PATHS.app.adminDashboard,
-          element: <AdminDashboard />
+          element: (
+            <AdminGuard>
+              <Suspense
+                fallback={
+                  <div className="flex items-center justify-center min-h-screen">
+                    <Spinner className="size-8" />
+                  </div>
+                }
+              >
+                <AdminDashboard />
+              </Suspense>
+            </AdminGuard>
+          )
         },
         {
           path: PATHS.app.addNewSite,
-          element: <AdicionarSitePage />
+          element: (
+            <AdminGuard>
+              <AdicionarSitePage />
+            </AdminGuard>
+          )
         },
         {
           path: PATHS.app.accountPage,
