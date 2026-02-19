@@ -1,15 +1,13 @@
-import { Button } from "@/components/ui/button"
-import { Zap } from "lucide-react"
+import { Button } from '@/components/ui/button'
+import { Zap } from 'lucide-react'
 
 export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
-
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
 
       <div className="container mx-auto text-center relative z-10">
         <div className="max-w-4xl mx-auto space-y-8">
-          
           <div className="flex items-center justify-center mb-12">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
@@ -24,8 +22,8 @@ export function HeroSection() {
           </h1>
 
           <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in-up text-pretty">
-            Automatize sua busca de emprego nas melhores empresas e receba insights de IA para seu currículo se
-            destacar.
+            Automatize sua busca de emprego nas melhores empresas e receba insights de IA para seu
+            currículo se destacar.
           </p>
 
           <div className="animate-fade-in-up">

@@ -1,19 +1,16 @@
-import { useNavigate, useSearchParams } from "react-router"
-import { Button } from "@/components/ui/button"
-import { CheckCircle2 } from "lucide-react"
-import { useMemo } from "react"
+import { useNavigate, useSearchParams } from 'react-router'
+import { Button } from '@/components/ui/button'
+import { CheckCircle2 } from 'lucide-react'
+import { useMemo } from 'react'
 
 export default function PaymentConfirmationPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
 
-  const planName = useMemo(
-    () => searchParams.get("plan") || "Premium",
-    [searchParams]
-  )
+  const planName = useMemo(() => searchParams.get('plan') || 'Premium', [searchParams])
 
   const handleDashboardClick = () => {
-    navigate("/app")
+    navigate('/app')
   }
 
   return (
@@ -31,13 +28,15 @@ export default function PaymentConfirmationPage() {
           <h1 className="text-4xl font-bold text-slate-900">Pagamento Confirmado!</h1>
 
           <p className="text-lg text-slate-600 leading-relaxed">
-            Obrigado por assinar o plano <span className="font-semibold text-slate-900">{planName}</span>! Sua jornada
-            para automatizar a busca de empregos começou.
+            Obrigado por assinar o plano{' '}
+            <span className="font-semibold text-slate-900">{planName}</span>! Sua jornada para
+            automatizar a busca de empregos começou.
           </p>
 
           <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
             <p className="text-sm text-slate-600">
-              Um e-mail de confirmação foi enviado para sua caixa de entrada. Verifique seu e-mail para mais detalhes.
+              Um e-mail de confirmação foi enviado para sua caixa de entrada. Verifique seu e-mail
+              para mais detalhes.
             </p>
           </div>
 

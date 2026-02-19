@@ -1,19 +1,23 @@
-import type React from "react"
-import { Card } from "@/components/ui/card"
-import { TrendingUp, Users, Globe, AlertTriangle } from "lucide-react"
+import type React from 'react'
+import { Card } from '@/components/ui/card'
+import { TrendingUp, Users, Globe, AlertTriangle } from 'lucide-react'
 
 interface KPICardProps {
   title: string
   value: string
   subtitle: string
   icon: React.ReactNode
-  trend?: "positive" | "negative" | "neutral"
+  trend?: 'positive' | 'negative' | 'neutral'
   delay?: string
 }
 
-function KPICard({ title, value, subtitle, icon, trend = "neutral", delay = "0s" }: KPICardProps) {
+function KPICard({ title, value, subtitle, icon, trend = 'neutral', delay = '0s' }: KPICardProps) {
   const trendColor =
-    trend === "positive" ? "text-[#39ff14]" : trend === "negative" ? "text-[#ff4444]" : "text-[#E0E0E0]"
+    trend === 'positive'
+      ? 'text-[#39ff14]'
+      : trend === 'negative'
+        ? 'text-[#ff4444]'
+        : 'text-[#E0E0E0]'
 
   return (
     <Card
@@ -28,7 +32,9 @@ function KPICard({ title, value, subtitle, icon, trend = "neutral", delay = "0s"
           </p>
           <p className={`text-xs md:text-sm ${trendColor} leading-tight`}>{subtitle}</p>
         </div>
-        <div className="text-[#007BFF] opacity-60 group-hover:opacity-100 transition-opacity ml-2">{icon}</div>
+        <div className="text-[#007BFF] opacity-60 group-hover:opacity-100 transition-opacity ml-2">
+          {icon}
+        </div>
       </div>
     </Card>
   )

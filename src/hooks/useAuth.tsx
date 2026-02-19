@@ -12,45 +12,51 @@ export function useAuth() {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
-  const login = useCallback(async (data: LoginInput): Promise<boolean> => {
-    setLoading(true)
-    setError(null)
-    try {
-      await authService.login(data)
-      await queryClient.invalidateQueries({ queryKey: ['user'] })
-      navigate(PATHS.app.home)
-      return true
-    } catch (e: unknown) {
-      if (e instanceof Error) {
-        setError(e.message)
-      } else {
-        setError('Erro inesperado')
+  const login = useCallback(
+    async (data: LoginInput): Promise<boolean> => {
+      setLoading(true)
+      setError(null)
+      try {
+        await authService.login(data)
+        await queryClient.invalidateQueries({ queryKey: ['user'] })
+        navigate(PATHS.app.home)
+        return true
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          setError(e.message)
+        } else {
+          setError('Erro inesperado')
+        }
+        return false
+      } finally {
+        setLoading(false)
       }
-      return false
-    } finally {
-      setLoading(false)
-    }
-  }, [queryClient, navigate])
+    },
+    [queryClient, navigate]
+  )
 
-  const register = useCallback(async (data: RegisterInput): Promise<boolean> => {
-    setLoading(true)
-    setError(null)
-    try {
-      await authService.register(data)
-      await queryClient.invalidateQueries({ queryKey: ['user'] })
-      navigate(PATHS.app.home)
-      return true
-    } catch (e: unknown) {
-      if (e instanceof Error) {
-        setError(e.message)
-      } else {
-        setError('Erro inesperado')
+  const register = useCallback(
+    async (data: RegisterInput): Promise<boolean> => {
+      setLoading(true)
+      setError(null)
+      try {
+        await authService.register(data)
+        await queryClient.invalidateQueries({ queryKey: ['user'] })
+        navigate(PATHS.app.home)
+        return true
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          setError(e.message)
+        } else {
+          setError('Erro inesperado')
+        }
+        return false
+      } finally {
+        setLoading(false)
       }
-      return false
-    } finally {
-      setLoading(false)
-    }
-  }, [queryClient, navigate])
+    },
+    [queryClient, navigate]
+  )
 
   const logout = useCallback(async () => {
     try {

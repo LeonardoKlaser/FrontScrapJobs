@@ -18,8 +18,6 @@ export const authLoader = (queryClient: QueryClient) => async () => {
     return freshUser
   } catch {
     const url = new URL(window.location.href)
-    throw redirect(
-      `${PATHS.login}?from=${encodeURIComponent(url.pathname + url.search)}`
-    )
+    throw redirect(`${PATHS.login}?from=${encodeURIComponent(url.pathname + url.search)}`)
   }
 }

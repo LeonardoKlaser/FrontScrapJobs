@@ -1,7 +1,7 @@
-import { useState } from "react"
-import { CurriculumList } from "@/components/curriculum/curriculum-list"
-import { CurriculumForm } from "@/components/curriculum/curriculum-form"
-import { useCurriculum } from "@/hooks/useCurriculum"
+import { useState } from 'react'
+import { CurriculumList } from '@/components/curriculum/curriculum-list'
+import { CurriculumForm } from '@/components/curriculum/curriculum-form'
+import { useCurriculum } from '@/hooks/useCurriculum'
 
 export function Curriculum() {
   const { data: curriculums } = useCurriculum()
@@ -22,12 +22,17 @@ export function Curriculum() {
       <div className="container mx-auto p-6">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">Gerenciador de Currículos</h1>
-          <p className="text-muted-foreground">Crie e gerencie múltiplos currículos para diferentes oportunidades</p>
+          <p className="text-muted-foreground">
+            Crie e gerencie múltiplos currículos para diferentes oportunidades
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6">
           <div className="order-2 lg:order-1">
-            <CurriculumForm curriculum={selectedCurriculum} isEditing={selectedCurriculumId !== null} />
+            <CurriculumForm
+              curriculum={selectedCurriculum}
+              isEditing={selectedCurriculumId !== null}
+            />
           </div>
 
           {/* Right Column - List (30%) */}

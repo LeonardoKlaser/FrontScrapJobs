@@ -1,28 +1,33 @@
-import { Button } from "@/components/ui/button"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Button } from '@/components/ui/button'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@/components/ui/accordion'
 
 export function FaqSection() {
   const faqs = [
     {
-      question: "Meus dados de currículo estão seguros?",
+      question: 'Meus dados de currículo estão seguros?',
       answer:
-        "Sim, usamos criptografia de ponta a ponta e seguimos as melhores práticas de segurança. Seus dados nunca são compartilhados com terceiros e você tem controle total sobre suas informações.",
+        'Sim, usamos criptografia de ponta a ponta e seguimos as melhores práticas de segurança. Seus dados nunca são compartilhados com terceiros e você tem controle total sobre suas informações.'
     },
     {
-      question: "Como funciona a análise de IA?",
+      question: 'Como funciona a análise de IA?',
       answer:
-        "Nossa IA compara as palavras-chave e requisitos da vaga com as habilidades e experiências do seu currículo, gerando um score de compatibilidade e sugestões personalizadas para melhorar suas chances.",
+        'Nossa IA compara as palavras-chave e requisitos da vaga com as habilidades e experiências do seu currículo, gerando um score de compatibilidade e sugestões personalizadas para melhorar suas chances.'
     },
     {
-      question: "Posso cancelar a qualquer momento?",
+      question: 'Posso cancelar a qualquer momento?',
       answer:
-        "Sim, você pode cancelar sua assinatura a qualquer momento, sem complicações. Não há taxas de cancelamento ou períodos de carência.",
+        'Sim, você pode cancelar sua assinatura a qualquer momento, sem complicações. Não há taxas de cancelamento ou períodos de carência.'
     },
     {
-      question: "Quantas empresas posso monitorar?",
+      question: 'Quantas empresas posso monitorar?',
       answer:
-        "Não há limite! Você pode adicionar quantas empresas quiser à sua lista de monitoramento e receber alertas de todas elas.",
-    },
+        'Não há limite! Você pode adicionar quantas empresas quiser à sua lista de monitoramento e receber alertas de todas elas.'
+    }
   ]
 
   return (
@@ -34,8 +39,8 @@ export function FaqSection() {
               Pronto para Acelerar sua Carreira?
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed text-pretty">
-              Deixe a busca de emprego manual no passado. Concentre sua energia no que realmente importa: preparar-se
-              para as entrevistas e conseguir o emprego dos seus sonhos.
+              Deixe a busca de emprego manual no passado. Concentre sua energia no que realmente
+              importa: preparar-se para as entrevistas e conseguir o emprego dos seus sonhos.
             </p>
             <Button
               size="lg"
@@ -56,7 +61,9 @@ export function FaqSection() {
                   <AccordionTrigger className="text-left font-medium text-foreground hover:no-underline">
                     {faq.question}
                   </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground leading-relaxed">{faq.answer}</AccordionContent>
+                  <AccordionContent className="text-muted-foreground leading-relaxed">
+                    {faq.answer}
+                  </AccordionContent>
                 </AccordionItem>
               ))}
             </Accordion>

@@ -36,8 +36,8 @@ export const createRouter = (queryClient: QueryClient) =>
         { path: PATHS.register, element: <Register /> },
         {
           path: 'checkout/:planId',
-          element: <CheckoutPage/>
-        },
+          element: <CheckoutPage />
+        }
       ]
     },
     {
@@ -68,7 +68,7 @@ export const createRouter = (queryClient: QueryClient) =>
         },
         {
           path: PATHS.app.accountPage,
-          element: <AccountPage/>
+          element: <AccountPage />
         },
         {
           path: 'payment-confirmation', // Nova rota

@@ -1,15 +1,14 @@
-import type React from "react"
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Spinner } from "@/components/ui/spinner"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { AlertCircle, Lock, Eye, EyeOff } from "lucide-react"
-import type { Plan } from "@/models/plan"
-import { api } from "@/services/api"
-
+import type React from 'react'
+import { useState } from 'react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Spinner } from '@/components/ui/spinner'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { AlertCircle, Lock, Eye, EyeOff } from 'lucide-react'
+import type { Plan } from '@/models/plan'
+import { api } from '@/services/api'
 
 interface PaymentFormProps {
   plan: Plan
@@ -22,7 +21,7 @@ interface FormData {
   confirmPassword: string
   cpfCnpj: string
   phone: string
-  paymentMethod: "pix" | "card" | ""
+  paymentMethod: 'pix' | 'card' | ''
 }
 
 interface FormErrors {
@@ -35,40 +34,40 @@ export function PaymentForm({ plan }: PaymentFormProps) {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [errors, setErrors] = useState<FormErrors>({})
   const [formData, setFormData] = useState<FormData>({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    cpfCnpj: "",
-    phone: "",
-    paymentMethod: "",
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    cpfCnpj: '',
+    phone: '',
+    paymentMethod: ''
   })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     let formattedValue = value
 
-    if (name === "cpfCnpj") {
+    if (name === 'cpfCnpj') {
       formattedValue = value
-        .replace(/\D/g, "")
+        .replace(/\D/g, '')
         .slice(0, 14)
-        .replace(/(\d{3})(\d)/, "$1.$2")
-        .replace(/(\d{3})(\d)/, "$1.$2")
-        .replace(/(\d{3})(\d{1,2})$/, "$1-$2")
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
     }
 
-    if (name === "phone") {
+    if (name === 'phone') {
       formattedValue = value
-        .replace(/\D/g, "")
+        .replace(/\D/g, '')
         .slice(0, 11)
-        .replace(/(\d{2})(\d)/, "($1) $2")
-        .replace(/(\d{5})(\d)/, "$1-$2")
+        .replace(/(\d{2})(\d)/, '($1) $2')
+        .replace(/(\d{5})(\d)/, '$1-$2')
     }
 
     setFormData((prev) => ({ ...prev, [name]: formattedValue }))
     // Clear error for this field when user starts typing
     if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }))
+      setErrors((prev) => ({ ...prev, [name]: '' }))
     }
   }
 
@@ -76,49 +75,49 @@ export function PaymentForm({ plan }: PaymentFormProps) {
     const newErrors: FormErrors = {}
 
     if (!formData.name.trim()) {
-      newErrors.name = "Nome é obrigatório"
+      newErrors.name = 'Nome é obrigatório'
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = "Email é obrigatório"
+      newErrors.email = 'Email é obrigatório'
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Email inválido"
+      newErrors.email = 'Email inválido'
     }
 
     if (!formData.password) {
-      newErrors.password = "Senha é obrigatória"
+      newErrors.password = 'Senha é obrigatória'
     } else if (formData.password.length < 8) {
-      newErrors.password = "Senha deve ter no mínimo 8 caracteres"
+      newErrors.password = 'Senha deve ter no mínimo 8 caracteres'
     } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-      newErrors.password = "Senha deve conter maiúsculas, minúsculas e números"
+      newErrors.password = 'Senha deve conter maiúsculas, minúsculas e números'
     }
 
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "Confirmação de senha é obrigatória"
+      newErrors.confirmPassword = 'Confirmação de senha é obrigatória'
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Senhas não conferem"
+      newErrors.confirmPassword = 'Senhas não conferem'
     }
 
     if (!formData.cpfCnpj.trim()) {
-      newErrors.cpfCnpj = "CPF/CNPJ é obrigatório"
+      newErrors.cpfCnpj = 'CPF/CNPJ é obrigatório'
     } else {
-      const cpfCnpjDigits = formData.cpfCnpj.replace(/\D/g, "")
+      const cpfCnpjDigits = formData.cpfCnpj.replace(/\D/g, '')
       if (cpfCnpjDigits.length !== 11 && cpfCnpjDigits.length !== 14) {
-        newErrors.cpfCnpj = "CPF/CNPJ inválido"
+        newErrors.cpfCnpj = 'CPF/CNPJ inválido'
       }
     }
 
     if (!formData.phone.trim()) {
-      newErrors.phone = "Telefone é obrigatório"
+      newErrors.phone = 'Telefone é obrigatório'
     } else {
-      const phoneDigits = formData.phone.replace(/\D/g, "")
+      const phoneDigits = formData.phone.replace(/\D/g, '')
       if (phoneDigits.length < 10 || phoneDigits.length > 11) {
-        newErrors.phone = "Telefone inválido"
+        newErrors.phone = 'Telefone inválido'
       }
     }
 
     if (!formData.paymentMethod) {
-      newErrors.paymentMethod = "Selecione um método de pagamento"
+      newErrors.paymentMethod = 'Selecione um método de pagamento'
     }
 
     setErrors(newErrors)
@@ -139,8 +138,8 @@ export function PaymentForm({ plan }: PaymentFormProps) {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        tax: formData.cpfCnpj.replace(/\D/g, ""),
-        cellphone: formData.phone.replace(/\D/g, ""),
+        tax: formData.cpfCnpj.replace(/\D/g, ''),
+        cellphone: formData.phone.replace(/\D/g, '')
       })
 
       const { url } = responsePayment.data
@@ -150,7 +149,7 @@ export function PaymentForm({ plan }: PaymentFormProps) {
       }
     } catch (err) {
       setErrors({
-        submit: err instanceof Error ? err.message : "Erro ao processar registro",
+        submit: err instanceof Error ? err.message : 'Erro ao processar registro'
       })
     } finally {
       setIsLoading(false)
@@ -170,7 +169,9 @@ export function PaymentForm({ plan }: PaymentFormProps) {
           {Object.keys(errors).length > 0 && (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{errors.submit || "Por favor, corrija os erros abaixo"}</AlertDescription>
+              <AlertDescription>
+                {errors.submit || 'Por favor, corrija os erros abaixo'}
+              </AlertDescription>
             </Alert>
           )}
 
@@ -191,7 +192,7 @@ export function PaymentForm({ plan }: PaymentFormProps) {
                 onChange={handleInputChange}
                 disabled={isLoading}
                 className={`bg-input border-border text-foreground placeholder:text-muted-foreground ${
-                  errors.name ? "border-destructive" : ""
+                  errors.name ? 'border-destructive' : ''
                 }`}
                 required
               />
@@ -211,7 +212,7 @@ export function PaymentForm({ plan }: PaymentFormProps) {
                 onChange={handleInputChange}
                 disabled={isLoading}
                 className={`bg-input border-border text-foreground placeholder:text-muted-foreground ${
-                  errors.email ? "border-destructive" : ""
+                  errors.email ? 'border-destructive' : ''
                 }`}
                 required
               />
@@ -226,13 +227,13 @@ export function PaymentForm({ plan }: PaymentFormProps) {
                 <Input
                   id="password"
                   name="password"
-                  type={showPassword ? "text" : "password"}
+                  type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={handleInputChange}
                   disabled={isLoading}
                   className={`bg-input border-border text-foreground placeholder:text-muted-foreground pr-10 ${
-                    errors.password ? "border-destructive" : ""
+                    errors.password ? 'border-destructive' : ''
                   }`}
                   required
                 />
@@ -245,7 +246,9 @@ export function PaymentForm({ plan }: PaymentFormProps) {
                 </button>
               </div>
               {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
-              <p className="text-xs text-muted-foreground">Mínimo 8 caracteres, com maiúsculas, minúsculas e números</p>
+              <p className="text-xs text-muted-foreground">
+                Mínimo 8 caracteres, com maiúsculas, minúsculas e números
+              </p>
             </div>
 
             <div className="space-y-2">
@@ -256,13 +259,13 @@ export function PaymentForm({ plan }: PaymentFormProps) {
                 <Input
                   id="confirmPassword"
                   name="confirmPassword"
-                  type={showConfirmPassword ? "text" : "password"}
+                  type={showConfirmPassword ? 'text' : 'password'}
                   placeholder="••••••••"
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                   disabled={isLoading}
                   className={`bg-input border-border text-foreground placeholder:text-muted-foreground pr-10 ${
-                    errors.confirmPassword ? "border-destructive" : ""
+                    errors.confirmPassword ? 'border-destructive' : ''
                   }`}
                   required
                 />
@@ -271,10 +274,16 @@ export function PaymentForm({ plan }: PaymentFormProps) {
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 >
-                  {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showConfirmPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
                 </button>
               </div>
-              {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword}</p>}
+              {errors.confirmPassword && (
+                <p className="text-sm text-destructive">{errors.confirmPassword}</p>
+              )}
             </div>
           </div>
 
@@ -295,7 +304,7 @@ export function PaymentForm({ plan }: PaymentFormProps) {
                 onChange={handleInputChange}
                 disabled={isLoading}
                 className={`bg-input border-border text-foreground placeholder:text-muted-foreground font-mono ${
-                  errors.cpfCnpj ? "border-destructive" : ""
+                  errors.cpfCnpj ? 'border-destructive' : ''
                 }`}
                 required
               />
@@ -315,7 +324,7 @@ export function PaymentForm({ plan }: PaymentFormProps) {
                 onChange={handleInputChange}
                 disabled={isLoading}
                 className={`bg-input border-border text-foreground placeholder:text-muted-foreground font-mono ${
-                  errors.phone ? "border-destructive" : ""
+                  errors.phone ? 'border-destructive' : ''
                 }`}
                 required
               />
@@ -332,20 +341,20 @@ export function PaymentForm({ plan }: PaymentFormProps) {
 
               <div
                 className={`flex items-center gap-3 rounded-lg border-2 p-4 cursor-pointer transition-colors ${
-                  formData.paymentMethod === "pix"
-                    ? "border-blue-600 bg-blue-50 dark:bg-blue-950"
-                    : "border-border hover:border-muted-foreground"
+                  formData.paymentMethod === 'pix'
+                    ? 'border-blue-600 bg-blue-50 dark:bg-blue-950'
+                    : 'border-border hover:border-muted-foreground'
                 }`}
                 onClick={() => {
-                  setFormData((prev) => ({ ...prev, paymentMethod: "pix" }))
-                  setErrors((prev) => ({ ...prev, paymentMethod: "" }))
+                  setFormData((prev) => ({ ...prev, paymentMethod: 'pix' }))
+                  setErrors((prev) => ({ ...prev, paymentMethod: '' }))
                 }}
               >
                 <input
                   type="radio"
                   name="paymentMethod"
                   value="pix"
-                  checked={formData.paymentMethod === "pix"}
+                  checked={formData.paymentMethod === 'pix'}
                   onChange={() => {}}
                   className="h-4 w-4"
                 />
@@ -357,20 +366,20 @@ export function PaymentForm({ plan }: PaymentFormProps) {
 
               <div
                 className={`flex items-center gap-3 rounded-lg border-2 p-4 cursor-pointer transition-colors ${
-                  formData.paymentMethod === "card"
-                    ? "border-blue-600 bg-blue-50 dark:bg-blue-950"
-                    : "border-border hover:border-muted-foreground"
+                  formData.paymentMethod === 'card'
+                    ? 'border-blue-600 bg-blue-50 dark:bg-blue-950'
+                    : 'border-border hover:border-muted-foreground'
                 }`}
                 onClick={() => {
-                  setFormData((prev) => ({ ...prev, paymentMethod: "card" }))
-                  setErrors((prev) => ({ ...prev, paymentMethod: "" }))
+                  setFormData((prev) => ({ ...prev, paymentMethod: 'card' }))
+                  setErrors((prev) => ({ ...prev, paymentMethod: '' }))
                 }}
               >
                 <input
                   type="radio"
                   name="paymentMethod"
                   value="card"
-                  checked={formData.paymentMethod === "card"}
+                  checked={formData.paymentMethod === 'card'}
                   onChange={() => {}}
                   className="h-4 w-4"
                 />
@@ -380,13 +389,19 @@ export function PaymentForm({ plan }: PaymentFormProps) {
                 </div>
               </div>
 
-              {errors.paymentMethod && <p className="text-sm text-destructive">{errors.paymentMethod}</p>}
+              {errors.paymentMethod && (
+                <p className="text-sm text-destructive">{errors.paymentMethod}</p>
+              )}
             </div>
           </div>
 
           {/* Submit Button */}
           <div className="flex gap-3 pt-6">
-            <Button type="submit" disabled={isLoading} className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+            >
               {isLoading ? (
                 <>
                   <Spinner className="mr-2 h-4 w-4" />

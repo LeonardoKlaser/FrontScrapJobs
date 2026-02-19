@@ -43,9 +43,18 @@ export function RegisterForm() {
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="confirmPassword" className="text-sm">Confirmar Senha</label>
-        <Input id="confirmPassword" type="password" placeholder="Confirme a senha" {...register('confirmPassword')} />
-        {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>}
+        <label htmlFor="confirmPassword" className="text-sm">
+          Confirmar Senha
+        </label>
+        <Input
+          id="confirmPassword"
+          type="password"
+          placeholder="Confirme a senha"
+          {...register('confirmPassword')}
+        />
+        {errors.confirmPassword && (
+          <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>
+        )}
       </div>
 
       {error && <p className="text-sm text-red-500">{error}</p>}

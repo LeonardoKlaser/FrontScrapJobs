@@ -1,44 +1,52 @@
-import { Card } from "@/components/ui/card"
+import { Card } from '@/components/ui/card'
 
 const errorLogs = [
   {
-    time: "14:32",
-    site: "TechCorp",
-    error: "Timeout na conexão",
+    time: '14:32',
+    site: 'TechCorp',
+    error: 'Timeout na conexão'
   },
   {
-    time: "13:45",
-    site: "DataFlow",
-    error: "Elemento não encontrado",
+    time: '13:45',
+    site: 'DataFlow',
+    error: 'Elemento não encontrado'
   },
   {
-    time: "12:18",
-    site: "TechCorp",
-    error: "Rate limit excedido",
+    time: '12:18',
+    site: 'TechCorp',
+    error: 'Rate limit excedido'
   },
   {
-    time: "11:55",
-    site: "WebScrape Inc",
-    error: "Captcha detectado",
+    time: '11:55',
+    site: 'WebScrape Inc',
+    error: 'Captcha detectado'
   },
   {
-    time: "10:22",
-    site: "InfoSite",
-    error: "Estrutura HTML alterada",
-  },
+    time: '10:22',
+    site: 'InfoSite',
+    error: 'Estrutura HTML alterada'
+  }
 ]
 
 export function ActivityLogs() {
   return (
     <Card className="bg-[#1E1E1E] border-[#333333] p-4 md:p-6 hover:shadow-lg hover:shadow-[#007BFF]/10 transition-all duration-300">
-      <h2 className="text-lg md:text-xl font-semibold text-[#007BFF] mb-4 md:mb-6">Últimos Erros de Scraping</h2>
+      <h2 className="text-lg md:text-xl font-semibold text-[#007BFF] mb-4 md:mb-6">
+        Últimos Erros de Scraping
+      </h2>
       <div className="overflow-x-auto">
         <table className="w-full min-w-[500px]">
           <thead>
             <tr className="border-b border-[#333333]">
-              <th className="text-left py-3 px-2 md:px-4 text-[#E0E0E0] font-medium text-sm">Horário</th>
-              <th className="text-left py-3 px-2 md:px-4 text-[#E0E0E0] font-medium text-sm">Nome do Site</th>
-              <th className="text-left py-3 px-2 md:px-4 text-[#E0E0E0] font-medium text-sm">Tipo de Erro</th>
+              <th className="text-left py-3 px-2 md:px-4 text-[#E0E0E0] font-medium text-sm">
+                Horário
+              </th>
+              <th className="text-left py-3 px-2 md:px-4 text-[#E0E0E0] font-medium text-sm">
+                Nome do Site
+              </th>
+              <th className="text-left py-3 px-2 md:px-4 text-[#E0E0E0] font-medium text-sm">
+                Tipo de Erro
+              </th>
             </tr>
           </thead>
           <tbody>

@@ -1,20 +1,20 @@
-import { useState } from "react"
-import { User, CreditCard, LogOut } from "lucide-react"
-import { ProfileSection } from "@/components/accountPage/profile-section"
-import { PlanSection } from "@/components/accountPage/plan-section"
-import { cn } from "@/lib/utils"
-import { useUser } from "@/hooks/useUser"
-import { useAuth } from "@/hooks/useAuth"
+import { useState } from 'react'
+import { User, CreditCard, LogOut } from 'lucide-react'
+import { ProfileSection } from '@/components/accountPage/profile-section'
+import { PlanSection } from '@/components/accountPage/plan-section'
+import { cn } from '@/lib/utils'
+import { useUser } from '@/hooks/useUser'
+import { useAuth } from '@/hooks/useAuth'
 
-type Tab = "perfil" | "plano" | "seguranca" | "notificacoes"
+type Tab = 'perfil' | 'plano' | 'seguranca' | 'notificacoes'
 
 const menuItems = [
-  { id: "perfil" as Tab, label: "Perfil", icon: User },
-  { id: "plano" as Tab, label: "Plano e Faturamento", icon: CreditCard },
+  { id: 'perfil' as Tab, label: 'Perfil', icon: User },
+  { id: 'plano' as Tab, label: 'Plano e Faturamento', icon: CreditCard }
 ]
 
 export default function AccountPage() {
-  const [activeTab, setActiveTab] = useState<Tab>("perfil")
+  const [activeTab, setActiveTab] = useState<Tab>('perfil')
   const { data: user } = useUser()
   const { logout } = useAuth()
 
@@ -40,10 +40,10 @@ export default function AccountPage() {
                     key={item.id}
                     onClick={() => setActiveTab(item.id)}
                     className={cn(
-                      "w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors",
+                      'w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors',
                       activeTab === item.id
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+                        ? 'bg-primary text-primary-foreground'
+                        : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                     )}
                   >
                     <Icon className="h-5 w-5" />
@@ -70,10 +70,10 @@ export default function AccountPage() {
                     key={item.id}
                     onClick={() => setActiveTab(item.id)}
                     className={cn(
-                      "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors",
+                      'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors',
                       activeTab === item.id
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-card text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-card text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                     )}
                   >
                     <Icon className="h-4 w-4" />
@@ -86,8 +86,8 @@ export default function AccountPage() {
 
           <main className="flex-1 min-w-0">
             <div className="space-y-6">
-              {activeTab === "perfil" && <ProfileSection user={user} />}
-              {activeTab === "plano" && <PlanSection user={user} />}
+              {activeTab === 'perfil' && <ProfileSection user={user} />}
+              {activeTab === 'plano' && <PlanSection user={user} />}
             </div>
           </main>
         </div>

@@ -1,32 +1,33 @@
-import { Clock, BarChart3, Mail, Infinity } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
+import { Clock, BarChart3, Mail, Infinity } from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
 
 export function FeaturesSection() {
   const features = [
     {
       icon: Clock,
-      title: "Scraping de Hora em Hora",
-      description: "Nunca mais perca uma vaga. Nosso sistema verifica seus alvos constantemente.",
-      highlight: false,
+      title: 'Scraping de Hora em Hora',
+      description: 'Nunca mais perca uma vaga. Nosso sistema verifica seus alvos constantemente.',
+      highlight: false
     },
     {
       icon: BarChart3,
-      title: "Análise de Currículo com IA",
-      description: "Receba um relatório detalhado sobre o match da vaga e dicas para otimizar seu currículo.",
-      highlight: true,
+      title: 'Análise de Currículo com IA',
+      description:
+        'Receba um relatório detalhado sobre o match da vaga e dicas para otimizar seu currículo.',
+      highlight: true
     },
     {
       icon: Mail,
-      title: "Alertas Diretos na sua Caixa de Entrada",
-      description: "As melhores oportunidades, entregues de forma limpa e organizada para você.",
-      highlight: false,
+      title: 'Alertas Diretos na sua Caixa de Entrada',
+      description: 'As melhores oportunidades, entregues de forma limpa e organizada para você.',
+      highlight: false
     },
     {
       icon: Infinity,
-      title: "Monitoramento Ilimitado",
-      description: "Acompanhe todas as empresas da sua lista de desejos, sem restrições.",
-      highlight: false,
-    },
+      title: 'Monitoramento Ilimitado',
+      description: 'Acompanhe todas as empresas da sua lista de desejos, sem restrições.',
+      highlight: false
+    }
   ]
 
   return (
@@ -43,7 +44,7 @@ export function FeaturesSection() {
             <Card
               key={index}
               className={`bg-card border-border hover:border-primary/50 transition-all duration-300 hover:scale-105 ${
-                feature.highlight ? "border-primary/50 bg-primary/5" : ""
+                feature.highlight ? 'border-primary/50 bg-primary/5' : ''
               }`}
             >
               <CardContent className="p-8 space-y-4">
@@ -51,7 +52,9 @@ export function FeaturesSection() {
                   <feature.icon className="w-6 h-6 text-primary" />
                 </div>
                 <h3 className="text-xl font-bold text-foreground">{feature.title}</h3>
-                <p className="text-muted-foreground leading-relaxed text-pretty">{feature.description}</p>
+                <p className="text-muted-foreground leading-relaxed text-pretty">
+                  {feature.description}
+                </p>
               </CardContent>
             </Card>
           ))}

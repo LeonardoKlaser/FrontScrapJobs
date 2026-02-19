@@ -20,11 +20,10 @@ export default tseslint.config([
       globals: globals.browser,
       parserOptions: {
         project: ['./tsconfig.app.json', './tsconfig.node.json'],
-        tsconfigRootDir: new URL('.', import.meta.url).pathname,
+        tsconfigRootDir: decodeURIComponent(new URL('.', import.meta.url).pathname),
       },
     },
     rules: {
-      indent: ['error', 2, { SwitchCase: 1 }],
       semi: ['error', 'never'],
       'comma-dangle': ['error', 'never'],
       '@typescript-eslint/no-unused-vars': [
@@ -32,13 +31,13 @@ export default tseslint.config([
         { args: 'none', ignoreRestSiblings: true }
       ],
       'max-len': [
-        'error',
+        'warn',
         {
           code: 100,
           tabWidth: 2,
           ignoreUrls: true,
-          ignoreStrings: false,
-          ignoreTemplateLiterals: false,
+          ignoreStrings: true,
+          ignoreTemplateLiterals: true,
           ignoreComments: false
         }
       ],

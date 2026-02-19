@@ -24,13 +24,17 @@ export function AuthForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mx-auto flex w-full max-w-md flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <label htmlFor="email" className="text-sm">E-mail</label>
+        <label htmlFor="email" className="text-sm">
+          E-mail
+        </label>
         <Input id="email" type="email" placeholder="seu@email.com" {...register('email')} />
         {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="password" className="text-sm">Senha</label>
+        <label htmlFor="password" className="text-sm">
+          Senha
+        </label>
         <Input id="password" type="password" placeholder="senha" {...register('password')} />
         {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
       </div>

@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/table'
 import { useDashboard } from '@/hooks/useDashboard'
 
-
 function StatsCard({
   title,
   value,
@@ -31,7 +30,7 @@ function StatsCard({
 }
 
 export function Home() {
-  const { data, isLoading, isError, error} = useDashboard();
+  const { data, isLoading, isError, error } = useDashboard()
 
   if (isLoading) {
     return (
@@ -51,9 +50,21 @@ export function Home() {
   }
 
   const stats = [
-    { title: 'URLs monitoradas', value: data?.monitored_urls_count ?? 0, icon: Globe },
-    { title: 'Vagas novas (24h)', value: data?.new_jobs_today_count ?? 0, icon: FileText },
-    { title: 'Alertas enviados', value: data?.alerts_sent_count ?? 0, icon: BellRing },
+    {
+      title: 'URLs monitoradas',
+      value: data?.monitored_urls_count ?? 0,
+      icon: Globe
+    },
+    {
+      title: 'Vagas novas (24h)',
+      value: data?.new_jobs_today_count ?? 0,
+      icon: FileText
+    },
+    {
+      title: 'Alertas enviados',
+      value: data?.alerts_sent_count ?? 0,
+      icon: BellRing
+    },
     { title: 'Falhas de scraping', value: 0, icon: AlertTriangle }
   ]
 
@@ -133,14 +144,14 @@ export function Home() {
                   <TableRow key={url.site_name}>
                     <TableCell>{url.site_name}</TableCell>
                     <TableCell className="max-w-xs truncate">
-                        <a 
-                            href={url.base_url} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-primary hover:underline"
-                        >
-                            {url.base_url}
-                        </a>
+                      <a
+                        href={url.base_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        {url.base_url}
+                      </a>
                     </TableCell>
                   </TableRow>
                 ))}

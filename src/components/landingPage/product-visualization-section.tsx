@@ -1,6 +1,6 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 
 export function ProductVisualizationSection() {
   return (
@@ -13,8 +13,8 @@ export function ProductVisualizationSection() {
               Veja Exatamente o Que Você Receberá
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed text-pretty">
-              Chega de e-mails de alerta genéricos. Nossas notificações são ricas em dados e insights para ajudá-lo a
-              tomar a melhor decisão.
+              Chega de e-mails de alerta genéricos. Nossas notificações são ricas em dados e
+              insights para ajudá-lo a tomar a melhor decisão.
             </p>
           </div>
 
@@ -33,7 +33,10 @@ export function ProductVisualizationSection() {
                       <p className="text-sm text-muted-foreground">Nova oportunidade encontrada!</p>
                     </div>
                   </div>
-                  <Badge variant="secondary" className="bg-success/20 text-success border-success/30">
+                  <Badge
+                    variant="secondary"
+                    className="bg-success/20 text-success border-success/30"
+                  >
                     85% Match
                   </Badge>
                 </div>

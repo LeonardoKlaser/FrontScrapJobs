@@ -1,23 +1,23 @@
-import { Target, Filter, Brain } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
+import { Target, Filter, Brain } from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
 
 export function HowItWorksSection() {
   const steps = [
     {
       icon: Target,
-      title: "1. Escolha suas Empresas",
-      description: "Selecione as empresas onde você sonha em trabalhar.",
+      title: '1. Escolha suas Empresas',
+      description: 'Selecione as empresas onde você sonha em trabalhar.'
     },
     {
       icon: Filter,
-      title: "2. Defina seus Filtros",
-      description: "Especifique os cargos e palavras-chave que correspondem ao seu perfil.",
+      title: '2. Defina seus Filtros',
+      description: 'Especifique os cargos e palavras-chave que correspondem ao seu perfil.'
     },
     {
       icon: Brain,
-      title: "3. Receba Alertas Inteligentes",
-      description: "Receba notificações por e-mail com uma análise completa de compatibilidade.",
-    },
+      title: '3. Receba Alertas Inteligentes',
+      description: 'Receba notificações por e-mail com uma análise completa de compatibilidade.'
+    }
   ]
 
   return (
@@ -41,7 +41,9 @@ export function HowItWorksSection() {
                   <step.icon className="w-8 h-8 text-primary" />
                 </div>
                 <h3 className="text-xl font-bold text-foreground">{step.title}</h3>
-                <p className="text-muted-foreground leading-relaxed text-pretty">{step.description}</p>
+                <p className="text-muted-foreground leading-relaxed text-pretty">
+                  {step.description}
+                </p>
               </CardContent>
             </Card>
           ))}

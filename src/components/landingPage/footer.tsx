@@ -1,4 +1,4 @@
-import { Zap } from "lucide-react"
+import { Zap } from 'lucide-react'
 
 export function Footer() {
   return (
@@ -22,7 +22,9 @@ export function Footer() {
             </a>
           </div>
 
-          <p className="text-sm text-muted-foreground">© 2025 scrapJobs. Todos os direitos reservados.</p>
+          <p className="text-sm text-muted-foreground">
+            © 2025 scrapJobs. Todos os direitos reservados.
+          </p>
         </div>
       </div>
     </footer>

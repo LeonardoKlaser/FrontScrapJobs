@@ -1,8 +1,7 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Check } from "lucide-react"
-import type { Plan } from "@/models/plan"
-
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Check } from 'lucide-react'
+import type { Plan } from '@/models/plan'
 
 interface PlanSummaryProps {
   plan: Plan
@@ -22,7 +21,9 @@ export function PlanSummary({ plan }: PlanSummaryProps) {
             <span className="text-4xl font-bold text-foreground">{plan.price.toFixed(2)}</span>
             <span className="text-muted-foreground">{plan.price}/mês</span>
           </div>
-          <p className="text-sm text-muted-foreground mt-2">Renovação automática. Cancele a qualquer momento.</p>
+          <p className="text-sm text-muted-foreground mt-2">
+            Renovação automática. Cancele a qualquer momento.
+          </p>
         </div>
 
         {/* Benefits */}
@@ -38,7 +39,6 @@ export function PlanSummary({ plan }: PlanSummaryProps) {
           </ul>
         </div>
 
-        
         <div className="pt-4">
           <Badge variant="secondary" className="bg-blue-500/10 text-blue-400 border-blue-500/20">
             Plano {plan.name}

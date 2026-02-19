@@ -1,40 +1,40 @@
-import type React from "react"
+import type React from 'react'
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { PlusCircle, Trash2, Loader2 } from "lucide-react"
-import type { Curriculum, Experience, Education } from "@/models/curriculum"
-import { curriculoService } from "@/services/curriculumService"
-import { useUpdateCurriculum } from "@/hooks/useCurriculum"
+import { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { PlusCircle, Trash2, Loader2 } from 'lucide-react'
+import type { Curriculum, Experience, Education } from '@/models/curriculum'
+import { curriculoService } from '@/services/curriculumService'
+import { useUpdateCurriculum } from '@/hooks/useCurriculum'
 
 interface CurriculumFormProps {
   curriculum?: Curriculum
   isEditing: boolean
 }
 
-function createEmptyFormData(): Omit<Curriculum, "id"> {
+function createEmptyFormData(): Omit<Curriculum, 'id'> {
   return {
-    title: "",
+    title: '',
     is_active: false,
-    summary: "",
-    skills: "",
-    languages: "",
-    experiences: [{ id: crypto.randomUUID(), company: "", title: "", description: "" }],
-    educations: [{ id: crypto.randomUUID(), institution: "", degree: "", year: "" }],
+    summary: '',
+    skills: '',
+    languages: '',
+    experiences: [{ id: crypto.randomUUID(), company: '', title: '', description: '' }],
+    educations: [{ id: crypto.randomUUID(), institution: '', degree: '', year: '' }]
   }
 }
 
 export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
   const [formData, setFormData] = useState(createEmptyFormData)
   const [isSaving, setIsSaving] = useState(false)
-  const [skillInput, setSkillInput] = useState("")
-  const [languageInput, setLanguageInput] = useState("")
-  const { mutate: updateCurriculum, isPending: isUpdating } = useUpdateCurriculum();
+  const [skillInput, setSkillInput] = useState('')
+  const [languageInput, setLanguageInput] = useState('')
+  const { mutate: updateCurriculum, isPending: isUpdating } = useUpdateCurriculum()
 
   useEffect(() => {
     if (curriculum) {
@@ -45,7 +45,7 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
         skills: curriculum.skills,
         languages: curriculum.languages,
         experiences: curriculum.experiences,
-        educations: curriculum.educations,
+        educations: curriculum.educations
       })
     } else {
       setFormData(createEmptyFormData())
@@ -68,88 +68,102 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
   const addExperience = () => {
     setFormData({
       ...formData,
-      experiences: [...formData.experiences, { id: crypto.randomUUID(), company: "", title: "", description: "" }],
+      experiences: [
+        ...formData.experiences,
+        { id: crypto.randomUUID(), company: '', title: '', description: '' }
+      ]
     })
   }
 
   const removeExperience = (id: string) => {
     setFormData({
       ...formData,
-      experiences: formData.experiences.filter((exp) => exp.id !== id),
+      experiences: formData.experiences.filter((exp) => exp.id !== id)
     })
   }
 
   const updateExperience = (id: string, field: keyof Experience, value: string) => {
     setFormData({
       ...formData,
-      experiences: formData.experiences.map((exp) => (exp.id === id ? { ...exp, [field]: value } : exp)),
+      experiences: formData.experiences.map((exp) =>
+        exp.id === id ? { ...exp, [field]: value } : exp
+      )
     })
   }
 
   const addEducation = () => {
     setFormData({
       ...formData,
-      educations: [...formData.educations, { id: crypto.randomUUID(), institution: "", degree: "", year: "" }],
+      educations: [
+        ...formData.educations,
+        { id: crypto.randomUUID(), institution: '', degree: '', year: '' }
+      ]
     })
   }
 
   const removeEducation = (id: string) => {
     setFormData({
       ...formData,
-      educations: formData.educations.filter((edu) => edu.id !== id),
+      educations: formData.educations.filter((edu) => edu.id !== id)
     })
   }
 
   const updateEducation = (id: string, field: keyof Education, value: string) => {
     setFormData({
       ...formData,
-      educations: formData.educations.map((edu) => (edu.id === id ? { ...edu, [field]: value } : edu)),
+      educations: formData.educations.map((edu) =>
+        edu.id === id ? { ...edu, [field]: value } : edu
+      )
     })
   }
 
   const handleSkillKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if ((e.key === "Enter" || e.key === ",") && skillInput.trim()) {
+    if ((e.key === 'Enter' || e.key === ',') && skillInput.trim()) {
       e.preventDefault()
-      const newSkills = formData.skills ? `${formData.skills}, ${skillInput.trim()}` : skillInput.trim()
+      const newSkills = formData.skills
+        ? `${formData.skills}, ${skillInput.trim()}`
+        : skillInput.trim()
       setFormData({ ...formData, skills: newSkills })
-      setSkillInput("")
+      setSkillInput('')
     }
   }
 
   const removeSkill = (skillToRemove: string) => {
     const skillsArray = formData.skills
-      .split(",")
+      .split(',')
       .map((s) => s.trim())
       .filter((s) => s !== skillToRemove)
-    setFormData({ ...formData, skills: skillsArray.join(", ") })
+    setFormData({ ...formData, skills: skillsArray.join(', ') })
   }
 
   const handleLanguageKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if ((e.key === "Enter" || e.key === ",") && languageInput.trim()) {
+    if ((e.key === 'Enter' || e.key === ',') && languageInput.trim()) {
       e.preventDefault()
-      const newLanguages = formData.languages ? `${formData.languages}, ${languageInput.trim()}` : languageInput.trim()
+      const newLanguages = formData.languages
+        ? `${formData.languages}, ${languageInput.trim()}`
+        : languageInput.trim()
       setFormData({ ...formData, languages: newLanguages })
-      setLanguageInput("")
+      setLanguageInput('')
     }
   }
 
   const removeLanguage = (languageToRemove: string) => {
     const languagesArray = formData.languages
-      .split(",")
+      .split(',')
       .map((l) => l.trim())
       .filter((l) => l !== languageToRemove)
-    setFormData({ ...formData, languages: languagesArray.join(", ") })
+    setFormData({ ...formData, languages: languagesArray.join(', ') })
   }
 
   const skillsArray = formData.skills
     ? formData.skills
-        .split(",")
+        .split(',')
         .map((s) => s.trim())
         .filter(Boolean)
     : []
   const languagesArray = formData.languages
     ? formData.languages
-        .split(",")
+        .split(',')
         .map((l) => l.trim())
         .filter(Boolean)
     : []
@@ -158,7 +172,7 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
     <Card>
       <CardHeader>
         <CardTitle className="text-2xl">
-          {isEditing ? `Editando: ${curriculum?.title}` : "Criar Novo Currículo"}
+          {isEditing ? `Editando: ${curriculum?.title}` : 'Criar Novo Currículo'}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -198,7 +212,12 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
           {skillsArray.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-2">
               {skillsArray.map((skill, index) => (
-                <Badge key={index} variant="secondary" className="cursor-pointer" onClick={() => removeSkill(skill)}>
+                <Badge
+                  key={index}
+                  variant="secondary"
+                  className="cursor-pointer"
+                  onClick={() => removeSkill(skill)}
+                >
                   {skill}
                   <span className="ml-1 text-xs">×</span>
                 </Badge>
@@ -248,9 +267,16 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
             <Card key={experience.id} className="bg-muted/50">
               <CardContent className="pt-6 space-y-4">
                 <div className="flex justify-between items-start">
-                  <h4 className="text-sm font-medium text-muted-foreground">Experiência {index + 1}</h4>
+                  <h4 className="text-sm font-medium text-muted-foreground">
+                    Experiência {index + 1}
+                  </h4>
                   {formData.experiences.length > 1 && (
-                    <Button type="button" variant="ghost" size="sm" onClick={() => removeExperience(experience.id)}>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removeExperience(experience.id)}
+                    >
                       <Trash2 className="h-4 w-4 text-destructive" />
                     </Button>
                   )}
@@ -262,7 +288,7 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
                     id={`company-${experience.id}`}
                     placeholder="Nome da empresa"
                     value={experience.company}
-                    onChange={(e) => updateExperience(experience.id, "company", e.target.value)}
+                    onChange={(e) => updateExperience(experience.id, 'company', e.target.value)}
                   />
                 </div>
 
@@ -272,7 +298,7 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
                     id={`title-${experience.id}`}
                     placeholder="Seu cargo"
                     value={experience.title}
-                    onChange={(e) => updateExperience(experience.id, "title", e.target.value)}
+                    onChange={(e) => updateExperience(experience.id, 'title', e.target.value)}
                   />
                 </div>
 
@@ -283,7 +309,7 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
                     placeholder="Descreva suas responsabilidades e conquistas..."
                     className="min-h-[100px] resize-y"
                     value={experience.description}
-                    onChange={(e) => updateExperience(experience.id, "description", e.target.value)}
+                    onChange={(e) => updateExperience(experience.id, 'description', e.target.value)}
                   />
                 </div>
               </CardContent>
@@ -305,9 +331,16 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
             <Card key={education.id} className="bg-muted/50">
               <CardContent className="pt-6 space-y-4">
                 <div className="flex justify-between items-start">
-                  <h4 className="text-sm font-medium text-muted-foreground">Formação {index + 1}</h4>
+                  <h4 className="text-sm font-medium text-muted-foreground">
+                    Formação {index + 1}
+                  </h4>
                   {formData.educations.length > 1 && (
-                    <Button type="button" variant="ghost" size="sm" onClick={() => removeEducation(education.id)}>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removeEducation(education.id)}
+                    >
                       <Trash2 className="h-4 w-4 text-destructive" />
                     </Button>
                   )}
@@ -319,7 +352,7 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
                     id={`institution-${education.id}`}
                     placeholder="Nome da instituição"
                     value={education.institution}
-                    onChange={(e) => updateEducation(education.id, "institution", e.target.value)}
+                    onChange={(e) => updateEducation(education.id, 'institution', e.target.value)}
                   />
                 </div>
 
@@ -329,7 +362,7 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
                     id={`degree-${education.id}`}
                     placeholder="Ex: Bacharelado em Ciência da Computação"
                     value={education.degree}
-                    onChange={(e) => updateEducation(education.id, "degree", e.target.value)}
+                    onChange={(e) => updateEducation(education.id, 'degree', e.target.value)}
                   />
                 </div>
 
@@ -339,7 +372,7 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
                     id={`year-${education.id}`}
                     placeholder="Ex: 2020"
                     value={education.year}
-                    onChange={(e) => updateEducation(education.id, "year", e.target.value)}
+                    onChange={(e) => updateEducation(education.id, 'year', e.target.value)}
                   />
                 </div>
               </CardContent>
@@ -349,14 +382,19 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
 
         {/* Save Button */}
         <div className="pt-4">
-          <Button onClick={handleSave} disabled={isSaving || isUpdating || !formData.title} className="w-full" size="lg">
+          <Button
+            onClick={handleSave}
+            disabled={isSaving || isUpdating || !formData.title}
+            className="w-full"
+            size="lg"
+          >
             {isSaving ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Salvando...
               </>
             ) : (
-              "Salvar Currículo"
+              'Salvar Currículo'
             )}
           </Button>
         </div>

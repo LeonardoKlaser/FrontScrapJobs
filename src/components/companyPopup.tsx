@@ -1,11 +1,11 @@
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Loader2 } from "lucide-react"
-import { useState } from "react"
-import { Input } from "./ui/input"
-import { Label } from "./ui/label"
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Loader2 } from 'lucide-react'
+import { useState } from 'react'
+import { Input } from './ui/input'
+import { Label } from './ui/label'
 
 interface RegistrationModalProps {
   isOpen: boolean
@@ -28,17 +28,18 @@ export function RegistrationModal({
   isAlreadyRegistered,
   isLoading,
   onRegister,
-  onUnRegister,
+  onUnRegister
 }: RegistrationModalProps) {
-  const [keywords, setKeywords] = useState("")
+  const [keywords, setKeywords] = useState('')
   const hasNoSlots = remainingSlots === 0 && !isAlreadyRegistered
 
-  const isRegisterButtonDisabled = hasNoSlots || isLoading || (!keywords.trim() && !isAlreadyRegistered)
+  const isRegisterButtonDisabled =
+    hasNoSlots || isLoading || (!keywords.trim() && !isAlreadyRegistered)
 
   const handleRegisterClick = () => {
-    if (!keywords.trim()) return 
+    if (!keywords.trim()) return
     const targetWords = keywords
-      .split(",")
+      .split(',')
       .map((word) => word.trim())
       .filter(Boolean)
 
@@ -46,7 +47,7 @@ export function RegistrationModal({
   }
 
   const handleClose = () => {
-    setKeywords("")
+    setKeywords('')
     onClose()
   }
 
@@ -62,7 +63,7 @@ export function RegistrationModal({
             <div className="flex justify-center">
               <div className="relative h-10 w-auto max-w-[200px]">
                 <img
-                  src={companyLogo || "/placeholder.svg"}
+                  src={companyLogo || '/placeholder.svg'}
                   alt={`${companyName} logo`}
                   width={200}
                   height={40}
@@ -77,23 +78,23 @@ export function RegistrationModal({
             {isAlreadyRegistered ? (
               <div>
                 <p className="text-center text-muted-foreground">
-                  Você já está inscrito para receber alertas de vagas do(a){" "}
+                  Você já está inscrito para receber alertas de vagas do(a){' '}
                   <span className="font-semibold text-foreground">{companyName}</span>.
                 </p>
                 <div className="py-4 text-center">
                   <p className="text-sm text-muted-foreground mb-4">
-                    Deseja se desvincular para parar de receber notificações de vagas da {companyName}?
+                    Deseja se desvincular para parar de receber notificações de vagas da{' '}
+                    {companyName}?
                   </p>
-                  <Button
-                    variant="destructive"
-                    onClick={handleUnregister}>
+                  <Button variant="destructive" onClick={handleUnregister}>
                     Desvincular
                   </Button>
                 </div>
               </div>
-              
             ) : hasNoSlots ? (
-              <p className="text-center text-muted-foreground">Você atingiu o limite de empresas do seu plano.</p>
+              <p className="text-center text-muted-foreground">
+                Você atingiu o limite de empresas do seu plano.
+              </p>
             ) : (
               <>
                 <p className="text-center text-muted-foreground">
@@ -123,7 +124,6 @@ export function RegistrationModal({
                   {remainingSlots}
                 </Badge>
               </div>
-              
             )}
           </CardContent>
 
@@ -134,16 +134,20 @@ export function RegistrationModal({
               </Button>
             ) : (
               <>
-                <Button onClick={handleRegisterClick} disabled={isRegisterButtonDisabled} className="w-full">
+                <Button
+                  onClick={handleRegisterClick}
+                  disabled={isRegisterButtonDisabled}
+                  className="w-full"
+                >
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Registrando...
                     </>
                   ) : hasNoSlots ? (
-                    "Limite de Slots Atingido"
+                    'Limite de Slots Atingido'
                   ) : (
-                    "Confirmar Inscrição e Usar 1 Slot"
+                    'Confirmar Inscrição e Usar 1 Slot'
                   )}
                 </Button>
                 <Button onClick={onClose} variant="ghost" className="w-full" disabled={isLoading}>

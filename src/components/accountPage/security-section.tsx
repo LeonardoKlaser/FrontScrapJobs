@@ -1,25 +1,25 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { useState } from 'react'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 
 export function SecuritySection() {
   const [passwords, setPasswords] = useState({
-    current: "",
-    new: "",
-    confirm: "",
+    current: '',
+    new: '',
+    confirm: ''
   })
 
   const handlePasswordChange = () => {
-    console.log("Changing password")
+    console.log('Changing password')
   }
 
   const handleEnable2FA = () => {
-    console.log("Enabling 2FA")
+    console.log('Enabling 2FA')
   }
 
   return (
@@ -75,7 +75,9 @@ export function SecuritySection() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-foreground">Status</p>
-              <p className="text-sm text-muted-foreground">Adicione uma camada extra de segurança à sua conta</p>
+              <p className="text-sm text-muted-foreground">
+                Adicione uma camada extra de segurança à sua conta
+              </p>
             </div>
             <Badge variant="secondary">Desativado</Badge>
           </div>

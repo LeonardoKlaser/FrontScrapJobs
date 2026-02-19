@@ -1,7 +1,7 @@
 import type { SiteCareer, UserSiteRequest } from '@/models/siteCareer'
 import { api } from './api'
 
-export type ScrapingType = "CSS" | "API"
+export type ScrapingType = 'CSS' | 'API'
 
 export interface SiteConfigFormData {
   base_url: string
@@ -33,7 +33,7 @@ export const SiteCareerService = {
 
   addSiteConfig: async (formData: SiteConfigFormData, logoFile: File | null) => {
     const multipartData = new FormData()
-    multipartData.append("siteData", JSON.stringify(formData))
+    multipartData.append('siteData', JSON.stringify(formData))
 
     if (logoFile) {
       multipartData.append('logo', logoFile)
@@ -41,7 +41,7 @@ export const SiteCareerService = {
 
     const response = await api.post('/siteCareer', multipartData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': 'multipart/form-data'
       }
     })
 
@@ -60,5 +60,5 @@ export const SiteCareerService = {
 
   unregisterUserFromSite: async (siteId: number): Promise<void> => {
     await api.delete(`/userSite/${siteId}`)
-  },
+  }
 }

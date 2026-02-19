@@ -1,11 +1,11 @@
-import { Check } from "lucide-react"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
-import type { User } from "@/models/user"
+import { Check } from 'lucide-react'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
+import type { User } from '@/models/user'
 
-export function PlanSection({user}: { user: User | undefined}) {
+export function PlanSection({ user }: { user: User | undefined }) {
   const currentUsage = 2
   const maxUsage = user?.plan?.max_sites ?? 0
   const usagePercentage = maxUsage > 0 ? (currentUsage / maxUsage) * 100 : 0

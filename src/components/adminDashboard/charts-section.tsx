@@ -1,22 +1,31 @@
-import { Card } from "@/components/ui/card"
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, BarChart, Bar, Tooltip } from "recharts"
+import { Card } from '@/components/ui/card'
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  Tooltip
+} from 'recharts'
 
 const revenueData = [
-  { month: "Jan", revenue: 3200 },
-  { month: "Fev", revenue: 3800 },
-  { month: "Mar", revenue: 4100 },
-  { month: "Abr", revenue: 4300 },
-  { month: "Mai", revenue: 4600 },
-  { month: "Jun", revenue: 4820 },
+  { month: 'Jan', revenue: 3200 },
+  { month: 'Fev', revenue: 3800 },
+  { month: 'Mar', revenue: 4100 },
+  { month: 'Abr', revenue: 4300 },
+  { month: 'Mai', revenue: 4600 },
+  { month: 'Jun', revenue: 4820 }
 ]
 
 const userAcquisitionData = [
-  { month: "Jan", novos: 45, cancelamentos: 12 },
-  { month: "Fev", novos: 52, cancelamentos: 8 },
-  { month: "Mar", novos: 38, cancelamentos: 15 },
-  { month: "Abr", novos: 61, cancelamentos: 9 },
-  { month: "Mai", novos: 49, cancelamentos: 11 },
-  { month: "Jun", novos: 58, cancelamentos: 7 },
+  { month: 'Jan', novos: 45, cancelamentos: 12 },
+  { month: 'Fev', novos: 52, cancelamentos: 8 },
+  { month: 'Mar', novos: 38, cancelamentos: 15 },
+  { month: 'Abr', novos: 61, cancelamentos: 9 },
+  { month: 'Mai', novos: 49, cancelamentos: 11 },
+  { month: 'Jun', novos: 58, cancelamentos: 7 }
 ]
 
 export function ChartsSection() {
@@ -29,31 +38,41 @@ export function ChartsSection() {
         <div className="h-48 md:h-64">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={revenueData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-              <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "#E0E0E0", fontSize: 11 }} />
+              <XAxis
+                dataKey="month"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#E0E0E0', fontSize: 11 }}
+              />
               <YAxis
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: "#E0E0E0", fontSize: 11 }}
-                tickFormatter={(value:any) => `R$ ${value}`}
+                tick={{ fill: '#E0E0E0', fontSize: 11 }}
+                tickFormatter={(value: any) => `R$ ${value}`}
                 width={60}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "#1E1E1E",
-                  border: "1px solid #333333",
-                  borderRadius: "8px",
-                  color: "#E0E0E0",
-                  fontSize: "12px",
+                  backgroundColor: '#1E1E1E',
+                  border: '1px solid #333333',
+                  borderRadius: '8px',
+                  color: '#E0E0E0',
+                  fontSize: '12px'
                 }}
-                formatter={(value:any) => [`R$ ${value}`, "Receita"]}
+                formatter={(value: any) => [`R$ ${value}`, 'Receita']}
               />
               <Line
                 type="monotone"
                 dataKey="revenue"
                 stroke="#007BFF"
                 strokeWidth={3}
-                dot={{ fill: "#007BFF", strokeWidth: 2, r: 3 }}
-                activeDot={{ r: 5, fill: "#007BFF", stroke: "#007BFF", strokeWidth: 2 }}
+                dot={{ fill: '#007BFF', strokeWidth: 2, r: 3 }}
+                activeDot={{
+                  r: 5,
+                  fill: '#007BFF',
+                  stroke: '#007BFF',
+                  strokeWidth: 2
+                }}
               />
             </LineChart>
           </ResponsiveContainer>
@@ -67,19 +86,34 @@ export function ChartsSection() {
         <div className="h-48 md:h-64">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={userAcquisitionData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-              <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "#E0E0E0", fontSize: 11 }} />
-              <YAxis axisLine={false} tickLine={false} tick={{ fill: "#E0E0E0", fontSize: 11 }} width={30} />
+              <XAxis
+                dataKey="month"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#E0E0E0', fontSize: 11 }}
+              />
+              <YAxis
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#E0E0E0', fontSize: 11 }}
+                width={30}
+              />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "#1E1E1E",
-                  border: "1px solid #333333",
-                  borderRadius: "8px",
-                  color: "#E0E0E0",
-                  fontSize: "12px",
+                  backgroundColor: '#1E1E1E',
+                  border: '1px solid #333333',
+                  borderRadius: '8px',
+                  color: '#E0E0E0',
+                  fontSize: '12px'
                 }}
               />
               <Bar dataKey="novos" fill="#39ff14" name="Novos Registos" radius={[2, 2, 0, 0]} />
-              <Bar dataKey="cancelamentos" fill="#ff4444" name="Cancelamentos" radius={[2, 2, 0, 0]} />
+              <Bar
+                dataKey="cancelamentos"
+                fill="#ff4444"
+                name="Cancelamentos"
+                radius={[2, 2, 0, 0]}
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>

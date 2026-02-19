@@ -1,13 +1,13 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Check } from "lucide-react"
-import { usePlans } from "@/hooks/usePlans"
-import { useNavigate } from "react-router"
-import { PATHS } from "@/router/paths"
+import { useState } from 'react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Check } from 'lucide-react'
+import { usePlans } from '@/hooks/usePlans'
+import { useNavigate } from 'react-router'
+import { PATHS } from '@/router/paths'
 
 export function PricingSection() {
   const [isAnnual, setIsAnnual] = useState(false)
@@ -38,7 +38,9 @@ export function PricingSection() {
               <button
                 onClick={() => setIsAnnual(false)}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                  !isAnnual ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                  !isAnnual
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 Mensal
@@ -46,12 +48,14 @@ export function PricingSection() {
               <button
                 onClick={() => setIsAnnual(true)}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-all relative ${
-                  isAnnual ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                  isAnnual
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 Anual
                 {isAnnual && (
-                  <Badge className="absolute -top-2 -right-2 bg-success text-success-foreground text-xs"/>
+                  <Badge className="absolute -top-2 -right-2 bg-success text-success-foreground text-xs" />
                 )}
               </button>
             </div>
@@ -59,15 +63,24 @@ export function PricingSection() {
 
           <div className="flex justify-center gap-8">
             {plans?.map((plan) => (
-              <Card key={plan.id} className="bg-card border-border hover:border-primary/50 transition-all duration-300">
+              <Card
+                key={plan.id}
+                className="bg-card border-border hover:border-primary/50 transition-all duration-300"
+              >
                 <CardHeader className="text-center pb-4">
-                  <CardTitle className="text-2xl font-bold text-foreground">Plano {plan.name}</CardTitle>
+                  <CardTitle className="text-2xl font-bold text-foreground">
+                    Plano {plan.name}
+                  </CardTitle>
                   <div className="mt-4">
                     <span className="text-4xl font-bold text-foreground">
                       R$ {isAnnual ? (plan.price * 0.8).toFixed(2) : plan.price.toFixed(2)}
                     </span>
-                    <span className="text-muted-foreground">/{isAnnual ? "mês" : "mês"}</span>
-                    {isAnnual && <p className="text-sm text-success mt-1">Economize R$ {(plan.price * 0.2 * 12).toFixed(2)} por ano</p>}
+                    <span className="text-muted-foreground">/{isAnnual ? 'mês' : 'mês'}</span>
+                    {isAnnual && (
+                      <p className="text-sm text-success mt-1">
+                        Economize R$ {(plan.price * 0.2 * 12).toFixed(2)} por ano
+                      </p>
+                    )}
                   </div>
                 </CardHeader>
 
