@@ -6,8 +6,6 @@ import { useAuth } from '@/hooks/useAuth'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { ArrowRightIcon, Loader2Icon } from 'lucide-react'
-import { useNavigate } from 'react-router'
-import { PATHS } from '@/router/paths'
 
 export function RegisterForm() {
   const { register: registerUser, loading, error } = useAuth()
@@ -20,11 +18,8 @@ export function RegisterForm() {
     mode: 'onChange'
   })
 
-  const navigate = useNavigate()
-
   const onSubmit = async (data: RegisterInput) => {
-    const ok = await registerUser(data)
-    if (ok) navigate(PATHS.app.home, { replace: true })
+    await registerUser(data)
   }
 
   return (
@@ -47,9 +42,10 @@ export function RegisterForm() {
         {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
       </div>
 
-       <div className="flex flex-col gap-1">
-        <label className="text-sm">Confirmar Senha</label>
-        <Input type="password" placeholder="Confirme a senha"/>
+      <div className="flex flex-col gap-1">
+        <label htmlFor="confirmPassword" className="text-sm">Confirmar Senha</label>
+        <Input id="confirmPassword" type="password" placeholder="Confirme a senha" {...register('confirmPassword')} />
+        {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>}
       </div>
 
       {error && <p className="text-sm text-red-500">{error}</p>}

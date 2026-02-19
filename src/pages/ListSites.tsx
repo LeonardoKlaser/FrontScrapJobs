@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useMemo } from "react"
 import { CheckCircle, Search, Send, XCircle } from "lucide-react"
 import { Input } from "@/components/ui/input"
@@ -24,7 +22,7 @@ export default function EmpresasPage() {
   const [filter, setFilter] = useState("all");
   const { mutate: requestSite, isPending, isSuccess, isError, error } = useRequestSite()
   const { mutate: registerUserToSite, isPending: isRegisteringUser } = useRegisterUserSite()
-  const { mutate: unregisterUser, isPending: isUnregistering } = useUnregisterUserSite();
+  const { mutate: unregisterUser } = useUnregisterUserSite();
 
   const filteredCompanies = useMemo(() => {
     return data

@@ -87,7 +87,7 @@ export function RegistrationModal({
                   <Button
                     variant="destructive"
                     onClick={handleUnregister}>
-                    "Desvincular"
+                    Desvincular
                   </Button>
                 </div>
               </div>

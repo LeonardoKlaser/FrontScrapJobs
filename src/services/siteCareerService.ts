@@ -1,11 +1,10 @@
-import type { SiteCareer, UserSiteRequest } from '@/models/siteCareer';
+import type { SiteCareer, UserSiteRequest } from '@/models/siteCareer'
 import { api } from './api'
-import axios from 'axios'
 
 export type ScrapingType = "CSS" | "API"
 
-export interface FormData {
-  base_url: string;
+export interface SiteConfigFormData {
+  base_url: string
   site_name: string
   is_active: boolean
   scraping_type: ScrapingType
@@ -27,74 +26,39 @@ export interface FormData {
 }
 
 export const SiteCareerService = {
-
-  getAllSiteCareer: async(): Promise<SiteCareer[]> => {
-    try{
-      const {data} = await api.get('/api/getSites')
+  getAllSiteCareer: async (): Promise<SiteCareer[]> => {
+    const { data } = await api.get('/api/getSites')
     return data
-    }catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-       throw new Error(error.response.data.error || 'Não foi possível recuperar dados do dashboard.')
-     }
-     throw new Error('Não foi possível conectar ao servidor.')
-   }
-    
   },
 
-  addSiteConfig: async(formData : FormData, logoFile: File | null) => {
-    const data = new FormData();
+  addSiteConfig: async (formData: SiteConfigFormData, logoFile: File | null) => {
+    const multipartData = new FormData()
+    multipartData.append("siteData", JSON.stringify(formData))
 
-    try{
-      data.append("siteData", JSON.stringify(formData));
-
-    if(logoFile){
-      data.append('logo', logoFile)
+    if (logoFile) {
+      multipartData.append('logo', logoFile)
     }
 
-    const response = await api.post('/siteCareer', data, {
+    const response = await api.post('/siteCareer', multipartData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       }
-    });
+    })
 
-    return response.data;
-    }catch(error){
-      if (axios.isAxiosError(error) && error.response) {
-        console.log(error.response.data.error || 'Não foi possível recuperar dados do dashboard.')
-        throw new Error(error.response.data.error || 'Não foi possível recuperar dados do dashboard.')
-      }
-      throw new Error('Não foi possível conectar ao servidor.')
-    }
+    return response.data
   },
 
   requestSite: async (url: string) => {
-    try {
-      const { data } = await api.post('api/request-site', { url });
-      return data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.error || 'Não foi possível enviar a solicitação.');
-      }
-      throw new Error('Não foi possível conectar ao servidor.');
-    }
+    const { data } = await api.post('/api/request-site', { url })
+    return data
   },
+
   registerUserSite: async (request: UserSiteRequest) => {
-    try {
-      const { data } = await api.post('/userSite',  request );
-      return data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.error || 'Não foi possível enviar a solicitação.');
-      }
-      throw new Error('Não foi possível conectar ao servidor.');
-    }
+    const { data } = await api.post('/userSite', request)
+    return data
   },
+
   unregisterUserFromSite: async (siteId: number): Promise<void> => {
-    try {
-      await api.delete(`/userSite/${siteId}`);
-    } catch (error) {
-      console.error('Error unregistering user from site:', error);
-      throw error;
-    }
+    await api.delete(`/userSite/${siteId}`)
   },
 }

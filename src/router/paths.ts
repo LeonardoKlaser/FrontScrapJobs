@@ -9,7 +9,7 @@ export const PATHS = {
     listSites: '/app/sites',
     adminDashboard: '/app/admin-dashboard',
     addNewSite: '/app/add-new-site',
-    accountPage: 'app/accountPage',
+    accountPage: '/app/accountPage',
     // job: (id: string) => `/app/jobs/${id}`
   },
   notFound: '*'

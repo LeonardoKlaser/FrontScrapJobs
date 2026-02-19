@@ -1,18 +1,16 @@
-import { useLocation, useNavigate } from "react-router"
+import { useNavigate, useSearchParams } from "react-router"
 import { Button } from "@/components/ui/button"
 import { CheckCircle2 } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useMemo } from "react"
 
 export default function PaymentConfirmationPage() {
   const navigate = useNavigate()
-  const { search } = useLocation()
-  const params = new URLSearchParams(search)
-  const [planName, setPlanName] = useState("Premium")
+  const [searchParams] = useSearchParams()
 
-  useEffect(() => {
-    const plan = params.get("plan") || "Premium"
-    setPlanName(plan)
-  }, [params])
+  const planName = useMemo(
+    () => searchParams.get("plan") || "Premium",
+    [searchParams]
+  )
 
   const handleDashboardClick = () => {
     navigate("/app")

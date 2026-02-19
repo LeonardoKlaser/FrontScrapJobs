@@ -8,7 +8,7 @@ import type { User } from "@/models/user"
 export function PlanSection({user}: { user: User | undefined}) {
   const currentUsage = 2
   const maxUsage = user?.plan?.max_sites ?? 0
-  const usagePercentage = (currentUsage / maxUsage) * 100
+  const usagePercentage = maxUsage > 0 ? (currentUsage / maxUsage) * 100 : 0
 
   const benefits = user?.plan?.features ?? []
 

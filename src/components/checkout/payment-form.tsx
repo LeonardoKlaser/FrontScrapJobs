@@ -135,49 +135,19 @@ export function PaymentForm({ plan }: PaymentFormProps) {
     setIsLoading(true)
 
     try {
-      const responsePayment = await api.post(`/api/payments/create/${plan.id}`)
+      const responsePayment = await api.post(`/api/payments/create/${plan.id}`, {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        tax: formData.cpfCnpj.replace(/\D/g, ""),
+        cellphone: formData.phone.replace(/\D/g, ""),
+      })
 
       const { url } = responsePayment.data
-      window.location.href = url
-
-      alert("Pagamento processado com sucesso! (Simulado)")
-
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          cpfCnpj: formData.cpfCnpj,
-          phone: formData.phone,
-          paymentMethod: formData.paymentMethod,
-        }),
-      })
-
-      const result = await response.json()
-
-      if (!response.ok) {
-        setErrors({
-          submit: result.error || "Erro ao processar registro",
-        })
+      if (url) {
+        window.location.href = url
         return
       }
-
-      alert(`${result.message}\nID do Registro: ${result.registrationId}`)
-
-      setFormData({
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        cpfCnpj: "",
-        phone: "",
-        paymentMethod: "",
-      })
-      setErrors({})
     } catch (err) {
       setErrors({
         submit: err instanceof Error ? err.message : "Erro ao processar registro",

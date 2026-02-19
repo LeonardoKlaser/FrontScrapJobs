@@ -1,5 +1,3 @@
-"use client"
-
 import type React from "react"
 
 import { useState, useEffect } from "react"
@@ -19,18 +17,20 @@ interface CurriculumFormProps {
   isEditing: boolean
 }
 
-const emptyFormData: Omit<Curriculum, "id"> = {
-  title: "",
-  is_active: false,
-  summary: "",
-  skills: "",
-  languages: "",
-  experiences: [{ id: crypto.randomUUID(), company: "", title: "", description: "" }],
-  educations: [{ id: crypto.randomUUID(), institution: "", degree: "", year: "" }],
+function createEmptyFormData(): Omit<Curriculum, "id"> {
+  return {
+    title: "",
+    is_active: false,
+    summary: "",
+    skills: "",
+    languages: "",
+    experiences: [{ id: crypto.randomUUID(), company: "", title: "", description: "" }],
+    educations: [{ id: crypto.randomUUID(), institution: "", degree: "", year: "" }],
+  }
 }
 
 export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
-  const [formData, setFormData] = useState(emptyFormData)
+  const [formData, setFormData] = useState(createEmptyFormData)
   const [isSaving, setIsSaving] = useState(false)
   const [skillInput, setSkillInput] = useState("")
   const [languageInput, setLanguageInput] = useState("")
@@ -48,19 +48,21 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
         educations: curriculum.educations,
       })
     } else {
-      setFormData(emptyFormData)
+      setFormData(createEmptyFormData())
     }
   }, [curriculum])
 
   const handleSave = async () => {
     setIsSaving(true)
-    if (isEditing && curriculum) {
-      updateCurriculum({ ...formData, id: curriculum.id });
-    } else {
-      await curriculoService.newCurriculum(formData)    
+    try {
+      if (isEditing && curriculum) {
+        updateCurriculum({ ...formData, id: curriculum.id })
+      } else {
+        await curriculoService.newCurriculum(formData)
+      }
+    } finally {
+      setIsSaving(false)
     }
-    
-    setIsSaving(false)
   }
 
   const addExperience = () => {

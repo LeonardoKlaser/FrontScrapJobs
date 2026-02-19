@@ -89,14 +89,16 @@ export function Home() {
                     <TableCell>{job.title}</TableCell>
                     <TableCell>{job.company}</TableCell>
                     <TableCell>{job.location}</TableCell>
-                    <a 
-                            href={job.job_link} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-primary hover:underline"
-                        >
-                            Ver vaga
-                        </a>
+                    <TableCell>
+                      <a
+                        href={job.job_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        Ver vaga
+                      </a>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -127,8 +129,8 @@ export function Home() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {monitoredUrls.map((url, index) => (
-                  <TableRow key={index}>
+                {monitoredUrls.map((url) => (
+                  <TableRow key={url.site_name}>
                     <TableCell>{url.site_name}</TableCell>
                     <TableCell className="max-w-xs truncate">
                         <a 

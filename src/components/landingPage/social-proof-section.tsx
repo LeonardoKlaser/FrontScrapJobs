@@ -16,7 +16,7 @@ export function SocialProofSection() {
           </p>
   
           <div className="flex items-center justify-center space-x-8 md:space-x-12 opacity-60">
-            {companies.map((company, index) => (
+            {companies.map((company) => (
               <div
                 key={company.name}
                 className="flex items-center justify-center w-12 h-12 bg-card border border-border rounded-lg text-muted-foreground font-bold text-lg hover:opacity-100 transition-opacity duration-200"

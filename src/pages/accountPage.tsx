@@ -1,11 +1,7 @@
-"use client"
-
 import { useState } from "react"
 import { User, CreditCard, LogOut } from "lucide-react"
-import { ProfileSection } from "@/components/accountPage//profile-section"
+import { ProfileSection } from "@/components/accountPage/profile-section"
 import { PlanSection } from "@/components/accountPage/plan-section"
-// import { SecuritySection } from "@/components/accountPage/security-section"
-// import { NotificationsSection } from "@/components/accountPage/notifications-section"
 import { cn } from "@/lib/utils"
 import { useUser } from "@/hooks/useUser"
 import { useAuth } from "@/hooks/useAuth"
@@ -15,18 +11,15 @@ type Tab = "perfil" | "plano" | "seguranca" | "notificacoes"
 const menuItems = [
   { id: "perfil" as Tab, label: "Perfil", icon: User },
   { id: "plano" as Tab, label: "Plano e Faturamento", icon: CreditCard },
-  // { id: "seguranca" as Tab, label: "Segurança", icon: Shield },
-  // { id: "notificacoes" as Tab, label: "Notificações", icon: Bell },
 ]
 
 export default function AccountPage() {
   const [activeTab, setActiveTab] = useState<Tab>("perfil")
-  const {data: user} = useUser();
+  const { data: user } = useUser()
   const { logout } = useAuth()
 
   const handleLogout = () => {
     logout()
-    window.location.reload()
   }
 
   return (
@@ -93,11 +86,8 @@ export default function AccountPage() {
 
           <main className="flex-1 min-w-0">
             <div className="space-y-6">
-              {activeTab === "perfil" && <ProfileSection id={user?.id} user_name={user?.user_name} email={user?.email} plan={user?.plan}/>}
+              {activeTab === "perfil" && <ProfileSection user={user} />}
               {activeTab === "plano" && <PlanSection user={user} />}
-              {/* {activeTab === "seguranca" && <SecuritySection />} */}
-              {/* {activeTab === "notificacoes" && <NotificationsSection />} */}
-
             </div>
           </main>
         </div>

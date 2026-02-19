@@ -9,7 +9,7 @@ export function useRegisterUserSite() {
   return useMutation({
     mutationFn: (request: UserSiteRequest) => SiteCareerService.registerUserSite(request),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["siteCareer"] })
+      queryClient.invalidateQueries({ queryKey: ["siteCareerList"] })
     },
   })
 }

@@ -1,8 +1,8 @@
 import type { Plan } from "./plan";
 
 export interface User {
-  id: string | undefined;
-  user_name: string | undefined;
-  email: string | undefined;
+  id: string;
+  user_name: string;
+  email: string;
   plan: Plan | undefined;
 }

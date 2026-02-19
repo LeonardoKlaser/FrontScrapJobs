@@ -1,5 +1,3 @@
-"use client"
-
 import type React from "react"
 
 import { useEffect, useState } from "react"
@@ -15,10 +13,10 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { HelpCircle, CheckCircle, XCircle, ImagePlus } from "lucide-react"
 import { Tooltip } from "@/components/tooltip"
 import { useAddSiteConfig } from "@/hooks/useAddSiteConfig"
-import { type FormData, type ScrapingType } from "@/services/siteCareerService"
+import { type SiteConfigFormData, type ScrapingType } from "@/services/siteCareerService"
 
 export default function AdicionarSitePage() {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<SiteConfigFormData>({
     site_name: "",
     base_url: "",
     is_active: true,
@@ -68,7 +66,7 @@ export default function AdicionarSitePage() {
     }
   }, [isSuccess]);
 
-  const handleInputChange = (field: keyof FormData, value: string | boolean) => {
+  const handleInputChange = (field: keyof SiteConfigFormData, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
   

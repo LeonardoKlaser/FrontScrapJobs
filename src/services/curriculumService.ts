@@ -14,7 +14,7 @@ export const curriculoService = {
       throw new Error('Não foi possível conectar ao servidor.');
     }
   },
-  newCurriculum: async (data : Curriculum) => {
+  newCurriculum: async (data : Omit<Curriculum, "id">) => {
     try {
       await api.post('/curriculum', data);
       return;

@@ -1,15 +1,10 @@
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { CurriculumList } from "@/components/curriculum/curriculum-list"
 import { CurriculumForm } from "@/components/curriculum/curriculum-form"
-import type { Curriculum } from "@/models/curriculum"
 import { useCurriculum } from "@/hooks/useCurriculum"
 
 export function Curriculum() {
-  const { data } = useCurriculum();
-  const curriculums = useMemo(() => {
-    return data 
-  }, [data]);
-  //const [curriculums] = useState<Curriculum[] | undefined >(data)
+  const { data: curriculums } = useCurriculum()
   const [selectedCurriculumId, setSelectedCurriculumId] = useState<string | null>(null)
 
   const selectedCurriculum = curriculums?.find((cv) => cv.id === selectedCurriculumId)
