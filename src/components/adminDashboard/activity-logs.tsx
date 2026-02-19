@@ -30,8 +30,8 @@ const errorLogs = [
 
 export function ActivityLogs() {
   return (
-    <Card className="bg-card border-border p-4 md:p-6 hover:shadow-lg hover:shadow-[#007BFF]/10 transition-all duration-300">
-      <h2 className="text-lg md:text-xl font-semibold text-[#007BFF] mb-4 md:mb-6">
+    <Card className="bg-card border-border p-4 md:p-6 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300">
+      <h2 className="text-lg md:text-xl font-semibold text-primary mb-4 md:mb-6">
         Últimos Erros de Scraping
       </h2>
       <div className="overflow-x-auto">
@@ -60,7 +60,7 @@ export function ActivityLogs() {
                 <td className="py-3 px-2 md:px-4 text-foreground text-sm font-medium">
                   {log.site}
                 </td>
-                <td className="py-3 px-2 md:px-4 text-[#ff4444] text-sm">{log.error}</td>
+                <td className="py-3 px-2 md:px-4 text-destructive text-sm">{log.error}</td>
               </tr>
             ))}
           </tbody>

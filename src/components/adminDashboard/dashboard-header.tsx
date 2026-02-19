@@ -9,7 +9,7 @@ import {
 export function DashboardHeader() {
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-      <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#007BFF] text-balance">
+      <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-primary text-balance">
         Dashboard de Monitorização
       </h1>
       <div className="flex items-center gap-2">

@@ -14,25 +14,25 @@ interface KPICardProps {
 function KPICard({ title, value, subtitle, icon, trend = 'neutral', delay = '0s' }: KPICardProps) {
   const trendColor =
     trend === 'positive'
-      ? 'text-[#39ff14]'
+      ? 'text-success'
       : trend === 'negative'
-        ? 'text-[#ff4444]'
+        ? 'text-destructive'
         : 'text-foreground'
 
   return (
     <Card
-      className="bg-card border-border p-4 md:p-6 hover:shadow-lg hover:shadow-[#007BFF]/20 hover:border-[#007BFF]/30 transition-all duration-300 group cursor-pointer transform hover:scale-105"
+      className="bg-card border-border p-4 md:p-6 hover:shadow-lg hover:shadow-primary/20 hover:border-primary/30 transition-all duration-300 group cursor-pointer transform hover:scale-105"
       style={{ animationDelay: delay }}
     >
       <div className="flex items-start justify-between">
         <div className="space-y-2 flex-1 min-w-0">
           <p className="text-muted-foreground text-xs md:text-sm font-medium truncate">{title}</p>
-          <p className="text-xl md:text-2xl lg:text-3xl font-bold text-[#007BFF] group-hover:text-[#0056b3] transition-colors">
+          <p className="text-xl md:text-2xl lg:text-3xl font-bold text-primary group-hover:text-primary/80 transition-colors">
             {value}
           </p>
           <p className={`text-xs md:text-sm ${trendColor} leading-tight`}>{subtitle}</p>
         </div>
-        <div className="text-[#007BFF] opacity-60 group-hover:opacity-100 transition-opacity ml-2">
+        <div className="text-primary opacity-60 group-hover:opacity-100 transition-opacity ml-2">
           {icon}
         </div>
       </div>

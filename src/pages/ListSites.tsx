@@ -106,7 +106,7 @@ export default function EmpresasPage() {
                 placeholder="Buscar por uma empresa..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-[#007bff] focus:ring-[#007bff]"
+                className="pl-10 bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
               />
             </div>
             <div className="bg-card border border-border rounded-lg p-1 flex mt-4">
