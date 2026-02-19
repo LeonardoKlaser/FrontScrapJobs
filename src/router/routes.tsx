@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { createBrowserRouter } from 'react-router'
+import { createBrowserRouter, Navigate } from 'react-router'
 
 import { MainLayout } from '@/layouts/MainLayout'
 import { Home } from '@/pages/Home'
@@ -29,9 +29,6 @@ const curriculumLazy = async () => {
   }
 }
 
-// TODO: Admin guard needs backend support. The backend currently checks ADMIN_EMAIL
-// server-side but does not expose `is_admin` in the user response.
-// Once the backend sends `is_admin`, uncomment the role check below.
 function AdminGuard({ children }: { children: React.ReactNode }) {
   const user = useUser()
   if (user.isLoading)
@@ -40,7 +37,7 @@ function AdminGuard({ children }: { children: React.ReactNode }) {
         <Spinner className="size-8" />
       </div>
     )
-  // if (!user.data?.is_admin) return <Navigate to={PATHS.app.home} replace />
+  if (!user.data?.is_admin) return <Navigate to={PATHS.app.home} replace />
   return <>{children}</>
 }
 

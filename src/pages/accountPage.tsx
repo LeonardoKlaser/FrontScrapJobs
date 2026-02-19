@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { User, CreditCard, LogOut } from 'lucide-react'
+import { User, CreditCard, Lock, LogOut } from 'lucide-react'
 import { ProfileSection } from '@/components/accountPage/profile-section'
 import { PlanSection } from '@/components/accountPage/plan-section'
+import { SecuritySection } from '@/components/accountPage/security-section'
 import { cn } from '@/lib/utils'
 import { useUser } from '@/hooks/useUser'
 import { useAuth } from '@/hooks/useAuth'
@@ -10,7 +11,8 @@ type Tab = 'perfil' | 'plano' | 'seguranca' | 'notificacoes'
 
 const menuItems = [
   { id: 'perfil' as Tab, label: 'Perfil', icon: User },
-  { id: 'plano' as Tab, label: 'Plano e Faturamento', icon: CreditCard }
+  { id: 'plano' as Tab, label: 'Plano e Faturamento', icon: CreditCard },
+  { id: 'seguranca' as Tab, label: 'Segurança', icon: Lock }
 ]
 
 export default function AccountPage() {
@@ -88,6 +90,7 @@ export default function AccountPage() {
             <div className="space-y-6">
               {activeTab === 'perfil' && <ProfileSection user={user} />}
               {activeTab === 'plano' && <PlanSection user={user} />}
+              {activeTab === 'seguranca' && <SecuritySection />}
             </div>
           </main>
         </div>
