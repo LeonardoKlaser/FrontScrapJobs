@@ -1,32 +1,5 @@
 import { Card } from '@/components/ui/card'
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  Tooltip
-} from 'recharts'
-
-const revenueData = [
-  { month: 'Jan', revenue: 3200 },
-  { month: 'Fev', revenue: 3800 },
-  { month: 'Mar', revenue: 4100 },
-  { month: 'Abr', revenue: 4300 },
-  { month: 'Mai', revenue: 4600 },
-  { month: 'Jun', revenue: 4820 }
-]
-
-const userAcquisitionData = [
-  { month: 'Jan', novos: 45, cancelamentos: 12 },
-  { month: 'Fev', novos: 52, cancelamentos: 8 },
-  { month: 'Mar', novos: 38, cancelamentos: 15 },
-  { month: 'Abr', novos: 61, cancelamentos: 9 },
-  { month: 'Mai', novos: 49, cancelamentos: 11 },
-  { month: 'Jun', novos: 58, cancelamentos: 7 }
-]
+import { BarChart3, TrendingUp } from 'lucide-react'
 
 export function ChartsSection() {
   return (
@@ -35,47 +8,9 @@ export function ChartsSection() {
         <h2 className="text-lg md:text-xl font-semibold text-primary mb-4 md:mb-6 text-balance">
           Receita Mensal (Últimos 6 Meses)
         </h2>
-        <div className="h-48 md:h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={revenueData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-              <XAxis
-                dataKey="month"
-                axisLine={false}
-                tickLine={false}
-                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
-              />
-              <YAxis
-                axisLine={false}
-                tickLine={false}
-                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
-                tickFormatter={(value: number) => `R$ ${value}`}
-                width={60}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: 'hsl(var(--card))',
-                  border: '1px solid hsl(var(--border))',
-                  borderRadius: '8px',
-                  color: 'hsl(var(--foreground))',
-                  fontSize: '12px'
-                }}
-                formatter={(value: number) => [`R$ ${value}`, 'Receita']}
-              />
-              <Line
-                type="monotone"
-                dataKey="revenue"
-                stroke="#007BFF"
-                strokeWidth={3}
-                dot={{ fill: '#007BFF', strokeWidth: 2, r: 3 }}
-                activeDot={{
-                  r: 5,
-                  fill: '#007BFF',
-                  stroke: '#007BFF',
-                  strokeWidth: 2
-                }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+        <div className="h-48 md:h-64 flex flex-col items-center justify-center text-muted-foreground">
+          <TrendingUp size={48} className="mb-4 opacity-30" />
+          <p className="text-sm">Histórico de receita em breve</p>
         </div>
       </Card>
 
@@ -83,39 +18,9 @@ export function ChartsSection() {
         <h2 className="text-lg md:text-xl font-semibold text-primary mb-4 md:mb-6 text-balance">
           Novos Utilizadores vs. Cancelamentos (Mês)
         </h2>
-        <div className="h-48 md:h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={userAcquisitionData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-              <XAxis
-                dataKey="month"
-                axisLine={false}
-                tickLine={false}
-                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
-              />
-              <YAxis
-                axisLine={false}
-                tickLine={false}
-                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
-                width={30}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: 'hsl(var(--card))',
-                  border: '1px solid hsl(var(--border))',
-                  borderRadius: '8px',
-                  color: 'hsl(var(--foreground))',
-                  fontSize: '12px'
-                }}
-              />
-              <Bar dataKey="novos" fill="#39ff14" name="Novos Registos" radius={[2, 2, 0, 0]} />
-              <Bar
-                dataKey="cancelamentos"
-                fill="#ff4444"
-                name="Cancelamentos"
-                radius={[2, 2, 0, 0]}
-              />
-            </BarChart>
-          </ResponsiveContainer>
+        <div className="h-48 md:h-64 flex flex-col items-center justify-center text-muted-foreground">
+          <BarChart3 size={48} className="mb-4 opacity-30" />
+          <p className="text-sm">Histórico de utilizadores em breve</p>
         </div>
       </Card>
     </div>

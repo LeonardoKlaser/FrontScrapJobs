@@ -26,7 +26,7 @@ export default function AdminDashboard() {
           <ChartsSection />
         </div>
         <div className="animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-          <ActivityLogs />
+          <ActivityLogs errors={data?.recent_errors ?? []} isLoading={isLoading} />
         </div>
       </div>
     </div>

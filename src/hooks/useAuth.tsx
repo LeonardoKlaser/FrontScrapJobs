@@ -2,6 +2,7 @@ import { PATHS } from '@/router/paths'
 import { authService } from '@/services/authService'
 import type { LoginInput } from '@/validators/auth'
 import { useQueryClient } from '@tanstack/react-query'
+import axios from 'axios'
 import { useState, useCallback } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 
@@ -23,7 +24,9 @@ export function useAuth() {
         navigate(redirectTo && redirectTo.startsWith('/app') ? redirectTo : PATHS.app.home)
         return true
       } catch (e: unknown) {
-        if (e instanceof Error) {
+        if (axios.isAxiosError(e)) {
+          setError(e.response?.data?.error ?? 'E-mail ou senha inválidos')
+        } else if (e instanceof Error) {
           setError(e.message)
         } else {
           setError('Erro inesperado')
