@@ -13,17 +13,24 @@ import { PATHS } from '@/router/paths'
 import { useUser } from '@/hooks/useUser'
 import { useAuth } from '@/hooks/useAuth'
 
-const items = [
+const baseItems = [
   { title: 'Início', href: PATHS.app.home },
   { title: 'Currículo', href: PATHS.app.curriculum },
   { title: 'Empresas', href: PATHS.app.listSites },
   { title: 'Minha Conta', href: PATHS.app.accountPage }
 ]
 
+const adminItems = [
+  { title: 'Admin', href: PATHS.app.adminDashboard },
+  { title: 'Adicionar Site', href: PATHS.app.addNewSite }
+]
+
 export function AppHeader() {
   const [open, setOpen] = useState(false)
   const { data: user, isLoading } = useUser()
   const { logout } = useAuth()
+
+  const items = user?.is_admin ? [...baseItems, ...adminItems] : baseItems
 
   const handleLogout = async () => {
     await logout()

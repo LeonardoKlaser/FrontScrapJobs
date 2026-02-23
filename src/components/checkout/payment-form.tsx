@@ -1,5 +1,5 @@
 import type React from 'react'
-import { useState } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -45,6 +45,49 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
     paymentMethod: ''
   })
 
+  const debounceTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({})
+
+  const validateFieldOnServer = useCallback(
+    async (field: 'email' | 'cpfCnpj', value: string) => {
+      const email = field === 'email' ? value : formData.email
+      const tax =
+        field === 'cpfCnpj' ? value.replace(/\D/g, '') : formData.cpfCnpj.replace(/\D/g, '')
+
+      if (!email || !tax) return
+
+      try {
+        const res = await api.post('/api/users/validate-checkout', { email, tax })
+        const data = res.data as { email_exists: boolean; tax_exists: boolean }
+
+        setErrors((prev) => {
+          const next = { ...prev }
+          if (field === 'email') {
+            next.email = data.email_exists ? 'Este e-mail já possui cadastro. Faça login.' : ''
+          }
+          if (field === 'cpfCnpj') {
+            next.cpfCnpj = data.tax_exists ? 'Este CPF/CNPJ já está cadastrado.' : ''
+          }
+          return next
+        })
+      } catch {
+        // Silently ignore validation errors — form submit will catch issues
+      }
+    },
+    [formData.email, formData.cpfCnpj]
+  )
+
+  const handleFieldBlur = useCallback(
+    (field: 'email' | 'cpfCnpj', value: string) => {
+      if (debounceTimers.current[field]) {
+        clearTimeout(debounceTimers.current[field])
+      }
+      debounceTimers.current[field] = setTimeout(() => {
+        validateFieldOnServer(field, value)
+      }, 300)
+    },
+    [validateFieldOnServer]
+  )
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     let formattedValue = value
@@ -76,9 +119,9 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
     }
 
     setFormData((prev) => ({ ...prev, [name]: formattedValue }))
-    // Clear error for this field when user starts typing
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: '' }))
+    // Clear error for this field and submit error when user starts typing
+    if (errors[name] || errors.submit) {
+      setErrors((prev) => ({ ...prev, [name]: '', submit: '' }))
     }
   }
 
@@ -227,13 +270,26 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
                 placeholder="seu@email.com"
                 value={formData.email}
                 onChange={handleInputChange}
+                onBlur={() => handleFieldBlur('email', formData.email)}
                 disabled={isLoading}
                 className={`bg-input border-border text-foreground placeholder:text-muted-foreground ${
                   errors.email ? 'border-destructive' : ''
                 }`}
                 required
               />
-              {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
+              {errors.email && (
+                <p className="text-sm text-destructive">
+                  {errors.email}
+                  {errors.email.includes('login') && (
+                    <>
+                      {' '}
+                      <a href="/login" className="underline font-medium">
+                        Ir para login
+                      </a>
+                    </>
+                  )}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -319,6 +375,7 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
                 placeholder="000.000.000-00"
                 value={formData.cpfCnpj}
                 onChange={handleInputChange}
+                onBlur={() => handleFieldBlur('cpfCnpj', formData.cpfCnpj)}
                 disabled={isLoading}
                 className={`bg-input border-border text-foreground placeholder:text-muted-foreground font-mono ${
                   errors.cpfCnpj ? 'border-destructive' : ''
@@ -422,7 +479,11 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
           <div className="flex gap-3 pt-6">
             <Button
               type="submit"
-              disabled={isLoading}
+              disabled={
+                isLoading ||
+                errors.email?.includes('cadastro') ||
+                errors.cpfCnpj?.includes('cadastrado')
+              }
               className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               {isLoading ? (
