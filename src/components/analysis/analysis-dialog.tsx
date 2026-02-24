@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -7,8 +7,9 @@ import {
   DialogDescription
 } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
-import { Loader2, CheckCircle, AlertTriangle, Lightbulb, Target } from 'lucide-react'
-import { useAnalyzeJob } from '@/hooks/useAnalysis'
+import { Button } from '@/components/ui/button'
+import { Loader2, CheckCircle, AlertTriangle, Lightbulb, Target, Mail } from 'lucide-react'
+import { useAnalyzeJob, useSendAnalysisEmail } from '@/hooks/useAnalysis'
 import type { ResumeAnalysis } from '@/services/analysisService'
 import { isAxiosError } from 'axios'
 
@@ -25,7 +26,13 @@ function getScoreBadgeColor(score: number) {
   return 'bg-red-500/10 text-red-500 border-red-500/20'
 }
 
-function AnalysisResult({ analysis }: { analysis: ResumeAnalysis }) {
+function AnalysisResult({
+  analysis,
+  jobId,
+}: {
+  analysis: ResumeAnalysis
+  jobId: number
+}) {
   const {
     matchAnalysis,
     strengthsForThisJob,
@@ -33,6 +40,20 @@ function AnalysisResult({ analysis }: { analysis: ResumeAnalysis }) {
     actionableResumeSuggestions,
     finalConsiderations
   } = analysis
+
+  const { mutate: sendEmail, isPending: isSending, isSuccess: emailSent, isError: emailError } = useSendAnalysisEmail()
+  const [emailFeedback, setEmailFeedback] = useState<string | null>(null)
+
+  const handleSendEmail = () => {
+    setEmailFeedback(null)
+    sendEmail(
+      { jobId, analysis },
+      {
+        onSuccess: () => setEmailFeedback('Email enviado com sucesso!'),
+        onError: () => setEmailFeedback('Erro ao enviar email. Tente novamente.')
+      }
+    )
+  }
 
   return (
     <div className="space-y-6 max-h-[60vh] overflow-y-auto pr-2">
@@ -121,6 +142,29 @@ function AnalysisResult({ analysis }: { analysis: ResumeAnalysis }) {
           <p className="text-sm text-muted-foreground">{finalConsiderations}</p>
         </div>
       )}
+
+      {/* Send Email Button */}
+      <div className="flex items-center gap-3 pt-2 border-t">
+        <Button
+          size="sm"
+          variant="outline"
+          className="gap-2"
+          onClick={handleSendEmail}
+          disabled={isSending || emailSent}
+        >
+          {isSending ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Mail className="h-4 w-4" />
+          )}
+          {emailSent ? 'Email enviado' : 'Enviar análise por email'}
+        </Button>
+        {emailFeedback && (
+          <span className={`text-xs ${emailError ? 'text-destructive' : 'text-green-600'}`}>
+            {emailFeedback}
+          </span>
+        )}
+      </div>
     </div>
   )
 }
@@ -164,7 +208,7 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
           </div>
         )}
 
-        {data && <AnalysisResult analysis={data} />}
+        {data && jobId !== null && <AnalysisResult analysis={data} jobId={jobId} />}
       </DialogContent>
     </Dialog>
   )

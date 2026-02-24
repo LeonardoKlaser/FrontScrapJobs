@@ -35,5 +35,9 @@ export const analysisService = {
   analyzeJob: async (jobId: number): Promise<ResumeAnalysis> => {
     const { data } = await api.post('/api/analyze-job', { job_id: jobId })
     return data
+  },
+
+  sendAnalysisEmail: async (jobId: number, analysis: ResumeAnalysis): Promise<void> => {
+    await api.post('/api/analyze-job/send-email', { job_id: jobId, analysis })
   }
 }

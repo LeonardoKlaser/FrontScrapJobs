@@ -18,3 +18,10 @@ export interface DashboardData {
   latest_jobs: LatestJob[]
   user_monitored_urls: MonitoredURL[]
 }
+
+export interface PaginatedJobsResponse {
+  jobs: LatestJob[]
+  total_count: number
+  page: number
+  limit: number
+}
