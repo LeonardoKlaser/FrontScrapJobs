@@ -7,7 +7,8 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { PlusCircle, Trash2, Loader2 } from 'lucide-react'
+import { SectionHeader } from '@/components/common/section-header'
+import { PlusCircle, Trash2, Loader2, Briefcase, GraduationCap, Save, X } from 'lucide-react'
 import type { Curriculum, Experience, Education } from '@/models/curriculum'
 import { curriculumService } from '@/services/curriculumService'
 import { useUpdateCurriculum } from '@/hooks/useCurriculum'
@@ -172,16 +173,18 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
     : []
 
   return (
-    <Card>
+    <Card className="animate-fade-in-up">
       <CardHeader>
-        <CardTitle className="text-2xl">
+        <CardTitle className="text-xl tracking-tight">
           {isEditing ? `Editando: ${curriculum?.title}` : 'Criar Novo Currículo'}
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-8">
         {/* Nome do Currículo */}
         <div className="space-y-2">
-          <Label htmlFor="name">Nome do Currículo</Label>
+          <Label htmlFor="name" className="text-muted-foreground">
+            Nome do Currículo
+          </Label>
           <Input
             id="name"
             placeholder="Ex: Currículo para Vaga Front-end"
@@ -192,7 +195,9 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
 
         {/* Resumo Profissional */}
         <div className="space-y-2">
-          <Label htmlFor="summary">Resumo Profissional</Label>
+          <Label htmlFor="summary" className="text-muted-foreground">
+            Resumo Profissional
+          </Label>
           <Textarea
             id="summary"
             placeholder="Descreva sua experiência e objetivos profissionais..."
@@ -204,7 +209,9 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
 
         {/* Habilidades */}
         <div className="space-y-2">
-          <Label htmlFor="skills">Habilidades</Label>
+          <Label htmlFor="skills" className="text-muted-foreground">
+            Habilidades
+          </Label>
           <Input
             id="skills"
             placeholder="Digite uma habilidade e pressione Enter ou vírgula"
@@ -213,16 +220,16 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
             onKeyDown={handleSkillKeyDown}
           />
           {skillsArray.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-2">
+            <div className="flex flex-wrap gap-1.5 mt-2">
               {skillsArray.map((skill, index) => (
                 <Badge
                   key={index}
-                  variant="secondary"
-                  className="cursor-pointer"
+                  variant="default"
+                  className="cursor-pointer gap-1 pr-1.5 hover:bg-primary/20"
                   onClick={() => removeSkill(skill)}
                 >
                   {skill}
-                  <span className="ml-1 text-xs">×</span>
+                  <X className="h-3 w-3 opacity-60" />
                 </Badge>
               ))}
             </div>
@@ -231,7 +238,9 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
 
         {/* Idiomas */}
         <div className="space-y-2">
-          <Label htmlFor="languages">Idiomas</Label>
+          <Label htmlFor="languages" className="text-muted-foreground">
+            Idiomas
+          </Label>
           <Input
             id="languages"
             placeholder="Digite um idioma e pressione Enter ou vírgula"
@@ -240,16 +249,16 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
             onKeyDown={handleLanguageKeyDown}
           />
           {languagesArray.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-2">
+            <div className="flex flex-wrap gap-1.5 mt-2">
               {languagesArray.map((language, index) => (
                 <Badge
                   key={index}
-                  variant="secondary"
-                  className="cursor-pointer"
+                  variant="default"
+                  className="cursor-pointer gap-1 pr-1.5 hover:bg-primary/20"
                   onClick={() => removeLanguage(language)}
                 >
                   {language}
-                  <span className="ml-1 text-xs">×</span>
+                  <X className="h-3 w-3 opacity-60" />
                 </Badge>
               ))}
             </div>
@@ -258,146 +267,191 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
 
         {/* Experiências Profissionais */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <Label className="text-lg font-semibold">Experiências Profissionais</Label>
+          <SectionHeader title="Experiências Profissionais" icon={Briefcase}>
             <Button type="button" variant="outline" size="sm" onClick={addExperience}>
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Adicionar Experiência
+              <PlusCircle className="mr-1.5 h-3.5 w-3.5" />
+              Adicionar
             </Button>
-          </div>
+          </SectionHeader>
 
-          {formData.experiences.map((experience, index) => (
-            <Card key={experience.id} className="bg-muted/50">
-              <CardContent className="pt-6 space-y-4">
-                <div className="flex justify-between items-start">
-                  <h4 className="text-sm font-medium text-muted-foreground">
-                    Experiência {index + 1}
-                  </h4>
-                  {formData.experiences.length > 1 && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => removeExperience(experience.id)}
+          <div className="space-y-3">
+            {formData.experiences.map((experience, index) => (
+              <Card key={experience.id} className="border-border/30 bg-muted/30">
+                <CardContent className="pt-5 space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-medium text-muted-foreground">
+                      Experiência {index + 1}
+                    </span>
+                    {formData.experiences.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                        onClick={() => removeExperience(experience.id)}
+                        aria-label="Remover experiência"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor={`company-${experience.id}`}
+                        className="text-muted-foreground text-xs"
+                      >
+                        Empresa
+                      </Label>
+                      <Input
+                        id={`company-${experience.id}`}
+                        placeholder="Nome da empresa"
+                        value={experience.company}
+                        onChange={(e) => updateExperience(experience.id, 'company', e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor={`title-${experience.id}`}
+                        className="text-muted-foreground text-xs"
+                      >
+                        Cargo
+                      </Label>
+                      <Input
+                        id={`title-${experience.id}`}
+                        placeholder="Seu cargo"
+                        value={experience.title}
+                        onChange={(e) => updateExperience(experience.id, 'title', e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor={`description-${experience.id}`}
+                      className="text-muted-foreground text-xs"
                     >
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor={`company-${experience.id}`}>Empresa</Label>
-                  <Input
-                    id={`company-${experience.id}`}
-                    placeholder="Nome da empresa"
-                    value={experience.company}
-                    onChange={(e) => updateExperience(experience.id, 'company', e.target.value)}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor={`title-${experience.id}`}>Cargo</Label>
-                  <Input
-                    id={`title-${experience.id}`}
-                    placeholder="Seu cargo"
-                    value={experience.title}
-                    onChange={(e) => updateExperience(experience.id, 'title', e.target.value)}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor={`description-${experience.id}`}>Descrição</Label>
-                  <Textarea
-                    id={`description-${experience.id}`}
-                    placeholder="Descreva suas responsabilidades e conquistas..."
-                    className="min-h-[100px] resize-y"
-                    value={experience.description}
-                    onChange={(e) => updateExperience(experience.id, 'description', e.target.value)}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                      Descrição
+                    </Label>
+                    <Textarea
+                      id={`description-${experience.id}`}
+                      placeholder="Descreva suas responsabilidades e conquistas..."
+                      className="min-h-[80px] resize-y"
+                      value={experience.description}
+                      onChange={(e) =>
+                        updateExperience(experience.id, 'description', e.target.value)
+                      }
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
 
         {/* Formação Acadêmica */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <Label className="text-lg font-semibold">Formação Acadêmica</Label>
+          <SectionHeader title="Formação Acadêmica" icon={GraduationCap}>
             <Button type="button" variant="outline" size="sm" onClick={addEducation}>
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Adicionar Formação
+              <PlusCircle className="mr-1.5 h-3.5 w-3.5" />
+              Adicionar
             </Button>
+          </SectionHeader>
+
+          <div className="space-y-3">
+            {formData.educations.map((education, index) => (
+              <Card key={education.id} className="border-border/30 bg-muted/30">
+                <CardContent className="pt-5 space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-medium text-muted-foreground">
+                      Formação {index + 1}
+                    </span>
+                    {formData.educations.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                        onClick={() => removeEducation(education.id)}
+                        aria-label="Remover formação"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor={`institution-${education.id}`}
+                        className="text-muted-foreground text-xs"
+                      >
+                        Instituição
+                      </Label>
+                      <Input
+                        id={`institution-${education.id}`}
+                        placeholder="Nome da instituição"
+                        value={education.institution}
+                        onChange={(e) =>
+                          updateEducation(education.id, 'institution', e.target.value)
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor={`degree-${education.id}`}
+                        className="text-muted-foreground text-xs"
+                      >
+                        Curso/Grau
+                      </Label>
+                      <Input
+                        id={`degree-${education.id}`}
+                        placeholder="Ex: Bacharelado em CC"
+                        value={education.degree}
+                        onChange={(e) => updateEducation(education.id, 'degree', e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor={`year-${education.id}`}
+                        className="text-muted-foreground text-xs"
+                      >
+                        Ano de Conclusão
+                      </Label>
+                      <Input
+                        id={`year-${education.id}`}
+                        placeholder="Ex: 2020"
+                        value={education.year}
+                        onChange={(e) => updateEducation(education.id, 'year', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
-
-          {formData.educations.map((education, index) => (
-            <Card key={education.id} className="bg-muted/50">
-              <CardContent className="pt-6 space-y-4">
-                <div className="flex justify-between items-start">
-                  <h4 className="text-sm font-medium text-muted-foreground">
-                    Formação {index + 1}
-                  </h4>
-                  {formData.educations.length > 1 && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => removeEducation(education.id)}
-                    >
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor={`institution-${education.id}`}>Instituição</Label>
-                  <Input
-                    id={`institution-${education.id}`}
-                    placeholder="Nome da instituição"
-                    value={education.institution}
-                    onChange={(e) => updateEducation(education.id, 'institution', e.target.value)}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor={`degree-${education.id}`}>Curso/Grau</Label>
-                  <Input
-                    id={`degree-${education.id}`}
-                    placeholder="Ex: Bacharelado em Ciência da Computação"
-                    value={education.degree}
-                    onChange={(e) => updateEducation(education.id, 'degree', e.target.value)}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor={`year-${education.id}`}>Ano de Conclusão</Label>
-                  <Input
-                    id={`year-${education.id}`}
-                    placeholder="Ex: 2020"
-                    value={education.year}
-                    onChange={(e) => updateEducation(education.id, 'year', e.target.value)}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          ))}
         </div>
 
         {/* Save Button */}
-        <div className="pt-4">
+        <div className="pt-2">
           <Button
             onClick={handleSave}
             disabled={isSaving || isUpdating || !formData.title}
+            variant="glow"
             className="w-full"
             size="lg"
           >
-            {isSaving ? (
+            {isSaving || isUpdating ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Salvando...
               </>
             ) : (
-              'Salvar Currículo'
+              <>
+                <Save className="mr-2 h-4 w-4" />
+                Salvar Currículo
+              </>
             )}
           </Button>
         </div>

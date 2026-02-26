@@ -5,6 +5,7 @@ import {
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/accordion'
+import { ArrowRight } from 'lucide-react'
 
 export function FaqSection() {
   const faqs = [
@@ -31,11 +32,11 @@ export function FaqSection() {
   ]
 
   return (
-    <section className="py-24 px-4 bg-card/30">
+    <section className="py-20 sm:py-24 px-4 bg-card/30">
       <div className="container mx-auto">
         <div className="grid lg:grid-cols-2 gap-16 max-w-6xl mx-auto">
-          <div className="space-y-6">
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground leading-tight text-balance">
+          <div className="space-y-6 animate-fade-in-up">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground leading-tight tracking-tight text-balance">
               Pronto para Acelerar sua Carreira?
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed text-pretty">
@@ -44,21 +45,23 @@ export function FaqSection() {
             </p>
             <a href="#pricing">
               <Button
+                variant="glow"
                 size="lg"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg font-medium"
+                className="px-8 py-4 text-lg font-medium animate-pulse-glow"
               >
                 Iniciar Meu Teste Gratuito
+                <ArrowRight className="w-5 h-5 ml-1" />
               </Button>
             </a>
           </div>
 
-          <div>
+          <div className="animate-fade-in-up" style={{ animationDelay: '150ms' }}>
             <Accordion type="single" collapsible className="space-y-4">
               {faqs.map((faq, index) => (
                 <AccordionItem
                   key={index}
                   value={`item-${index}`}
-                  className="bg-card border border-border rounded-lg px-6"
+                  className="bg-card border border-border/50 rounded-lg px-6 hover:border-primary/20 transition-colors duration-200"
                 >
                   <AccordionTrigger className="text-left font-medium text-foreground hover:no-underline">
                     {faq.question}

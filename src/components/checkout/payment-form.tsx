@@ -6,7 +6,19 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Spinner } from '@/components/ui/spinner'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { AlertCircle, Lock, Eye, EyeOff } from 'lucide-react'
+import {
+  AlertCircle,
+  Lock,
+  Eye,
+  EyeOff,
+  UserIcon,
+  MailIcon,
+  LockIcon,
+  PhoneIcon,
+  FileTextIcon,
+  CreditCardIcon,
+  QrCodeIcon
+} from 'lucide-react'
 import type { Plan } from '@/models/plan'
 import { api } from '@/services/api'
 import axios from 'axios'
@@ -62,10 +74,10 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
         setErrors((prev) => {
           const next = { ...prev }
           if (field === 'email') {
-            next.email = data.email_exists ? 'Este e-mail já possui cadastro. Faça login.' : ''
+            next.email = data.email_exists ? 'Este e-mail ja possui cadastro. Faca login.' : ''
           }
           if (field === 'cpfCnpj') {
-            next.cpfCnpj = data.tax_exists ? 'Este CPF/CNPJ já está cadastrado.' : ''
+            next.cpfCnpj = data.tax_exists ? 'Este CPF/CNPJ ja esta cadastrado.' : ''
           }
           return next
         })
@@ -95,13 +107,11 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
     if (name === 'cpfCnpj') {
       const digits = value.replace(/\D/g, '').slice(0, 14)
       if (digits.length <= 11) {
-        // CPF: XXX.XXX.XXX-XX
         formattedValue = digits
           .replace(/(\d{3})(\d)/, '$1.$2')
           .replace(/(\d{3})(\d)/, '$1.$2')
           .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
       } else {
-        // CNPJ: XX.XXX.XXX/XXXX-XX
         formattedValue = digits
           .replace(/(\d{2})(\d)/, '$1.$2')
           .replace(/(\d{3})(\d)/, '$1.$2')
@@ -119,7 +129,6 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
     }
 
     setFormData((prev) => ({ ...prev, [name]: formattedValue }))
-    // Clear error for this field and submit error when user starts typing
     if (errors[name] || errors.submit) {
       setErrors((prev) => ({ ...prev, [name]: '', submit: '' }))
     }
@@ -129,49 +138,49 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
     const newErrors: FormErrors = {}
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Nome é obrigatório'
+      newErrors.name = 'Nome e obrigatorio'
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Email é obrigatório'
+      newErrors.email = 'Email e obrigatorio'
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Email inválido'
+      newErrors.email = 'Email invalido'
     }
 
     if (!formData.password) {
-      newErrors.password = 'Senha é obrigatória'
+      newErrors.password = 'Senha e obrigatoria'
     } else if (formData.password.length < 8) {
-      newErrors.password = 'Senha deve ter no mínimo 8 caracteres'
+      newErrors.password = 'Senha deve ter no minimo 8 caracteres'
     } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-      newErrors.password = 'Senha deve conter maiúsculas, minúsculas e números'
+      newErrors.password = 'Senha deve conter maiusculas, minusculas e numeros'
     }
 
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Confirmação de senha é obrigatória'
+      newErrors.confirmPassword = 'Confirmacao de senha e obrigatoria'
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Senhas não conferem'
+      newErrors.confirmPassword = 'Senhas nao conferem'
     }
 
     if (!formData.cpfCnpj.trim()) {
-      newErrors.cpfCnpj = 'CPF/CNPJ é obrigatório'
+      newErrors.cpfCnpj = 'CPF/CNPJ e obrigatorio'
     } else {
       const cpfCnpjDigits = formData.cpfCnpj.replace(/\D/g, '')
       if (cpfCnpjDigits.length !== 11 && cpfCnpjDigits.length !== 14) {
-        newErrors.cpfCnpj = 'CPF/CNPJ inválido'
+        newErrors.cpfCnpj = 'CPF/CNPJ invalido'
       }
     }
 
     if (!formData.phone.trim()) {
-      newErrors.phone = 'Telefone é obrigatório'
+      newErrors.phone = 'Telefone e obrigatorio'
     } else {
       const phoneDigits = formData.phone.replace(/\D/g, '')
       if (phoneDigits.length < 10 || phoneDigits.length > 11) {
-        newErrors.phone = 'Telefone inválido'
+        newErrors.phone = 'Telefone invalido'
       }
     }
 
     if (!formData.paymentMethod) {
-      newErrors.paymentMethod = 'Selecione um método de pagamento'
+      newErrors.paymentMethod = 'Selecione um metodo de pagamento'
     }
 
     setErrors(newErrors)
@@ -217,14 +226,14 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
   }
 
   return (
-    <Card className="border-border w-full max-w-2xl">
+    <Card className="w-full border-border/50">
       <CardHeader>
-        <CardTitle className="text-3xl">Criar Conta</CardTitle>
+        <CardTitle className="text-2xl tracking-tight">Criar Conta</CardTitle>
         <CardDescription>Preencha os dados para criar sua conta</CardDescription>
       </CardHeader>
 
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-8">
           {/* Error Alert */}
           {Object.values(errors).some(Boolean) && (
             <Alert variant="destructive">
@@ -236,54 +245,58 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
           )}
 
           {/* Personal Data Section */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Dados Pessoais</h3>
+          <fieldset className="space-y-4 animate-fade-in-up">
+            <legend className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              Dados Pessoais
+            </legend>
 
             <div className="space-y-2">
-              <Label htmlFor="name" className="text-foreground">
+              <Label htmlFor="name" className="text-muted-foreground">
                 Nome Completo
               </Label>
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                placeholder="João Silva"
-                value={formData.name}
-                onChange={handleInputChange}
-                disabled={isLoading}
-                className={`bg-input border-border text-foreground placeholder:text-muted-foreground ${
-                  errors.name ? 'border-destructive' : ''
-                }`}
-                required
-              />
+              <div className="relative">
+                <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  id="name"
+                  name="name"
+                  type="text"
+                  placeholder="Joao Silva"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  disabled={isLoading}
+                  className={`pl-10 ${errors.name ? 'border-destructive' : ''}`}
+                  required
+                />
+              </div>
               {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-foreground">
+              <Label htmlFor="email" className="text-muted-foreground">
                 Email
               </Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="seu@email.com"
-                value={formData.email}
-                onChange={handleInputChange}
-                onBlur={() => handleFieldBlur('email', formData.email)}
-                disabled={isLoading}
-                className={`bg-input border-border text-foreground placeholder:text-muted-foreground ${
-                  errors.email ? 'border-destructive' : ''
-                }`}
-                required
-              />
+              <div className="relative">
+                <MailIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="seu@email.com"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  onBlur={() => handleFieldBlur('email', formData.email)}
+                  disabled={isLoading}
+                  className={`pl-10 ${errors.email ? 'border-destructive' : ''}`}
+                  required
+                />
+              </div>
               {errors.email && (
                 <p className="text-sm text-destructive">
                   {errors.email}
                   {errors.email.includes('login') && (
                     <>
                       {' '}
-                      <a href="/login" className="underline font-medium">
+                      <a href="/login" className="font-medium underline">
                         Ir para login
                       </a>
                     </>
@@ -293,10 +306,11 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-foreground">
+              <Label htmlFor="password" className="text-muted-foreground">
                 Senha
               </Label>
               <div className="relative">
+                <LockIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   id="password"
                   name="password"
@@ -305,30 +319,30 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
                   value={formData.password}
                   onChange={handleInputChange}
                   disabled={isLoading}
-                  className={`bg-input border-border text-foreground placeholder:text-muted-foreground pr-10 ${
-                    errors.password ? 'border-destructive' : ''
-                  }`}
+                  className={`pl-10 pr-10 ${errors.password ? 'border-destructive' : ''}`}
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
               {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
               <p className="text-xs text-muted-foreground">
-                Mínimo 8 caracteres, com maiúsculas, minúsculas e números
+                Minimo 8 caracteres, com maiusculas, minusculas e numeros
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword" className="text-foreground">
+              <Label htmlFor="confirmPassword" className="text-muted-foreground">
                 Confirmar Senha
               </Label>
               <div className="relative">
+                <LockIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   id="confirmPassword"
                   name="confirmPassword"
@@ -337,15 +351,14 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                   disabled={isLoading}
-                  className={`bg-input border-border text-foreground placeholder:text-muted-foreground pr-10 ${
-                    errors.confirmPassword ? 'border-destructive' : ''
-                  }`}
+                  className={`pl-10 pr-10 ${errors.confirmPassword ? 'border-destructive' : ''}`}
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  aria-label={showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {showConfirmPassword ? (
                     <EyeOff className="h-4 w-4" />
@@ -358,66 +371,76 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
                 <p className="text-sm text-destructive">{errors.confirmPassword}</p>
               )}
             </div>
-          </div>
+          </fieldset>
 
           {/* Additional Data Section */}
-          <div className="space-y-4 border-t border-border pt-6">
-            <h3 className="text-lg font-semibold">Dados Adicionais</h3>
+          <fieldset
+            className="space-y-4 border-t border-border/50 pt-8 animate-fade-in-up"
+            style={{ animationDelay: '100ms' }}
+          >
+            <legend className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              Dados Adicionais
+            </legend>
 
             <div className="space-y-2">
-              <Label htmlFor="cpfCnpj" className="text-foreground">
+              <Label htmlFor="cpfCnpj" className="text-muted-foreground">
                 CPF/CNPJ
               </Label>
-              <Input
-                id="cpfCnpj"
-                name="cpfCnpj"
-                type="text"
-                placeholder="000.000.000-00"
-                value={formData.cpfCnpj}
-                onChange={handleInputChange}
-                onBlur={() => handleFieldBlur('cpfCnpj', formData.cpfCnpj)}
-                disabled={isLoading}
-                className={`bg-input border-border text-foreground placeholder:text-muted-foreground font-mono ${
-                  errors.cpfCnpj ? 'border-destructive' : ''
-                }`}
-                required
-              />
+              <div className="relative">
+                <FileTextIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  id="cpfCnpj"
+                  name="cpfCnpj"
+                  type="text"
+                  placeholder="000.000.000-00"
+                  value={formData.cpfCnpj}
+                  onChange={handleInputChange}
+                  onBlur={() => handleFieldBlur('cpfCnpj', formData.cpfCnpj)}
+                  disabled={isLoading}
+                  className={`pl-10 font-mono ${errors.cpfCnpj ? 'border-destructive' : ''}`}
+                  required
+                />
+              </div>
               {errors.cpfCnpj && <p className="text-sm text-destructive">{errors.cpfCnpj}</p>}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone" className="text-foreground">
+              <Label htmlFor="phone" className="text-muted-foreground">
                 Telefone
               </Label>
-              <Input
-                id="phone"
-                name="phone"
-                type="text"
-                placeholder="(11) 99999-9999"
-                value={formData.phone}
-                onChange={handleInputChange}
-                disabled={isLoading}
-                className={`bg-input border-border text-foreground placeholder:text-muted-foreground font-mono ${
-                  errors.phone ? 'border-destructive' : ''
-                }`}
-                required
-              />
+              <div className="relative">
+                <PhoneIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  id="phone"
+                  name="phone"
+                  type="text"
+                  placeholder="(11) 99999-9999"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  disabled={isLoading}
+                  className={`pl-10 font-mono ${errors.phone ? 'border-destructive' : ''}`}
+                  required
+                />
+              </div>
               {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
             </div>
-          </div>
+          </fieldset>
 
           {/* Payment Method Section */}
-          <div className="space-y-4 border-t border-border pt-6">
-            <h3 className="text-lg font-semibold">Método de Pagamento</h3>
+          <fieldset
+            className="space-y-4 border-t border-border/50 pt-8 animate-fade-in-up"
+            style={{ animationDelay: '200ms' }}
+          >
+            <legend className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              Metodo de Pagamento
+            </legend>
 
-            <div className="space-y-3">
-              <Label className="text-foreground">Escolha o método de pagamento</Label>
-
+            <div className="grid gap-3 sm:grid-cols-2">
               <div
-                className={`flex items-center gap-3 rounded-lg border-2 p-4 cursor-pointer transition-colors ${
+                className={`group flex cursor-pointer items-center gap-4 rounded-lg border-2 p-4 transition-all duration-150 ${
                   formData.paymentMethod === 'pix'
                     ? 'border-primary bg-primary/10'
-                    : 'border-border hover:border-muted-foreground'
+                    : 'border-border/50 hover:border-primary/30'
                 }`}
                 onClick={() => {
                   setFormData((prev) => ({ ...prev, paymentMethod: 'pix' }))
@@ -433,19 +456,28 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
                     setFormData((prev) => ({ ...prev, paymentMethod: 'pix' }))
                     setErrors((prev) => ({ ...prev, paymentMethod: '' }))
                   }}
-                  className="h-4 w-4"
+                  className="sr-only"
                 />
+                <div
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-colors ${
+                    formData.paymentMethod === 'pix'
+                      ? 'bg-primary/20 text-primary'
+                      : 'bg-muted text-muted-foreground'
+                  }`}
+                >
+                  <QrCodeIcon className="h-5 w-5" />
+                </div>
                 <div>
-                  <p className="font-semibold">PIX</p>
-                  <p className="text-sm text-muted-foreground">Transferência instantânea</p>
+                  <p className="font-semibold text-foreground">PIX</p>
+                  <p className="text-xs text-muted-foreground">Transferencia instantanea</p>
                 </div>
               </div>
 
               <div
-                className={`flex items-center gap-3 rounded-lg border-2 p-4 cursor-pointer transition-colors ${
+                className={`group flex cursor-pointer items-center gap-4 rounded-lg border-2 p-4 transition-all duration-150 ${
                   formData.paymentMethod === 'card'
                     ? 'border-primary bg-primary/10'
-                    : 'border-border hover:border-muted-foreground'
+                    : 'border-border/50 hover:border-primary/30'
                 }`}
                 onClick={() => {
                   setFormData((prev) => ({ ...prev, paymentMethod: 'card' }))
@@ -461,30 +493,40 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
                     setFormData((prev) => ({ ...prev, paymentMethod: 'card' }))
                     setErrors((prev) => ({ ...prev, paymentMethod: '' }))
                   }}
-                  className="h-4 w-4"
+                  className="sr-only"
                 />
+                <div
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-colors ${
+                    formData.paymentMethod === 'card'
+                      ? 'bg-primary/20 text-primary'
+                      : 'bg-muted text-muted-foreground'
+                  }`}
+                >
+                  <CreditCardIcon className="h-5 w-5" />
+                </div>
                 <div>
-                  <p className="font-semibold">Cartão de Crédito</p>
-                  <p className="text-sm text-muted-foreground">Visa, Mastercard, Elo</p>
+                  <p className="font-semibold text-foreground">Cartao de Credito</p>
+                  <p className="text-xs text-muted-foreground">Visa, Mastercard, Elo</p>
                 </div>
               </div>
-
-              {errors.paymentMethod && (
-                <p className="text-sm text-destructive">{errors.paymentMethod}</p>
-              )}
             </div>
-          </div>
+
+            {errors.paymentMethod && (
+              <p className="text-sm text-destructive">{errors.paymentMethod}</p>
+            )}
+          </fieldset>
 
           {/* Submit Button */}
-          <div className="flex gap-3 pt-6">
+          <div className="space-y-4 border-t border-border/50 pt-8">
             <Button
               type="submit"
+              variant="glow"
               disabled={
                 isLoading ||
                 errors.email?.includes('cadastro') ||
                 errors.cpfCnpj?.includes('cadastrado')
               }
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+              className="h-11 w-full text-base"
             >
               {isLoading ? (
                 <>
@@ -494,16 +536,15 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
               ) : (
                 <>
                   <Lock className="mr-2 h-4 w-4" />
-                  Criar Conta
+                  Criar Conta e Pagar
                 </>
               )}
             </Button>
-          </div>
 
-          {/* Security Text */}
-          <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-            <Lock className="h-4 w-4 text-primary" />
-            <span>Seus dados são protegidos com criptografia SSL</span>
+            <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+              <Lock className="h-3.5 w-3.5 text-primary" />
+              <span>Seus dados sao protegidos com criptografia SSL</span>
+            </div>
           </div>
         </form>
       </CardContent>

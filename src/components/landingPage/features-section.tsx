@@ -31,10 +31,10 @@ export function FeaturesSection() {
   ]
 
   return (
-    <section className="py-24 px-4">
+    <section className="py-20 sm:py-24 px-4">
       <div className="container mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 text-balance">
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight text-balance">
             Uma Vantagem Injusta para Sua Carreira
           </h2>
         </div>
@@ -43,9 +43,10 @@ export function FeaturesSection() {
           {features.map((feature, index) => (
             <Card
               key={index}
-              className={`bg-card border-border hover:border-primary/50 transition-all duration-300 hover:scale-105 ${
-                feature.highlight ? 'border-primary/50 bg-primary/5' : ''
+              className={`bg-card border-border/50 hover:border-primary/30 transition-all duration-300 animate-fade-in-up ${
+                feature.highlight ? 'border-primary/50 glow-border' : ''
               }`}
+              style={{ animationDelay: `${index * 120}ms` }}
             >
               <CardContent className="p-8 space-y-4">
                 <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">

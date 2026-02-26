@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { CheckCircle, PlusCircle } from 'lucide-react'
+import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { CheckCircle, PlusCircle, FileText } from 'lucide-react'
 import type { Curriculum } from '@/models/curriculum'
 import { useSetActiveCurriculum } from '@/hooks/useCurriculum'
-import { Badge } from '../ui/badge'
+import { EmptyState } from '@/components/common/empty-state'
 
 interface CurriculumListProps {
   curriculums: Curriculum[] | undefined
@@ -30,55 +31,81 @@ export function CurriculumList({
     })
   }
 
+  const hasCurriculums = curriculums && curriculums.length > 0
+
   return (
-    <div className="space-y-4">
-      <Button onClick={onCreateNew} className="w-full bg-transparent" variant="outline">
-        <PlusCircle className="mr-2 h-4 w-4" />
-        Criar Novo Currículo
+    <div className="space-y-3 lg:sticky lg:top-8">
+      <Button onClick={onCreateNew} variant="outline" className="w-full gap-2">
+        <PlusCircle className="h-4 w-4" />
+        Novo Currículo
       </Button>
 
-      <div className="space-y-3">
-        {curriculums?.map((curriculum) => {
-          const isActivating = isPending && activatingId === curriculum.id
-          return (
-            <Card
-              key={curriculum.id}
-              className={`cursor-pointer transition-all hover:border-primary/50 relative ${
-                selectedId === curriculum.id ? 'border-primary border-2' : ''
-              }`}
-              onClick={() => onSelect(curriculum.id)}
-            >
-              {curriculum.is_active && (
-                <Badge
-                  className="absolute top-3 right-3 bg-primary text-primary-foreground"
-                  variant="default"
+      {!hasCurriculums && (
+        <EmptyState
+          icon={FileText}
+          title="Nenhum currículo ainda"
+          description="Crie seu primeiro currículo para começar a receber análises de vagas"
+          action={
+            <Button onClick={onCreateNew} variant="glow" size="sm">
+              <PlusCircle className="h-4 w-4" />
+              Criar Currículo
+            </Button>
+          }
+        />
+      )}
+
+      {hasCurriculums && (
+        <div className="space-y-2">
+          {curriculums.map((curriculum, index) => {
+            const isSelected = selectedId === curriculum.id
+            const isActivating = isPending && activatingId === curriculum.id
+
+            return (
+              <div
+                key={curriculum.id}
+                className="animate-fade-in-up"
+                style={{ animationDelay: `${index * 40}ms` }}
+              >
+                <Card
+                  className={`cursor-pointer transition-all duration-150 relative ${
+                    isSelected
+                      ? 'border-l-2 border-l-primary bg-primary/5 border-primary/30'
+                      : 'hover:bg-muted/30'
+                  }`}
+                  onClick={() => onSelect(curriculum.id)}
                 >
-                  <CheckCircle className="mr-1 h-3 w-3" />
-                  Ativo
-                </Badge>
-              )}
-              <CardHeader className="p-4">
-                <CardTitle className="text-base text-balance pr-20">{curriculum.title}</CardTitle>
-                <CardDescription className="text-sm line-clamp-2 text-pretty">
-                  {curriculum.summary}
-                </CardDescription>
-                {!curriculum.is_active && (
-                  <Button
-                    size="sm"
-                    variant="default"
-                    onClick={(e) => handleSetActive(e, curriculum.id)}
-                    disabled={isActivating}
-                    className="mt-2 w-fit"
-                  >
-                    <CheckCircle className="mr-2 h-4 w-4" />
-                    {isActivating ? 'Ativando...' : 'Definir como ativo'}
-                  </Button>
-                )}
-              </CardHeader>
-            </Card>
-          )
-        })}
-      </div>
+                  <CardHeader className="p-4">
+                    <div className="flex items-start justify-between gap-2">
+                      <CardTitle className="text-sm">{curriculum.title}</CardTitle>
+                      {curriculum.is_active && (
+                        <Badge variant="default" className="shrink-0 text-xs px-2 py-0">
+                          <CheckCircle className="mr-1 h-3 w-3" />
+                          Ativo
+                        </Badge>
+                      )}
+                    </div>
+                    <CardDescription className="text-xs line-clamp-2 text-pretty">
+                      {curriculum.summary || 'Sem resumo'}
+                    </CardDescription>
+                    {!curriculum.is_active && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={(e) => handleSetActive(e, curriculum.id)}
+                        disabled={isActivating}
+                        className="mt-1.5 w-fit h-7 text-xs text-muted-foreground hover:text-primary"
+                      >
+                        <CheckCircle className="mr-1 h-3 w-3" />
+                        {isActivating ? 'Ativando...' : 'Definir como ativo'}
+                      </Button>
+                    )}
+                  </CardHeader>
+                </Card>
+              </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }

@@ -28,9 +28,7 @@ export const dashboardService = {
       return data
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        throw new Error(
-          error.response.data.error || 'Não foi possível recuperar as vagas.'
-        )
+        throw new Error(error.response.data.error || 'Não foi possível recuperar as vagas.')
       }
       throw new Error('Não foi possível conectar ao servidor.')
     }

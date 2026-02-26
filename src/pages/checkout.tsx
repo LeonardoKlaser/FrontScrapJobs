@@ -1,5 +1,3 @@
-// src/pages/checkout.tsx
-
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { PlanSummary } from '@/components/checkout/plan-summary'
 import { PaymentForm } from '@/components/checkout/payment-form'
@@ -16,7 +14,7 @@ export default function CheckoutPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <Spinner className="size-10" />
       </div>
     )
@@ -24,12 +22,12 @@ export default function CheckoutPage() {
 
   if (isError || !plans) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Card className="w-full max-w-md">
+      <div className="flex min-h-screen items-center justify-center bg-background px-4">
+        <Card className="w-full max-w-md border-border/50">
           <CardHeader>
             <CardTitle>Erro ao carregar</CardTitle>
             <CardDescription>
-              Não foi possível buscar os planos. Tente novamente mais tarde.
+              Nao foi possivel buscar os planos. Tente novamente mais tarde.
             </CardDescription>
           </CardHeader>
         </Card>
@@ -41,12 +39,12 @@ export default function CheckoutPage() {
 
   if (!plan) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Card className="w-full max-w-md">
+      <div className="flex min-h-screen items-center justify-center bg-background px-4">
+        <Card className="w-full max-w-md border-border/50">
           <CardHeader>
-            <CardTitle>Plano não encontrado</CardTitle>
+            <CardTitle>Plano nao encontrado</CardTitle>
             <CardDescription>
-              O plano solicitado não existe. Por favor, selecione um plano válido.
+              O plano solicitado nao existe. Por favor, selecione um plano valido.
             </CardDescription>
           </CardHeader>
         </Card>
@@ -63,19 +61,27 @@ export default function CheckoutPage() {
       : 'monthly'
 
   return (
-    <div className="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold text-foreground mb-2">Finalize sua Assinatura</h1>
-          <p className="text-muted-foreground">
-            Escolha seu método de pagamento e comece a usar o ScrapJobs
+    <div className="min-h-screen bg-background px-4 py-12 sm:px-6 lg:px-8">
+      {/* Ambient glow */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute right-1/4 top-0 h-[600px] w-[600px] rounded-full bg-primary/5 blur-[150px]" />
+      </div>
+
+      <div className="relative mx-auto max-w-6xl">
+        <div className="animate-fade-in-up mb-10">
+          <h1 className="text-gradient-primary text-3xl font-bold tracking-tight sm:text-4xl">
+            Finalize sua Assinatura
+          </h1>
+          <p className="mt-2 text-muted-foreground">
+            Escolha seu metodo de pagamento e comece a usar o ScrapJobs
           </p>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-1">
+
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          <div className="animate-fade-in-up lg:col-span-1" style={{ animationDelay: '100ms' }}>
             <PlanSummary plan={plan} billingPeriod={billingPeriod} />
           </div>
-          <div className="lg:col-span-2">
+          <div className="animate-fade-in-up lg:col-span-2" style={{ animationDelay: '200ms' }}>
             <PaymentForm plan={plan} billingPeriod={billingPeriod} />
           </div>
         </div>

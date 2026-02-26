@@ -2,7 +2,7 @@ import { Outlet } from 'react-router'
 
 export function PublicLayout() {
   return (
-    <main>
+    <main className="min-h-screen bg-background">
       <Outlet />
     </main>
   )

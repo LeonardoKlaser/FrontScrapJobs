@@ -3,24 +3,26 @@ import { BarChart3, TrendingUp } from 'lucide-react'
 
 export function ChartsSection() {
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
-      <Card className="bg-card border-border p-4 md:p-6 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300">
-        <h2 className="text-lg md:text-xl font-semibold text-primary mb-4 md:mb-6 text-balance">
-          Receita Mensal (Últimos 6 Meses)
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 animate-fade-in-up">
+      <Card className="p-5">
+        <h2 className="text-base font-semibold tracking-tight text-foreground mb-1">
+          Receita Mensal
         </h2>
-        <div className="h-48 md:h-64 flex flex-col items-center justify-center text-muted-foreground">
-          <TrendingUp size={48} className="mb-4 opacity-30" />
-          <p className="text-sm">Histórico de receita em breve</p>
+        <p className="text-xs text-muted-foreground mb-6">Últimos 6 meses</p>
+        <div className="h-48 md:h-56 flex flex-col items-center justify-center rounded-lg bg-muted/30 border border-border/50">
+          <TrendingUp className="size-10 text-muted-foreground/30 mb-3" />
+          <p className="text-sm text-muted-foreground">Histórico de receita em breve</p>
         </div>
       </Card>
 
-      <Card className="bg-card border-border p-4 md:p-6 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300">
-        <h2 className="text-lg md:text-xl font-semibold text-primary mb-4 md:mb-6 text-balance">
-          Novos Utilizadores vs. Cancelamentos (Mês)
+      <Card className="p-5">
+        <h2 className="text-base font-semibold tracking-tight text-foreground mb-1">
+          Usuários vs. Cancelamentos
         </h2>
-        <div className="h-48 md:h-64 flex flex-col items-center justify-center text-muted-foreground">
-          <BarChart3 size={48} className="mb-4 opacity-30" />
-          <p className="text-sm">Histórico de utilizadores em breve</p>
+        <p className="text-xs text-muted-foreground mb-6">Este mês</p>
+        <div className="h-48 md:h-56 flex flex-col items-center justify-center rounded-lg bg-muted/30 border border-border/50">
+          <BarChart3 className="size-10 text-muted-foreground/30 mb-3" />
+          <p className="text-sm text-muted-foreground">Histórico de usuários em breve</p>
         </div>
       </Card>
     </div>

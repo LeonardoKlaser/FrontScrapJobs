@@ -1,6 +1,8 @@
 import { Component } from 'react'
 import type { ErrorInfo, ReactNode } from 'react'
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 
 interface Props {
   children: ReactNode
@@ -41,30 +43,35 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="flex items-center justify-center min-h-[400px] p-6">
-          <div className="text-center space-y-4 max-w-md">
-            <AlertTriangle className="mx-auto size-12 text-destructive" />
-            <h2 className="text-xl font-semibold text-foreground">Algo deu errado</h2>
-            <p className="text-sm text-muted-foreground">
-              Ocorreu um erro inesperado. Tente recarregar a página.
-            </p>
-            <div className="flex gap-3 justify-center">
-              <button
-                onClick={this.handleRetry}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-              >
-                <RefreshCw className="size-4" />
-                Tentar novamente
-              </button>
-              <button
-                onClick={this.handleGoHome}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
-              >
-                <Home className="size-4" />
-                Página inicial
-              </button>
-            </div>
-          </div>
+        <div className="flex items-center justify-center min-h-[400px] p-6 animate-fade-in">
+          <Card className="max-w-md w-full border-destructive/30">
+            <CardContent className="flex flex-col items-center text-center space-y-4 pt-2">
+              <div className="flex size-14 items-center justify-center rounded-full bg-destructive/10">
+                <AlertTriangle className="size-7 text-destructive" />
+              </div>
+              <div className="space-y-1.5">
+                <h2 className="text-lg font-semibold tracking-tight">Algo deu errado</h2>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Ocorreu um erro inesperado. Tente recarregar a página.
+                </p>
+              </div>
+              {this.state.error && (
+                <code className="block w-full rounded-md bg-muted/50 px-3 py-2 text-xs font-mono text-muted-foreground truncate">
+                  {this.state.error.message}
+                </code>
+              )}
+              <div className="flex gap-3 pt-2">
+                <Button onClick={this.handleRetry} variant="glow" size="sm">
+                  <RefreshCw className="size-4" />
+                  Tentar novamente
+                </Button>
+                <Button onClick={this.handleGoHome} variant="ghost" size="sm">
+                  <Home className="size-4" />
+                  Página inicial
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       )
     }

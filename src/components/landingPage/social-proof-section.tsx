@@ -9,17 +9,18 @@ export function SocialProofSection() {
   ]
 
   return (
-    <section className="py-16 border-t border-border/50">
+    <section className="py-20 sm:py-24 border-t border-border/50">
       <div className="container mx-auto px-4">
-        <p className="text-center text-muted-foreground mb-8 text-lg">
+        <p className="text-center text-muted-foreground mb-10 text-lg tracking-tight">
           Monitorando oportunidades das maiores empresas, como:
         </p>
 
-        <div className="flex items-center justify-center space-x-8 md:space-x-12 opacity-60">
-          {companies.map((company) => (
+        <div className="flex items-center justify-center flex-wrap gap-4 md:gap-6">
+          {companies.map((company, index) => (
             <div
               key={company.name}
-              className="flex items-center justify-center w-12 h-12 bg-card border border-border rounded-lg text-muted-foreground font-bold text-lg hover:opacity-100 transition-opacity duration-200"
+              className="flex items-center justify-center w-14 h-14 bg-card border border-border/50 rounded-lg text-muted-foreground font-bold text-lg hover:border-primary/30 hover:text-primary transition-all duration-200 animate-fade-in-up"
+              style={{ animationDelay: `${index * 80}ms` }}
             >
               {company.logo}
             </div>

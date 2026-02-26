@@ -21,10 +21,10 @@ export function HowItWorksSection() {
   ]
 
   return (
-    <section className="py-24 px-4 bg-card/30">
+    <section className="py-20 sm:py-24 px-4 bg-card/30">
       <div className="container mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 text-balance">
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight text-balance">
             Comece em 3 Passos Simples
           </h2>
         </div>
@@ -33,8 +33,8 @@ export function HowItWorksSection() {
           {steps.map((step, index) => (
             <Card
               key={index}
-              className="bg-card border-border hover:border-primary/50 transition-all duration-300 hover:scale-105"
-              style={{ animationDelay: `${index * 200}ms` }}
+              className="bg-card border-border/50 hover:border-primary/30 transition-all duration-300 animate-fade-in-up"
+              style={{ animationDelay: `${index * 150}ms` }}
             >
               <CardContent className="p-8 text-center space-y-4">
                 <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">

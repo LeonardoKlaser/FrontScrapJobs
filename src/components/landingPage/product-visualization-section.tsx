@@ -4,12 +4,12 @@ import { Badge } from '@/components/ui/badge'
 
 export function ProductVisualizationSection() {
   return (
-    <section className="py-24 px-4 bg-card/30">
+    <section className="py-20 sm:py-24 px-4 bg-card/30">
       <div className="container mx-auto">
         <div className="grid lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
           {/* Text Content */}
-          <div className="space-y-6">
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground leading-tight text-balance">
+          <div className="space-y-6 animate-fade-in-up">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground leading-tight tracking-tight text-balance">
               Veja Exatamente o Que Você Receberá
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed text-pretty">
@@ -19,11 +19,11 @@ export function ProductVisualizationSection() {
           </div>
 
           {/* Email Mockup */}
-          <div className="relative">
-            <Card className="bg-card border-border shadow-2xl">
+          <div className="relative animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+            <Card className="bg-card border-border/50 glow-border">
               <CardContent className="p-6 space-y-4">
                 {/* Email Header */}
-                <div className="flex items-center justify-between pb-4 border-b border-border">
+                <div className="flex items-center justify-between pb-4 border-b border-border/50">
                   <div className="flex items-center space-x-2">
                     <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
                       <span className="text-primary-foreground text-sm font-bold">sJ</span>
@@ -33,12 +33,7 @@ export function ProductVisualizationSection() {
                       <p className="text-sm text-muted-foreground">Nova oportunidade encontrada!</p>
                     </div>
                   </div>
-                  <Badge
-                    variant="secondary"
-                    className="bg-success/20 text-success border-success/30"
-                  >
-                    85% Match
-                  </Badge>
+                  <Badge>85% Match</Badge>
                 </div>
 
                 {/* Job Details */}
@@ -57,7 +52,7 @@ export function ProductVisualizationSection() {
                   </div>
 
                   <Button
-                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                    className="w-full"
                     onClick={() =>
                       document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
                     }

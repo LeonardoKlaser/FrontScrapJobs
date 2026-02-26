@@ -12,6 +12,7 @@ import { ModeToggle } from '@/components/common/mode-toggle'
 import { PATHS } from '@/router/paths'
 import { useUser } from '@/hooks/useUser'
 import { useAuth } from '@/hooks/useAuth'
+import { cn } from '@/lib/utils'
 
 const baseItems = [
   { title: 'Início', href: PATHS.app.home },
@@ -38,16 +39,16 @@ export function AppHeader() {
 
   return (
     <header
-      className="sticky top-0 z-40 w-full border-b
-      bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      className="sticky top-0 z-40 w-full border-b border-border/40
+      bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60"
     >
-      <div className="container mx-auto flex h-14 items-center justify-between px-4">
-        <Link to={PATHS.app.home} className="text-lg font-semibold">
-          Scrap&nbsp;<span className="text-primary">Jobs</span>
+      <div className="mx-auto flex h-12 max-w-6xl items-center justify-between px-4">
+        <Link to={PATHS.app.home} className="flex items-center gap-2 text-lg font-semibold">
+          Scrap<span className="text-primary">Jobs</span>
         </Link>
 
         <NavigationMenu viewport={false} className="hidden md:block">
-          <NavigationMenuList className="flex items-center gap-6">
+          <NavigationMenuList className="flex items-center gap-1">
             {items.map((item) => (
               <NavigationMenuItem key={item.href}>
                 <NavigationMenuLink asChild>
@@ -55,10 +56,12 @@ export function AppHeader() {
                     to={item.href}
                     end={item.href === PATHS.app.home}
                     className={({ isActive }) =>
-                      [
-                        'text-sm font-medium transition-colors',
-                        isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-                      ].join(' ')
+                      cn(
+                        'relative px-3 py-1.5 rounded-md text-sm font-medium transition-colors after:absolute after:bottom-0 after:left-3 after:right-3 after:h-px after:transition-colors',
+                        isActive
+                          ? 'text-foreground after:bg-primary'
+                          : 'text-muted-foreground hover:text-foreground after:bg-transparent'
+                      )
                     }
                   >
                     {item.title}
@@ -73,7 +76,12 @@ export function AppHeader() {
           <ModeToggle />
 
           {!isLoading && user && (
-            <Button size="sm" variant="outline" onClick={handleLogout}>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="text-muted-foreground"
+              onClick={handleLogout}
+            >
               Sair
             </Button>
           )}
@@ -91,7 +99,7 @@ export function AppHeader() {
       </div>
 
       {open && (
-        <nav className="md:hidden border-b bg-background px-4 pb-4 pt-2 shadow-sm">
+        <nav className="md:hidden border-b border-border/40 bg-background/95 backdrop-blur-md px-4 pb-4 pt-2">
           {items.map((item) => (
             <NavLink
               key={item.href}
@@ -99,10 +107,10 @@ export function AppHeader() {
               end={item.href === PATHS.app.home}
               onClick={() => setOpen(false)}
               className={({ isActive }) =>
-                [
+                cn(
                   'block rounded-md px-3 py-2 text-sm font-medium transition-colors',
                   isActive ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-muted'
-                ].join(' ')
+                )
               }
             >
               {item.title}

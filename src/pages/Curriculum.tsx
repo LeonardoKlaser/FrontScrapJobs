@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { CurriculumList } from '@/components/curriculum/curriculum-list'
 import { CurriculumForm } from '@/components/curriculum/curriculum-form'
 import { useCurriculum } from '@/hooks/useCurriculum'
+import { PageHeader } from '@/components/common/page-header'
 
 export function Curriculum() {
   const { data: curriculums } = useCurriculum()
@@ -18,32 +19,28 @@ export function Curriculum() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto p-6">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Gerenciador de Currículos</h1>
-          <p className="text-muted-foreground">
-            Crie e gerencie múltiplos currículos para diferentes oportunidades
-          </p>
+    <div>
+      <PageHeader
+        title="Gerenciador de Currículos"
+        description="Crie e gerencie múltiplos currículos para diferentes oportunidades"
+        className="mb-10"
+      />
+
+      <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
+        <div className="animate-fade-in-up" style={{ animationDelay: '50ms' }}>
+          <CurriculumList
+            curriculums={curriculums}
+            selectedId={selectedCurriculumId}
+            onSelect={handleSelectCurriculum}
+            onCreateNew={handleCreateNew}
+          />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6">
-          <div className="order-2 lg:order-1">
-            <CurriculumForm
-              curriculum={selectedCurriculum}
-              isEditing={selectedCurriculumId !== null}
-            />
-          </div>
-
-          {/* Right Column - List (30%) */}
-          <div className="order-1 lg:order-2">
-            <CurriculumList
-              curriculums={curriculums}
-              selectedId={selectedCurriculumId}
-              onSelect={handleSelectCurriculum}
-              onCreateNew={handleCreateNew}
-            />
-          </div>
+        <div className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+          <CurriculumForm
+            curriculum={selectedCurriculum}
+            isEditing={selectedCurriculumId !== null}
+          />
         </div>
       </div>
     </div>

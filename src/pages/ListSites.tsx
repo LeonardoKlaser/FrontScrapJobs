@@ -1,9 +1,10 @@
 import { useState, useMemo } from 'react'
-import { CheckCircle, Search, Send, XCircle } from 'lucide-react'
+import { Building2, CheckCircle, Radar, Search, Send, XCircle } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { RegistrationModal } from '@/components/companyPopup'
 import { useSiteCareer } from '@/hooks/useSiteCareer'
 import { useRequestSite } from '@/hooks/useRequestSite'
@@ -11,6 +12,14 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import type { SiteCareer } from '@/models/siteCareer'
 import { useRegisterUserSite, useUnregisterUserSite } from '@/hooks/useRegisterUserSite'
 import { useUser } from '@/hooks/useUser'
+import { FilterPills } from '@/components/common/filter-pills'
+import { EmptyState } from '@/components/common/empty-state'
+
+const filters = [
+  { key: 'all', label: 'Todas' },
+  { key: 'subscribed', label: 'Inscritas' },
+  { key: 'not_subscribed', label: 'Disponíveis' }
+] as const
 
 export default function EmpresasPage() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -38,6 +47,7 @@ export default function EmpresasPage() {
     return data?.filter((company) => company.is_subscribed).length ?? 0
   }, [data])
 
+  const totalCount = data?.length ?? 0
   const maxSites = user?.plan?.max_sites ?? 3
   const remainingSlots = Math.max(0, maxSites - subscribedCount)
 
@@ -83,163 +93,145 @@ export default function EmpresasPage() {
   }
 
   return (
-    <div className="scrapjobs-theme min-h-screen">
-      <section className="py-20 px-4">
-        <div className="container mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 fade-in text-balance">
-            Monitore as Empresas dos Seus Sonhos
-          </h1>
-          <p className="text-xl text-foreground max-w-4xl mx-auto leading-relaxed fade-in text-pretty">
-            Nossa plataforma monitora 24/7 as páginas de carreira das maiores empresas do mercado.
-            Deixe o trabalho duro conosco e nunca mais perca uma oportunidade.
-          </p>
-        </div>
-      </section>
+    <div className="space-y-10">
+      {/* Header */}
+      <div className="animate-fade-in-up text-center">
+        <h1 className="text-gradient-primary text-3xl font-bold tracking-tight sm:text-4xl">
+          Empresas Monitoradas
+        </h1>
+        <p className="mt-2 text-muted-foreground text-pretty max-w-2xl mx-auto">
+          Acompanhe as páginas de carreira das empresas e receba alertas de novas vagas.
+        </p>
+      </div>
 
-      <section className="py-16 px-4">
-        <div className="container mx-auto">
-          <div className="max-w-md mx-auto mb-12">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-foreground h-5 w-5" />
+      {/* Stats row */}
+      <div
+        className="animate-fade-in-up grid grid-cols-3 gap-4 max-w-lg mx-auto"
+        style={{ animationDelay: '50ms' }}
+      >
+        <div className="text-center">
+          <p className="text-2xl font-display font-bold text-foreground">{totalCount}</p>
+          <p className="text-xs text-muted-foreground">Empresas</p>
+        </div>
+        <div className="text-center border-x border-border/50">
+          <p className="text-2xl font-display font-bold text-primary">{subscribedCount}</p>
+          <p className="text-xs text-muted-foreground">Inscritas</p>
+        </div>
+        <div className="text-center">
+          <p className="text-2xl font-display font-bold text-foreground">{remainingSlots}</p>
+          <p className="text-xs text-muted-foreground">Slots livres</p>
+        </div>
+      </div>
+
+      {/* Search + Filters */}
+      <div
+        className="animate-fade-in-up max-w-md mx-auto space-y-3"
+        style={{ animationDelay: '100ms' }}
+      >
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          <Input
+            type="text"
+            placeholder="Buscar empresa..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-9"
+          />
+        </div>
+        <div className="flex justify-center">
+          <FilterPills options={filters} activeKey={filter} onChange={setFilter} />
+        </div>
+      </div>
+
+      {/* Company grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        {filteredCompanies?.map((company, index) => (
+          <button
+            key={company.site_id}
+            className="animate-fade-in-up group relative flex flex-col items-center gap-3 rounded-lg border border-border/50 bg-card p-5 text-center transition-all duration-150 hover:border-primary/20 hover:bg-card/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            style={{ animationDelay: `${150 + index * 40}ms` }}
+            onClick={() => handleCompanyClick(company)}
+          >
+            {company.is_subscribed && (
+              <Badge className="absolute -top-2 -right-2 px-1.5 py-0.5 text-xs">
+                <CheckCircle className="size-3" />
+              </Badge>
+            )}
+            <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-muted/30 p-2">
+              {company.logo_url ? (
+                <img
+                  src={company.logo_url}
+                  alt={`${company.site_name} logo`}
+                  className="max-h-full max-w-full object-contain"
+                />
+              ) : (
+                <Building2 className="size-6 text-muted-foreground" />
+              )}
+            </div>
+            <span className="text-sm font-medium text-foreground leading-tight">
+              {company.site_name}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {/* Empty state */}
+      {filteredCompanies?.length === 0 && (
+        <EmptyState icon={Search} title={`Nenhuma empresa encontrada para "${searchTerm}"`} />
+      )}
+
+      {/* Request section */}
+      <Card className="animate-fade-in-up max-w-2xl mx-auto" style={{ animationDelay: '200ms' }}>
+        <CardHeader className="text-center">
+          <div className="flex justify-center mb-2">
+            <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10">
+              <Radar className="size-5 text-primary" />
+            </div>
+          </div>
+          <CardTitle className="text-xl tracking-tight">Expanda seu Radar</CardTitle>
+          <CardDescription className="text-sm">
+            Não encontrou uma empresa? Envie o link do portal de carreiras.
+          </CardDescription>
+        </CardHeader>
+        <form onSubmit={handleRequestSubmit} className="space-y-4 px-6 pb-6">
+          {isSuccess && (
+            <Alert className="border-primary/30 bg-primary/5">
+              <CheckCircle className="h-4 w-4 text-primary" />
+              <AlertDescription className="text-primary">
+                Solicitação enviada com sucesso!
+              </AlertDescription>
+            </Alert>
+          )}
+          {isError && (
+            <Alert className="border-destructive/30 bg-destructive/5">
+              <XCircle className="h-4 w-4 text-destructive" />
+              <AlertDescription className="text-destructive">
+                {error?.message || 'Ocorreu um erro ao enviar a solicitação.'}
+              </AlertDescription>
+            </Alert>
+          )}
+          <div className="flex flex-col sm:flex-row items-end gap-2">
+            <div className="w-full space-y-1.5">
+              <Label htmlFor="siteUrl" className="text-muted-foreground text-sm">
+                Link do portal de carreiras
+              </Label>
               <Input
-                type="text"
-                placeholder="Buscar por uma empresa..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
+                id="siteUrl"
+                type="url"
+                placeholder="https://exemplo.com/carreiras"
+                value={requestedUrl}
+                onChange={(e) => setRequestedUrl(e.target.value)}
+                required
               />
             </div>
-            <div className="bg-card border border-border rounded-lg p-1 flex mt-4">
-              <button
-                onClick={() => setFilter('all')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all relative ${
-                  filter === 'all'
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                Todas
-              </button>
-              <button
-                onClick={() => setFilter('subscribed')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                  filter === 'subscribed'
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                Inscrito
-              </button>
-              <button
-                onClick={() => setFilter('not_subscribed')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all relative ${
-                  filter === 'not_subscribed'
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                Não inscrito
-              </button>
-            </div>
+            <Button type="submit" variant="glow" disabled={isPending}>
+              {isPending ? 'Enviando...' : 'Enviar'}
+              <Send className="h-4 w-4" />
+            </Button>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {filteredCompanies?.map((company, index) => (
-              <Card
-                key={company.site_id}
-                className="scrapjobs-card company-card-hover p-6 text-center cursor-pointer fade-in"
-                style={{ animationDelay: `${index * 0.1}s` }}
-                onClick={() => handleCompanyClick(company)}
-              >
-                <div className="flex flex-col items-center space-y-4">
-                  <div className="w-20 h-20 flex items-center justify-center">
-                    <img
-                      src={company.logo_url || '/placeholder.svg'}
-                      alt={`${company.site_name} logo`}
-                      className="max-w-full max-h-full object-contain"
-                    />
-                  </div>
-                  <h3 className="text-foreground font-semibold text-sm">{company.site_name}</h3>
-                </div>
-              </Card>
-            ))}
-          </div>
+        </form>
+      </Card>
 
-          {filteredCompanies?.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground text-lg">
-                Nenhuma empresa encontrada para "{searchTerm}"
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
-
-      <section className="py-20 px-4">
-        <div className="container mx-auto">
-          <Card className="max-w-3xl mx-auto bg-card/50 border-border/50 px-20">
-            <CardHeader className="text-center">
-              <CardTitle className="text-3xl md:text-4xl font-bold text-foreground">
-                Expanda seu Radar de Vagas
-              </CardTitle>
-              <CardDescription className="text-lg pt-2">
-                Não encontrou uma empresa? Adicione o portal de carreiras dela e não perca nenhuma
-                oportunidade.
-              </CardDescription>
-            </CardHeader>
-            <form onSubmit={handleRequestSubmit} className="space-y-4">
-              {isSuccess && (
-                <Alert className="border-green-500 bg-green-500/10">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <AlertDescription className="text-green-500">
-                    Solicitação enviada com sucesso!
-                  </AlertDescription>
-                </Alert>
-              )}
-              {isError && (
-                <Alert className="border-red-500 bg-red-500/10">
-                  <XCircle className="h-4 w-4 text-red-500" />
-                  <AlertDescription className="text-red-500">
-                    {error?.message || 'Ocorreu um erro ao enviar a solicitação.'}
-                  </AlertDescription>
-                </Alert>
-              )}
-              <div className="flex flex-col sm:flex-row items-end gap-2">
-                <div className="w-full space-y-2">
-                  <Label htmlFor="siteUrl" className="text-muted-foreground">
-                    Link do portal de carreiras
-                  </Label>
-                  <Input
-                    id="siteUrl"
-                    type="url"
-                    placeholder="https://exemplo.com/carreiras"
-                    className="py-6 text-base"
-                    value={requestedUrl}
-                    onChange={(e) => setRequestedUrl(e.target.value)}
-                    required
-                  />
-                </div>
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="w-full sm:w-auto px-8 py-3 text-base"
-                  disabled={isPending}
-                >
-                  <span className="mr-2">{isPending ? 'Enviando...' : 'Enviar'}</span>
-                  <Send className="h-4 w-4" />
-                </Button>
-              </div>
-            </form>
-          </Card>
-        </div>
-      </section>
-
-      <footer className="border-t border-border bg-background py-8">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-muted-foreground">
-            © {new Date().getFullYear()} ScrapJobs. Todos os direitos reservados.
-          </p>
-        </div>
-      </footer>
       <RegistrationModal
         isOpen={isPopupOpen}
         onClose={() => setPopupOpen(false)}

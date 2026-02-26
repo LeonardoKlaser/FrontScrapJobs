@@ -1,6 +1,15 @@
 import type React from 'react'
 import { Card } from '@/components/ui/card'
-import { TrendingUp, Users, Globe, AlertTriangle } from 'lucide-react'
+import { Skeleton } from '@/components/common/skeleton'
+import {
+  TrendingUp,
+  TrendingDown,
+  Minus,
+  Users,
+  Globe,
+  AlertTriangle,
+  DollarSign
+} from 'lucide-react'
 
 interface KPICardProps {
   title: string
@@ -8,33 +17,31 @@ interface KPICardProps {
   subtitle: string
   icon: React.ReactNode
   trend?: 'positive' | 'negative' | 'neutral'
-  delay?: string
 }
 
-function KPICard({ title, value, subtitle, icon, trend = 'neutral', delay = '0s' }: KPICardProps) {
-  const trendColor =
-    trend === 'positive'
-      ? 'text-success'
-      : trend === 'negative'
-        ? 'text-destructive'
-        : 'text-foreground'
+function TrendIcon({ trend }: { trend: 'positive' | 'negative' | 'neutral' }) {
+  if (trend === 'positive') return <TrendingUp className="size-3.5 text-primary" />
+  if (trend === 'negative') return <TrendingDown className="size-3.5 text-destructive" />
+  return <Minus className="size-3.5 text-muted-foreground" />
+}
 
+function KPICard({ title, value, subtitle, icon, trend = 'neutral' }: KPICardProps) {
   return (
-    <Card
-      className="bg-card border-border p-4 md:p-6 hover:shadow-lg hover:shadow-primary/20 hover:border-primary/30 transition-all duration-300 group cursor-pointer transform hover:scale-105"
-      style={{ animationDelay: delay }}
-    >
-      <div className="flex items-start justify-between">
-        <div className="space-y-2 flex-1 min-w-0">
-          <p className="text-muted-foreground text-xs md:text-sm font-medium truncate">{title}</p>
-          <p className="text-xl md:text-2xl lg:text-3xl font-bold text-primary group-hover:text-primary/80 transition-colors">
-            {value}
-          </p>
-          <p className={`text-xs md:text-sm ${trendColor} leading-tight`}>{subtitle}</p>
-        </div>
-        <div className="text-primary opacity-60 group-hover:opacity-100 transition-opacity ml-2">
+    <Card className="p-5 hover:border-primary/30 transition-colors duration-150 group">
+      <div className="flex items-start justify-between mb-3">
+        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          {title}
+        </p>
+        <div className="text-muted-foreground group-hover:text-primary transition-colors duration-150">
           {icon}
         </div>
+      </div>
+      <p className="text-2xl md:text-3xl font-bold font-display tracking-tight text-foreground">
+        {value === '—' ? <Skeleton className="h-8 w-20 inline-block" /> : value}
+      </p>
+      <div className="flex items-center gap-1.5 mt-2">
+        <TrendIcon trend={trend} />
+        <p className="text-xs text-muted-foreground">{subtitle}</p>
       </div>
     </Card>
   )
@@ -59,42 +66,46 @@ export function KPICards({
   scrapingErrors,
   isLoading
 }: KPICardsProps) {
-  const placeholder = isLoading ? '...' : undefined
+  const placeholder = isLoading ? '—' : undefined
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-      <KPICard
-        title="Faturamento (Mês)"
-        value={placeholder ?? formatCurrency(totalRevenue)}
-        subtitle="Receita de assinaturas ativas"
-        icon={<TrendingUp size={20} className="md:w-6 md:h-6" />}
-        trend="positive"
-        delay="0.1s"
-      />
-      <KPICard
-        title="Usuários Ativos"
-        value={placeholder ?? String(activeUsers)}
-        subtitle="Total de usuários cadastrados"
-        icon={<Users size={20} className="md:w-6 md:h-6" />}
-        trend="positive"
-        delay="0.2s"
-      />
-      <KPICard
-        title="Sites Monitorados"
-        value={placeholder ?? String(monitoredSites)}
-        subtitle="Sites com scraping ativo"
-        icon={<Globe size={20} className="md:w-6 md:h-6" />}
-        trend="neutral"
-        delay="0.3s"
-      />
-      <KPICard
-        title="Erros de Scraping (24h)"
-        value={placeholder ?? String(scrapingErrors)}
-        subtitle="Falhas nas últimas 24 horas"
-        icon={<AlertTriangle size={20} className="md:w-6 md:h-6" />}
-        trend={scrapingErrors > 0 ? 'negative' : 'neutral'}
-        delay="0.4s"
-      />
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="animate-fade-in-up" style={{ animationDelay: '0ms' }}>
+        <KPICard
+          title="Faturamento"
+          value={placeholder ?? formatCurrency(totalRevenue)}
+          subtitle="Receita de assinaturas ativas"
+          icon={<DollarSign className="size-5" />}
+          trend="positive"
+        />
+      </div>
+      <div className="animate-fade-in-up" style={{ animationDelay: '60ms' }}>
+        <KPICard
+          title="Usuários Ativos"
+          value={placeholder ?? String(activeUsers)}
+          subtitle="Total de usuários cadastrados"
+          icon={<Users className="size-5" />}
+          trend="positive"
+        />
+      </div>
+      <div className="animate-fade-in-up" style={{ animationDelay: '120ms' }}>
+        <KPICard
+          title="Sites Monitorados"
+          value={placeholder ?? String(monitoredSites)}
+          subtitle="Sites com scraping ativo"
+          icon={<Globe className="size-5" />}
+          trend="neutral"
+        />
+      </div>
+      <div className="animate-fade-in-up" style={{ animationDelay: '180ms' }}>
+        <KPICard
+          title="Erros (24h)"
+          value={placeholder ?? String(scrapingErrors)}
+          subtitle="Falhas nas últimas 24 horas"
+          icon={<AlertTriangle className="size-5" />}
+          trend={scrapingErrors > 0 ? 'negative' : 'neutral'}
+        />
+      </div>
     </div>
   )
 }

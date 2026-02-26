@@ -14,25 +14,27 @@ export default function Login() {
   }, [user, navigate])
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4 dark:bg-gray-900">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl dark:bg-gray-800">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+      {/* Subtle radial glow behind card */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute left-1/2 top-1/3 h-[480px] w-[480px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-[120px]" />
+      </div>
+
+      <div className="animate-fade-in-up relative w-full max-w-md rounded-lg border border-border/50 bg-card p-8">
         <div className="mb-6 flex items-center justify-center">
           <img
             src={Logo}
             alt="Logo Scrap Jobs"
-            className="h-48 w-48 select-none"
+            className="h-40 w-40 select-none"
             draggable={false}
           />
         </div>
 
         <AuthForm />
 
-        <p className="mt-4 text-center text-sm text-muted-foreground">
-          Primeira missão por aqui?{' '}
-          <Link
-            to="/#pricing"
-            className="ml-1 font-medium text-primary hover:underline dark:text-primary"
-          >
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          Primeira missao por aqui?{' '}
+          <Link to="/#pricing" className="font-medium text-primary hover:underline">
             Escolha um plano
           </Link>
         </p>

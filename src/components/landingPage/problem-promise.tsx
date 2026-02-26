@@ -1,11 +1,11 @@
 export function ProblemPromiseSection() {
   return (
-    <section className="py-24 px-4">
+    <section className="py-20 sm:py-24 px-4">
       <div className="container mx-auto">
         <div className="grid md:grid-cols-2 gap-16 max-w-6xl mx-auto">
           {/* Problem */}
-          <div className="space-y-6">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight text-balance">
+          <div className="space-y-6 animate-fade-in-up" style={{ animationDelay: '0ms' }}>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight tracking-tight text-balance">
               A busca de emprego não deveria ser um segundo emprego.
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed text-pretty">
@@ -16,10 +16,10 @@ export function ProblemPromiseSection() {
           </div>
 
           {/* Promise */}
-          <div className="space-y-6">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight text-balance">
+          <div className="space-y-6 animate-fade-in-up" style={{ animationDelay: '150ms' }}>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight tracking-tight text-balance">
               Recupere seu tempo.{' '}
-              <span className="text-primary">Candidate-se com inteligência.</span>
+              <span className="text-gradient-primary">Candidate-se com inteligência.</span>
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed text-pretty">
               A scrapJobs automatiza toda sua busca de emprego, monitorando suas empresas favoritas

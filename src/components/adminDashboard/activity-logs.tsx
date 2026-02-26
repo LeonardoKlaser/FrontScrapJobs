@@ -1,4 +1,8 @@
 import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/common/skeleton'
+import { EmptyState } from '@/components/common/empty-state'
+import { AlertTriangle, CheckCircle2 } from 'lucide-react'
 import type { ScrapingError } from '@/services/adminDashboardService'
 
 interface ActivityLogsProps {
@@ -18,52 +22,86 @@ function formatDate(dateStr: string): string {
 
 export function ActivityLogs({ errors, isLoading }: ActivityLogsProps) {
   return (
-    <Card className="bg-card border-border p-4 md:p-6 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300">
-      <h2 className="text-lg md:text-xl font-semibold text-primary mb-4 md:mb-6">
-        Últimos Erros de Scraping
-      </h2>
-      <div className="overflow-x-auto">
+    <Card className="p-5 animate-fade-in-up">
+      <div className="flex items-center justify-between mb-5">
+        <div>
+          <h2 className="text-base font-semibold tracking-tight text-foreground">
+            Últimos Erros de Scraping
+          </h2>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Falhas recentes no processo de coleta
+          </p>
+        </div>
+        {!isLoading && (
+          <Badge variant={errors.length > 0 ? 'destructive' : 'default'}>
+            {errors.length > 0 ? (
+              <>
+                <AlertTriangle className="size-3" />
+                {errors.length} {errors.length === 1 ? 'erro' : 'erros'}
+              </>
+            ) : (
+              <>
+                <CheckCircle2 className="size-3" />
+                Tudo certo
+              </>
+            )}
+          </Badge>
+        )}
+      </div>
+      <div className="overflow-x-auto scrollbar-thin">
         <table className="w-full min-w-[500px]">
           <thead>
-            <tr className="border-b border-border">
-              <th className="text-left py-3 px-2 md:px-4 text-muted-foreground font-medium text-sm">
+            <tr className="border-b border-border/50">
+              <th className="text-left py-2.5 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 Data/Hora
               </th>
-              <th className="text-left py-3 px-2 md:px-4 text-muted-foreground font-medium text-sm">
-                Nome do Site
+              <th className="text-left py-2.5 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                Site
               </th>
-              <th className="text-left py-3 px-2 md:px-4 text-muted-foreground font-medium text-sm">
-                Tipo de Erro
+              <th className="text-left py-2.5 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                Mensagem de Erro
               </th>
             </tr>
           </thead>
           <tbody>
             {isLoading ? (
-              <tr>
-                <td colSpan={3} className="py-6 text-center text-muted-foreground text-sm">
-                  Carregando...
-                </td>
-              </tr>
+              <>
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <tr key={i} className="border-b border-border/50 last:border-0">
+                    <td className="py-2.5 px-3">
+                      <Skeleton className="h-4 w-24" />
+                    </td>
+                    <td className="py-2.5 px-3">
+                      <Skeleton className="h-4 w-28" />
+                    </td>
+                    <td className="py-2.5 px-3">
+                      <Skeleton className="h-4 w-40" />
+                    </td>
+                  </tr>
+                ))}
+              </>
             ) : errors.length === 0 ? (
               <tr>
-                <td colSpan={3} className="py-6 text-center text-muted-foreground text-sm">
-                  Nenhum erro de scraping registrado
+                <td colSpan={3}>
+                  <EmptyState icon={CheckCircle2} title="Nenhum erro de scraping registrado" />
                 </td>
               </tr>
             ) : (
               errors.map((log) => (
                 <tr
                   key={log.id}
-                  className="border-b border-border hover:bg-muted transition-colors duration-200"
+                  className="border-b border-border/50 last:border-0 hover:bg-muted/30 transition-colors duration-150"
                 >
-                  <td className="py-3 px-2 md:px-4 text-foreground text-sm font-mono">
+                  <td className="py-2.5 px-3 text-sm font-mono text-muted-foreground whitespace-nowrap">
                     {formatDate(log.created_at)} {formatTime(log.created_at)}
                   </td>
-                  <td className="py-3 px-2 md:px-4 text-foreground text-sm font-medium">
+                  <td className="py-2.5 px-3 text-sm font-medium text-foreground">
                     {log.site_name}
                   </td>
-                  <td className="py-3 px-2 md:px-4 text-destructive text-sm truncate max-w-xs">
-                    {log.error_message}
+                  <td className="py-2.5 px-3">
+                    <Badge variant="destructive" className="font-normal max-w-xs truncate">
+                      {log.error_message}
+                    </Badge>
                   </td>
                 </tr>
               ))

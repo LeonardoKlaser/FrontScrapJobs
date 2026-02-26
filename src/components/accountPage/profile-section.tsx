@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
+import { UserCircle } from 'lucide-react'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { useUpdateProfile } from '@/hooks/useUpdateProfile'
+import { StatusFeedback } from '@/components/common/status-feedback'
 import type { User } from '@/models/user'
 
 export function ProfileSection({ user }: { user: User | undefined }) {
@@ -29,13 +31,38 @@ export function ProfileSection({ user }: { user: User | undefined }) {
     })
   }
 
+  const initials = user?.user_name
+    ? user.user_name
+        .split(' ')
+        .slice(0, 2)
+        .map((w) => w[0])
+        .join('')
+        .toUpperCase()
+    : '?'
+
   return (
-    <Card>
+    <Card className="animate-fade-in-up">
       <CardHeader>
-        <CardTitle>Informações Pessoais</CardTitle>
+        <CardTitle className="text-lg">Informações Pessoais</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="space-y-4">
+        <div className="flex items-center gap-4">
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+            {user?.user_name ? (
+              <span className="text-lg font-semibold">{initials}</span>
+            ) : (
+              <UserCircle className="h-8 w-8" />
+            )}
+          </div>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-medium text-foreground">
+              {user?.user_name || 'Usuário'}
+            </p>
+            <p className="truncate text-xs text-muted-foreground">{user?.email}</p>
+          </div>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="name">Nome</Label>
             <Input
@@ -53,11 +80,9 @@ export function ProfileSection({ user }: { user: User | undefined }) {
               type="email"
               value={user?.email ?? ''}
               disabled
-              className="bg-muted"
+              className="bg-muted/50"
             />
-            <p className="text-xs text-muted-foreground">
-              O e-mail não pode ser alterado. Entre em contato com o suporte se necessário.
-            </p>
+            <p className="text-xs text-muted-foreground">O e-mail não pode ser alterado.</p>
           </div>
 
           <div className="space-y-2">
@@ -82,14 +107,18 @@ export function ProfileSection({ user }: { user: User | undefined }) {
         </div>
 
         {updateProfile.isSuccess && (
-          <p className="text-sm text-green-500">Perfil atualizado com sucesso!</p>
+          <StatusFeedback variant="success" message="Perfil atualizado com sucesso!" />
         )}
         {updateProfile.isError && (
-          <p className="text-sm text-destructive">Erro ao atualizar perfil. Tente novamente.</p>
+          <StatusFeedback variant="error" message="Erro ao atualizar perfil. Tente novamente." />
         )}
       </CardContent>
       <CardFooter>
-        <Button onClick={handleSave} disabled={updateProfile.isPending || !name.trim()}>
+        <Button
+          variant="glow"
+          onClick={handleSave}
+          disabled={updateProfile.isPending || !name.trim()}
+        >
           {updateProfile.isPending ? 'Salvando...' : 'Salvar Alterações'}
         </Button>
       </CardFooter>
