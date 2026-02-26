@@ -1,25 +1,25 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, lazy } from 'react'
 import { createBrowserRouter, Navigate } from 'react-router'
 
 import { MainLayout } from '@/layouts/MainLayout'
-import { Home } from '@/pages/Home'
-import { NotFound } from '@/pages/NotFound'
-import Login from '@/pages/Login'
 import { PublicLayout } from '@/layouts/PublicLayout'
-import { Landing } from '@/pages/Landing'
 import { authLoader } from './loaders/authLoader'
 import { PATHS } from './paths'
 
 import type { QueryClient } from '@tanstack/react-query'
-import EmpresasPage from '@/pages/ListSites'
-import AdicionarSitePage from '@/pages/addNewSite'
-import AccountPage from '@/pages/accountPage'
-import CheckoutPage from '@/pages/checkout'
-import PaymentConfirmationPage from '@/pages/paymentConfirmation'
-import { Spinner } from '@/components/ui/spinner'
 import { useUser } from '@/hooks/useUser'
+import { LoadingSection } from '@/components/common/loading-section'
 
-const AdminDashboard = React.lazy(() => import('@/pages/adminDashboard'))
+const Landing = lazy(() => import('@/pages/Landing').then((m) => ({ default: m.Landing })))
+const Login = lazy(() => import('@/pages/Login'))
+const Home = lazy(() => import('@/pages/Home').then((m) => ({ default: m.Home })))
+const NotFound = lazy(() => import('@/pages/NotFound').then((m) => ({ default: m.NotFound })))
+const EmpresasPage = lazy(() => import('@/pages/ListSites'))
+const AdicionarSitePage = lazy(() => import('@/pages/addNewSite'))
+const AccountPage = lazy(() => import('@/pages/accountPage'))
+const CheckoutPage = lazy(() => import('@/pages/checkout'))
+const PaymentConfirmationPage = lazy(() => import('@/pages/paymentConfirmation'))
+const AdminDashboard = lazy(() => import('@/pages/adminDashboard'))
 
 const curriculumLazy = async () => {
   const { Curriculum } = await import('@/pages/Curriculum')
@@ -31,12 +31,7 @@ const curriculumLazy = async () => {
 
 function AdminGuard({ children }: { children: React.ReactNode }) {
   const user = useUser()
-  if (user.isLoading)
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Spinner className="size-8" />
-      </div>
-    )
+  if (user.isLoading) return <LoadingSection variant="full" label="Verificando permissões..." />
   if (!user.data?.is_admin) return <Navigate to={PATHS.app.home} replace />
   return <>{children}</>
 }
@@ -78,11 +73,7 @@ export const createRouter = (queryClient: QueryClient) =>
           element: (
             <AdminGuard>
               <Suspense
-                fallback={
-                  <div className="flex items-center justify-center min-h-screen">
-                    <Spinner className="size-8" />
-                  </div>
-                }
+                fallback={<LoadingSection variant="section" label="Carregando painel..." />}
               >
                 <AdminDashboard />
               </Suspense>

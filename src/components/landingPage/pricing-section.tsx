@@ -44,7 +44,7 @@ export function PricingSection() {
             <div className="bg-card border border-border/50 rounded-lg p-1 flex">
               <button
                 onClick={() => setIsAnnual(false)}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-150 ${
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                   !isAnnual
                     ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:text-foreground'
@@ -54,7 +54,7 @@ export function PricingSection() {
               </button>
               <button
                 onClick={() => setIsAnnual(true)}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-150 relative ${
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring relative ${
                   isAnnual
                     ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:text-foreground'
@@ -78,7 +78,7 @@ export function PricingSection() {
               return (
                 <Card
                   key={plan.id}
-                  className={`bg-card border-border/50 transition-all duration-300 animate-fade-in-up min-w-[280px] max-w-[340px] flex-1 relative ${
+                  className={`bg-card border-border/50 transition-all duration-300 animate-fade-in-up hover-lift min-w-[280px] max-w-[340px] flex-1 relative ${
                     isFeatured ? 'border-primary/50 glow-border' : 'hover:border-primary/30'
                   }`}
                   style={{ animationDelay: `${index * 150}ms` }}

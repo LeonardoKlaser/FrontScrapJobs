@@ -1,4 +1,4 @@
-import { ShieldCheck } from 'lucide-react'
+import { ShieldCheck, Loader2, CheckCircle } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -14,10 +14,18 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { changePasswordSchema, type ChangePasswordInput } from '@/validators/changePassword'
 import { useChangePassword } from '@/hooks/useChangePassword'
-import { StatusFeedback } from '@/components/common/status-feedback'
+import { useButtonState } from '@/hooks/useButtonState'
+import { toast } from 'sonner'
 
 export function SecuritySection() {
   const changePassword = useChangePassword()
+  const {
+    buttonState,
+    setLoading,
+    setSuccess,
+    setError: setBtnError,
+    isDisabled
+  } = useButtonState()
 
   const {
     register,
@@ -29,9 +37,20 @@ export function SecuritySection() {
   })
 
   const onSubmit = (data: ChangePasswordInput) => {
+    setLoading()
     changePassword.mutate(
       { old_password: data.old_password, new_password: data.new_password },
-      { onSuccess: () => reset() }
+      {
+        onSuccess: () => {
+          setSuccess()
+          toast.success('Senha alterada com sucesso!')
+          reset()
+        },
+        onError: () => {
+          setBtnError()
+          toast.error('Senha atual incorreta. Tente novamente.')
+        }
+      }
     )
   }
 
@@ -75,17 +94,31 @@ export function SecuritySection() {
               )}
             </div>
           </div>
-
-          {changePassword.isSuccess && (
-            <StatusFeedback variant="success" message="Senha alterada com sucesso!" />
-          )}
-          {changePassword.isError && (
-            <StatusFeedback variant="error" message="Senha atual incorreta. Tente novamente." />
-          )}
         </CardContent>
         <CardFooter>
-          <Button variant="glow" type="submit" disabled={changePassword.isPending}>
-            {changePassword.isPending ? 'Alterando...' : 'Alterar Senha'}
+          <Button
+            variant={buttonState === 'success' ? 'outline' : 'glow'}
+            type="submit"
+            disabled={isDisabled}
+            className={
+              buttonState === 'success'
+                ? 'animate-success-flash border-primary/50 text-primary'
+                : ''
+            }
+          >
+            {buttonState === 'loading' ? (
+              <>
+                <Loader2 className="size-4 animate-spin" />
+                Alterando...
+              </>
+            ) : buttonState === 'success' ? (
+              <>
+                <CheckCircle className="size-4" />
+                Senha alterada!
+              </>
+            ) : (
+              'Alterar Senha'
+            )}
           </Button>
         </CardFooter>
       </form>

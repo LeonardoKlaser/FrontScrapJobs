@@ -27,7 +27,7 @@ function TrendIcon({ trend }: { trend: 'positive' | 'negative' | 'neutral' }) {
 
 function KPICard({ title, value, subtitle, icon, trend = 'neutral' }: KPICardProps) {
   return (
-    <Card className="p-5 hover:border-primary/30 transition-colors duration-150 group">
+    <Card className="p-5 hover:border-primary/30 transition-colors duration-150 group hover-lift">
       <div className="flex items-start justify-between mb-3">
         <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
           {title}

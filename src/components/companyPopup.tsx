@@ -61,7 +61,7 @@ export function RegistrationModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[460px] p-0 gap-0 overflow-hidden">
+      <DialogContent className="max-w-[95vw] sm:max-w-[460px] p-0 gap-0 overflow-hidden">
         {/* Company header */}
         <div className="flex flex-col items-center gap-3 px-6 pt-6 pb-4">
           <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-muted/50 p-2">
@@ -122,8 +122,8 @@ export function RegistrationModal({
               </div>
               {previewTags.length > 0 && (
                 <div className="flex flex-wrap gap-1.5">
-                  {previewTags.map((tag, i) => (
-                    <Badge key={i} variant="default" className="text-xs">
+                  {previewTags.map((tag) => (
+                    <Badge key={tag} variant="default" className="text-xs">
                       {tag}
                     </Badge>
                   ))}

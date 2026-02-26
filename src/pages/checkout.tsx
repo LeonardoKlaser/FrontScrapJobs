@@ -77,11 +77,14 @@ export default function CheckoutPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-          <div className="animate-fade-in-up lg:col-span-1" style={{ animationDelay: '100ms' }}>
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_2fr] lg:grid-cols-3">
+          <div className="animate-fade-in-up md:col-span-1" style={{ animationDelay: '100ms' }}>
             <PlanSummary plan={plan} billingPeriod={billingPeriod} />
           </div>
-          <div className="animate-fade-in-up lg:col-span-2" style={{ animationDelay: '200ms' }}>
+          <div
+            className="animate-fade-in-up md:col-span-1 lg:col-span-2"
+            style={{ animationDelay: '200ms' }}
+          >
             <PaymentForm plan={plan} billingPeriod={billingPeriod} />
           </div>
         </div>

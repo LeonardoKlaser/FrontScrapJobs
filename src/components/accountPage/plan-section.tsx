@@ -63,8 +63,8 @@ export function PlanSection({ user, currentUsage = 0 }: PlanSectionProps) {
             <div>
               <p className="mb-3 text-sm font-medium text-foreground">Benefícios incluídos</p>
               <ul className="grid gap-2 sm:grid-cols-2">
-                {benefits.map((benefit, index) => (
-                  <li key={index} className="flex items-start gap-2.5">
+                {benefits.map((benefit) => (
+                  <li key={benefit} className="flex items-start gap-2.5">
                     <div className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary/10">
                       <Check className="h-2.5 w-2.5 text-primary" />
                     </div>

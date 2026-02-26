@@ -32,7 +32,7 @@ export function HowItWorksSection() {
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {steps.map((step, index) => (
             <Card
-              key={index}
+              key={step.title}
               className="bg-card border-border/50 hover:border-primary/30 transition-all duration-300 animate-fade-in-up"
               style={{ animationDelay: `${index * 150}ms` }}
             >

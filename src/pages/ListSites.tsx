@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Building2, CheckCircle, Radar, Search, Send, XCircle } from 'lucide-react'
+import { Building2, CheckCircle, Radar, Search, Send } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -8,12 +8,12 @@ import { Badge } from '@/components/ui/badge'
 import { RegistrationModal } from '@/components/companyPopup'
 import { useSiteCareer } from '@/hooks/useSiteCareer'
 import { useRequestSite } from '@/hooks/useRequestSite'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 import type { SiteCareer } from '@/models/siteCareer'
 import { useRegisterUserSite, useUnregisterUserSite } from '@/hooks/useRegisterUserSite'
 import { useUser } from '@/hooks/useUser'
 import { FilterPills } from '@/components/common/filter-pills'
 import { EmptyState } from '@/components/common/empty-state'
+import { toast } from 'sonner'
 
 const filters = [
   { key: 'all', label: 'Todas' },
@@ -29,7 +29,7 @@ export default function EmpresasPage() {
   const { data } = useSiteCareer()
   const { data: user } = useUser()
   const [filter, setFilter] = useState('all')
-  const { mutate: requestSite, isPending, isSuccess, isError, error } = useRequestSite()
+  const { mutate: requestSite, isPending } = useRequestSite()
   const { mutate: registerUserToSite, isPending: isRegisteringUser } = useRegisterUserSite()
   const { mutate: unregisterUser } = useUnregisterUserSite()
 
@@ -61,7 +61,11 @@ export default function EmpresasPage() {
     if (requestedUrl) {
       requestSite(requestedUrl, {
         onSuccess: () => {
+          toast.success('Solicitação enviada com sucesso!')
           setRequestedUrl('')
+        },
+        onError: (err) => {
+          toast.error(err?.message || 'Ocorreu um erro ao enviar a solicitação.')
         }
       })
     }
@@ -106,7 +110,7 @@ export default function EmpresasPage() {
 
       {/* Stats row */}
       <div
-        className="animate-fade-in-up grid grid-cols-3 gap-4 max-w-lg mx-auto"
+        className="animate-fade-in-up grid grid-cols-3 gap-3 sm:gap-4 max-w-lg mx-auto"
         style={{ animationDelay: '50ms' }}
       >
         <div className="text-center">
@@ -144,11 +148,11 @@ export default function EmpresasPage() {
       </div>
 
       {/* Company grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 min-[480px]:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
         {filteredCompanies?.map((company, index) => (
           <button
             key={company.site_id}
-            className="animate-fade-in-up group relative flex flex-col items-center gap-3 rounded-lg border border-border/50 bg-card p-5 text-center transition-all duration-150 hover:border-primary/20 hover:bg-card/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="animate-fade-in-up hover-lift group relative flex flex-col items-center gap-3 rounded-lg border border-border/50 bg-card p-5 text-center transition-all duration-150 hover:border-primary/20 hover:bg-card/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             style={{ animationDelay: `${150 + index * 40}ms` }}
             onClick={() => handleCompanyClick(company)}
           >
@@ -194,22 +198,6 @@ export default function EmpresasPage() {
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleRequestSubmit} className="space-y-4 px-6 pb-6">
-          {isSuccess && (
-            <Alert className="border-primary/30 bg-primary/5">
-              <CheckCircle className="h-4 w-4 text-primary" />
-              <AlertDescription className="text-primary">
-                Solicitação enviada com sucesso!
-              </AlertDescription>
-            </Alert>
-          )}
-          {isError && (
-            <Alert className="border-destructive/30 bg-destructive/5">
-              <XCircle className="h-4 w-4 text-destructive" />
-              <AlertDescription className="text-destructive">
-                {error?.message || 'Ocorreu um erro ao enviar a solicitação.'}
-              </AlertDescription>
-            </Alert>
-          )}
           <div className="flex flex-col sm:flex-row items-end gap-2">
             <div className="w-full space-y-1.5">
               <Label htmlFor="siteUrl" className="text-muted-foreground text-sm">

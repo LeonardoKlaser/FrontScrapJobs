@@ -53,7 +53,7 @@ function StatsCard({
 }) {
   return (
     <Card
-      className="animate-fade-in-up group relative flex flex-1 min-w-[180px] flex-col gap-3 p-5 overflow-hidden hover:border-primary/20"
+      className="animate-fade-in-up hover-lift group relative flex flex-col gap-3 p-5 overflow-hidden hover:border-primary/20"
       style={{ animationDelay: `${delay}ms` }}
     >
       <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full -mr-4 -mt-4 transition-all duration-300 group-hover:bg-primary/10" />
@@ -94,9 +94,9 @@ export function Home() {
   if (isDashboardLoading) {
     return (
       <div className="flex flex-col gap-10">
-        <div className="flex flex-wrap gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 3 }).map((_, i) => (
-            <SkeletonCard key={i} className="flex-1 min-w-[180px]" />
+            <SkeletonCard key={i} />
           ))}
         </div>
         <SkeletonTable rows={4} />
@@ -155,7 +155,7 @@ export function Home() {
   return (
     <div className="flex flex-col gap-10">
       {/* Stats */}
-      <div className="flex flex-wrap gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {stats.map((s, i) => (
           <StatsCard key={s.title} {...s} delay={i * 80} />
         ))}
@@ -166,8 +166,8 @@ export function Home() {
         <SectionHeader title="Últimas vagas" icon={Sparkles} />
 
         {/* Search & Filter */}
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="relative flex-1 min-w-[200px] max-w-sm">
+        <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3">
+          <div className="relative flex-1 min-w-0 sm:min-w-[200px] max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Buscar por título..."
@@ -181,7 +181,7 @@ export function Home() {
             Buscar
           </Button>
           <Select value={String(days)} onValueChange={handleDaysChange}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue placeholder="Período" />
             </SelectTrigger>
             <SelectContent>
@@ -250,7 +250,7 @@ export function Home() {
             </div>
 
             {/* Pagination */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-muted-foreground">{totalCount} vaga(s) encontrada(s)</p>
               <div className="flex items-center gap-1">
                 <Button
@@ -261,7 +261,7 @@ export function Home() {
                   onClick={() => setPage((p) => p - 1)}
                 >
                   <ChevronLeft className="h-4 w-4" />
-                  Anterior
+                  <span className="hidden sm:inline">Anterior</span>
                 </Button>
                 <span className="inline-flex h-8 min-w-[2rem] items-center justify-center rounded-md bg-primary/10 px-2.5 text-sm font-medium text-primary">
                   {page}
@@ -274,7 +274,7 @@ export function Home() {
                   disabled={page >= totalPages}
                   onClick={() => setPage((p) => p + 1)}
                 >
-                  Próximo
+                  <span className="hidden sm:inline">Próximo</span>
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>

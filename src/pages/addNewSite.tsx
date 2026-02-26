@@ -1,6 +1,6 @@
 import type React from 'react'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -15,20 +15,22 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import {
   HelpCircle,
-  CheckCircle,
   XCircle,
   ImagePlus,
   Globe,
   Code2,
   Webhook,
-  Loader2
+  Loader2,
+  CheckCircle
 } from 'lucide-react'
 import { Tooltip } from '@/components/tooltip'
 import { PageHeader } from '@/components/common/page-header'
 import { useAddSiteConfig } from '@/hooks/useAddSiteConfig'
+import { useButtonState } from '@/hooks/useButtonState'
 import { type SiteConfigFormData } from '@/services/siteCareerService'
 
 export default function AdicionarSitePage() {
@@ -52,35 +54,14 @@ export default function AdicionarSitePage() {
     json_data_mappings: ''
   })
   const [logoFile, setLogoFile] = useState<File | null>(null)
-  const { mutate: addSite, isPending, isSuccess, isError, error } = useAddSiteConfig()
-
-  useEffect(() => {
-    if (isSuccess) {
-      const timer = setTimeout(() => {
-        setFormData({
-          site_name: '',
-          base_url: '',
-          is_active: true,
-          scraping_type: 'CSS',
-          job_list_item_selector: '',
-          title_selector: '',
-          link_selector: '',
-          link_attribute: '',
-          location_selector: '',
-          next_page_selector: '',
-          job_description_selector: '',
-          job_requisition_id_selector: '',
-          api_endpoint_template: '',
-          api_method: 'GET',
-          api_headers_json: '',
-          api_payload_template: '',
-          json_data_mappings: ''
-        })
-        setLogoFile(null)
-      }, 3000)
-      return () => clearTimeout(timer)
-    }
-  }, [isSuccess])
+  const { mutate: addSite } = useAddSiteConfig()
+  const {
+    buttonState,
+    setLoading,
+    setSuccess,
+    setError: setBtnError,
+    isDisabled
+  } = useButtonState()
 
   const handleInputChange = (field: keyof SiteConfigFormData, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
@@ -102,7 +83,40 @@ export default function AdicionarSitePage() {
       setValidationError('Por favor, preencha os campos obrigatórios: Nome do Site e URL Base.')
       return
     }
-    addSite({ formData, logoFile })
+    setLoading()
+    addSite(
+      { formData, logoFile },
+      {
+        onSuccess: () => {
+          setSuccess()
+          toast.success('Site adicionado com sucesso!')
+          setFormData({
+            site_name: '',
+            base_url: '',
+            is_active: true,
+            scraping_type: 'CSS',
+            job_list_item_selector: '',
+            title_selector: '',
+            link_selector: '',
+            link_attribute: '',
+            location_selector: '',
+            next_page_selector: '',
+            job_description_selector: '',
+            job_requisition_id_selector: '',
+            api_endpoint_template: '',
+            api_method: 'GET',
+            api_headers_json: '',
+            api_payload_template: '',
+            json_data_mappings: ''
+          })
+          setLogoFile(null)
+        },
+        onError: (err) => {
+          setBtnError()
+          toast.error(err?.message || 'Ocorreu um erro ao adicionar o site.')
+        }
+      }
+    )
   }
 
   return (
@@ -117,22 +131,6 @@ export default function AdicionarSitePage() {
           <Alert className="border-destructive/50 bg-destructive/5 animate-fade-in">
             <XCircle className="h-4 w-4 text-destructive" />
             <AlertDescription className="text-destructive">{validationError}</AlertDescription>
-          </Alert>
-        )}
-        {isSuccess && (
-          <Alert className="border-primary/50 bg-primary/5 animate-fade-in">
-            <CheckCircle className="h-4 w-4 text-primary" />
-            <AlertDescription className="text-primary">
-              Site adicionado com sucesso!
-            </AlertDescription>
-          </Alert>
-        )}
-        {isError && (
-          <Alert className="border-destructive/50 bg-destructive/5 animate-fade-in">
-            <XCircle className="h-4 w-4 text-destructive" />
-            <AlertDescription className="text-destructive">
-              {error?.message || 'Ocorreu um erro ao adicionar o site.'}
-            </AlertDescription>
           </Alert>
         )}
 
@@ -524,7 +522,7 @@ export default function AdicionarSitePage() {
               <CardDescription>Imagem exibida junto ao nome do site</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-wrap items-center gap-3">
                 <Input
                   id="logo_upload"
                   type="file"
@@ -540,22 +538,40 @@ export default function AdicionarSitePage() {
                   <ImagePlus className="size-4" />
                   Escolher Imagem
                 </Button>
-                {logoFile && <span className="text-sm text-muted-foreground">{logoFile.name}</span>}
+                {logoFile && (
+                  <span className="text-sm text-muted-foreground min-w-0 truncate max-w-[200px] sm:max-w-xs">
+                    {logoFile.name}
+                  </span>
+                )}
               </div>
             </CardContent>
           </Card>
         </div>
 
         {/* Submit */}
-        <div className="flex justify-end animate-fade-in-up" style={{ animationDelay: '250ms' }}>
-          <Button type="submit" variant="glow" size="lg" disabled={isPending}>
-            {isPending ? (
+        <div
+          className="flex flex-col sm:flex-row sm:justify-end animate-fade-in-up"
+          style={{ animationDelay: '250ms' }}
+        >
+          <Button
+            type="submit"
+            variant={buttonState === 'success' ? 'outline' : 'glow'}
+            size="lg"
+            className={`w-full sm:w-auto ${buttonState === 'success' ? 'animate-success-flash border-primary/50 text-primary' : ''}`}
+            disabled={isDisabled}
+          >
+            {buttonState === 'loading' ? (
               <>
                 <Loader2 className="size-4 animate-spin" />
                 Salvando...
               </>
+            ) : buttonState === 'success' ? (
+              <>
+                <CheckCircle className="size-4" />
+                Salvo!
+              </>
             ) : (
-              'Salvar Configuração do Site'
+              'Cadastrar Site'
             )}
           </Button>
         </div>

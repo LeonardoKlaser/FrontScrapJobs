@@ -2,7 +2,7 @@ import { AuthForm } from '@/components/forms/Auth'
 import { PATHS } from '@/router/paths'
 import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router'
-import Logo from '@/assets/logo_dark_contornado.png'
+import Logo from '@/assets/logo_dark_contornado.webp'
 import { useUser } from '@/hooks/useUser'
 
 export default function Login() {

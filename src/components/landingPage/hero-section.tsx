@@ -7,8 +7,8 @@ export function HeroSection() {
       {/* Radial emerald gradient background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(16,185,129,0.12),transparent)]" />
 
-      {/* Subtle grid overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
+      {/* Subtle grid overlay — dark lines on light bg, light lines on dark bg */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.04)_1px,transparent_1px)] bg-[size:64px_64px] dark:bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)]" />
 
       <div className="container mx-auto text-center relative z-10">
         <div className="max-w-4xl mx-auto space-y-8">
@@ -27,7 +27,7 @@ export function HeroSection() {
 
           {/* Headline */}
           <h1
-            className="text-5xl md:text-7xl font-bold leading-tight tracking-tight animate-fade-in-up text-balance"
+            className="text-3xl sm:text-5xl md:text-7xl font-bold leading-tight tracking-tight animate-fade-in-up text-balance"
             style={{ animationDelay: '100ms' }}
           >
             <span className="text-foreground">Pare de Procurar.</span>
@@ -37,7 +37,7 @@ export function HeroSection() {
 
           {/* Subheadline */}
           <p
-            className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in-up text-pretty"
+            className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in-up text-pretty"
             style={{ animationDelay: '200ms' }}
           >
             Automatize sua busca de emprego nas melhores empresas e receba insights de IA para seu
@@ -50,7 +50,7 @@ export function HeroSection() {
               <Button
                 variant="glow"
                 size="lg"
-                className="px-8 py-4 text-lg font-medium rounded-lg hover:scale-105 transition-transform duration-200 animate-pulse-glow"
+                className="w-full sm:w-auto px-8 py-4 text-lg font-medium rounded-lg hover:scale-105 transition-transform duration-200 animate-pulse-glow"
               >
                 Iniciar Meu Teste Gratuito
                 <ArrowRight className="w-5 h-5 ml-1" />

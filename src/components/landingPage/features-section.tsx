@@ -42,8 +42,8 @@ export function FeaturesSection() {
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {features.map((feature, index) => (
             <Card
-              key={index}
-              className={`bg-card border-border/50 hover:border-primary/30 transition-all duration-300 animate-fade-in-up ${
+              key={feature.title}
+              className={`bg-card border-border/50 hover:border-primary/30 transition-all duration-300 animate-fade-in-up hover-lift ${
                 feature.highlight ? 'border-primary/50 glow-border' : ''
               }`}
               style={{ animationDelay: `${index * 120}ms` }}

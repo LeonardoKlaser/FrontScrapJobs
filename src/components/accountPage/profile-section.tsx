@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
-import { UserCircle } from 'lucide-react'
+import { UserCircle, Loader2, CheckCircle } from 'lucide-react'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { useUpdateProfile } from '@/hooks/useUpdateProfile'
-import { StatusFeedback } from '@/components/common/status-feedback'
+import { useButtonState } from '@/hooks/useButtonState'
+import { toast } from 'sonner'
 import type { User } from '@/models/user'
 
 export function ProfileSection({ user }: { user: User | undefined }) {
@@ -14,6 +15,13 @@ export function ProfileSection({ user }: { user: User | undefined }) {
   const [tax, setTax] = useState('')
 
   const updateProfile = useUpdateProfile()
+  const {
+    buttonState,
+    setLoading,
+    setSuccess,
+    setError: setBtnError,
+    isDisabled
+  } = useButtonState()
 
   useEffect(() => {
     if (user) {
@@ -24,11 +32,24 @@ export function ProfileSection({ user }: { user: User | undefined }) {
   }, [user])
 
   const handleSave = () => {
-    updateProfile.mutate({
-      user_name: name,
-      cellphone: cellphone || undefined,
-      tax: tax || undefined
-    })
+    setLoading()
+    updateProfile.mutate(
+      {
+        user_name: name,
+        cellphone: cellphone || undefined,
+        tax: tax || undefined
+      },
+      {
+        onSuccess: () => {
+          setSuccess()
+          toast.success('Perfil atualizado com sucesso!')
+        },
+        onError: () => {
+          setBtnError()
+          toast.error('Erro ao atualizar perfil. Tente novamente.')
+        }
+      }
+    )
   }
 
   const initials = user?.user_name
@@ -105,21 +126,29 @@ export function ProfileSection({ user }: { user: User | undefined }) {
             />
           </div>
         </div>
-
-        {updateProfile.isSuccess && (
-          <StatusFeedback variant="success" message="Perfil atualizado com sucesso!" />
-        )}
-        {updateProfile.isError && (
-          <StatusFeedback variant="error" message="Erro ao atualizar perfil. Tente novamente." />
-        )}
       </CardContent>
       <CardFooter>
         <Button
-          variant="glow"
+          variant={buttonState === 'success' ? 'outline' : 'glow'}
           onClick={handleSave}
-          disabled={updateProfile.isPending || !name.trim()}
+          disabled={isDisabled || !name.trim()}
+          className={
+            buttonState === 'success' ? 'animate-success-flash border-primary/50 text-primary' : ''
+          }
         >
-          {updateProfile.isPending ? 'Salvando...' : 'Salvar Alterações'}
+          {buttonState === 'loading' ? (
+            <>
+              <Loader2 className="size-4 animate-spin" />
+              Salvando...
+            </>
+          ) : buttonState === 'success' ? (
+            <>
+              <CheckCircle className="size-4" />
+              Salvo!
+            </>
+          ) : (
+            'Salvar Alterações'
+          )}
         </Button>
       </CardFooter>
     </Card>

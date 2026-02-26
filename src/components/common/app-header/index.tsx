@@ -43,7 +43,11 @@ export function AppHeader() {
       bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60"
     >
       <div className="mx-auto flex h-12 max-w-6xl items-center justify-between px-4">
-        <Link to={PATHS.app.home} className="flex items-center gap-2 text-lg font-semibold">
+        <Link
+          to={PATHS.app.home}
+          prefetch="intent"
+          className="flex items-center gap-2 text-lg font-semibold"
+        >
           Scrap<span className="text-primary">Jobs</span>
         </Link>
 
@@ -55,6 +59,7 @@ export function AppHeader() {
                   <NavLink
                     to={item.href}
                     end={item.href === PATHS.app.home}
+                    prefetch="intent"
                     className={({ isActive }) =>
                       cn(
                         'relative px-3 py-1.5 rounded-md text-sm font-medium transition-colors after:absolute after:bottom-0 after:left-3 after:right-3 after:h-px after:transition-colors',
@@ -105,6 +110,7 @@ export function AppHeader() {
               key={item.href}
               to={item.href}
               end={item.href === PATHS.app.home}
+              prefetch="intent"
               onClick={() => setOpen(false)}
               className={({ isActive }) =>
                 cn(

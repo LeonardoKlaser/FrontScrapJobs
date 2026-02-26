@@ -42,8 +42,8 @@ export function PlanSummary({ plan, billingPeriod }: PlanSummaryProps) {
         <div className="space-y-3">
           <h3 className="text-sm font-semibold text-foreground">O que esta incluido:</h3>
           <ul className="space-y-2.5">
-            {plan.features.map((benefit, index) => (
-              <li key={index} className="flex items-start gap-3">
+            {plan.features.map((benefit) => (
+              <li key={benefit} className="flex items-start gap-3">
                 <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10">
                   <Check className="h-3 w-3 text-primary" />
                 </div>

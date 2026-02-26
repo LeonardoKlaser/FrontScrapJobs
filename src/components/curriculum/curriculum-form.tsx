@@ -8,11 +8,22 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { SectionHeader } from '@/components/common/section-header'
-import { PlusCircle, Trash2, Loader2, Briefcase, GraduationCap, Save, X } from 'lucide-react'
+import {
+  PlusCircle,
+  Trash2,
+  Loader2,
+  Briefcase,
+  GraduationCap,
+  Save,
+  X,
+  CheckCircle
+} from 'lucide-react'
 import type { Curriculum, Experience, Education } from '@/models/curriculum'
 import { curriculumService } from '@/services/curriculumService'
 import { useUpdateCurriculum } from '@/hooks/useCurriculum'
 import { useQueryClient } from '@tanstack/react-query'
+import { useButtonState } from '@/hooks/useButtonState'
+import { toast } from 'sonner'
 
 interface CurriculumFormProps {
   curriculum?: Curriculum
@@ -34,6 +45,13 @@ function createEmptyFormData(): Omit<Curriculum, 'id'> {
 export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
   const [formData, setFormData] = useState(createEmptyFormData)
   const [isSaving, setIsSaving] = useState(false)
+  const {
+    buttonState,
+    setLoading: setBtnLoading,
+    setSuccess: setBtnSuccess,
+    setError: setBtnError,
+    isDisabled: isBtnDisabled
+  } = useButtonState()
   const [skillInput, setSkillInput] = useState('')
   const [languageInput, setLanguageInput] = useState('')
   const { mutate: updateCurriculum, isPending: isUpdating } = useUpdateCurriculum()
@@ -57,13 +75,31 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
 
   const handleSave = async () => {
     setIsSaving(true)
+    setBtnLoading()
     try {
       if (isEditing && curriculum) {
-        updateCurriculum({ ...formData, id: curriculum.id })
+        updateCurriculum(
+          { ...formData, id: curriculum.id },
+          {
+            onSuccess: () => {
+              setBtnSuccess()
+              toast.success('Currículo salvo com sucesso!')
+            },
+            onError: () => {
+              setBtnError()
+              toast.error('Erro ao salvar currículo. Tente novamente.')
+            }
+          }
+        )
       } else {
         await curriculumService.newCurriculum(formData)
         queryClient.invalidateQueries({ queryKey: ['curriculumList'] })
+        setBtnSuccess()
+        toast.success('Currículo criado com sucesso!')
       }
+    } catch {
+      setBtnError()
+      toast.error('Erro ao salvar currículo. Tente novamente.')
     } finally {
       setIsSaving(false)
     }
@@ -221,9 +257,9 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
           />
           {skillsArray.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-2">
-              {skillsArray.map((skill, index) => (
+              {skillsArray.map((skill) => (
                 <Badge
-                  key={index}
+                  key={skill}
                   variant="default"
                   className="cursor-pointer gap-1 pr-1.5 hover:bg-primary/20"
                   onClick={() => removeSkill(skill)}
@@ -250,9 +286,9 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
           />
           {languagesArray.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-2">
-              {languagesArray.map((language, index) => (
+              {languagesArray.map((language) => (
                 <Badge
-                  key={index}
+                  key={language}
                   variant="default"
                   className="cursor-pointer gap-1 pr-1.5 hover:bg-primary/20"
                   onClick={() => removeLanguage(language)}
@@ -437,15 +473,20 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
         <div className="pt-2">
           <Button
             onClick={handleSave}
-            disabled={isSaving || isUpdating || !formData.title}
-            variant="glow"
-            className="w-full"
+            disabled={isSaving || isUpdating || isBtnDisabled || !formData.title}
+            variant={buttonState === 'success' ? 'outline' : 'glow'}
+            className={`w-full ${buttonState === 'success' ? 'animate-success-flash border-primary/50 text-primary' : ''}`}
             size="lg"
           >
-            {isSaving || isUpdating ? (
+            {buttonState === 'loading' || isSaving || isUpdating ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Salvando...
+              </>
+            ) : buttonState === 'success' ? (
+              <>
+                <CheckCircle className="mr-2 h-4 w-4" />
+                Salvo!
               </>
             ) : (
               <>

@@ -238,7 +238,27 @@
   animation: list-item-in 0.3s ease-out both;
 }
 
+@keyframes success-flash {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+.animate-success-flash {
+  animation: success-flash 0.6s ease-out;
+}
+
 @layer base {
+  html {
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
   * {
     @apply border-border outline-ring/50;
   }
@@ -284,5 +304,21 @@
 
   .glow-border {
     box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
+  }
+
+  .hover-lift {
+    transition: transform 150ms ease-out, box-shadow 150ms ease-out;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
+  }
+
+  :is(.dark *) .hover-lift:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  :not(.dark) .hover-lift:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
 }

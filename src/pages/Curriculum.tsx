@@ -26,7 +26,7 @@ export function Curriculum() {
         className="mb-10"
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-6">
         <div className="animate-fade-in-up" style={{ animationDelay: '50ms' }}>
           <CurriculumList
             curriculums={curriculums}

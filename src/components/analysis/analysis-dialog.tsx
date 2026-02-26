@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -22,6 +22,7 @@ import {
 import { useAnalyzeJob, useSendAnalysisEmail } from '@/hooks/useAnalysis'
 import type { ResumeAnalysis } from '@/services/analysisService'
 import { isAxiosError } from 'axios'
+import { toast } from 'sonner'
 
 interface AnalysisDialogProps {
   jobId: number | null
@@ -57,21 +58,14 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
     finalConsiderations
   } = analysis
 
-  const {
-    mutate: sendEmail,
-    isPending: isSending,
-    isSuccess: emailSent,
-    isError: emailError
-  } = useSendAnalysisEmail()
-  const [emailFeedback, setEmailFeedback] = useState<string | null>(null)
+  const { mutate: sendEmail, isPending: isSending, isSuccess: emailSent } = useSendAnalysisEmail()
 
   const handleSendEmail = () => {
-    setEmailFeedback(null)
     sendEmail(
       { jobId, analysis },
       {
-        onSuccess: () => setEmailFeedback('Email enviado com sucesso!'),
-        onError: () => setEmailFeedback('Erro ao enviar email. Tente novamente.')
+        onSuccess: () => toast.success('Email enviado com sucesso!'),
+        onError: () => toast.error('Erro ao enviar email. Tente novamente.')
       }
     )
   }
@@ -82,7 +76,7 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
   return (
     <div className="space-y-5 max-h-[60vh] overflow-y-auto pr-1 scrollbar-thin">
       {/* Score hero */}
-      <Card className="flex flex-row items-center gap-5 p-5 border-border/50">
+      <Card className="flex flex-col items-center gap-4 p-5 sm:flex-row sm:items-center sm:gap-5 border-border/50">
         <div className="relative flex h-20 w-20 shrink-0 items-center justify-center">
           <svg className="absolute inset-0 h-20 w-20 -rotate-90" viewBox="0 0 80 80">
             <circle
@@ -133,9 +127,9 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
             Pontos Fortes
           </h4>
           <div className="grid gap-2">
-            {strengthsForThisJob.map((s, i) => (
+            {strengthsForThisJob.map((s) => (
               <div
-                key={i}
+                key={s.point}
                 className="flex items-start gap-2.5 rounded-lg border border-border/50 bg-card px-3.5 py-2.5"
               >
                 <div className="mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
@@ -159,9 +153,9 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
             Lacunas e Melhorias
           </h4>
           <div className="grid gap-2">
-            {gapsAndImprovementAreas.map((g, i) => (
+            {gapsAndImprovementAreas.map((g) => (
               <div
-                key={i}
+                key={g.areaDescription}
                 className="flex items-start gap-2.5 rounded-lg border border-border/50 bg-card px-3.5 py-2.5"
               >
                 <div className="mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full bg-warning" />
@@ -185,9 +179,9 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
             Sugestões para o Currículo
           </h4>
           <div className="grid gap-2.5">
-            {actionableResumeSuggestions.map((s, i) => (
+            {actionableResumeSuggestions.map((s) => (
               <div
-                key={i}
+                key={s.suggestion}
                 className="rounded-lg border border-border/50 bg-card px-3.5 py-3 border-l-2 border-l-info/40"
               >
                 <p className="text-sm font-medium text-foreground">{s.suggestion}</p>
@@ -221,7 +215,7 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
       )}
 
       {/* Send Email */}
-      <div className="flex items-center gap-3 pt-3 border-t border-border/50">
+      <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-border/50">
         <Button
           size="sm"
           variant={emailSent ? 'outline' : 'glow'}
@@ -232,11 +226,6 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
           {isSending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
           {emailSent ? 'Email enviado' : 'Enviar análise por email'}
         </Button>
-        {emailFeedback && (
-          <span className={`text-xs ${emailError ? 'text-destructive' : 'text-primary'}`}>
-            {emailFeedback}
-          </span>
-        )}
       </div>
     </div>
   )
@@ -261,7 +250,7 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="max-w-[95vw] sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="tracking-tight">Análise de Compatibilidade com IA</DialogTitle>
           <DialogDescription>Comparação entre seu currículo e a vaga selecionada</DialogDescription>
