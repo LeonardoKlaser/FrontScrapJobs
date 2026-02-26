@@ -27,7 +27,7 @@ export default function CheckoutPage() {
           <CardHeader>
             <CardTitle>Erro ao carregar</CardTitle>
             <CardDescription>
-              Nao foi possivel buscar os planos. Tente novamente mais tarde.
+              Não foi possível buscar os planos. Tente novamente mais tarde.
             </CardDescription>
           </CardHeader>
         </Card>
@@ -42,9 +42,9 @@ export default function CheckoutPage() {
       <div className="flex min-h-screen items-center justify-center bg-background px-4">
         <Card className="w-full max-w-md border-border/50">
           <CardHeader>
-            <CardTitle>Plano nao encontrado</CardTitle>
+            <CardTitle>Plano não encontrado</CardTitle>
             <CardDescription>
-              O plano solicitado nao existe. Por favor, selecione um plano valido.
+              O plano solicitado não existe. Por favor, selecione um plano válido.
             </CardDescription>
           </CardHeader>
         </Card>
@@ -73,7 +73,7 @@ export default function CheckoutPage() {
             Finalize sua Assinatura
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Escolha seu metodo de pagamento e comece a usar o ScrapJobs
+            Escolha seu método de pagamento e comece a usar o ScrapJobs
           </p>
         </div>
 

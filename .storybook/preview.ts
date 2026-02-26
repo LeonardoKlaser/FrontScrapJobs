@@ -12,7 +12,7 @@ const preview: Preview = {
         icon: 'paintbrush',
         items: [
           { value: 'dark', title: 'Dark', icon: 'moon' },
-          { value: 'light', title: 'Light', icon: 'sun' },
+          { value: 'light', title: 'Light', icon: 'sun' }
         ],
         dynamicTitle: true,
       },

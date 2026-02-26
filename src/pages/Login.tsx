@@ -33,7 +33,7 @@ export default function Login() {
         <AuthForm />
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          Primeira missao por aqui?{' '}
+          Primeira missão por aqui?{' '}
           <Link to="/#pricing" className="font-medium text-primary hover:underline">
             Escolha um plano
           </Link>

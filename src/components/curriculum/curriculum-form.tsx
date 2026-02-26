@@ -44,7 +44,6 @@ function createEmptyFormData(): Omit<Curriculum, 'id'> {
 
 export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
   const [formData, setFormData] = useState(createEmptyFormData)
-  const [isSaving, setIsSaving] = useState(false)
   const {
     buttonState,
     setLoading: setBtnLoading,
@@ -74,7 +73,6 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
   }, [curriculum])
 
   const handleSave = async () => {
-    setIsSaving(true)
     setBtnLoading()
     try {
       if (isEditing && curriculum) {
@@ -100,8 +98,6 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
     } catch {
       setBtnError()
       toast.error('Erro ao salvar currículo. Tente novamente.')
-    } finally {
-      setIsSaving(false)
     }
   }
 
@@ -473,12 +469,12 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
         <div className="pt-2">
           <Button
             onClick={handleSave}
-            disabled={isSaving || isUpdating || isBtnDisabled || !formData.title}
+            disabled={isUpdating || isBtnDisabled || !formData.title}
             variant={buttonState === 'success' ? 'outline' : 'glow'}
             className={`w-full ${buttonState === 'success' ? 'animate-success-flash border-primary/50 text-primary' : ''}`}
             size="lg"
           >
-            {buttonState === 'loading' || isSaving || isUpdating ? (
+            {buttonState === 'loading' || isUpdating ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Salvando...
