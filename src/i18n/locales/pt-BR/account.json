@@ -31,7 +31,16 @@
     "changedButton": "Senha alterada!",
     "changeButton": "Alterar Senha",
     "changeSuccess": "Senha alterada com sucesso!",
-    "wrongPassword": "Senha atual incorreta. Tente novamente."
+    "wrongPassword": "Senha atual incorreta. Tente novamente.",
+    "dangerZone": "Zona de perigo",
+    "deleteWarning": "Ao excluir sua conta, seus dados serão desativados. Esta ação pode ser revertida em até 30 dias.",
+    "deleteAccount": "Excluir minha conta",
+    "confirmDelete": "Confirmar exclusão de conta",
+    "confirmDeleteMessage": "Digite sua senha para confirmar a exclusão da conta.",
+    "passwordPlaceholder": "Sua senha",
+    "cancel": "Cancelar",
+    "confirmDeleteBtn": "Excluir conta",
+    "deleteError": "Erro ao excluir conta"
   },
   "plan": {
     "title": "Meu Plano",
@@ -42,6 +51,11 @@
     "unlimited": "Ilimitado",
     "benefits": "Benefícios incluídos",
     "manage": "Gerenciar Assinatura",
-    "upgrade": "Fazer Upgrade"
+    "upgrade": "Fazer Upgrade",
+    "expiresAt": "Expira em",
+    "manageTitle": "Gerenciar Plano",
+    "currentPlan": "Plano atual",
+    "renew": "Renovar",
+    "subscribe": "Assinar"
   }
 }

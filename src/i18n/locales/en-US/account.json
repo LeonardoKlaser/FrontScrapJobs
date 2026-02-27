@@ -31,7 +31,16 @@
     "changedButton": "Password changed!",
     "changeButton": "Change Password",
     "changeSuccess": "Password changed successfully!",
-    "wrongPassword": "Current password is incorrect. Please try again."
+    "wrongPassword": "Current password is incorrect. Please try again.",
+    "dangerZone": "Danger zone",
+    "deleteWarning": "Deleting your account will deactivate your data. This action can be reversed within 30 days.",
+    "deleteAccount": "Delete my account",
+    "confirmDelete": "Confirm account deletion",
+    "confirmDeleteMessage": "Enter your password to confirm account deletion.",
+    "passwordPlaceholder": "Your password",
+    "cancel": "Cancel",
+    "confirmDeleteBtn": "Delete account",
+    "deleteError": "Failed to delete account"
   },
   "plan": {
     "title": "My Plan",
@@ -42,6 +51,11 @@
     "unlimited": "Unlimited",
     "benefits": "Included benefits",
     "manage": "Manage Subscription",
-    "upgrade": "Upgrade"
+    "upgrade": "Upgrade",
+    "expiresAt": "Expires on",
+    "manageTitle": "Manage Plan",
+    "currentPlan": "Current plan",
+    "renew": "Renew",
+    "subscribe": "Subscribe"
   }
 }

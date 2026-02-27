@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Check, ArrowUpRight, Sparkles } from 'lucide-react'
 import {
@@ -11,17 +12,21 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { usePlans } from '@/hooks/usePlans'
+import { Link } from 'react-router'
 import type { User } from '@/models/user'
-import { useNavigate } from 'react-router'
 
 interface PlanSectionProps {
   user: User | undefined
-  currentUsage?: number
 }
 
-export function PlanSection({ user, currentUsage = 0 }: PlanSectionProps) {
+export function PlanSection({ user }: PlanSectionProps) {
   const { t } = useTranslation('account')
-  const navigate = useNavigate()
+  const [showManageDialog, setShowManageDialog] = useState(false)
+  const { data: plans } = usePlans()
+
+  const currentUsage = user?.monitored_sites_count ?? 0
   const maxUsage = user?.plan?.max_sites ?? 0
   const usagePercentage = maxUsage > 0 ? (currentUsage / maxUsage) * 100 : 0
   const benefits = user?.plan?.features ?? []
@@ -59,6 +64,13 @@ export function PlanSection({ user, currentUsage = 0 }: PlanSectionProps) {
             </div>
           </div>
 
+          {user?.expires_at && (
+            <p className="text-xs text-muted-foreground mt-2">
+              {t('plan.expiresAt', 'Expira em')}:{' '}
+              {new Date(user.expires_at).toLocaleDateString('pt-BR')}
+            </p>
+          )}
+
           {benefits.length > 0 && (
             <div>
               <p className="mb-3 text-sm font-medium text-foreground">{t('plan.benefits')}</p>
@@ -79,7 +91,7 @@ export function PlanSection({ user, currentUsage = 0 }: PlanSectionProps) {
           <Button
             variant="outline"
             className="w-full sm:w-auto"
-            onClick={() => navigate('/#pricing')}
+            onClick={() => setShowManageDialog(true)}
           >
             {t('plan.manage')}
           </Button>
@@ -87,7 +99,7 @@ export function PlanSection({ user, currentUsage = 0 }: PlanSectionProps) {
             <Button
               variant="glow"
               className="w-full sm:w-auto"
-              onClick={() => navigate('/#pricing')}
+              onClick={() => setShowManageDialog(true)}
             >
               <Sparkles className="h-4 w-4" />
               {t('plan.upgrade')}
@@ -96,6 +108,50 @@ export function PlanSection({ user, currentUsage = 0 }: PlanSectionProps) {
           )}
         </CardFooter>
       </Card>
+
+      <Dialog open={showManageDialog} onOpenChange={setShowManageDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('plan.manageTitle', 'Gerenciar Plano')}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-2 mb-4">
+            <p className="text-sm text-muted-foreground">
+              {t('plan.currentPlan', 'Plano atual')}:{' '}
+              <span className="font-semibold text-foreground">
+                {user?.plan?.name ?? t('plan.noPlan')}
+              </span>
+            </p>
+            {user?.expires_at && (
+              <p className="text-sm text-muted-foreground">
+                {t('plan.expiresAt', 'Expira em')}:{' '}
+                {new Date(user.expires_at).toLocaleDateString('pt-BR')}
+              </p>
+            )}
+          </div>
+          <div className="space-y-4">
+            {plans?.map((plan) => (
+              <div
+                key={plan.id}
+                className="flex items-center justify-between rounded-lg border border-border/50 p-4"
+              >
+                <div>
+                  <p className="font-semibold text-foreground">{plan.name}</p>
+                  <p className="text-sm text-muted-foreground">
+                    R$ {plan.price.toFixed(2)}/m{'\u00EAs'}
+                  </p>
+                </div>
+                <Link to={`/checkout/${plan.id}`}>
+                  <Button size="sm" variant={plan.id === user?.plan?.id ? 'outline' : 'default'}>
+                    {plan.id === user?.plan?.id
+                      ? t('plan.renew', 'Renovar')
+                      : t('plan.subscribe', 'Assinar')}
+                  </Button>
+                </Link>
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
