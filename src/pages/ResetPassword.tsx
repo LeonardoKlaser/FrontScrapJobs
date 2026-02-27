@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { authService } from '@/services/authService'
+import { isAxiosError } from 'axios'
 import Logo from '@/assets/logo_dark_contornado.webp'
 
 export default function ResetPassword() {
@@ -44,8 +45,8 @@ export default function ResetPassword() {
       setTimeout(() => navigate('/login'), 3000)
     } catch (err: unknown) {
       const msg =
-        err instanceof Error
-          ? err.message
+        isAxiosError(err) && err.response?.data?.error
+          ? err.response.data.error
           : t('reset.error', 'Erro ao redefinir senha. Token pode estar expirado.')
       setError(msg)
     } finally {
