@@ -6,9 +6,12 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { ArrowRightIcon, Loader2Icon, MailIcon, LockIcon } from 'lucide-react'
+import { Link } from 'react-router'
+import { useTranslation } from 'react-i18next'
 
 export function AuthForm() {
   const { login, loading, error } = useAuth()
+  const { t } = useTranslation('auth')
   const {
     register,
     handleSubmit,
@@ -42,9 +45,14 @@ export function AuthForm() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="password" className="text-muted-foreground">
-          Senha
-        </Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="password" className="text-muted-foreground">
+            {t('password', 'Senha')}
+          </Label>
+          <Link to="/forgot-password" className="text-xs text-primary hover:underline">
+            {t('forgotPassword', 'Esqueci minha senha')}
+          </Link>
+        </div>
         <div className="relative">
           <LockIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
