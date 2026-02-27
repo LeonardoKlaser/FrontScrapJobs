@@ -51,5 +51,14 @@
     "emailSent": "A confirmation email has been sent to your inbox.",
     "goToDashboard": "Go to Dashboard",
     "needHelp": "Need help? Contact our support at"
+  },
+  "renew": {
+    "loading": "Loading plans...",
+    "title": "Your subscription has expired",
+    "description": "Renew your plan to continue accessing all ScrapJobs features.",
+    "sites": "{{count}} monitored companies",
+    "analyses": "{{count}} AI analyses/month",
+    "unlimitedAnalyses": "Unlimited AI analyses",
+    "subscribe": "Subscribe"
   }
 }

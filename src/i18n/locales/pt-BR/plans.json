@@ -51,5 +51,14 @@
     "emailSent": "Um e-mail de confirmação foi enviado para sua caixa de entrada.",
     "goToDashboard": "Ir para o Dashboard",
     "needHelp": "Precisa de ajuda? Entre em contato com nosso suporte em"
+  },
+  "renew": {
+    "loading": "Carregando planos...",
+    "title": "Sua assinatura expirou",
+    "description": "Renove seu plano para continuar acessando todas as funcionalidades do ScrapJobs.",
+    "sites": "{{count}} empresas monitoradas",
+    "analyses": "{{count}} análises de IA/mês",
+    "unlimitedAnalyses": "Análises de IA ilimitadas",
+    "subscribe": "Assinar Plano"
   }
 }

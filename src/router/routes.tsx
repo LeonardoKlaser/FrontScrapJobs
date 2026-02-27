@@ -21,7 +21,10 @@ const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'))
 const ResetPassword = lazy(() => import('@/pages/ResetPassword'))
 const CheckoutPage = lazy(() => import('@/pages/checkout'))
 const PaymentConfirmationPage = lazy(() => import('@/pages/paymentConfirmation'))
+const RenewSubscription = lazy(() => import('@/pages/RenewSubscription'))
 const AdminDashboard = lazy(() => import('@/pages/adminDashboard'))
+const TermsOfService = lazy(() => import('@/pages/TermsOfService'))
+const PrivacyPolicy = lazy(() => import('@/pages/PrivacyPolicy'))
 
 const curriculumLazy = async () => {
   const { Curriculum } = await import('@/pages/Curriculum')
@@ -48,6 +51,8 @@ export const createRouter = (queryClient: QueryClient) =>
         { path: PATHS.login, element: <Login /> },
         { path: 'forgot-password', element: <ForgotPassword /> },
         { path: 'reset-password', element: <ResetPassword /> },
+        { path: 'terms', element: <TermsOfService /> },
+        { path: 'privacy', element: <PrivacyPolicy /> },
         {
           path: 'checkout/:planId',
           element: <CheckoutPage />
@@ -99,6 +104,10 @@ export const createRouter = (queryClient: QueryClient) =>
         {
           path: 'payment-confirmation', // Nova rota
           element: <PaymentConfirmationPage />
+        },
+        {
+          path: 'renew',
+          element: <RenewSubscription />
         }
       ]
     },

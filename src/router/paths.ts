@@ -3,6 +3,8 @@ export const PATHS = {
   login: '/login',
   forgotPassword: '/forgot-password',
   resetPassword: '/reset-password',
+  terms: '/terms',
+  privacy: '/privacy',
 
   checkout: (planId: string) => `/checkout/${planId}`,
   app: {
@@ -12,7 +14,8 @@ export const PATHS = {
     adminDashboard: '/app/admin-dashboard',
     addNewSite: '/app/add-new-site',
     accountPage: '/app/accountPage',
-    paymentConfirmation: '/app/payment-confirmation'
+    paymentConfirmation: '/app/payment-confirmation',
+    renew: '/app/renew'
   },
   notFound: '*'
 } as const
