@@ -72,7 +72,8 @@ export function SecuritySection() {
     setDeleteError('')
     try {
       await authService.deleteAccount(deletePassword)
-      await queryClient.invalidateQueries({ queryKey: ['user'] })
+      await authService.logout()
+      queryClient.clear()
       window.location.href = '/'
     } catch (err) {
       setDeleteError(

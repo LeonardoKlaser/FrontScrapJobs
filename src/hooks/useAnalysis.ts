@@ -1,11 +1,15 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { analysisService } from '@/services/analysisService'
 import type { ResumeAnalysis } from '@/services/analysisService'
 
 export function useAnalyzeJob() {
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: ({ jobId, curriculumId }: { jobId: number; curriculumId: number }) =>
-      analysisService.analyzeJob(jobId, curriculumId)
+      analysisService.analyzeJob(jobId, curriculumId),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['analysisHistory', variables.jobId] })
+    }
   })
 }
 

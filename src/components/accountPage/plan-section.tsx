@@ -137,7 +137,9 @@ export function PlanSection({ user }: PlanSectionProps) {
                 <div>
                   <p className="font-semibold text-foreground">{plan.name}</p>
                   <p className="text-sm text-muted-foreground">
-                    R$ {plan.price.toFixed(2)}/m{'\u00EAs'}
+                    {plan.price === 0
+                      ? t('plan.free', 'Grátis')
+                      : `R$ ${plan.price.toFixed(2).replace('.', ',')}/mês`}
                   </p>
                 </div>
                 <Link to={`/checkout/${plan.id}`}>

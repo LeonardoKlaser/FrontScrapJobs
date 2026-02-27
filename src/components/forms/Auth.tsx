@@ -29,14 +29,14 @@ export function AuthForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-5">
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="email" className="text-muted-foreground">
-          E-mail
+          {t('email', 'E-mail')}
         </Label>
         <div className="relative">
           <MailIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             id="email"
             type="email"
-            placeholder="seu@email.com"
+            placeholder={t('emailPlaceholder', 'seu@email.com')}
             className="pl-10"
             {...register('email')}
           />
@@ -58,7 +58,7 @@ export function AuthForm() {
           <Input
             id="password"
             type="password"
-            placeholder="senha"
+            placeholder={t('passwordPlaceholder', 'senha')}
             className="pl-10"
             {...register('password')}
           />
@@ -75,7 +75,7 @@ export function AuthForm() {
           <Loader2Icon className="h-4 w-4 animate-spin" />
         ) : (
           <>
-            Entrar
+            {t('submit', 'Entrar')}
             <ArrowRightIcon className="ml-1 h-4 w-4" />
           </>
         )}
