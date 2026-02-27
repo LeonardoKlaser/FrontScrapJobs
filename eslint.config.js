@@ -22,7 +22,7 @@ export default tseslint.config([
       sourceType: 'module',
       globals: globals.browser,
       parserOptions: {
-        project: ['./tsconfig.app.json', './tsconfig.node.json', './tsconfig.test.json'],
+        project: ['./tsconfig.app.json', './tsconfig.node.json', './tsconfig.test.json', './tsconfig.e2e.json'],
         tsconfigRootDir: decodeURIComponent(new URL('.', import.meta.url).pathname),
       },
     },

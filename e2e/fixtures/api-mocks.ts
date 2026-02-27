@@ -84,11 +84,14 @@ export const mockCurriculums = [
     skills: 'React, TypeScript, CSS',
     languages: 'Portugues, Ingles',
     experiences: [
-      { id: '1', company: 'Empresa X', title: 'Dev Frontend', description: 'Desenvolvimento de interfaces' }
+      {
+        id: '1',
+        company: 'Empresa X',
+        title: 'Dev Frontend',
+        description: 'Desenvolvimento de interfaces'
+      }
     ],
-    educations: [
-      { id: '1', institution: 'USP', degree: 'Ciencia da Computacao', year: '2020' }
-    ]
+    educations: [{ id: '1', institution: 'USP', degree: 'Ciencia da Computacao', year: '2020' }]
   },
   {
     id: 2,
@@ -100,9 +103,7 @@ export const mockCurriculums = [
     experiences: [
       { id: '2', company: 'Empresa Y', title: 'Dev Backend', description: 'APIs REST' }
     ],
-    educations: [
-      { id: '2', institution: 'UNICAMP', degree: 'Engenharia', year: '2019' }
-    ]
+    educations: [{ id: '2', institution: 'UNICAMP', degree: 'Engenharia', year: '2019' }]
   }
 ]
 

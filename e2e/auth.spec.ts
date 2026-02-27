@@ -1,4 +1,4 @@
-import { test, expect, mockUser } from './fixtures/api-mocks'
+import { test, expect } from './fixtures/api-mocks'
 
 test.describe('Autenticacao', () => {
   test('login com credenciais validas redireciona para /app', async ({ page, mockAPI }) => {
