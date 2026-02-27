@@ -35,7 +35,8 @@
     "cpfExists": "This Tax ID is already registered.",
     "hidePassword": "Hide password",
     "showPassword": "Show password",
-    "goToLogin": "Go to login"
+    "goToLogin": "Go to login",
+    "backToHome": "Back to Home"
   },
   "planSummary": {
     "description": "Your plan summary",

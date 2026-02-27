@@ -3,6 +3,7 @@ import { PlanSummary } from '@/components/checkout/plan-summary'
 import { PaymentForm } from '@/components/checkout/payment-form'
 import { useParams, useSearchParams, Link } from 'react-router'
 import { usePlans } from '@/hooks/usePlans'
+import { PATHS } from '@/router/paths'
 import { Spinner } from '@/components/ui/spinner'
 import { ArrowLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -68,11 +69,11 @@ export default function CheckoutPage() {
 
       <div className="relative mx-auto max-w-6xl">
         <Link
-          to="/"
+          to={PATHS.landing}
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
         >
           <ArrowLeft className="h-4 w-4" />
-          Voltar para a Página Inicial
+          {t('paymentForm.backToHome')}
         </Link>
 
         <div className="animate-fade-in-up mb-10">

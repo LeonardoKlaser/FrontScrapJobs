@@ -35,7 +35,8 @@
     "cpfExists": "Este CPF/CNPJ já está cadastrado.",
     "hidePassword": "Ocultar senha",
     "showPassword": "Mostrar senha",
-    "goToLogin": "Ir para login"
+    "goToLogin": "Ir para login",
+    "backToHome": "Voltar para a Página Inicial"
   },
   "planSummary": {
     "description": "Resumo do seu plano",
