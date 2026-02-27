@@ -32,8 +32,17 @@ export interface ResumeAnalysis {
 }
 
 export const analysisService = {
-  analyzeJob: async (jobId: number): Promise<ResumeAnalysis> => {
-    const { data } = await api.post('/api/analyze-job', { job_id: jobId })
+  analyzeJob: async (jobId: number, curriculumId: number): Promise<ResumeAnalysis> => {
+    const { data } = await api.post('/api/analyze-job', { job_id: jobId, curriculum_id: curriculumId })
+    return data
+  },
+
+  getAnalysisHistory: async (jobId: number): Promise<{
+    has_analysis: boolean
+    analysis?: ResumeAnalysis
+    curriculum_id?: number
+  }> => {
+    const { data } = await api.get('/api/analyze-job/history', { params: { job_id: jobId } })
     return data
   },
 

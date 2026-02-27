@@ -8,4 +8,6 @@ export interface User {
   tax?: string
   is_admin?: boolean
   plan: Plan | undefined
+  expires_at?: string
+  monitored_sites_count?: number
 }

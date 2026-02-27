@@ -38,19 +38,36 @@ describe('analysisService', () => {
   })
 
   describe('analyzeJob', () => {
-    it('sends POST /api/analyze-job with job_id', async () => {
+    it('sends POST /api/analyze-job with job_id and curriculum_id', async () => {
       vi.mocked(api.post).mockResolvedValue({ data: mockAnalysis })
 
-      const result = await analysisService.analyzeJob(42)
+      const result = await analysisService.analyzeJob(42, 1)
 
-      expect(api.post).toHaveBeenCalledWith('/api/analyze-job', { job_id: 42 })
+      expect(api.post).toHaveBeenCalledWith('/api/analyze-job', {
+        job_id: 42,
+        curriculum_id: 1
+      })
       expect(result).toEqual(mockAnalysis)
     })
 
     it('throws on failure', async () => {
       vi.mocked(api.post).mockRejectedValue(new Error('Server error'))
 
-      await expect(analysisService.analyzeJob(42)).rejects.toThrow('Server error')
+      await expect(analysisService.analyzeJob(42, 1)).rejects.toThrow('Server error')
+    })
+  })
+
+  describe('getAnalysisHistory', () => {
+    it('sends GET /api/analyze-job/history with job_id param', async () => {
+      const mockHistory = { has_analysis: true, analysis: mockAnalysis, curriculum_id: 1 }
+      vi.mocked(api.get).mockResolvedValue({ data: mockHistory })
+
+      const result = await analysisService.getAnalysisHistory(42)
+
+      expect(api.get).toHaveBeenCalledWith('/api/analyze-job/history', {
+        params: { job_id: 42 }
+      })
+      expect(result).toEqual(mockHistory)
     })
   })
 

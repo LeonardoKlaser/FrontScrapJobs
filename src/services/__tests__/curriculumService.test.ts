@@ -76,13 +76,13 @@ describe('curriculumService', () => {
     })
   })
 
-  describe('setActiveCurriculum', () => {
-    it('sends PATCH /curriculum/:id/active', async () => {
-      vi.mocked(api.patch).mockResolvedValue({})
+  describe('deleteCurriculum', () => {
+    it('sends DELETE /curriculum/:id', async () => {
+      vi.mocked(api.delete).mockResolvedValue({})
 
-      await curriculumService.setActiveCurriculum(5)
+      await curriculumService.deleteCurriculum(5)
 
-      expect(api.patch).toHaveBeenCalledWith('/curriculum/5/active')
+      expect(api.delete).toHaveBeenCalledWith('/curriculum/5')
     })
   })
 })

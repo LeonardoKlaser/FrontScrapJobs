@@ -19,10 +19,10 @@ export function useUpdateCurriculum() {
   })
 }
 
-export function useSetActiveCurriculum() {
+export function useDeleteCurriculum() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (curriculumId: number) => curriculumService.setActiveCurriculum(curriculumId),
+    mutationFn: (curriculumId: number) => curriculumService.deleteCurriculum(curriculumId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['curriculumList'] })
     }

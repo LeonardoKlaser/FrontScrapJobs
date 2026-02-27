@@ -15,7 +15,6 @@ export interface Education {
 export interface Curriculum {
   id: number
   title: string
-  is_active: boolean
   summary: string
   skills: string
   languages: string

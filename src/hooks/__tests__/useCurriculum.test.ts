@@ -1,7 +1,7 @@
 import { renderHook, waitFor, act } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { curriculumService } from '@/services/curriculumService'
-import { useCurriculum, useUpdateCurriculum, useSetActiveCurriculum } from '@/hooks/useCurriculum'
+import { useCurriculum, useUpdateCurriculum, useDeleteCurriculum } from '@/hooks/useCurriculum'
 import type { Curriculum } from '@/models/curriculum'
 import type { ReactNode } from 'react'
 import { createElement } from 'react'
@@ -10,7 +10,7 @@ vi.mock('@/services/curriculumService', () => ({
   curriculumService: {
     getCurriculums: vi.fn(),
     updateCurriculum: vi.fn(),
-    setActiveCurriculum: vi.fn()
+    deleteCurriculum: vi.fn()
   }
 }))
 
@@ -60,15 +60,15 @@ describe('useUpdateCurriculum', () => {
   })
 })
 
-describe('useSetActiveCurriculum', () => {
+describe('useDeleteCurriculum', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  it('calls setActiveCurriculum on mutate', async () => {
-    vi.mocked(curriculumService.setActiveCurriculum).mockResolvedValue(undefined)
+  it('calls deleteCurriculum on mutate', async () => {
+    vi.mocked(curriculumService.deleteCurriculum).mockResolvedValue(undefined)
 
-    const { result } = renderHook(() => useSetActiveCurriculum(), { wrapper: createWrapper() })
+    const { result } = renderHook(() => useDeleteCurriculum(), { wrapper: createWrapper() })
 
     await act(async () => {
       result.current.mutate(5)
@@ -76,6 +76,6 @@ describe('useSetActiveCurriculum', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    expect(curriculumService.setActiveCurriculum).toHaveBeenCalledWith(5)
+    expect(curriculumService.deleteCurriculum).toHaveBeenCalledWith(5)
   })
 })

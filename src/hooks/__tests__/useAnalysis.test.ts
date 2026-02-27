@@ -9,6 +9,7 @@ import { createElement } from 'react'
 vi.mock('@/services/analysisService', () => ({
   analysisService: {
     analyzeJob: vi.fn(),
+    getAnalysisHistory: vi.fn(),
     sendAnalysisEmail: vi.fn()
   }
 }))
@@ -44,12 +45,12 @@ describe('useAnalyzeJob', () => {
     const { result } = renderHook(() => useAnalyzeJob(), { wrapper: createWrapper() })
 
     await act(async () => {
-      result.current.mutate(42)
+      result.current.mutate({ jobId: 42, curriculumId: 1 })
     })
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    expect(vi.mocked(analysisService.analyzeJob).mock.calls[0][0]).toBe(42)
+    expect(analysisService.analyzeJob).toHaveBeenCalledWith(42, 1)
     expect(result.current.data).toEqual(mockAnalysis)
   })
 })

@@ -1,11 +1,8 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { CheckCircle, PlusCircle, FileText } from 'lucide-react'
+import { PlusCircle, FileText } from 'lucide-react'
 import type { Curriculum } from '@/models/curriculum'
-import { useSetActiveCurriculum } from '@/hooks/useCurriculum'
 import { EmptyState } from '@/components/common/empty-state'
 
 interface CurriculumListProps {
@@ -22,16 +19,6 @@ export function CurriculumList({
   onCreateNew
 }: CurriculumListProps) {
   const { t } = useTranslation('curriculum')
-  const { mutate: setActive, isPending } = useSetActiveCurriculum()
-  const [activatingId, setActivatingId] = useState<number | null>(null)
-
-  const handleSetActive = (e: React.MouseEvent, id: number) => {
-    e.stopPropagation()
-    setActivatingId(id)
-    setActive(id, {
-      onSettled: () => setActivatingId(null)
-    })
-  }
 
   const hasCurriculums = curriculums && curriculums.length > 0
 
@@ -60,7 +47,6 @@ export function CurriculumList({
         <div className="space-y-2">
           {curriculums.map((curriculum, index) => {
             const isSelected = selectedId === curriculum.id
-            const isActivating = isPending && activatingId === curriculum.id
 
             return (
               <div
@@ -79,28 +65,10 @@ export function CurriculumList({
                   <CardHeader className="p-4">
                     <div className="flex items-start justify-between gap-2">
                       <CardTitle className="text-sm">{curriculum.title}</CardTitle>
-                      {curriculum.is_active && (
-                        <Badge variant="default" className="shrink-0 text-xs px-2 py-0">
-                          <CheckCircle className="mr-1 h-3 w-3" />
-                          {t('list.active')}
-                        </Badge>
-                      )}
                     </div>
                     <CardDescription className="text-xs line-clamp-2 text-pretty">
                       {curriculum.summary || t('list.noSummary')}
                     </CardDescription>
-                    {!curriculum.is_active && (
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={(e) => handleSetActive(e, curriculum.id)}
-                        disabled={isActivating}
-                        className="mt-1.5 w-fit h-7 text-xs text-muted-foreground hover:text-primary"
-                      >
-                        <CheckCircle className="mr-1 h-3 w-3" />
-                        {isActivating ? t('list.activating') : t('list.setActive')}
-                      </Button>
-                    )}
                   </CardHeader>
                 </Card>
               </div>

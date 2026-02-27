@@ -41,14 +41,7 @@ export const curriculumService = {
     }
   },
 
-  setActiveCurriculum: async (curriculumId: number): Promise<void> => {
-    try {
-      await api.patch(`/curriculum/${curriculumId}/active`)
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.error || 'Não foi possível ativar o currículo.')
-      }
-      throw new Error('Não foi possível conectar ao servidor.')
-    }
+  deleteCurriculum: async (curriculumId: number): Promise<void> => {
+    await api.delete(`/curriculum/${curriculumId}`)
   }
 }

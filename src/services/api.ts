@@ -15,6 +15,9 @@ api.interceptors.response.use(
         window.location.href = `/login?from=${encodeURIComponent(window.location.pathname)}`
       }
     }
+    if (error.response?.status === 403 && error.response?.data?.error === 'subscription_expired') {
+      window.location.href = '/app/renew'
+    }
     return Promise.reject(error)
   }
 )

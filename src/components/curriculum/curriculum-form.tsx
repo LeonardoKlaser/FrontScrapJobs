@@ -34,7 +34,6 @@ interface CurriculumFormProps {
 function createEmptyFormData(): Omit<Curriculum, 'id'> {
   return {
     title: '',
-    is_active: false,
     summary: '',
     skills: '',
     languages: '',
@@ -62,7 +61,6 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
     if (curriculum) {
       setFormData({
         title: curriculum.title,
-        is_active: false,
         summary: curriculum.summary,
         skills: curriculum.skills,
         languages: curriculum.languages,

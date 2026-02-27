@@ -25,5 +25,20 @@ export const authService = {
   changePassword: async (data: { old_password: string; new_password: string }) => {
     const { data: res } = await api.post('/api/user/change-password', data)
     return res
+  },
+
+  forgotPassword: async (email: string) => {
+    const { data } = await api.post('/api/forgot-password', { email })
+    return data
+  },
+
+  resetPassword: async (token: string, newPassword: string) => {
+    const { data } = await api.post('/api/reset-password', { token, new_password: newPassword })
+    return data
+  },
+
+  deleteAccount: async (password: string) => {
+    const { data } = await api.delete('/api/user/account', { data: { password } })
+    return data
   }
 }
