@@ -6,10 +6,12 @@
     "emptyTitle": "No resumes yet",
     "emptyDescription": "Create your first resume to start receiving job analysis",
     "createButton": "Create Resume",
-    "active": "Active",
     "noSummary": "No summary",
-    "activating": "Activating...",
-    "setActive": "Set as active"
+    "deleteTitle": "Delete Resume",
+    "deleteDescription": "Are you sure you want to delete this resume? This action cannot be undone.",
+    "confirmDelete": "Delete",
+    "deleteSuccess": "Resume deleted successfully!",
+    "deleteError": "Failed to delete resume."
   },
   "form": {
     "editing": "Editing: {{title}}",

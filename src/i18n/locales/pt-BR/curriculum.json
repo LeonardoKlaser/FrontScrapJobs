@@ -6,10 +6,12 @@
     "emptyTitle": "Nenhum currículo ainda",
     "emptyDescription": "Crie seu primeiro currículo para começar a receber análises de vagas",
     "createButton": "Criar Currículo",
-    "active": "Ativo",
     "noSummary": "Sem resumo",
-    "activating": "Ativando...",
-    "setActive": "Definir como ativo"
+    "deleteTitle": "Excluir Currículo",
+    "deleteDescription": "Tem certeza que deseja excluir este currículo? Esta ação não pode ser desfeita.",
+    "confirmDelete": "Excluir",
+    "deleteSuccess": "Currículo excluído com sucesso!",
+    "deleteError": "Erro ao excluir currículo."
   },
   "form": {
     "editing": "Editando: {{title}}",
