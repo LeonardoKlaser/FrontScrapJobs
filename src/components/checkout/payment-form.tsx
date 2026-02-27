@@ -58,7 +58,7 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
     confirmPassword: '',
     cpfCnpj: '',
     phone: '',
-    paymentMethod: ''
+    paymentMethod: 'pix'
   })
 
   const debounceTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({})
@@ -480,34 +480,12 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
               </div>
 
               <div
-                className={`group flex cursor-pointer items-center gap-4 rounded-lg border-2 p-4 transition-all duration-150 ${
-                  formData.paymentMethod === 'card'
-                    ? 'border-primary bg-primary/10'
-                    : 'border-border/50 hover:border-primary/30'
-                }`}
-                onClick={() => {
-                  setFormData((prev) => ({ ...prev, paymentMethod: 'card' }))
-                  setErrors((prev) => ({ ...prev, paymentMethod: '' }))
-                }}
+                className="relative flex items-center gap-4 rounded-lg border-2 border-border/50 p-4 opacity-50 pointer-events-none"
               >
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  value="card"
-                  checked={formData.paymentMethod === 'card'}
-                  onChange={() => {
-                    setFormData((prev) => ({ ...prev, paymentMethod: 'card' }))
-                    setErrors((prev) => ({ ...prev, paymentMethod: '' }))
-                  }}
-                  className="sr-only"
-                />
-                <div
-                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-colors ${
-                    formData.paymentMethod === 'card'
-                      ? 'bg-primary/20 text-primary'
-                      : 'bg-muted text-muted-foreground'
-                  }`}
-                >
+                <span className="absolute right-3 top-3 rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                  Em breve
+                </span>
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
                   <CreditCardIcon className="h-5 w-5" />
                 </div>
                 <div>

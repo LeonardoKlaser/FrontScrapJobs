@@ -1,9 +1,10 @@
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { PlanSummary } from '@/components/checkout/plan-summary'
 import { PaymentForm } from '@/components/checkout/payment-form'
-import { useParams, useSearchParams } from 'react-router'
+import { useParams, useSearchParams, Link } from 'react-router'
 import { usePlans } from '@/hooks/usePlans'
 import { Spinner } from '@/components/ui/spinner'
+import { ArrowLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 export default function CheckoutPage() {
@@ -66,6 +67,14 @@ export default function CheckoutPage() {
       </div>
 
       <div className="relative mx-auto max-w-6xl">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Voltar para a Página Inicial
+        </Link>
+
         <div className="animate-fade-in-up mb-10">
           <h1 className="text-gradient-primary text-3xl font-bold tracking-tight sm:text-4xl">
             {t('checkout.title')}
