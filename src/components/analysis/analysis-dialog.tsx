@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Dialog,
@@ -18,9 +18,11 @@ import {
   Target,
   Mail,
   TrendingUp,
-  TrendingDown
+  TrendingDown,
+  RefreshCw
 } from 'lucide-react'
-import { useAnalyzeJob, useSendAnalysisEmail } from '@/hooks/useAnalysis'
+import { useAnalyzeJob, useAnalysisHistory, useSendAnalysisEmail } from '@/hooks/useAnalysis'
+import { useCurriculum } from '@/hooks/useCurriculum'
 import type { ResumeAnalysis } from '@/services/analysisService'
 import { isAxiosError } from 'axios'
 import { toast } from 'sonner'
@@ -235,14 +237,68 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
 
 export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
   const { t } = useTranslation('sites')
-  const { mutate, data, isPending, isError, error, reset } = useAnalyzeJob()
+  const [step, setStep] = useState<
+    'loading-history' | 'select' | 'analyzing' | 'result' | 'history'
+  >('loading-history')
+  const [selectedCvId, setSelectedCvId] = useState<number | null>(null)
+  const [analysisResult, setAnalysisResult] = useState<ResumeAnalysis | null>(null)
 
+  const { data: curricula } = useCurriculum()
+  const { data: historyData, isLoading: isLoadingHistory } = useAnalysisHistory(
+    open ? jobId : null
+  )
+  const {
+    mutate: analyzeJob,
+    isError,
+    error,
+    reset: resetAnalysis
+  } = useAnalyzeJob()
+
+  // When dialog opens, reset state
   useEffect(() => {
-    if (open && jobId !== null) {
-      reset()
-      mutate(jobId)
+    if (open) {
+      setStep('loading-history')
+      setSelectedCvId(null)
+      setAnalysisResult(null)
+      resetAnalysis()
     }
-  }, [open, jobId, mutate, reset])
+  }, [open, resetAnalysis])
+
+  // When history data loads, decide which step to show
+  useEffect(() => {
+    if (!open || step !== 'loading-history') return
+    if (isLoadingHistory) return
+
+    if (historyData?.has_analysis && historyData.analysis) {
+      setAnalysisResult(historyData.analysis)
+      setStep('history')
+    } else {
+      setStep('select')
+    }
+  }, [open, step, isLoadingHistory, historyData])
+
+  const handleAnalyze = () => {
+    if (!jobId || !selectedCvId) return
+    setStep('analyzing')
+    analyzeJob(
+      { jobId, curriculumId: selectedCvId },
+      {
+        onSuccess: (data) => {
+          setAnalysisResult(data)
+          setStep('result')
+        },
+        onError: () => {
+          setStep('select')
+        }
+      }
+    )
+  }
+
+  const handleRedo = () => {
+    setAnalysisResult(null)
+    setStep('select')
+    resetAnalysis()
+  }
 
   const getErrorMessage = () => {
     if (isAxiosError(error) && error.response?.data?.error) {
@@ -259,7 +315,70 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
           <DialogDescription>{t('analysis.description')}</DialogDescription>
         </DialogHeader>
 
-        {isPending && (
+        {/* Loading history */}
+        {step === 'loading-history' && (
+          <div className="flex flex-col items-center justify-center py-14 gap-3">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <p className="text-sm text-muted-foreground">{t('analysis.loading')}</p>
+          </div>
+        )}
+
+        {/* Previous analysis (history) */}
+        {step === 'history' && analysisResult && jobId !== null && (
+          <div className="space-y-4">
+            <AnalysisResult analysis={analysisResult} jobId={jobId} />
+            <div className="flex justify-center pt-2 border-t border-border/50">
+              <Button variant="outline" size="sm" onClick={handleRedo} className="gap-2">
+                <RefreshCw className="h-3.5 w-3.5" />
+                {t('analysis.redo')}
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Curriculum selection */}
+        {step === 'select' && (
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">{t('analysis.selectCurriculum')}</p>
+            <div className="grid gap-2 max-h-[40vh] overflow-y-auto pr-1">
+              {curricula?.map((cv) => (
+                <Card
+                  key={cv.id}
+                  className={`cursor-pointer p-3 transition-all duration-150 ${
+                    selectedCvId === cv.id
+                      ? 'border-primary/50 bg-primary/5'
+                      : 'hover:bg-muted/30'
+                  }`}
+                  onClick={() => setSelectedCvId(cv.id)}
+                >
+                  <p className="text-sm font-medium">{cv.title}</p>
+                  <p className="text-xs text-muted-foreground line-clamp-1">{cv.summary}</p>
+                </Card>
+              ))}
+            </div>
+            {isError && (
+              <div className="flex items-center gap-2 text-sm text-destructive">
+                <AlertTriangle className="h-4 w-4" />
+                {getErrorMessage()}
+              </div>
+            )}
+            <div className="flex justify-end">
+              <Button
+                variant="glow"
+                size="sm"
+                disabled={!selectedCvId}
+                onClick={handleAnalyze}
+                className="gap-2"
+              >
+                <Target className="h-3.5 w-3.5" />
+                {t('analysis.generate')}
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Analyzing */}
+        {step === 'analyzing' && (
           <div className="flex flex-col items-center justify-center py-14 gap-3">
             <div className="relative">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -267,20 +386,16 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
                 <Loader2 className="h-8 w-8" />
               </div>
             </div>
-            <p className="text-sm text-muted-foreground animate-fade-in">{t('analysis.loading')}</p>
+            <p className="text-sm text-muted-foreground animate-fade-in">
+              {t('analysis.loading')}
+            </p>
           </div>
         )}
 
-        {isError && (
-          <div className="flex flex-col items-center justify-center py-14 gap-3 animate-fade-in-up">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
-              <AlertTriangle className="h-6 w-6 text-destructive" />
-            </div>
-            <p className="text-sm text-destructive font-medium">{getErrorMessage()}</p>
-          </div>
+        {/* New analysis result */}
+        {step === 'result' && analysisResult && jobId !== null && (
+          <AnalysisResult analysis={analysisResult} jobId={jobId} />
         )}
-
-        {data && jobId !== null && <AnalysisResult analysis={data} jobId={jobId} />}
       </DialogContent>
     </Dialog>
   )

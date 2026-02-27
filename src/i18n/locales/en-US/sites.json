@@ -47,6 +47,9 @@
     "sendEmail": "Send analysis by email",
     "emailSent": "Email sent",
     "emailSuccess": "Email sent successfully!",
-    "emailError": "Failed to send email. Please try again."
+    "emailError": "Failed to send email. Please try again.",
+    "selectCurriculum": "Select the resume to compare with this job:",
+    "generate": "Generate Analysis",
+    "redo": "Redo Analysis"
   }
 }

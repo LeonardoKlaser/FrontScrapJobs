@@ -47,6 +47,9 @@
     "sendEmail": "Enviar análise por email",
     "emailSent": "Email enviado",
     "emailSuccess": "Email enviado com sucesso!",
-    "emailError": "Erro ao enviar email. Tente novamente."
+    "emailError": "Erro ao enviar email. Tente novamente.",
+    "selectCurriculum": "Selecione o currículo para comparar com esta vaga:",
+    "generate": "Gerar Análise",
+    "redo": "Refazer Análise"
   }
 }
