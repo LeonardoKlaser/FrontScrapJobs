@@ -1,0 +1,40 @@
+{
+  "stats": {
+    "monitoredUrls": "Monitored URLs",
+    "newJobs24h": "New jobs (24h)",
+    "alertsSent": "Alerts sent"
+  },
+  "latestJobs": {
+    "title": "Latest jobs",
+    "searchPlaceholder": "Search by title...",
+    "search": "Search",
+    "period": "Period",
+    "all": "All",
+    "last24h": "Last 24h",
+    "last7days": "Last 7 days",
+    "last30days": "Last 30 days",
+    "loadError": "Failed to load jobs.",
+    "empty": "No jobs found.",
+    "jobTitle": "Title",
+    "company": "Company",
+    "location": "Location",
+    "link": "Link",
+    "action": "Action",
+    "viewJob": "View job",
+    "analyzeAI": "Analyze with AI",
+    "jobCount": "{{count}} job(s) found",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "monitoredUrls": {
+    "title": "Your monitored URLs",
+    "newUrl": "New URL",
+    "empty": "You haven't added any URLs to monitor yet.",
+    "addCompany": "Add company",
+    "name": "Name",
+    "url": "URL"
+  },
+  "error": {
+    "loadDashboard": "Failed to load dashboard"
+  }
+}

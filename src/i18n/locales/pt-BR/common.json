@@ -1,0 +1,58 @@
+{
+  "nav": {
+    "home": "Início",
+    "curriculum": "Currículo",
+    "companies": "Empresas",
+    "myAccount": "Minha Conta",
+    "admin": "Admin",
+    "addSite": "Adicionar Site",
+    "logout": "Sair",
+    "openMenu": "Abrir menu"
+  },
+  "theme": {
+    "toggle": "Alternar tema",
+    "light": "Claro",
+    "dark": "Escuro",
+    "system": "Sistema"
+  },
+  "error": {
+    "title": "Algo deu errado",
+    "description": "Ocorreu um erro inesperado. Tente novamente ou volte ao início.",
+    "retry": "Tentar novamente",
+    "backHome": "Voltar ao início"
+  },
+  "notFound": {
+    "title": "Página não encontrada",
+    "description": "O endereço que você tentou acessar não existe ou foi movido. Verifique a URL ou volte para o início.",
+    "backHome": "Voltar ao início",
+    "homePage": "Página inicial"
+  },
+  "loading": "Carregando...",
+  "language": {
+    "label": "Idioma",
+    "pt": "Português",
+    "en": "English"
+  },
+  "actions": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "close": "Fechar",
+    "add": "Adicionar",
+    "remove": "Remover",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "confirm": "Confirmar",
+    "back": "Voltar",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "send": "Enviar",
+    "sending": "Enviando...",
+    "saving": "Salvando...",
+    "saved": "Salvo!",
+    "processing": "Processando..."
+  },
+  "status": {
+    "success": "Sucesso!",
+    "error": "Erro"
+  }
+}

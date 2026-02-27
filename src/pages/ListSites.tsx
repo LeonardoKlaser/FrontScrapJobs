@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Building2, CheckCircle, Radar, Search, Send } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -15,13 +16,8 @@ import { FilterPills } from '@/components/common/filter-pills'
 import { EmptyState } from '@/components/common/empty-state'
 import { toast } from 'sonner'
 
-const filters = [
-  { key: 'all', label: 'Todas' },
-  { key: 'subscribed', label: 'Inscritas' },
-  { key: 'not_subscribed', label: 'Disponíveis' }
-] as const
-
 export default function EmpresasPage() {
+  const { t } = useTranslation('sites')
   const [searchTerm, setSearchTerm] = useState('')
   const [requestedUrl, setRequestedUrl] = useState('')
   const [selectedCompany, setSelectedCompany] = useState<SiteCareer>()
@@ -32,6 +28,12 @@ export default function EmpresasPage() {
   const { mutate: requestSite, isPending } = useRequestSite()
   const { mutate: registerUserToSite, isPending: isRegisteringUser } = useRegisterUserSite()
   const { mutate: unregisterUser } = useUnregisterUserSite()
+
+  const filters = [
+    { key: 'all', label: t('filterAll') },
+    { key: 'subscribed', label: t('filterSubscribed') },
+    { key: 'not_subscribed', label: t('filterAvailable') }
+  ] as const
 
   const filteredCompanies = useMemo(() => {
     return data
@@ -61,11 +63,11 @@ export default function EmpresasPage() {
     if (requestedUrl) {
       requestSite(requestedUrl, {
         onSuccess: () => {
-          toast.success('Solicitação enviada com sucesso!')
+          toast.success(t('requestSite.success'))
           setRequestedUrl('')
         },
         onError: (err) => {
-          toast.error(err?.message || 'Ocorreu um erro ao enviar a solicitação.')
+          toast.error(err?.message || t('requestSite.error'))
         }
       })
     }
@@ -101,10 +103,10 @@ export default function EmpresasPage() {
       {/* Header */}
       <div className="animate-fade-in-up text-center">
         <h1 className="text-gradient-primary text-3xl font-bold tracking-tight sm:text-4xl">
-          Empresas Monitoradas
+          {t('title')}
         </h1>
         <p className="mt-2 text-muted-foreground text-pretty max-w-2xl mx-auto">
-          Acompanhe as páginas de carreira das empresas e receba alertas de novas vagas.
+          {t('description')}
         </p>
       </div>
 
@@ -115,15 +117,15 @@ export default function EmpresasPage() {
       >
         <div className="text-center">
           <p className="text-2xl font-display font-bold text-foreground">{totalCount}</p>
-          <p className="text-xs text-muted-foreground">Empresas</p>
+          <p className="text-xs text-muted-foreground">{t('stats.companies')}</p>
         </div>
         <div className="text-center border-x border-border/50">
           <p className="text-2xl font-display font-bold text-primary">{subscribedCount}</p>
-          <p className="text-xs text-muted-foreground">Inscritas</p>
+          <p className="text-xs text-muted-foreground">{t('stats.subscribed')}</p>
         </div>
         <div className="text-center">
           <p className="text-2xl font-display font-bold text-foreground">{remainingSlots}</p>
-          <p className="text-xs text-muted-foreground">Slots livres</p>
+          <p className="text-xs text-muted-foreground">{t('stats.freeSlots')}</p>
         </div>
       </div>
 
@@ -136,7 +138,7 @@ export default function EmpresasPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
             type="text"
-            placeholder="Buscar empresa..."
+            placeholder={t('search')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-9"
@@ -181,7 +183,7 @@ export default function EmpresasPage() {
 
       {/* Empty state */}
       {filteredCompanies?.length === 0 && (
-        <EmptyState icon={Search} title={`Nenhuma empresa encontrada para "${searchTerm}"`} />
+        <EmptyState icon={Search} title={t('emptySearch', { term: searchTerm })} />
       )}
 
       {/* Request section */}
@@ -192,28 +194,26 @@ export default function EmpresasPage() {
               <Radar className="size-5 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-xl tracking-tight">Expanda seu Radar</CardTitle>
-          <CardDescription className="text-sm">
-            Não encontrou uma empresa? Envie o link do portal de carreiras.
-          </CardDescription>
+          <CardTitle className="text-xl tracking-tight">{t('requestSite.title')}</CardTitle>
+          <CardDescription className="text-sm">{t('requestSite.description')}</CardDescription>
         </CardHeader>
         <form onSubmit={handleRequestSubmit} className="space-y-4 px-6 pb-6">
           <div className="flex flex-col sm:flex-row items-end gap-2">
             <div className="w-full space-y-1.5">
               <Label htmlFor="siteUrl" className="text-muted-foreground text-sm">
-                Link do portal de carreiras
+                {t('requestSite.label')}
               </Label>
               <Input
                 id="siteUrl"
                 type="url"
-                placeholder="https://exemplo.com/carreiras"
+                placeholder={t('requestSite.placeholder')}
                 value={requestedUrl}
                 onChange={(e) => setRequestedUrl(e.target.value)}
                 required
               />
             </div>
             <Button type="submit" variant="glow" disabled={isPending}>
-              {isPending ? 'Enviando...' : 'Enviar'}
+              {isPending ? t('requestSite.sending') : t('requestSite.send')}
               <Send className="h-4 w-4" />
             </Button>
           </div>

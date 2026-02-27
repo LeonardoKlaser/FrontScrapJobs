@@ -1,4 +1,8 @@
+import { useTranslation } from 'react-i18next'
+
 export function SocialProofSection() {
+  const { t } = useTranslation('landing')
+
   const companies = [
     { name: 'Google', logo: 'G' },
     { name: 'Amazon', logo: 'A' },
@@ -12,7 +16,7 @@ export function SocialProofSection() {
     <section className="py-20 sm:py-24 border-t border-border/50">
       <div className="container mx-auto px-4">
         <p className="text-center text-muted-foreground mb-10 text-lg tracking-tight">
-          Monitorando oportunidades das maiores empresas, como:
+          {t('socialProof.subtitle')}
         </p>
 
         <div className="flex items-center justify-center flex-wrap gap-4 md:gap-6">

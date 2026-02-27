@@ -1,0 +1,52 @@
+{
+  "title": "Gerenciador de Currículos",
+  "description": "Crie e gerencie múltiplos currículos para diferentes oportunidades",
+  "list": {
+    "newButton": "Novo Currículo",
+    "emptyTitle": "Nenhum currículo ainda",
+    "emptyDescription": "Crie seu primeiro currículo para começar a receber análises de vagas",
+    "createButton": "Criar Currículo",
+    "active": "Ativo",
+    "noSummary": "Sem resumo",
+    "activating": "Ativando...",
+    "setActive": "Definir como ativo"
+  },
+  "form": {
+    "editing": "Editando: {{title}}",
+    "createNew": "Criar Novo Currículo",
+    "nameLabel": "Nome do Currículo",
+    "namePlaceholder": "Ex: Currículo para Vaga Front-end",
+    "summaryLabel": "Resumo Profissional",
+    "summaryPlaceholder": "Descreva sua experiência e objetivos profissionais...",
+    "skillsLabel": "Habilidades",
+    "skillsPlaceholder": "Digite uma habilidade e pressione Enter ou vírgula",
+    "languagesLabel": "Idiomas",
+    "languagesPlaceholder": "Digite um idioma e pressione Enter ou vírgula",
+    "experience": {
+      "title": "Experiências Profissionais",
+      "label": "Experiência {{index}}",
+      "remove": "Remover experiência",
+      "companyLabel": "Empresa",
+      "companyPlaceholder": "Nome da empresa",
+      "roleLabel": "Cargo",
+      "rolePlaceholder": "Seu cargo",
+      "descriptionLabel": "Descrição",
+      "descriptionPlaceholder": "Descreva suas responsabilidades e conquistas..."
+    },
+    "education": {
+      "title": "Formação Acadêmica",
+      "label": "Formação {{index}}",
+      "remove": "Remover formação",
+      "institutionLabel": "Instituição",
+      "institutionPlaceholder": "Nome da instituição",
+      "degreeLabel": "Curso/Grau",
+      "degreePlaceholder": "Ex: Bacharelado em CC",
+      "yearLabel": "Ano de Conclusão",
+      "yearPlaceholder": "Ex: 2020"
+    },
+    "saveButton": "Salvar Currículo",
+    "saveSuccess": "Currículo salvo com sucesso!",
+    "createSuccess": "Currículo criado com sucesso!",
+    "saveError": "Erro ao salvar currículo. Tente novamente."
+  }
+}

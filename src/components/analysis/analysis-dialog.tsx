@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   Dialog,
   DialogContent,
@@ -50,6 +51,7 @@ function getScoreIcon(score: number) {
 }
 
 function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: number }) {
+  const { t } = useTranslation('sites')
   const {
     matchAnalysis,
     strengthsForThisJob,
@@ -64,8 +66,8 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
     sendEmail(
       { jobId, analysis },
       {
-        onSuccess: () => toast.success('Email enviado com sucesso!'),
-        onError: () => toast.error('Erro ao enviar email. Tente novamente.')
+        onSuccess: () => toast.success(t('analysis.emailSuccess')),
+        onError: () => toast.error(t('analysis.emailError'))
       }
     )
   }
@@ -124,7 +126,7 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/10">
               <CheckCircle className="h-3.5 w-3.5 text-primary" />
             </div>
-            Pontos Fortes
+            {t('analysis.strengths')}
           </h4>
           <div className="grid gap-2">
             {strengthsForThisJob.map((s) => (
@@ -150,7 +152,7 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-warning/10">
               <AlertTriangle className="h-3.5 w-3.5 text-warning" />
             </div>
-            Lacunas e Melhorias
+            {t('analysis.gaps')}
           </h4>
           <div className="grid gap-2">
             {gapsAndImprovementAreas.map((g) => (
@@ -176,7 +178,7 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-info/10">
               <Lightbulb className="h-3.5 w-3.5 text-info" />
             </div>
-            Sugestões para o Currículo
+            {t('analysis.suggestions')}
           </h4>
           <div className="grid gap-2.5">
             {actionableResumeSuggestions.map((s) => (
@@ -208,7 +210,7 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/10">
               <Target className="h-3.5 w-3.5 text-primary" />
             </div>
-            Considerações Finais
+            {t('analysis.finalNotes')}
           </h4>
           <p className="text-sm text-muted-foreground leading-relaxed">{finalConsiderations}</p>
         </div>
@@ -224,7 +226,7 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
           disabled={isSending || emailSent}
         >
           {isSending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
-          {emailSent ? 'Email enviado' : 'Enviar análise por email'}
+          {emailSent ? t('analysis.emailSent') : t('analysis.sendEmail')}
         </Button>
       </div>
     </div>
@@ -232,6 +234,7 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
 }
 
 export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
+  const { t } = useTranslation('sites')
   const { mutate, data, isPending, isError, error, reset } = useAnalyzeJob()
 
   useEffect(() => {
@@ -245,15 +248,15 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
     if (isAxiosError(error) && error.response?.data?.error) {
       return error.response.data.error
     }
-    return 'Erro ao executar análise. Tente novamente.'
+    return t('analysis.error')
   }
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
       <DialogContent className="max-w-[95vw] sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle className="tracking-tight">Análise de Compatibilidade com IA</DialogTitle>
-          <DialogDescription>Comparação entre seu currículo e a vaga selecionada</DialogDescription>
+          <DialogTitle className="tracking-tight">{t('analysis.title')}</DialogTitle>
+          <DialogDescription>{t('analysis.description')}</DialogDescription>
         </DialogHeader>
 
         {isPending && (
@@ -264,9 +267,7 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
                 <Loader2 className="h-8 w-8" />
               </div>
             </div>
-            <p className="text-sm text-muted-foreground animate-fade-in">
-              Analisando compatibilidade...
-            </p>
+            <p className="text-sm text-muted-foreground animate-fade-in">{t('analysis.loading')}</p>
           </div>
         )}
 

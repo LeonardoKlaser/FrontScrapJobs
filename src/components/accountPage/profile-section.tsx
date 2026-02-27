@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { UserCircle, Loader2, CheckCircle } from 'lucide-react'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -10,6 +11,7 @@ import { toast } from 'sonner'
 import type { User } from '@/models/user'
 
 export function ProfileSection({ user }: { user: User | undefined }) {
+  const { t } = useTranslation('account')
   const [name, setName] = useState('')
   const [cellphone, setCellphone] = useState('')
   const [tax, setTax] = useState('')
@@ -42,11 +44,11 @@ export function ProfileSection({ user }: { user: User | undefined }) {
       {
         onSuccess: () => {
           setSuccess()
-          toast.success('Perfil atualizado com sucesso!')
+          toast.success(t('profile.saveSuccess'))
         },
         onError: () => {
           setBtnError()
-          toast.error('Erro ao atualizar perfil. Tente novamente.')
+          toast.error(t('profile.saveError'))
         }
       }
     )
@@ -64,7 +66,7 @@ export function ProfileSection({ user }: { user: User | undefined }) {
   return (
     <Card className="animate-fade-in-up">
       <CardHeader>
-        <CardTitle className="text-lg">Informações Pessoais</CardTitle>
+        <CardTitle className="text-lg">{t('profile.title')}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="flex items-center gap-4">
@@ -77,7 +79,7 @@ export function ProfileSection({ user }: { user: User | undefined }) {
           </div>
           <div className="min-w-0">
             <p className="truncate text-sm font-medium text-foreground">
-              {user?.user_name || 'Usuário'}
+              {user?.user_name || t('profile.fallbackName')}
             </p>
             <p className="truncate text-xs text-muted-foreground">{user?.email}</p>
           </div>
@@ -85,17 +87,17 @@ export function ProfileSection({ user }: { user: User | undefined }) {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="name">Nome</Label>
+            <Label htmlFor="name">{t('profile.nameLabel')}</Label>
             <Input
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Seu nome"
+              placeholder={t('profile.namePlaceholder')}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">E-mail</Label>
+            <Label htmlFor="email">{t('profile.emailLabel')}</Label>
             <Input
               id="email"
               type="email"
@@ -103,26 +105,26 @@ export function ProfileSection({ user }: { user: User | undefined }) {
               disabled
               className="bg-muted/50"
             />
-            <p className="text-xs text-muted-foreground">O e-mail não pode ser alterado.</p>
+            <p className="text-xs text-muted-foreground">{t('profile.emailReadonly')}</p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="cellphone">Celular</Label>
+            <Label htmlFor="cellphone">{t('profile.phoneLabel')}</Label>
             <Input
               id="cellphone"
               value={cellphone}
               onChange={(e) => setCellphone(e.target.value)}
-              placeholder="(11) 99999-9999"
+              placeholder={t('profile.phonePlaceholder')}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="tax">CPF</Label>
+            <Label htmlFor="tax">{t('profile.cpfLabel')}</Label>
             <Input
               id="tax"
               value={tax}
               onChange={(e) => setTax(e.target.value)}
-              placeholder="000.000.000-00"
+              placeholder={t('profile.cpfPlaceholder')}
             />
           </div>
         </div>
@@ -139,15 +141,15 @@ export function ProfileSection({ user }: { user: User | undefined }) {
           {buttonState === 'loading' ? (
             <>
               <Loader2 className="size-4 animate-spin" />
-              Salvando...
+              {t('actions.saving', { ns: 'common' })}
             </>
           ) : buttonState === 'success' ? (
             <>
               <CheckCircle className="size-4" />
-              Salvo!
+              {t('actions.saved', { ns: 'common' })}
             </>
           ) : (
-            'Salvar Alterações'
+            t('profile.saveButton')
           )}
         </Button>
       </CardFooter>

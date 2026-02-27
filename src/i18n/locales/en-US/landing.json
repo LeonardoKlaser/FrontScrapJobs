@@ -1,0 +1,100 @@
+{
+  "hero": {
+    "brand": "scrapJobs",
+    "heading1": "Stop Searching.",
+    "heading2": "Start Getting Interviewed.",
+    "subheading": "Automate your job search at top companies and get AI insights to make your resume stand out.",
+    "cta": "Start My Free Trial"
+  },
+  "features": {
+    "title": "An Unfair Advantage for Your Career",
+    "scraping": {
+      "title": "Hourly Scraping",
+      "description": "Never miss a job posting again. Our system checks your targets constantly."
+    },
+    "ai": {
+      "title": "AI Resume Analysis",
+      "description": "Get a detailed report on job match and tips to optimize your resume."
+    },
+    "alerts": {
+      "title": "Alerts Straight to Your Inbox",
+      "description": "The best opportunities, delivered cleanly and organized for you."
+    },
+    "monitoring": {
+      "title": "Unlimited Monitoring",
+      "description": "Track all companies on your wish list, without restrictions."
+    }
+  },
+  "howItWorks": {
+    "title": "Get Started in 3 Simple Steps",
+    "step1": {
+      "title": "1. Choose Your Companies",
+      "description": "Select the companies where you dream of working."
+    },
+    "step2": {
+      "title": "2. Set Your Filters",
+      "description": "Specify the roles and keywords that match your profile."
+    },
+    "step3": {
+      "title": "3. Receive Smart Alerts",
+      "description": "Get email notifications with a complete compatibility analysis."
+    }
+  },
+  "problem": {
+    "heading": "Job searching shouldn't be a second job.",
+    "description": "You spend hours browsing dozens of job sites, opening endless tabs, adapting resumes for each position, and still miss opportunities that come up when you're not looking. It's frustrating, time-consuming, and inefficient.",
+    "promiseHeading": "Reclaim your time. Apply with intelligence.",
+    "promiseDescription": "scrapJobs automates your entire job search, monitoring your favorite companies 24/7 and sending smart alerts with AI analysis. Focus your energy on what really matters: preparing for interviews."
+  },
+  "faq": {
+    "security": {
+      "question": "Is my resume data secure?",
+      "answer": "Yes, we use end-to-end encryption and follow security best practices. Your data is never shared with third parties and you have full control over your information."
+    },
+    "ai": {
+      "question": "How does the AI analysis work?",
+      "answer": "Our AI compares the job's keywords and requirements with your resume's skills and experiences, generating a compatibility score and personalized suggestions to improve your chances."
+    },
+    "cancel": {
+      "question": "Can I cancel at any time?",
+      "answer": "Yes, you can cancel your subscription at any time, no hassle. There are no cancellation fees or grace periods."
+    },
+    "limits": {
+      "question": "How many companies can I monitor?",
+      "answer": "It depends on your plan! The Beta Tester plan allows up to 3 sites, Professional up to 15, and Premium up to 50 sites."
+    },
+    "ctaTitle": "Ready to Accelerate Your Career?",
+    "ctaDescription": "Leave manual job searching in the past. Focus your energy on what really matters: preparing for interviews and landing your dream job.",
+    "ctaButton": "Start My Free Trial"
+  },
+  "productVisualization": {
+    "title": "See Exactly What You'll Receive",
+    "description": "No more generic alert emails. Our notifications are rich in data and insights to help you make the best decision.",
+    "emailSubtitle": "New opportunity found!",
+    "aiAnalysis": "AI Analysis:",
+    "bullet1": "Your React and TypeScript skills are a perfect match",
+    "bullet2": "Next.js experience is a differentiator for this role",
+    "bullet3": "Consider highlighting your performance projects",
+    "applyNow": "Apply Now"
+  },
+  "footer": {
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "copyright": "© {{year}} scrapJobs. All rights reserved."
+  },
+  "socialProof": {
+    "subtitle": "Monitoring opportunities from the biggest companies, like:"
+  },
+  "pricing": {
+    "title": "Simple and Transparent Pricing",
+    "loading": "Loading plans...",
+    "monthly": "Monthly",
+    "annual": "Annual",
+    "discount": "-20%",
+    "popular": "Popular",
+    "planName": "{{name}} Plan",
+    "perMonth": "/mo",
+    "savePerYear": "Save R$ {{amount}} per year",
+    "cta": "Start Automating"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "title": "Monitored Companies",
+  "description": "Track company career pages and get alerts for new job openings.",
+  "stats": {
+    "companies": "Companies",
+    "subscribed": "Subscribed",
+    "freeSlots": "Free slots"
+  },
+  "search": "Search company...",
+  "filterAll": "All",
+  "filterSubscribed": "Subscribed",
+  "filterAvailable": "Available",
+  "emptySearch": "No company found for \"{{term}}\"",
+  "requestSite": {
+    "title": "Expand Your Radar",
+    "description": "Can't find a company? Send the career portal link.",
+    "label": "Career portal link",
+    "placeholder": "https://example.com/careers",
+    "sending": "Sending...",
+    "send": "Send",
+    "success": "Request sent successfully!",
+    "error": "An error occurred while sending the request."
+  },
+  "popup": {
+    "logo": "{{name}} logo",
+    "receiving": "You receive job alerts from {{name}}.",
+    "stopQuestion": "Do you want to stop receiving notifications?",
+    "unsubscribe": "Unsubscribe",
+    "limitReached": "You have reached the company limit for your plan.",
+    "instruction": "Enter keywords or roles of interest to receive alerts.",
+    "keywordsLabel": "Keywords (separate with commas)",
+    "keywordsPlaceholder": "e.g.: Frontend, React, Mid-level",
+    "slotsAvailable": "Available slots",
+    "limitButton": "Limit Reached",
+    "confirmSubscription": "Confirm Subscription",
+    "registering": "Registering..."
+  },
+  "analysis": {
+    "title": "AI Compatibility Analysis",
+    "description": "Comparison between your resume and the selected job",
+    "loading": "Analyzing compatibility...",
+    "error": "Analysis failed. Please try again.",
+    "strengths": "Strengths",
+    "gaps": "Gaps and Improvements",
+    "suggestions": "Resume Suggestions",
+    "finalNotes": "Final Notes",
+    "sendEmail": "Send analysis by email",
+    "emailSent": "Email sent",
+    "emailSuccess": "Email sent successfully!",
+    "emailError": "Failed to send email. Please try again."
+  }
+}

@@ -1,6 +1,7 @@
 import type React from 'react'
 
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -43,6 +44,7 @@ function createEmptyFormData(): Omit<Curriculum, 'id'> {
 }
 
 export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
+  const { t } = useTranslation('curriculum')
   const [formData, setFormData] = useState(createEmptyFormData)
   const {
     buttonState,
@@ -81,11 +83,11 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
           {
             onSuccess: () => {
               setBtnSuccess()
-              toast.success('Currículo salvo com sucesso!')
+              toast.success(t('form.saveSuccess'))
             },
             onError: () => {
               setBtnError()
-              toast.error('Erro ao salvar currículo. Tente novamente.')
+              toast.error(t('form.saveError'))
             }
           }
         )
@@ -93,11 +95,11 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
         await curriculumService.newCurriculum(formData)
         queryClient.invalidateQueries({ queryKey: ['curriculumList'] })
         setBtnSuccess()
-        toast.success('Currículo criado com sucesso!')
+        toast.success(t('form.createSuccess'))
       }
     } catch {
       setBtnError()
-      toast.error('Erro ao salvar currículo. Tente novamente.')
+      toast.error(t('form.saveError'))
     }
   }
 
@@ -208,18 +210,18 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
     <Card className="animate-fade-in-up">
       <CardHeader>
         <CardTitle className="text-xl tracking-tight">
-          {isEditing ? `Editando: ${curriculum?.title}` : 'Criar Novo Currículo'}
+          {isEditing ? t('form.editing', { title: curriculum?.title }) : t('form.createNew')}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-8">
         {/* Nome do Currículo */}
         <div className="space-y-2">
           <Label htmlFor="name" className="text-muted-foreground">
-            Nome do Currículo
+            {t('form.nameLabel')}
           </Label>
           <Input
             id="name"
-            placeholder="Ex: Currículo para Vaga Front-end"
+            placeholder={t('form.namePlaceholder')}
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
           />
@@ -228,11 +230,11 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
         {/* Resumo Profissional */}
         <div className="space-y-2">
           <Label htmlFor="summary" className="text-muted-foreground">
-            Resumo Profissional
+            {t('form.summaryLabel')}
           </Label>
           <Textarea
             id="summary"
-            placeholder="Descreva sua experiência e objetivos profissionais..."
+            placeholder={t('form.summaryPlaceholder')}
             className="min-h-[120px] resize-y"
             value={formData.summary}
             onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
@@ -242,11 +244,11 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
         {/* Habilidades */}
         <div className="space-y-2">
           <Label htmlFor="skills" className="text-muted-foreground">
-            Habilidades
+            {t('form.skillsLabel')}
           </Label>
           <Input
             id="skills"
-            placeholder="Digite uma habilidade e pressione Enter ou vírgula"
+            placeholder={t('form.skillsPlaceholder')}
             value={skillInput}
             onChange={(e) => setSkillInput(e.target.value)}
             onKeyDown={handleSkillKeyDown}
@@ -271,11 +273,11 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
         {/* Idiomas */}
         <div className="space-y-2">
           <Label htmlFor="languages" className="text-muted-foreground">
-            Idiomas
+            {t('form.languagesLabel')}
           </Label>
           <Input
             id="languages"
-            placeholder="Digite um idioma e pressione Enter ou vírgula"
+            placeholder={t('form.languagesPlaceholder')}
             value={languageInput}
             onChange={(e) => setLanguageInput(e.target.value)}
             onKeyDown={handleLanguageKeyDown}
@@ -299,10 +301,10 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
 
         {/* Experiências Profissionais */}
         <div className="space-y-4">
-          <SectionHeader title="Experiências Profissionais" icon={Briefcase}>
+          <SectionHeader title={t('form.experience.title')} icon={Briefcase}>
             <Button type="button" variant="outline" size="sm" onClick={addExperience}>
               <PlusCircle className="mr-1.5 h-3.5 w-3.5" />
-              Adicionar
+              {t('actions.add', { ns: 'common' })}
             </Button>
           </SectionHeader>
 
@@ -312,7 +314,7 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
                 <CardContent className="pt-5 space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-xs font-medium text-muted-foreground">
-                      Experiência {index + 1}
+                      {t('form.experience.label', { index: index + 1 })}
                     </span>
                     {formData.experiences.length > 1 && (
                       <Button
@@ -321,7 +323,7 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
                         size="icon"
                         className="h-7 w-7 text-muted-foreground hover:text-destructive"
                         onClick={() => removeExperience(experience.id)}
-                        aria-label="Remover experiência"
+                        aria-label={t('form.experience.remove')}
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </Button>
@@ -334,11 +336,11 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
                         htmlFor={`company-${experience.id}`}
                         className="text-muted-foreground text-xs"
                       >
-                        Empresa
+                        {t('form.experience.companyLabel')}
                       </Label>
                       <Input
                         id={`company-${experience.id}`}
-                        placeholder="Nome da empresa"
+                        placeholder={t('form.experience.companyPlaceholder')}
                         value={experience.company}
                         onChange={(e) => updateExperience(experience.id, 'company', e.target.value)}
                       />
@@ -348,11 +350,11 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
                         htmlFor={`title-${experience.id}`}
                         className="text-muted-foreground text-xs"
                       >
-                        Cargo
+                        {t('form.experience.roleLabel')}
                       </Label>
                       <Input
                         id={`title-${experience.id}`}
-                        placeholder="Seu cargo"
+                        placeholder={t('form.experience.rolePlaceholder')}
                         value={experience.title}
                         onChange={(e) => updateExperience(experience.id, 'title', e.target.value)}
                       />
@@ -364,11 +366,11 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
                       htmlFor={`description-${experience.id}`}
                       className="text-muted-foreground text-xs"
                     >
-                      Descrição
+                      {t('form.experience.descriptionLabel')}
                     </Label>
                     <Textarea
                       id={`description-${experience.id}`}
-                      placeholder="Descreva suas responsabilidades e conquistas..."
+                      placeholder={t('form.experience.descriptionPlaceholder')}
                       className="min-h-[80px] resize-y"
                       value={experience.description}
                       onChange={(e) =>
@@ -384,10 +386,10 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
 
         {/* Formação Acadêmica */}
         <div className="space-y-4">
-          <SectionHeader title="Formação Acadêmica" icon={GraduationCap}>
+          <SectionHeader title={t('form.education.title')} icon={GraduationCap}>
             <Button type="button" variant="outline" size="sm" onClick={addEducation}>
               <PlusCircle className="mr-1.5 h-3.5 w-3.5" />
-              Adicionar
+              {t('actions.add', { ns: 'common' })}
             </Button>
           </SectionHeader>
 
@@ -397,7 +399,7 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
                 <CardContent className="pt-5 space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-xs font-medium text-muted-foreground">
-                      Formação {index + 1}
+                      {t('form.education.label', { index: index + 1 })}
                     </span>
                     {formData.educations.length > 1 && (
                       <Button
@@ -406,7 +408,7 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
                         size="icon"
                         className="h-7 w-7 text-muted-foreground hover:text-destructive"
                         onClick={() => removeEducation(education.id)}
-                        aria-label="Remover formação"
+                        aria-label={t('form.education.remove')}
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </Button>
@@ -419,11 +421,11 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
                         htmlFor={`institution-${education.id}`}
                         className="text-muted-foreground text-xs"
                       >
-                        Instituição
+                        {t('form.education.institutionLabel')}
                       </Label>
                       <Input
                         id={`institution-${education.id}`}
-                        placeholder="Nome da instituição"
+                        placeholder={t('form.education.institutionPlaceholder')}
                         value={education.institution}
                         onChange={(e) =>
                           updateEducation(education.id, 'institution', e.target.value)
@@ -435,11 +437,11 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
                         htmlFor={`degree-${education.id}`}
                         className="text-muted-foreground text-xs"
                       >
-                        Curso/Grau
+                        {t('form.education.degreeLabel')}
                       </Label>
                       <Input
                         id={`degree-${education.id}`}
-                        placeholder="Ex: Bacharelado em CC"
+                        placeholder={t('form.education.degreePlaceholder')}
                         value={education.degree}
                         onChange={(e) => updateEducation(education.id, 'degree', e.target.value)}
                       />
@@ -449,11 +451,11 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
                         htmlFor={`year-${education.id}`}
                         className="text-muted-foreground text-xs"
                       >
-                        Ano de Conclusão
+                        {t('form.education.yearLabel')}
                       </Label>
                       <Input
                         id={`year-${education.id}`}
-                        placeholder="Ex: 2020"
+                        placeholder={t('form.education.yearPlaceholder')}
                         value={education.year}
                         onChange={(e) => updateEducation(education.id, 'year', e.target.value)}
                       />
@@ -477,17 +479,17 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
             {buttonState === 'loading' || isUpdating ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Salvando...
+                {t('actions.saving', { ns: 'common' })}
               </>
             ) : buttonState === 'success' ? (
               <>
                 <CheckCircle className="mr-2 h-4 w-4" />
-                Salvo!
+                {t('actions.saved', { ns: 'common' })}
               </>
             ) : (
               <>
                 <Save className="mr-2 h-4 w-4" />
-                Salvar Currículo
+                {t('form.saveButton')}
               </>
             )}
           </Button>

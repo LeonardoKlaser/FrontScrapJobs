@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { ShieldCheck, Loader2, CheckCircle } from 'lucide-react'
 import {
   Card,
@@ -18,6 +19,7 @@ import { useButtonState } from '@/hooks/useButtonState'
 import { toast } from 'sonner'
 
 export function SecuritySection() {
+  const { t } = useTranslation('account')
   const changePassword = useChangePassword()
   const {
     buttonState,
@@ -43,12 +45,12 @@ export function SecuritySection() {
       {
         onSuccess: () => {
           setSuccess()
-          toast.success('Senha alterada com sucesso!')
+          toast.success(t('security.changeSuccess'))
           reset()
         },
         onError: () => {
           setBtnError()
-          toast.error('Senha atual incorreta. Tente novamente.')
+          toast.error(t('security.wrongPassword'))
         }
       }
     )
@@ -62,8 +64,8 @@ export function SecuritySection() {
             <ShieldCheck className="h-4.5 w-4.5 text-primary" />
           </div>
           <div>
-            <CardTitle className="text-lg">Alterar Senha</CardTitle>
-            <CardDescription>Mantenha sua conta segura com uma senha forte</CardDescription>
+            <CardTitle className="text-lg">{t('security.title')}</CardTitle>
+            <CardDescription>{t('security.description')}</CardDescription>
           </div>
         </div>
       </CardHeader>
@@ -71,7 +73,7 @@ export function SecuritySection() {
         <CardContent className="space-y-4">
           <div className="max-w-md space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="old_password">Senha Atual</Label>
+              <Label htmlFor="old_password">{t('security.currentPassword')}</Label>
               <Input id="old_password" type="password" {...register('old_password')} />
               {errors.old_password && (
                 <p className="text-xs text-destructive">{errors.old_password.message}</p>
@@ -79,7 +81,7 @@ export function SecuritySection() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="new_password">Nova Senha</Label>
+              <Label htmlFor="new_password">{t('security.newPassword')}</Label>
               <Input id="new_password" type="password" {...register('new_password')} />
               {errors.new_password && (
                 <p className="text-xs text-destructive">{errors.new_password.message}</p>
@@ -87,7 +89,7 @@ export function SecuritySection() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirm_password">Confirmar Nova Senha</Label>
+              <Label htmlFor="confirm_password">{t('security.confirmPassword')}</Label>
               <Input id="confirm_password" type="password" {...register('confirm_password')} />
               {errors.confirm_password && (
                 <p className="text-xs text-destructive">{errors.confirm_password.message}</p>
@@ -109,15 +111,15 @@ export function SecuritySection() {
             {buttonState === 'loading' ? (
               <>
                 <Loader2 className="size-4 animate-spin" />
-                Alterando...
+                {t('security.changingButton')}
               </>
             ) : buttonState === 'success' ? (
               <>
                 <CheckCircle className="size-4" />
-                Senha alterada!
+                {t('security.changedButton')}
               </>
             ) : (
-              'Alterar Senha'
+              t('security.changeButton')
             )}
           </Button>
         </CardFooter>

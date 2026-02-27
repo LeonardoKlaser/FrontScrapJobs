@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -8,6 +9,7 @@ import { useNavigate } from 'react-router'
 import { PATHS } from '@/router/paths'
 
 export function PricingSection() {
+  const { t } = useTranslation('landing')
   const [isAnnual, setIsAnnual] = useState(false)
   const { data: plans, isLoading } = usePlans()
   const navigate = useNavigate()
@@ -21,7 +23,7 @@ export function PricingSection() {
     return (
       <section id="pricing" className="py-20 sm:py-24 px-4">
         <div className="container mx-auto text-center text-muted-foreground">
-          Carregando planos...
+          {t('pricing.loading')}
         </div>
       </section>
     )
@@ -34,7 +36,7 @@ export function PricingSection() {
       <div className="container mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight text-balance">
-            Preço Simples e Transparente
+            {t('pricing.title')}
           </h2>
         </div>
 
@@ -50,7 +52,7 @@ export function PricingSection() {
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                Mensal
+                {t('pricing.monthly')}
               </button>
               <button
                 onClick={() => setIsAnnual(true)}
@@ -60,8 +62,12 @@ export function PricingSection() {
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                Anual
-                {isAnnual && <Badge className="absolute -top-2 -right-2 text-xs">-20%</Badge>}
+                {t('pricing.annual')}
+                {isAnnual && (
+                  <Badge className="absolute -top-2 -right-2 text-xs">
+                    {t('pricing.discount')}
+                  </Badge>
+                )}
               </button>
             </div>
           </div>
@@ -85,20 +91,22 @@ export function PricingSection() {
                 >
                   {isFeatured && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <Badge>Popular</Badge>
+                      <Badge>{t('pricing.popular')}</Badge>
                     </div>
                   )}
 
                   <CardHeader className="text-center pb-4">
                     <CardTitle className="text-2xl font-bold text-foreground">
-                      Plano {plan.name}
+                      {t('pricing.planName', { name: plan.name })}
                     </CardTitle>
                     <div className="mt-4">
                       <span className="text-4xl font-bold text-foreground">R$ {displayPrice}</span>
-                      <span className="text-muted-foreground">/mês</span>
+                      <span className="text-muted-foreground">{t('pricing.perMonth')}</span>
                       {showAnnual && (
                         <p className="text-sm text-primary mt-1">
-                          Economize R$ {(plan.price * 0.2 * 12).toFixed(2)} por ano
+                          {t('pricing.savePerYear', {
+                            amount: (plan.price * 0.2 * 12).toFixed(2)
+                          })}
                         </p>
                       )}
                     </div>
@@ -121,7 +129,7 @@ export function PricingSection() {
                       className="w-full py-3 text-lg font-medium"
                       onClick={() => handleChoosePlan(plan.id, plan.name)}
                     >
-                      Começar a Automatizar
+                      {t('pricing.cta')}
                     </Button>
                   </CardContent>
                 </Card>

@@ -4,6 +4,7 @@ import { Skeleton } from '@/components/common/skeleton'
 import { EmptyState } from '@/components/common/empty-state'
 import { AlertTriangle, CheckCircle2 } from 'lucide-react'
 import type { ScrapingError } from '@/services/adminDashboardService'
+import { useTranslation } from 'react-i18next'
 
 interface ActivityLogsProps {
   errors: ScrapingError[]
@@ -21,28 +22,28 @@ function formatDate(dateStr: string): string {
 }
 
 export function ActivityLogs({ errors, isLoading }: ActivityLogsProps) {
+  const { t } = useTranslation('admin')
+
   return (
     <Card className="p-5 animate-fade-in-up">
       <div className="flex items-center justify-between mb-5">
         <div>
           <h2 className="text-base font-semibold tracking-tight text-foreground">
-            Últimos Erros de Scraping
+            {t('activityLogs.title')}
           </h2>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Falhas recentes no processo de coleta
-          </p>
+          <p className="text-xs text-muted-foreground mt-0.5">{t('activityLogs.subtitle')}</p>
         </div>
         {!isLoading && (
           <Badge variant={errors.length > 0 ? 'destructive' : 'default'}>
             {errors.length > 0 ? (
               <>
                 <AlertTriangle className="size-3" />
-                {errors.length} {errors.length === 1 ? 'erro' : 'erros'}
+                {errors.length} {t('activityLogs.errorCount', { count: errors.length })}
               </>
             ) : (
               <>
                 <CheckCircle2 className="size-3" />
-                Tudo certo
+                {t('activityLogs.allGood')}
               </>
             )}
           </Badge>
@@ -53,13 +54,13 @@ export function ActivityLogs({ errors, isLoading }: ActivityLogsProps) {
           <thead>
             <tr className="border-b border-border/50">
               <th className="text-left py-2.5 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                Data/Hora
+                {t('activityLogs.dateTime')}
               </th>
               <th className="text-left py-2.5 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                Site
+                {t('activityLogs.site')}
               </th>
               <th className="text-left py-2.5 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                Mensagem de Erro
+                {t('activityLogs.errorMessage')}
               </th>
             </tr>
           </thead>
@@ -83,7 +84,7 @@ export function ActivityLogs({ errors, isLoading }: ActivityLogsProps) {
             ) : errors.length === 0 ? (
               <tr>
                 <td colSpan={3}>
-                  <EmptyState icon={CheckCircle2} title="Nenhum erro de scraping registrado" />
+                  <EmptyState icon={CheckCircle2} title={t('activityLogs.empty')} />
                 </td>
               </tr>
             ) : (

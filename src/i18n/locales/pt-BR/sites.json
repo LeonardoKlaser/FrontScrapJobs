@@ -1,0 +1,52 @@
+{
+  "title": "Empresas Monitoradas",
+  "description": "Acompanhe as páginas de carreira das empresas e receba alertas de novas vagas.",
+  "stats": {
+    "companies": "Empresas",
+    "subscribed": "Inscritas",
+    "freeSlots": "Slots livres"
+  },
+  "search": "Buscar empresa...",
+  "filterAll": "Todas",
+  "filterSubscribed": "Inscritas",
+  "filterAvailable": "Disponíveis",
+  "emptySearch": "Nenhuma empresa encontrada para \"{{term}}\"",
+  "requestSite": {
+    "title": "Expanda seu Radar",
+    "description": "Não encontrou uma empresa? Envie o link do portal de carreiras.",
+    "label": "Link do portal de carreiras",
+    "placeholder": "https://exemplo.com/carreiras",
+    "sending": "Enviando...",
+    "send": "Enviar",
+    "success": "Solicitação enviada com sucesso!",
+    "error": "Ocorreu um erro ao enviar a solicitação."
+  },
+  "popup": {
+    "logo": "{{name}} logo",
+    "receiving": "Você recebe alertas de vagas do(a) {{name}}.",
+    "stopQuestion": "Deseja parar de receber notificações?",
+    "unsubscribe": "Desvincular",
+    "limitReached": "Você atingiu o limite de empresas do seu plano.",
+    "instruction": "Insira palavras-chave ou cargos de interesse para receber alertas.",
+    "keywordsLabel": "Palavras-chave (separe com vírgulas)",
+    "keywordsPlaceholder": "Ex: Front-end, React, Pleno",
+    "slotsAvailable": "Slots disponíveis",
+    "limitButton": "Limite Atingido",
+    "confirmSubscription": "Confirmar Inscrição",
+    "registering": "Registrando..."
+  },
+  "analysis": {
+    "title": "Análise de Compatibilidade com IA",
+    "description": "Comparação entre seu currículo e a vaga selecionada",
+    "loading": "Analisando compatibilidade...",
+    "error": "Erro ao executar análise. Tente novamente.",
+    "strengths": "Pontos Fortes",
+    "gaps": "Lacunas e Melhorias",
+    "suggestions": "Sugestões para o Currículo",
+    "finalNotes": "Considerações Finais",
+    "sendEmail": "Enviar análise por email",
+    "emailSent": "Email enviado",
+    "emailSuccess": "Email enviado com sucesso!",
+    "emailError": "Erro ao enviar email. Tente novamente."
+  }
+}

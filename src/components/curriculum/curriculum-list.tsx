@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -20,6 +21,7 @@ export function CurriculumList({
   onSelect,
   onCreateNew
 }: CurriculumListProps) {
+  const { t } = useTranslation('curriculum')
   const { mutate: setActive, isPending } = useSetActiveCurriculum()
   const [activatingId, setActivatingId] = useState<number | null>(null)
 
@@ -37,18 +39,18 @@ export function CurriculumList({
     <div className="space-y-3 lg:sticky lg:top-8">
       <Button onClick={onCreateNew} variant="outline" className="w-full gap-2">
         <PlusCircle className="h-4 w-4" />
-        Novo Currículo
+        {t('list.newButton')}
       </Button>
 
       {!hasCurriculums && (
         <EmptyState
           icon={FileText}
-          title="Nenhum currículo ainda"
-          description="Crie seu primeiro currículo para começar a receber análises de vagas"
+          title={t('list.emptyTitle')}
+          description={t('list.emptyDescription')}
           action={
             <Button onClick={onCreateNew} variant="glow" size="sm">
               <PlusCircle className="h-4 w-4" />
-              Criar Currículo
+              {t('list.createButton')}
             </Button>
           }
         />
@@ -80,12 +82,12 @@ export function CurriculumList({
                       {curriculum.is_active && (
                         <Badge variant="default" className="shrink-0 text-xs px-2 py-0">
                           <CheckCircle className="mr-1 h-3 w-3" />
-                          Ativo
+                          {t('list.active')}
                         </Badge>
                       )}
                     </div>
                     <CardDescription className="text-xs line-clamp-2 text-pretty">
-                      {curriculum.summary || 'Sem resumo'}
+                      {curriculum.summary || t('list.noSummary')}
                     </CardDescription>
                     {!curriculum.is_active && (
                       <Button
@@ -96,7 +98,7 @@ export function CurriculumList({
                         className="mt-1.5 w-fit h-7 text-xs text-muted-foreground hover:text-primary"
                       >
                         <CheckCircle className="mr-1 h-3 w-3" />
-                        {isActivating ? 'Ativando...' : 'Definir como ativo'}
+                        {isActivating ? t('list.activating') : t('list.setActive')}
                       </Button>
                     )}
                   </CardHeader>

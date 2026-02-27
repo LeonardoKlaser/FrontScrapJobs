@@ -1,0 +1,100 @@
+{
+  "hero": {
+    "brand": "scrapJobs",
+    "heading1": "Pare de Procurar.",
+    "heading2": "Comece a Ser Entrevistado.",
+    "subheading": "Automatize sua busca de emprego nas melhores empresas e receba insights de IA para seu currículo se destacar.",
+    "cta": "Iniciar Meu Teste Gratuito"
+  },
+  "features": {
+    "title": "Uma Vantagem Injusta para Sua Carreira",
+    "scraping": {
+      "title": "Scraping de Hora em Hora",
+      "description": "Nunca mais perca uma vaga. Nosso sistema verifica seus alvos constantemente."
+    },
+    "ai": {
+      "title": "Análise de Currículo com IA",
+      "description": "Receba um relatório detalhado sobre o match da vaga e dicas para otimizar seu currículo."
+    },
+    "alerts": {
+      "title": "Alertas Diretos na sua Caixa de Entrada",
+      "description": "As melhores oportunidades, entregues de forma limpa e organizada para você."
+    },
+    "monitoring": {
+      "title": "Monitoramento Ilimitado",
+      "description": "Acompanhe todas as empresas da sua lista de desejos, sem restrições."
+    }
+  },
+  "howItWorks": {
+    "title": "Comece em 3 Passos Simples",
+    "step1": {
+      "title": "1. Escolha suas Empresas",
+      "description": "Selecione as empresas onde você sonha em trabalhar."
+    },
+    "step2": {
+      "title": "2. Defina seus Filtros",
+      "description": "Especifique os cargos e palavras-chave que correspondem ao seu perfil."
+    },
+    "step3": {
+      "title": "3. Receba Alertas Inteligentes",
+      "description": "Receba notificações por e-mail com uma análise completa de compatibilidade."
+    }
+  },
+  "problem": {
+    "heading": "A busca de emprego não deveria ser um segundo emprego.",
+    "description": "Você passa horas navegando entre dezenas de sites de emprego, abrindo abas infinitas, adaptando currículos para cada vaga e ainda assim perde oportunidades que surgem quando você não está olhando. É frustrante, demorado e ineficiente.",
+    "promiseHeading": "Recupere seu tempo. Candidate-se com inteligência.",
+    "promiseDescription": "A scrapJobs automatiza toda sua busca de emprego, monitorando suas empresas favoritas 24/7 e enviando alertas inteligentes com análise de IA. Concentre sua energia no que realmente importa: preparar-se para as entrevistas."
+  },
+  "faq": {
+    "security": {
+      "question": "Meus dados de currículo estão seguros?",
+      "answer": "Sim, usamos criptografia de ponta a ponta e seguimos as melhores práticas de segurança. Seus dados nunca são compartilhados com terceiros e você tem controle total sobre suas informações."
+    },
+    "ai": {
+      "question": "Como funciona a análise de IA?",
+      "answer": "Nossa IA compara as palavras-chave e requisitos da vaga com as habilidades e experiências do seu currículo, gerando um score de compatibilidade e sugestões personalizadas para melhorar suas chances."
+    },
+    "cancel": {
+      "question": "Posso cancelar a qualquer momento?",
+      "answer": "Sim, você pode cancelar sua assinatura a qualquer momento, sem complicações. Não há taxas de cancelamento ou períodos de carência."
+    },
+    "limits": {
+      "question": "Quantas empresas posso monitorar?",
+      "answer": "Depende do seu plano! O plano Beta Tester permite até 3 sites, o Profissional até 15 e o Premium até 50 sites."
+    },
+    "ctaTitle": "Pronto para Acelerar sua Carreira?",
+    "ctaDescription": "Deixe a busca de emprego manual no passado. Concentre sua energia no que realmente importa: preparar-se para as entrevistas e conseguir o emprego dos seus sonhos.",
+    "ctaButton": "Iniciar Meu Teste Gratuito"
+  },
+  "productVisualization": {
+    "title": "Veja Exatamente o Que Você Receberá",
+    "description": "Chega de e-mails de alerta genéricos. Nossas notificações são ricas em dados e insights para ajudá-lo a tomar a melhor decisão.",
+    "emailSubtitle": "Nova oportunidade encontrada!",
+    "aiAnalysis": "Análise de IA:",
+    "bullet1": "Suas habilidades em React e TypeScript são um match perfeito",
+    "bullet2": "Experiência com Next.js é um diferencial para esta vaga",
+    "bullet3": "Considere destacar seus projetos de performance",
+    "applyNow": "Candidatar-se Agora"
+  },
+  "footer": {
+    "terms": "Termos de Serviço",
+    "privacy": "Política de Privacidade",
+    "copyright": "© {{year}} scrapJobs. Todos os direitos reservados."
+  },
+  "socialProof": {
+    "subtitle": "Monitorando oportunidades das maiores empresas, como:"
+  },
+  "pricing": {
+    "title": "Preço Simples e Transparente",
+    "loading": "Carregando planos...",
+    "monthly": "Mensal",
+    "annual": "Anual",
+    "discount": "-20%",
+    "popular": "Popular",
+    "planName": "Plano {{name}}",
+    "perMonth": "/mês",
+    "savePerYear": "Economize R$ {{amount}} por ano",
+    "cta": "Começar a Automatizar"
+  }
+}

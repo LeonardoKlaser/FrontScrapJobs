@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Building2, Loader2 } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
 
@@ -29,6 +30,7 @@ export function RegistrationModal({
   onRegister,
   onUnRegister
 }: RegistrationModalProps) {
+  const { t } = useTranslation('sites')
   const [keywords, setKeywords] = useState('')
   const hasNoSlots = remainingSlots === 0 && !isAlreadyRegistered
 
@@ -68,7 +70,7 @@ export function RegistrationModal({
             {companyLogo ? (
               <img
                 src={companyLogo}
-                alt={`${companyName} logo`}
+                alt={t('popup.logo', { name: companyName })}
                 className="max-h-full max-w-full object-contain"
               />
             ) : (
@@ -84,37 +86,30 @@ export function RegistrationModal({
             <div className="space-y-4">
               <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-center">
                 <p className="text-sm text-muted-foreground">
-                  Você recebe alertas de vagas do(a){' '}
-                  <span className="font-semibold text-foreground">{companyName}</span>.
+                  {t('popup.receiving', { name: companyName })}
                 </p>
               </div>
               <div className="text-center space-y-3">
-                <p className="text-sm text-muted-foreground">
-                  Deseja parar de receber notificações?
-                </p>
+                <p className="text-sm text-muted-foreground">{t('popup.stopQuestion')}</p>
                 <Button variant="destructive" size="sm" onClick={handleUnregister}>
-                  Desvincular
+                  {t('popup.unsubscribe')}
                 </Button>
               </div>
             </div>
           ) : hasNoSlots ? (
             <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-4 text-center">
-              <p className="text-sm text-muted-foreground">
-                Você atingiu o limite de empresas do seu plano.
-              </p>
+              <p className="text-sm text-muted-foreground">{t('popup.limitReached')}</p>
             </div>
           ) : (
             <div className="space-y-4">
-              <p className="text-center text-sm text-muted-foreground">
-                Insira palavras-chave ou cargos de interesse para receber alertas.
-              </p>
+              <p className="text-center text-sm text-muted-foreground">{t('popup.instruction')}</p>
               <div className="space-y-1.5">
                 <Label htmlFor="keywords" className="text-muted-foreground text-sm">
-                  Palavras-chave (separe com vírgulas)
+                  {t('popup.keywordsLabel')}
                 </Label>
                 <Input
                   id="keywords"
-                  placeholder="Ex: Front-end, React, Pleno"
+                  placeholder={t('popup.keywordsPlaceholder')}
                   value={keywords}
                   onChange={(e) => setKeywords(e.target.value)}
                   disabled={isLoading}
@@ -134,7 +129,7 @@ export function RegistrationModal({
 
           {!isAlreadyRegistered && (
             <div className="flex items-center justify-between rounded-lg bg-muted/30 px-4 py-3">
-              <span className="text-sm text-muted-foreground">Slots disponíveis</span>
+              <span className="text-sm text-muted-foreground">{t('popup.slotsAvailable')}</span>
               <Badge variant={remainingSlots > 0 ? 'default' : 'destructive'} className="font-bold">
                 {remainingSlots}
               </Badge>
@@ -145,7 +140,7 @@ export function RegistrationModal({
           <div className="flex flex-col gap-2 pt-1">
             {isAlreadyRegistered ? (
               <Button onClick={onClose} variant="outline" className="w-full">
-                Fechar
+                {t('common:actions.close')}
               </Button>
             ) : (
               <>
@@ -158,12 +153,12 @@ export function RegistrationModal({
                   {isLoading ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      Registrando...
+                      {t('popup.registering')}
                     </>
                   ) : hasNoSlots ? (
-                    'Limite Atingido'
+                    t('popup.limitButton')
                   ) : (
-                    'Confirmar Inscrição'
+                    t('popup.confirmSubscription')
                   )}
                 </Button>
                 <Button
@@ -172,7 +167,7 @@ export function RegistrationModal({
                   className="w-full text-muted-foreground"
                   disabled={isLoading}
                 >
-                  Cancelar
+                  {t('common:actions.cancel')}
                 </Button>
               </>
             )}

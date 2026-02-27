@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { User, CreditCard, Lock } from 'lucide-react'
 import { PageHeader } from '@/components/common/page-header'
 import { ProfileSection } from '@/components/accountPage/profile-section'
@@ -9,23 +10,20 @@ import { useUser } from '@/hooks/useUser'
 
 type Tab = 'perfil' | 'plano' | 'seguranca'
 
-const menuItems = [
-  { id: 'perfil' as Tab, label: 'Perfil', icon: User },
-  { id: 'plano' as Tab, label: 'Plano e Faturamento', icon: CreditCard },
-  { id: 'seguranca' as Tab, label: 'Segurança', icon: Lock }
-]
-
 export default function AccountPage() {
   const [activeTab, setActiveTab] = useState<Tab>('perfil')
   const { data: user } = useUser()
+  const { t } = useTranslation('account')
+
+  const menuItems = [
+    { id: 'perfil' as Tab, label: t('tabs.profile'), icon: User },
+    { id: 'plano' as Tab, label: t('tabs.planBilling'), icon: CreditCard },
+    { id: 'seguranca' as Tab, label: t('tabs.security'), icon: Lock }
+  ]
 
   return (
     <div className="space-y-8">
-      <PageHeader
-        title="Configurações da Conta"
-        description="Gerencie suas informações pessoais e preferências"
-        gradient={false}
-      />
+      <PageHeader title={t('title')} description={t('description')} gradient={false} />
 
       <nav
         role="tablist"

@@ -1,0 +1,40 @@
+{
+  "stats": {
+    "monitoredUrls": "URLs monitoradas",
+    "newJobs24h": "Vagas novas (24h)",
+    "alertsSent": "Alertas enviados"
+  },
+  "latestJobs": {
+    "title": "Últimas vagas",
+    "searchPlaceholder": "Buscar por título...",
+    "search": "Buscar",
+    "period": "Período",
+    "all": "Todas",
+    "last24h": "Últimas 24h",
+    "last7days": "Últimos 7 dias",
+    "last30days": "Últimos 30 dias",
+    "loadError": "Erro ao carregar vagas.",
+    "empty": "Nenhuma vaga encontrada.",
+    "jobTitle": "Título",
+    "company": "Empresa",
+    "location": "Localização",
+    "link": "Link",
+    "action": "Ação",
+    "viewJob": "Ver vaga",
+    "analyzeAI": "Analisar com IA",
+    "jobCount": "{{count}} vaga(s) encontrada(s)",
+    "previous": "Anterior",
+    "next": "Próximo"
+  },
+  "monitoredUrls": {
+    "title": "Suas URLs monitoradas",
+    "newUrl": "Nova URL",
+    "empty": "Você ainda não adicionou URLs para monitorar.",
+    "addCompany": "Adicionar empresa",
+    "name": "Nome",
+    "url": "URL"
+  },
+  "error": {
+    "loadDashboard": "Erro ao carregar o dashboard"
+  }
+}

@@ -1,22 +1,25 @@
+import { useTranslation } from 'react-i18next'
 import { Target, Filter, Brain } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 
 export function HowItWorksSection() {
+  const { t } = useTranslation('landing')
+
   const steps = [
     {
       icon: Target,
-      title: '1. Escolha suas Empresas',
-      description: 'Selecione as empresas onde você sonha em trabalhar.'
+      titleKey: 'howItWorks.step1.title',
+      descriptionKey: 'howItWorks.step1.description'
     },
     {
       icon: Filter,
-      title: '2. Defina seus Filtros',
-      description: 'Especifique os cargos e palavras-chave que correspondem ao seu perfil.'
+      titleKey: 'howItWorks.step2.title',
+      descriptionKey: 'howItWorks.step2.description'
     },
     {
       icon: Brain,
-      title: '3. Receba Alertas Inteligentes',
-      description: 'Receba notificações por e-mail com uma análise completa de compatibilidade.'
+      titleKey: 'howItWorks.step3.title',
+      descriptionKey: 'howItWorks.step3.description'
     }
   ]
 
@@ -25,14 +28,14 @@ export function HowItWorksSection() {
       <div className="container mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight text-balance">
-            Comece em 3 Passos Simples
+            {t('howItWorks.title')}
           </h2>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {steps.map((step, index) => (
             <Card
-              key={step.title}
+              key={step.titleKey}
               className="bg-card border-border/50 hover:border-primary/30 transition-all duration-300 animate-fade-in-up"
               style={{ animationDelay: `${index * 150}ms` }}
             >
@@ -40,9 +43,9 @@ export function HowItWorksSection() {
                 <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <step.icon className="w-8 h-8 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold text-foreground">{step.title}</h3>
+                <h3 className="text-xl font-bold text-foreground">{t(step.titleKey)}</h3>
                 <p className="text-muted-foreground leading-relaxed text-pretty">
-                  {step.description}
+                  {t(step.descriptionKey)}
                 </p>
               </CardContent>
             </Card>

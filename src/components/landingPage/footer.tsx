@@ -1,6 +1,9 @@
+import { useTranslation } from 'react-i18next'
 import { Zap } from 'lucide-react'
 
 export function Footer() {
+  const { t } = useTranslation('landing')
+
   return (
     <footer className="py-12 px-4 bg-card border-t border-border/50">
       <div className="container mx-auto">
@@ -15,15 +18,15 @@ export function Footer() {
 
           <div className="flex items-center space-x-6 text-sm text-muted-foreground">
             <a href="#" className="hover:text-foreground transition-colors duration-150">
-              Termos de Serviço
+              {t('footer.terms')}
             </a>
             <a href="#" className="hover:text-foreground transition-colors duration-150">
-              Política de Privacidade
+              {t('footer.privacy')}
             </a>
           </div>
 
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} scrapJobs. Todos os direitos reservados.
+            {t('footer.copyright', { year: new Date().getFullYear() })}
           </p>
         </div>
       </div>

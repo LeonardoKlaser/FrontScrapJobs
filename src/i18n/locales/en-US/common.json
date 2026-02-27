@@ -1,0 +1,58 @@
+{
+  "nav": {
+    "home": "Home",
+    "curriculum": "Resume",
+    "companies": "Companies",
+    "myAccount": "My Account",
+    "admin": "Admin",
+    "addSite": "Add Site",
+    "logout": "Sign Out",
+    "openMenu": "Open menu"
+  },
+  "theme": {
+    "toggle": "Toggle theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred. Try again or go back to home.",
+    "retry": "Try again",
+    "backHome": "Back to home"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you tried to access does not exist or has been moved. Check the URL or go back to home.",
+    "backHome": "Back to home",
+    "homePage": "Home page"
+  },
+  "loading": "Loading...",
+  "language": {
+    "label": "Language",
+    "pt": "Português",
+    "en": "English"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "add": "Add",
+    "remove": "Remove",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "send": "Send",
+    "sending": "Sending...",
+    "saving": "Saving...",
+    "saved": "Saved!",
+    "processing": "Processing..."
+  },
+  "status": {
+    "success": "Success!",
+    "error": "Error"
+  }
+}

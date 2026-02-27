@@ -1,7 +1,9 @@
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Zap, ArrowRight } from 'lucide-react'
 
 export function HeroSection() {
+  const { t } = useTranslation('landing')
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
       {/* Radial emerald gradient background */}
@@ -21,7 +23,7 @@ export function HeroSection() {
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <Zap className="w-5 h-5 text-primary-foreground" />
               </div>
-              <span className="text-2xl font-bold text-foreground">scrapJobs</span>
+              <span className="text-2xl font-bold text-foreground">{t('hero.brand')}</span>
             </div>
           </div>
 
@@ -30,9 +32,9 @@ export function HeroSection() {
             className="text-3xl sm:text-5xl md:text-7xl font-bold leading-tight tracking-tight animate-fade-in-up text-balance"
             style={{ animationDelay: '100ms' }}
           >
-            <span className="text-foreground">Pare de Procurar.</span>
+            <span className="text-foreground">{t('hero.heading1')}</span>
             <br />
-            <span className="text-gradient-primary">Comece a Ser Entrevistado.</span>
+            <span className="text-gradient-primary">{t('hero.heading2')}</span>
           </h1>
 
           {/* Subheadline */}
@@ -40,8 +42,7 @@ export function HeroSection() {
             className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in-up text-pretty"
             style={{ animationDelay: '200ms' }}
           >
-            Automatize sua busca de emprego nas melhores empresas e receba insights de IA para seu
-            currículo se destacar.
+            {t('hero.subheading')}
           </p>
 
           {/* CTA */}
@@ -52,7 +53,7 @@ export function HeroSection() {
                 size="lg"
                 className="w-full sm:w-auto px-8 py-4 text-lg font-medium rounded-lg hover:scale-105 transition-transform duration-200 animate-pulse-glow"
               >
-                Iniciar Meu Teste Gratuito
+                {t('hero.cta')}
                 <ArrowRight className="w-5 h-5 ml-1" />
               </Button>
             </a>

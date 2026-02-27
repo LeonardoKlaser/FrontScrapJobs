@@ -2,8 +2,10 @@ import { useNavigate, useSearchParams } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { CheckCircle2, ArrowRight, Mail } from 'lucide-react'
 import { PATHS } from '@/router/paths'
+import { useTranslation } from 'react-i18next'
 
 export default function PaymentConfirmationPage() {
+  const { t } = useTranslation('plans')
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
 
@@ -27,16 +29,14 @@ export default function PaymentConfirmationPage() {
             className="animate-fade-in-up text-gradient-primary text-3xl font-bold tracking-tight sm:text-4xl"
             style={{ animationDelay: '100ms' }}
           >
-            Pagamento Confirmado!
+            {t('confirmation.title')}
           </h1>
 
           <p
             className="animate-fade-in-up text-lg leading-relaxed text-muted-foreground"
             style={{ animationDelay: '200ms' }}
           >
-            Obrigado por assinar o plano{' '}
-            <span className="font-semibold text-foreground">{planName}</span>! Sua jornada para
-            automatizar a busca de empregos comecou.
+            {t('confirmation.message', { planName })}
           </p>
 
           <div
@@ -45,7 +45,7 @@ export default function PaymentConfirmationPage() {
           >
             <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
               <Mail className="h-4 w-4 text-primary" />
-              <span>Um e-mail de confirmacao foi enviado para sua caixa de entrada.</span>
+              <span>{t('confirmation.emailSent')}</span>
             </div>
           </div>
 
@@ -55,7 +55,7 @@ export default function PaymentConfirmationPage() {
               onClick={() => navigate(PATHS.app.home)}
               className="h-11 w-full text-base"
             >
-              Ir para o Dashboard
+              {t('confirmation.goToDashboard')}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
@@ -64,7 +64,7 @@ export default function PaymentConfirmationPage() {
             className="animate-fade-in-up text-xs text-muted-foreground"
             style={{ animationDelay: '500ms' }}
           >
-            Precisa de ajuda? Entre em contato com nosso suporte em{' '}
+            {t('confirmation.needHelp')}{' '}
             <a href="mailto:support@scrapjobs.com" className="text-primary hover:underline">
               support@scrapjobs.com
             </a>

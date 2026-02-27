@@ -32,8 +32,11 @@ import { PageHeader } from '@/components/common/page-header'
 import { useAddSiteConfig } from '@/hooks/useAddSiteConfig'
 import { useButtonState } from '@/hooks/useButtonState'
 import { type SiteConfigFormData } from '@/services/siteCareerService'
+import { useTranslation } from 'react-i18next'
 
 export default function AdicionarSitePage() {
+  const { t } = useTranslation('admin')
+  const { t: tCommon } = useTranslation('common')
   const [formData, setFormData] = useState<SiteConfigFormData>({
     site_name: '',
     base_url: '',
@@ -80,7 +83,7 @@ export default function AdicionarSitePage() {
     setValidationError(null)
 
     if (!formData.site_name || !formData.base_url) {
-      setValidationError('Por favor, preencha os campos obrigatórios: Nome do Site e URL Base.')
+      setValidationError(t('addSite.requiredFieldsError'))
       return
     }
     setLoading()
@@ -89,7 +92,7 @@ export default function AdicionarSitePage() {
       {
         onSuccess: () => {
           setSuccess()
-          toast.success('Site adicionado com sucesso!')
+          toast.success(t('addSite.addSuccess'))
           setFormData({
             site_name: '',
             base_url: '',
@@ -113,7 +116,7 @@ export default function AdicionarSitePage() {
         },
         onError: (err) => {
           setBtnError()
-          toast.error(err?.message || 'Ocorreu um erro ao adicionar o site.')
+          toast.error(err?.message || t('addSite.addError'))
         }
       }
     )
@@ -121,10 +124,7 @@ export default function AdicionarSitePage() {
 
   return (
     <div className="space-y-8">
-      <PageHeader
-        title="Adicionar Novo Site"
-        description="Configure um novo site de carreiras para monitoramento automático"
-      />
+      <PageHeader title={t('addSite.title')} description={t('addSite.description')} />
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {validationError && (
@@ -134,17 +134,17 @@ export default function AdicionarSitePage() {
           </Alert>
         )}
 
-        {/* Informações Básicas */}
+        {/* Basic Info */}
         <div className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
           <Card>
             <CardHeader>
               <div className="flex items-center gap-2">
                 <Globe className="size-5 text-primary" />
                 <div>
-                  <CardTitle className="text-base tracking-tight">Informações Básicas</CardTitle>
-                  <CardDescription>
-                    Configure as informações fundamentais do site de empregos
-                  </CardDescription>
+                  <CardTitle className="text-base tracking-tight">
+                    {t('addSite.basicInfo.title')}
+                  </CardTitle>
+                  <CardDescription>{t('addSite.basicInfo.description')}</CardDescription>
                 </div>
               </div>
             </CardHeader>
@@ -152,12 +152,12 @@ export default function AdicionarSitePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="site_name">
-                    Nome do Site <span className="text-destructive">*</span>
+                    {t('addSite.basicInfo.nameLabel')} <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     id="site_name"
                     type="text"
-                    placeholder="Ex: Google Careers"
+                    placeholder={t('addSite.basicInfo.namePlaceholder')}
                     value={formData.site_name}
                     onChange={(e) => handleInputChange('site_name', e.target.value)}
                     required
@@ -166,12 +166,12 @@ export default function AdicionarSitePage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="base_url">
-                    URL Base da Página de Carreiras <span className="text-destructive">*</span>
+                    {t('addSite.basicInfo.urlLabel')} <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     id="base_url"
                     type="url"
-                    placeholder="https://careers.google.com/jobs/results/"
+                    placeholder={t('addSite.basicInfo.urlPlaceholder')}
                     value={formData.base_url}
                     onChange={(e) => handleInputChange('base_url', e.target.value)}
                     required
@@ -187,10 +187,10 @@ export default function AdicionarSitePage() {
                 />
                 <div>
                   <Label htmlFor="is_active" className="cursor-pointer">
-                    Monitoramento Ativo
+                    {t('addSite.basicInfo.activeLabel')}
                   </Label>
                   <p className="text-xs text-muted-foreground">
-                    O site será verificado automaticamente a cada ciclo
+                    {t('addSite.basicInfo.activeDescription')}
                   </p>
                 </div>
               </div>
@@ -198,12 +198,14 @@ export default function AdicionarSitePage() {
           </Card>
         </div>
 
-        {/* Estratégia de Coleta */}
+        {/* Collection Strategy */}
         <div className="animate-fade-in-up" style={{ animationDelay: '150ms' }}>
           <Card>
             <CardHeader>
-              <CardTitle className="text-base tracking-tight">Estratégia de Coleta</CardTitle>
-              <CardDescription>Selecione como os dados serão coletados do site</CardDescription>
+              <CardTitle className="text-base tracking-tight">
+                {t('addSite.strategy.title')}
+              </CardTitle>
+              <CardDescription>{t('addSite.strategy.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -226,14 +228,16 @@ export default function AdicionarSitePage() {
                     <Code2 className="size-4" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground">CSS Selectors</p>
+                    <p className="text-sm font-medium text-foreground">
+                      {t('addSite.strategy.css')}
+                    </p>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      Coleta via seletores CSS no HTML da página
+                      {t('addSite.strategy.cssDescription')}
                     </p>
                   </div>
                   {formData.scraping_type === 'CSS' && (
                     <Badge variant="default" className="absolute top-3 right-3 text-xs">
-                      Selecionado
+                      {t('addSite.strategy.selected')}
                     </Badge>
                   )}
                 </button>
@@ -257,14 +261,16 @@ export default function AdicionarSitePage() {
                     <Webhook className="size-4" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground">API</p>
+                    <p className="text-sm font-medium text-foreground">
+                      {t('addSite.strategy.api')}
+                    </p>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      Coleta via chamada direta à API do site
+                      {t('addSite.strategy.apiDescription')}
                     </p>
                   </div>
                   {formData.scraping_type === 'API' && (
                     <Badge variant="default" className="absolute top-3 right-3 text-xs">
-                      Selecionado
+                      {t('addSite.strategy.selected')}
                     </Badge>
                   )}
                 </button>
@@ -282,11 +288,9 @@ export default function AdicionarSitePage() {
                   <Code2 className="size-5 text-primary" />
                   <div>
                     <CardTitle className="text-base tracking-tight">
-                      Configuração de Seletores CSS
+                      {t('addSite.cssConfig.title')}
                     </CardTitle>
-                    <CardDescription>
-                      Configure os seletores para extrair dados das páginas
-                    </CardDescription>
+                    <CardDescription>{t('addSite.cssConfig.description')}</CardDescription>
                   </div>
                 </div>
               </CardHeader>
@@ -295,7 +299,7 @@ export default function AdicionarSitePage() {
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <Label htmlFor="job_list_item_selector">
-                        Seletor do Item da Lista de Vagas
+                        {t('addSite.cssConfig.jobListItem')}
                       </Label>
                       <Tooltip content="Ex: .job-card, li.search-result">
                         <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
@@ -311,7 +315,7 @@ export default function AdicionarSitePage() {
 
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <Label htmlFor="title_selector">Seletor do Título da Vaga</Label>
+                      <Label htmlFor="title_selector">{t('addSite.cssConfig.jobTitle')}</Label>
                       <Tooltip content="Ex: h2.job-title">
                         <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
                       </Tooltip>
@@ -326,7 +330,7 @@ export default function AdicionarSitePage() {
 
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <Label htmlFor="link_selector">Seletor do Link da Vaga</Label>
+                      <Label htmlFor="link_selector">{t('addSite.cssConfig.jobLink')}</Label>
                       <Tooltip content="Ex: a.apply-button">
                         <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
                       </Tooltip>
@@ -341,7 +345,7 @@ export default function AdicionarSitePage() {
 
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <Label htmlFor="link_attribute">Atributo do Link</Label>
+                      <Label htmlFor="link_attribute">{t('addSite.cssConfig.linkAttribute')}</Label>
                       <Tooltip content="Ex: href, data-href">
                         <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
                       </Tooltip>
@@ -356,7 +360,7 @@ export default function AdicionarSitePage() {
 
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <Label htmlFor="location_selector">Seletor da Localização</Label>
+                      <Label htmlFor="location_selector">{t('addSite.cssConfig.location')}</Label>
                       <Tooltip content="Ex: .job-location span">
                         <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
                       </Tooltip>
@@ -371,9 +375,7 @@ export default function AdicionarSitePage() {
 
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <Label htmlFor="next_page_selector">
-                        Seletor do Botão &apos;Próxima Página&apos;
-                      </Label>
+                      <Label htmlFor="next_page_selector">{t('addSite.cssConfig.nextPage')}</Label>
                       <Tooltip content="Ex: a.pagination-next">
                         <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
                       </Tooltip>
@@ -388,8 +390,10 @@ export default function AdicionarSitePage() {
 
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <Label htmlFor="job_description_selector">Seletor da Descrição da Vaga</Label>
-                      <Tooltip content="Seletor para a descrição na página de detalhes">
+                      <Label htmlFor="job_description_selector">
+                        {t('addSite.cssConfig.jobDescription')}
+                      </Label>
+                      <Tooltip content={t('addSite.cssConfig.jobDescriptionTooltip')}>
                         <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
                       </Tooltip>
                     </div>
@@ -406,9 +410,9 @@ export default function AdicionarSitePage() {
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <Label htmlFor="job_requisition_id_selector">
-                        Seletor do ID de Requisição
+                        {t('addSite.cssConfig.requisitionId')}
                       </Label>
-                      <Tooltip content="Seletor para o ID único da vaga">
+                      <Tooltip content={t('addSite.cssConfig.requisitionIdTooltip')}>
                         <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
                       </Tooltip>
                     </div>
@@ -435,24 +439,28 @@ export default function AdicionarSitePage() {
                 <div className="flex items-center gap-2">
                   <Webhook className="size-5 text-primary" />
                   <div>
-                    <CardTitle className="text-base tracking-tight">Configuração de API</CardTitle>
-                    <CardDescription>Configure os parâmetros para coleta via API</CardDescription>
+                    <CardTitle className="text-base tracking-tight">
+                      {t('addSite.apiConfig.title')}
+                    </CardTitle>
+                    <CardDescription>{t('addSite.apiConfig.description')}</CardDescription>
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="api_endpoint_template">Template do Endpoint da API</Label>
+                  <Label htmlFor="api_endpoint_template">
+                    {t('addSite.apiConfig.endpointTemplate')}
+                  </Label>
                   <Input
                     id="api_endpoint_template"
-                    placeholder="https://api.empresa.com/jobs?page={page_number}"
+                    placeholder={t('addSite.apiConfig.endpointPlaceholder')}
                     value={formData.api_endpoint_template}
                     onChange={(e) => handleInputChange('api_endpoint_template', e.target.value)}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="api_method">Método HTTP</Label>
+                  <Label htmlFor="api_method">{t('addSite.apiConfig.httpMethod')}</Label>
                   <Select
                     value={formData.api_method}
                     onValueChange={(value) => handleInputChange('api_method', value)}
@@ -468,7 +476,7 @@ export default function AdicionarSitePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="api_headers_json">Cabeçalhos (Headers) em formato JSON</Label>
+                  <Label htmlFor="api_headers_json">{t('addSite.apiConfig.headers')}</Label>
                   <Textarea
                     id="api_headers_json"
                     className="font-mono text-sm"
@@ -480,9 +488,7 @@ export default function AdicionarSitePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="api_payload_template">
-                    Corpo da Requisição (Payload Template)
-                  </Label>
+                  <Label htmlFor="api_payload_template">{t('addSite.apiConfig.payload')}</Label>
                   <Textarea
                     id="api_payload_template"
                     className="font-mono text-sm"
@@ -495,8 +501,8 @@ export default function AdicionarSitePage() {
 
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <Label htmlFor="json_data_mappings">Mapeamento dos Dados JSON</Label>
-                    <Tooltip content="Define o caminho para extrair cada dado do objeto JSON retornado pela API">
+                    <Label htmlFor="json_data_mappings">{t('addSite.apiConfig.jsonMapping')}</Label>
+                    <Tooltip content={t('addSite.apiConfig.jsonMappingTooltip')}>
                       <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
                     </Tooltip>
                   </div>
@@ -518,8 +524,8 @@ export default function AdicionarSitePage() {
         <div className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
           <Card>
             <CardHeader>
-              <CardTitle className="text-base tracking-tight">Logo da Empresa</CardTitle>
-              <CardDescription>Imagem exibida junto ao nome do site</CardDescription>
+              <CardTitle className="text-base tracking-tight">{t('addSite.logo.title')}</CardTitle>
+              <CardDescription>{t('addSite.logo.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap items-center gap-3">
@@ -536,7 +542,7 @@ export default function AdicionarSitePage() {
                   onClick={() => document.getElementById('logo_upload')?.click()}
                 >
                   <ImagePlus className="size-4" />
-                  Escolher Imagem
+                  {t('addSite.logo.chooseImage')}
                 </Button>
                 {logoFile && (
                   <span className="text-sm text-muted-foreground min-w-0 truncate max-w-[200px] sm:max-w-xs">
@@ -563,15 +569,15 @@ export default function AdicionarSitePage() {
             {buttonState === 'loading' ? (
               <>
                 <Loader2 className="size-4 animate-spin" />
-                Salvando...
+                {tCommon('actions.saving')}
               </>
             ) : buttonState === 'success' ? (
               <>
                 <CheckCircle className="size-4" />
-                Salvo!
+                {tCommon('actions.saved')}
               </>
             ) : (
-              'Cadastrar Site'
+              t('addSite.submitButton')
             )}
           </Button>
         </div>

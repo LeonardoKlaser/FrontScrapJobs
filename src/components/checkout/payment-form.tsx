@@ -22,6 +22,7 @@ import {
 import type { Plan } from '@/models/plan'
 import { api } from '@/services/api'
 import axios from 'axios'
+import { useTranslation } from 'react-i18next'
 
 interface PaymentFormProps {
   plan: Plan
@@ -43,6 +44,9 @@ interface FormErrors {
 }
 
 export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
+  const { t } = useTranslation('plans')
+  const { t: tAuth } = useTranslation('auth')
+  const { t: tCommon } = useTranslation('common')
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -74,10 +78,10 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
         setErrors((prev) => {
           const next = { ...prev }
           if (field === 'email') {
-            next.email = data.email_exists ? 'Este e-mail ja possui cadastro. Faca login.' : ''
+            next.email = data.email_exists ? t('paymentForm.emailExists') : ''
           }
           if (field === 'cpfCnpj') {
-            next.cpfCnpj = data.tax_exists ? 'Este CPF/CNPJ ja esta cadastrado.' : ''
+            next.cpfCnpj = data.tax_exists ? t('paymentForm.cpfExists') : ''
           }
           return next
         })
@@ -85,7 +89,7 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
         // Silently ignore validation errors — form submit will catch issues
       }
     },
-    [formData.email, formData.cpfCnpj]
+    [formData.email, formData.cpfCnpj, t]
   )
 
   const handleFieldBlur = useCallback(
@@ -138,49 +142,49 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
     const newErrors: FormErrors = {}
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Nome e obrigatorio'
+      newErrors.name = tAuth('validation.nameRequired')
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Email e obrigatorio'
+      newErrors.email = tAuth('validation.emailRequired')
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Email invalido'
+      newErrors.email = tAuth('validation.emailInvalid')
     }
 
     if (!formData.password) {
-      newErrors.password = 'Senha e obrigatoria'
+      newErrors.password = tAuth('validation.passwordRequired')
     } else if (formData.password.length < 8) {
-      newErrors.password = 'Senha deve ter no minimo 8 caracteres'
+      newErrors.password = tAuth('validation.passwordMin')
     } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-      newErrors.password = 'Senha deve conter maiusculas, minusculas e numeros'
+      newErrors.password = tAuth('validation.passwordPattern')
     }
 
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Confirmacao de senha e obrigatoria'
+      newErrors.confirmPassword = tAuth('validation.confirmPasswordRequired')
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Senhas nao conferem'
+      newErrors.confirmPassword = tAuth('validation.passwordsMismatch')
     }
 
     if (!formData.cpfCnpj.trim()) {
-      newErrors.cpfCnpj = 'CPF/CNPJ e obrigatorio'
+      newErrors.cpfCnpj = tAuth('validation.cpfRequired')
     } else {
       const cpfCnpjDigits = formData.cpfCnpj.replace(/\D/g, '')
       if (cpfCnpjDigits.length !== 11 && cpfCnpjDigits.length !== 14) {
-        newErrors.cpfCnpj = 'CPF/CNPJ invalido'
+        newErrors.cpfCnpj = tAuth('validation.cpfInvalid')
       }
     }
 
     if (!formData.phone.trim()) {
-      newErrors.phone = 'Telefone e obrigatorio'
+      newErrors.phone = tAuth('validation.phoneRequired')
     } else {
       const phoneDigits = formData.phone.replace(/\D/g, '')
       if (phoneDigits.length < 10 || phoneDigits.length > 11) {
-        newErrors.phone = 'Telefone invalido'
+        newErrors.phone = tAuth('validation.phoneInvalid')
       }
     }
 
     if (!formData.paymentMethod) {
-      newErrors.paymentMethod = 'Selecione um metodo de pagamento'
+      newErrors.paymentMethod = tAuth('validation.paymentMethodRequired')
     }
 
     setErrors(newErrors)
@@ -218,7 +222,7 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
           ? err.response.data.error
           : err instanceof Error
             ? err.message
-            : 'Erro ao processar registro'
+            : tCommon('status.error')
       setErrors({ submit: message })
     } finally {
       setIsLoading(false)
@@ -228,8 +232,8 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
   return (
     <Card className="w-full border-border/50">
       <CardHeader>
-        <CardTitle className="text-2xl tracking-tight">Criar Conta</CardTitle>
-        <CardDescription>Preencha os dados para criar sua conta</CardDescription>
+        <CardTitle className="text-2xl tracking-tight">{t('paymentForm.title')}</CardTitle>
+        <CardDescription>{t('paymentForm.description')}</CardDescription>
       </CardHeader>
 
       <CardContent>
@@ -238,21 +242,19 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
           {Object.values(errors).some(Boolean) && (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                {errors.submit || 'Por favor, corrija os erros abaixo'}
-              </AlertDescription>
+              <AlertDescription>{errors.submit || t('paymentForm.formErrors')}</AlertDescription>
             </Alert>
           )}
 
           {/* Personal Data Section */}
           <fieldset className="space-y-4 animate-fade-in-up">
             <legend className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-              Dados Pessoais
+              {t('paymentForm.personalData')}
             </legend>
 
             <div className="space-y-2">
               <Label htmlFor="name" className="text-muted-foreground">
-                Nome Completo
+                {t('paymentForm.fullName')}
               </Label>
               <div className="relative">
                 <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -260,7 +262,7 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
                   id="name"
                   name="name"
                   type="text"
-                  placeholder="Joao Silva"
+                  placeholder={t('paymentForm.fullNamePlaceholder')}
                   value={formData.name}
                   onChange={handleInputChange}
                   disabled={isLoading}
@@ -273,7 +275,7 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
 
             <div className="space-y-2">
               <Label htmlFor="email" className="text-muted-foreground">
-                Email
+                {t('paymentForm.emailLabel')}
               </Label>
               <div className="relative">
                 <MailIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -281,7 +283,7 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="seu@email.com"
+                  placeholder={t('paymentForm.emailPlaceholder')}
                   value={formData.email}
                   onChange={handleInputChange}
                   onBlur={() => handleFieldBlur('email', formData.email)}
@@ -293,11 +295,11 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
               {errors.email && (
                 <p className="text-sm text-destructive">
                   {errors.email}
-                  {errors.email.includes('login') && (
+                  {errors.email === t('paymentForm.emailExists') && (
                     <>
                       {' '}
                       <a href="/login" className="font-medium underline">
-                        Ir para login
+                        {t('paymentForm.goToLogin')}
                       </a>
                     </>
                   )}
@@ -307,7 +309,7 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
 
             <div className="space-y-2">
               <Label htmlFor="password" className="text-muted-foreground">
-                Senha
+                {t('paymentForm.passwordLabel')}
               </Label>
               <div className="relative">
                 <LockIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -325,21 +327,21 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                  aria-label={
+                    showPassword ? t('paymentForm.hidePassword') : t('paymentForm.showPassword')
+                  }
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
               {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
-              <p className="text-xs text-muted-foreground">
-                Minimo 8 caracteres, com maiusculas, minusculas e numeros
-              </p>
+              <p className="text-xs text-muted-foreground">{t('paymentForm.passwordHelper')}</p>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="confirmPassword" className="text-muted-foreground">
-                Confirmar Senha
+                {t('paymentForm.confirmPassword')}
               </Label>
               <div className="relative">
                 <LockIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -357,7 +359,11 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  aria-label={showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                  aria-label={
+                    showConfirmPassword
+                      ? t('paymentForm.hidePassword')
+                      : t('paymentForm.showPassword')
+                  }
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {showConfirmPassword ? (
@@ -379,12 +385,12 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
             style={{ animationDelay: '100ms' }}
           >
             <legend className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-              Dados Adicionais
+              {t('paymentForm.additionalData')}
             </legend>
 
             <div className="space-y-2">
               <Label htmlFor="cpfCnpj" className="text-muted-foreground">
-                CPF/CNPJ
+                {t('paymentForm.cpfLabel')}
               </Label>
               <div className="relative">
                 <FileTextIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -392,7 +398,7 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
                   id="cpfCnpj"
                   name="cpfCnpj"
                   type="text"
-                  placeholder="000.000.000-00"
+                  placeholder={t('paymentForm.cpfPlaceholder')}
                   value={formData.cpfCnpj}
                   onChange={handleInputChange}
                   onBlur={() => handleFieldBlur('cpfCnpj', formData.cpfCnpj)}
@@ -406,7 +412,7 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
 
             <div className="space-y-2">
               <Label htmlFor="phone" className="text-muted-foreground">
-                Telefone
+                {t('paymentForm.phoneLabel')}
               </Label>
               <div className="relative">
                 <PhoneIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -414,7 +420,7 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
                   id="phone"
                   name="phone"
                   type="text"
-                  placeholder="(11) 99999-9999"
+                  placeholder={t('paymentForm.phonePlaceholder')}
                   value={formData.phone}
                   onChange={handleInputChange}
                   disabled={isLoading}
@@ -432,7 +438,7 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
             style={{ animationDelay: '200ms' }}
           >
             <legend className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-              Metodo de Pagamento
+              {t('paymentForm.paymentMethod')}
             </legend>
 
             <div className="grid gap-3 sm:grid-cols-2">
@@ -468,8 +474,8 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
                   <QrCodeIcon className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="font-semibold text-foreground">PIX</p>
-                  <p className="text-xs text-muted-foreground">Transferencia instantanea</p>
+                  <p className="font-semibold text-foreground">{t('paymentForm.pix')}</p>
+                  <p className="text-xs text-muted-foreground">{t('paymentForm.pixDescription')}</p>
                 </div>
               </div>
 
@@ -505,8 +511,10 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
                   <CreditCardIcon className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="font-semibold text-foreground">Cartao de Credito</p>
-                  <p className="text-xs text-muted-foreground">Visa, Mastercard, Elo</p>
+                  <p className="font-semibold text-foreground">{t('paymentForm.creditCard')}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {t('paymentForm.creditCardDescription')}
+                  </p>
                 </div>
               </div>
             </div>
@@ -523,27 +531,27 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
               variant="glow"
               disabled={
                 isLoading ||
-                errors.email?.includes('cadastro') ||
-                errors.cpfCnpj?.includes('cadastrado')
+                errors.email === t('paymentForm.emailExists') ||
+                errors.cpfCnpj === t('paymentForm.cpfExists')
               }
               className="h-11 w-full text-base"
             >
               {isLoading ? (
                 <>
                   <Spinner className="mr-2 h-4 w-4" />
-                  Processando...
+                  {tCommon('actions.processing')}
                 </>
               ) : (
                 <>
                   <Lock className="mr-2 h-4 w-4" />
-                  Criar Conta e Pagar
+                  {t('paymentForm.submitButton')}
                 </>
               )}
             </Button>
 
             <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
               <Lock className="h-3.5 w-3.5 text-primary" />
-              <span>Seus dados sao protegidos com criptografia SSL</span>
+              <span>{t('paymentForm.securityMessage')}</span>
             </div>
           </div>
         </form>

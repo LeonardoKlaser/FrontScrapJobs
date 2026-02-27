@@ -1,8 +1,11 @@
+import { useTranslation } from 'react-i18next'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 
 export function ProductVisualizationSection() {
+  const { t } = useTranslation('landing')
+
   return (
     <section className="py-20 sm:py-24 px-4 bg-card/30">
       <div className="container mx-auto">
@@ -10,11 +13,10 @@ export function ProductVisualizationSection() {
           {/* Text Content */}
           <div className="space-y-6 animate-fade-in-up">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground leading-tight tracking-tight text-balance">
-              Veja Exatamente o Que Você Receberá
+              {t('productVisualization.title')}
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed text-pretty">
-              Chega de e-mails de alerta genéricos. Nossas notificações são ricas em dados e
-              insights para ajudá-lo a tomar a melhor decisão.
+              {t('productVisualization.description')}
             </p>
           </div>
 
@@ -30,7 +32,9 @@ export function ProductVisualizationSection() {
                     </div>
                     <div>
                       <p className="font-medium text-foreground">scrapJobs</p>
-                      <p className="text-sm text-muted-foreground">Nova oportunidade encontrada!</p>
+                      <p className="text-sm text-muted-foreground">
+                        {t('productVisualization.emailSubtitle')}
+                      </p>
                     </div>
                   </div>
                   <Badge>85% Match</Badge>
@@ -43,11 +47,13 @@ export function ProductVisualizationSection() {
 
                   {/* AI Analysis */}
                   <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 space-y-2">
-                    <h4 className="font-medium text-foreground">Análise de IA:</h4>
+                    <h4 className="font-medium text-foreground">
+                      {t('productVisualization.aiAnalysis')}
+                    </h4>
                     <ul className="text-sm text-muted-foreground space-y-1">
-                      <li>• Suas habilidades em React e TypeScript são um match perfeito</li>
-                      <li>• Experiência com Next.js é um diferencial para esta vaga</li>
-                      <li>• Considere destacar seus projetos de performance</li>
+                      <li>• {t('productVisualization.bullet1')}</li>
+                      <li>• {t('productVisualization.bullet2')}</li>
+                      <li>• {t('productVisualization.bullet3')}</li>
                     </ul>
                   </div>
 
@@ -57,7 +63,7 @@ export function ProductVisualizationSection() {
                       document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
                     }
                   >
-                    Candidatar-se Agora
+                    {t('productVisualization.applyNow')}
                   </Button>
                 </div>
               </CardContent>

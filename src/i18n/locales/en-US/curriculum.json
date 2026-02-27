@@ -1,0 +1,52 @@
+{
+  "title": "Resume Manager",
+  "description": "Create and manage multiple resumes for different opportunities",
+  "list": {
+    "newButton": "New Resume",
+    "emptyTitle": "No resumes yet",
+    "emptyDescription": "Create your first resume to start receiving job analysis",
+    "createButton": "Create Resume",
+    "active": "Active",
+    "noSummary": "No summary",
+    "activating": "Activating...",
+    "setActive": "Set as active"
+  },
+  "form": {
+    "editing": "Editing: {{title}}",
+    "createNew": "Create New Resume",
+    "nameLabel": "Resume Name",
+    "namePlaceholder": "e.g.: Resume for Frontend Position",
+    "summaryLabel": "Professional Summary",
+    "summaryPlaceholder": "Describe your experience and professional goals...",
+    "skillsLabel": "Skills",
+    "skillsPlaceholder": "Type a skill and press Enter or comma",
+    "languagesLabel": "Languages",
+    "languagesPlaceholder": "Type a language and press Enter or comma",
+    "experience": {
+      "title": "Work Experience",
+      "label": "Experience {{index}}",
+      "remove": "Remove experience",
+      "companyLabel": "Company",
+      "companyPlaceholder": "Company name",
+      "roleLabel": "Role",
+      "rolePlaceholder": "Your role",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Describe your responsibilities and achievements..."
+    },
+    "education": {
+      "title": "Education",
+      "label": "Education {{index}}",
+      "remove": "Remove education",
+      "institutionLabel": "Institution",
+      "institutionPlaceholder": "Institution name",
+      "degreeLabel": "Degree",
+      "degreePlaceholder": "e.g.: BS in Computer Science",
+      "yearLabel": "Graduation Year",
+      "yearPlaceholder": "e.g.: 2020"
+    },
+    "saveButton": "Save Resume",
+    "saveSuccess": "Resume saved successfully!",
+    "createSuccess": "Resume created successfully!",
+    "saveError": "Failed to save resume. Please try again."
+  }
+}

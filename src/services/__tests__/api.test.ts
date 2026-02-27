@@ -55,8 +55,7 @@ describe('api', () => {
           const isLoginPage = window.location.pathname === '/login'
           const isPublicPage = window.location.pathname === '/'
           if (!isLoginPage && !isPublicPage) {
-            window.location.href =
-              `/login?from=${encodeURIComponent(window.location.pathname)}`
+            window.location.href = `/login?from=${encodeURIComponent(window.location.pathname)}`
           }
         }
         return Promise.reject(err)
@@ -83,8 +82,7 @@ describe('api', () => {
           const isLoginPage = window.location.pathname === '/login'
           const isPublicPage = window.location.pathname === '/'
           if (!isLoginPage && !isPublicPage) {
-            window.location.href =
-              `/login?from=${encodeURIComponent(window.location.pathname)}`
+            window.location.href = `/login?from=${encodeURIComponent(window.location.pathname)}`
           }
         }
         return Promise.reject(err)
@@ -111,8 +109,7 @@ describe('api', () => {
           const isLoginPage = window.location.pathname === '/login'
           const isPublicPage = window.location.pathname === '/'
           if (!isLoginPage && !isPublicPage) {
-            window.location.href =
-              `/login?from=${encodeURIComponent(window.location.pathname)}`
+            window.location.href = `/login?from=${encodeURIComponent(window.location.pathname)}`
           }
         }
         return Promise.reject(err)

@@ -1,0 +1,47 @@
+{
+  "title": "Configurações da Conta",
+  "description": "Gerencie suas informações pessoais e preferências",
+  "tabs": {
+    "profile": "Perfil",
+    "planBilling": "Plano e Faturamento",
+    "security": "Segurança"
+  },
+  "profile": {
+    "title": "Informações Pessoais",
+    "fallbackName": "Usuário",
+    "nameLabel": "Nome",
+    "namePlaceholder": "Seu nome",
+    "emailLabel": "E-mail",
+    "emailReadonly": "O e-mail não pode ser alterado.",
+    "phoneLabel": "Celular",
+    "phonePlaceholder": "(11) 99999-9999",
+    "cpfLabel": "CPF",
+    "cpfPlaceholder": "000.000.000-00",
+    "saveButton": "Salvar Alterações",
+    "saveSuccess": "Perfil atualizado com sucesso!",
+    "saveError": "Erro ao atualizar perfil. Tente novamente."
+  },
+  "security": {
+    "title": "Alterar Senha",
+    "description": "Mantenha sua conta segura com uma senha forte",
+    "currentPassword": "Senha Atual",
+    "newPassword": "Nova Senha",
+    "confirmPassword": "Confirmar Nova Senha",
+    "changingButton": "Alterando...",
+    "changedButton": "Senha alterada!",
+    "changeButton": "Alterar Senha",
+    "changeSuccess": "Senha alterada com sucesso!",
+    "wrongPassword": "Senha atual incorreta. Tente novamente."
+  },
+  "plan": {
+    "title": "Meu Plano",
+    "description": "Gerencie sua assinatura e limites de uso",
+    "noPlan": "Sem plano",
+    "monitoredUrls": "URLs monitoradas",
+    "aiAnalyses": "Análises IA / mês",
+    "unlimited": "Ilimitado",
+    "benefits": "Benefícios incluídos",
+    "manage": "Gerenciar Assinatura",
+    "upgrade": "Fazer Upgrade"
+  }
+}

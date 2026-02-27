@@ -10,6 +10,7 @@ import {
   AlertTriangle,
   DollarSign
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 interface KPICardProps {
   title: string
@@ -66,42 +67,43 @@ export function KPICards({
   scrapingErrors,
   isLoading
 }: KPICardsProps) {
+  const { t } = useTranslation('admin')
   const placeholder = isLoading ? '—' : undefined
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <div className="animate-fade-in-up" style={{ animationDelay: '0ms' }}>
         <KPICard
-          title="Faturamento"
+          title={t('kpi.revenue')}
           value={placeholder ?? formatCurrency(totalRevenue)}
-          subtitle="Receita de assinaturas ativas"
+          subtitle={t('kpi.revenueSubtitle')}
           icon={<DollarSign className="size-5" />}
           trend="positive"
         />
       </div>
       <div className="animate-fade-in-up" style={{ animationDelay: '60ms' }}>
         <KPICard
-          title="Usuários Ativos"
+          title={t('kpi.activeUsers')}
           value={placeholder ?? String(activeUsers)}
-          subtitle="Total de usuários cadastrados"
+          subtitle={t('kpi.activeUsersSubtitle')}
           icon={<Users className="size-5" />}
           trend="positive"
         />
       </div>
       <div className="animate-fade-in-up" style={{ animationDelay: '120ms' }}>
         <KPICard
-          title="Sites Monitorados"
+          title={t('kpi.monitoredSites')}
           value={placeholder ?? String(monitoredSites)}
-          subtitle="Sites com scraping ativo"
+          subtitle={t('kpi.monitoredSitesSubtitle')}
           icon={<Globe className="size-5" />}
           trend="neutral"
         />
       </div>
       <div className="animate-fade-in-up" style={{ animationDelay: '180ms' }}>
         <KPICard
-          title="Erros (24h)"
+          title={t('kpi.errors24h')}
           value={placeholder ?? String(scrapingErrors)}
-          subtitle="Falhas nas últimas 24 horas"
+          subtitle={t('kpi.errors24hSubtitle')}
           icon={<AlertTriangle className="size-5" />}
           trend={scrapingErrors > 0 ? 'negative' : 'neutral'}
         />

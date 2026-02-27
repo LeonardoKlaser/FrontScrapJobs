@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import {
   Accordion,
@@ -8,28 +9,9 @@ import {
 import { ArrowRight } from 'lucide-react'
 
 export function FaqSection() {
-  const faqs = [
-    {
-      question: 'Meus dados de currículo estão seguros?',
-      answer:
-        'Sim, usamos criptografia de ponta a ponta e seguimos as melhores práticas de segurança. Seus dados nunca são compartilhados com terceiros e você tem controle total sobre suas informações.'
-    },
-    {
-      question: 'Como funciona a análise de IA?',
-      answer:
-        'Nossa IA compara as palavras-chave e requisitos da vaga com as habilidades e experiências do seu currículo, gerando um score de compatibilidade e sugestões personalizadas para melhorar suas chances.'
-    },
-    {
-      question: 'Posso cancelar a qualquer momento?',
-      answer:
-        'Sim, você pode cancelar sua assinatura a qualquer momento, sem complicações. Não há taxas de cancelamento ou períodos de carência.'
-    },
-    {
-      question: 'Quantas empresas posso monitorar?',
-      answer:
-        'Depende do seu plano! O plano Beta Tester permite até 3 sites, o Profissional até 15 e o Premium até 50 sites.'
-    }
-  ]
+  const { t } = useTranslation('landing')
+
+  const faqKeys = ['security', 'ai', 'cancel', 'limits'] as const
 
   return (
     <section className="py-20 sm:py-24 px-4 bg-card/30">
@@ -37,11 +19,10 @@ export function FaqSection() {
         <div className="grid lg:grid-cols-2 gap-16 max-w-6xl mx-auto">
           <div className="space-y-6 animate-fade-in-up">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground leading-tight tracking-tight text-balance">
-              Pronto para Acelerar sua Carreira?
+              {t('faq.ctaTitle')}
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed text-pretty">
-              Deixe a busca de emprego manual no passado. Concentre sua energia no que realmente
-              importa: preparar-se para as entrevistas e conseguir o emprego dos seus sonhos.
+              {t('faq.ctaDescription')}
             </p>
             <a href="#pricing">
               <Button
@@ -49,7 +30,7 @@ export function FaqSection() {
                 size="lg"
                 className="px-8 py-4 text-lg font-medium animate-pulse-glow"
               >
-                Iniciar Meu Teste Gratuito
+                {t('faq.ctaButton')}
                 <ArrowRight className="w-5 h-5 ml-1" />
               </Button>
             </a>
@@ -57,17 +38,17 @@ export function FaqSection() {
 
           <div className="animate-fade-in-up" style={{ animationDelay: '150ms' }}>
             <Accordion type="single" collapsible className="space-y-4">
-              {faqs.map((faq, index) => (
+              {faqKeys.map((key, index) => (
                 <AccordionItem
-                  key={faq.question}
+                  key={key}
                   value={`item-${index}`}
                   className="bg-card border border-border/50 rounded-lg px-6 hover:border-primary/20 transition-colors duration-200"
                 >
                   <AccordionTrigger className="text-left font-medium text-foreground hover:no-underline">
-                    {faq.question}
+                    {t(`faq.${key}.question`)}
                   </AccordionTrigger>
                   <AccordionContent className="text-muted-foreground leading-relaxed">
-                    {faq.answer}
+                    {t(`faq.${key}.answer`)}
                   </AccordionContent>
                 </AccordionItem>
               ))}

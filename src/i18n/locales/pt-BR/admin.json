@@ -1,0 +1,80 @@
+{
+  "kpi": {
+    "revenue": "Faturamento",
+    "revenueSubtitle": "Receita de assinaturas ativas",
+    "activeUsers": "Usuários Ativos",
+    "activeUsersSubtitle": "Total de usuários cadastrados",
+    "monitoredSites": "Sites Monitorados",
+    "monitoredSitesSubtitle": "Sites com scraping ativo",
+    "errors24h": "Erros (24h)",
+    "errors24hSubtitle": "Falhas nas últimas 24 horas"
+  },
+  "activityLogs": {
+    "title": "Últimos Erros de Scraping",
+    "subtitle": "Falhas recentes no processo de coleta",
+    "allGood": "Tudo certo",
+    "errorCount_one": "erro",
+    "errorCount_other": "erros",
+    "dateTime": "Data/Hora",
+    "site": "Site",
+    "errorMessage": "Mensagem de Erro",
+    "empty": "Nenhum erro de scraping registrado"
+  },
+  "addSite": {
+    "title": "Adicionar Novo Site",
+    "description": "Configure um novo site de carreiras para monitoramento automático",
+    "requiredFieldsError": "Por favor, preencha os campos obrigatórios: Nome do Site e URL Base.",
+    "addSuccess": "Site adicionado com sucesso!",
+    "addError": "Ocorreu um erro ao adicionar o site.",
+    "basicInfo": {
+      "title": "Informações Básicas",
+      "description": "Configure as informações fundamentais do site de empregos",
+      "nameLabel": "Nome do Site",
+      "namePlaceholder": "Ex: Google Careers",
+      "urlLabel": "URL Base da Página de Carreiras",
+      "urlPlaceholder": "https://careers.google.com/jobs/results/",
+      "activeLabel": "Monitoramento Ativo",
+      "activeDescription": "O site será verificado automaticamente a cada ciclo"
+    },
+    "strategy": {
+      "title": "Estratégia de Coleta",
+      "description": "Selecione como os dados serão coletados do site",
+      "css": "CSS Selectors",
+      "cssDescription": "Coleta via seletores CSS no HTML da página",
+      "api": "API",
+      "apiDescription": "Coleta via chamada direta à API do site",
+      "selected": "Selecionado"
+    },
+    "cssConfig": {
+      "title": "Configuração de Seletores CSS",
+      "description": "Configure os seletores para extrair dados das páginas",
+      "jobListItem": "Seletor do Item da Lista de Vagas",
+      "jobTitle": "Seletor do Título da Vaga",
+      "jobLink": "Seletor do Link da Vaga",
+      "linkAttribute": "Atributo do Link",
+      "location": "Seletor da Localização",
+      "nextPage": "Seletor do Botão 'Próxima Página'",
+      "jobDescription": "Seletor da Descrição da Vaga",
+      "jobDescriptionTooltip": "Seletor para a descrição na página de detalhes",
+      "requisitionId": "Seletor do ID de Requisição",
+      "requisitionIdTooltip": "Seletor para o ID único da vaga"
+    },
+    "apiConfig": {
+      "title": "Configuração de API",
+      "description": "Configure os parâmetros para coleta via API",
+      "endpointTemplate": "Template do Endpoint da API",
+      "endpointPlaceholder": "https://api.empresa.com/jobs?page={page_number}",
+      "httpMethod": "Método HTTP",
+      "headers": "Cabeçalhos (Headers) em formato JSON",
+      "payload": "Corpo da Requisição (Payload Template)",
+      "jsonMapping": "Mapeamento dos Dados JSON",
+      "jsonMappingTooltip": "Define o caminho para extrair cada dado do objeto JSON retornado pela API"
+    },
+    "logo": {
+      "title": "Logo da Empresa",
+      "description": "Imagem exibida junto ao nome do site",
+      "chooseImage": "Escolher Imagem"
+    },
+    "submitButton": "Cadastrar Site"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "checkout": {
+    "loadError": "Erro ao carregar",
+    "loadErrorDescription": "Não foi possível buscar os planos. Tente novamente mais tarde.",
+    "notFound": "Plano não encontrado",
+    "notFoundDescription": "O plano solicitado não existe. Por favor, selecione um plano válido.",
+    "title": "Finalize sua Assinatura",
+    "description": "Escolha seu método de pagamento e comece a usar o ScrapJobs"
+  },
+  "paymentForm": {
+    "title": "Criar Conta",
+    "description": "Preencha os dados para criar sua conta",
+    "formErrors": "Por favor, corrija os erros abaixo",
+    "personalData": "Dados Pessoais",
+    "fullName": "Nome Completo",
+    "fullNamePlaceholder": "Joao Silva",
+    "emailLabel": "Email",
+    "emailPlaceholder": "seu@email.com",
+    "passwordLabel": "Senha",
+    "passwordHelper": "Mínimo 8 caracteres, com maiúsculas, minúsculas e números",
+    "confirmPassword": "Confirmar Senha",
+    "additionalData": "Dados Adicionais",
+    "cpfLabel": "CPF/CNPJ",
+    "cpfPlaceholder": "000.000.000-00",
+    "phoneLabel": "Telefone",
+    "phonePlaceholder": "(11) 99999-9999",
+    "paymentMethod": "Método de Pagamento",
+    "pix": "PIX",
+    "pixDescription": "Transferência instantânea",
+    "creditCard": "Cartão de Crédito",
+    "creditCardDescription": "Visa, Mastercard, Elo",
+    "submitButton": "Criar Conta e Pagar",
+    "securityMessage": "Seus dados são protegidos com criptografia SSL",
+    "emailExists": "Este e-mail já possui cadastro. Faça login.",
+    "cpfExists": "Este CPF/CNPJ já está cadastrado.",
+    "hidePassword": "Ocultar senha",
+    "showPassword": "Mostrar senha",
+    "goToLogin": "Ir para login"
+  },
+  "planSummary": {
+    "description": "Resumo do seu plano",
+    "annualPayment": "Pagamento único anual",
+    "monthlyPayment": "Pagamento único mensal",
+    "included": "O que está incluído:",
+    "savings": "Economia de R$ {{amount}}",
+    "planName": "Plano {{name}}"
+  },
+  "confirmation": {
+    "title": "Pagamento Confirmado!",
+    "message": "Obrigado por assinar o plano {{planName}}! Sua jornada para automatizar a busca de empregos começou.",
+    "emailSent": "Um e-mail de confirmação foi enviado para sua caixa de entrada.",
+    "goToDashboard": "Ir para o Dashboard",
+    "needHelp": "Precisa de ajuda? Entre em contato com nosso suporte em"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "checkout": {
+    "loadError": "Loading error",
+    "loadErrorDescription": "Could not load plans. Please try again later.",
+    "notFound": "Plan not found",
+    "notFoundDescription": "The requested plan does not exist. Please select a valid plan.",
+    "title": "Complete Your Subscription",
+    "description": "Choose your payment method and start using ScrapJobs"
+  },
+  "paymentForm": {
+    "title": "Create Account",
+    "description": "Fill in your details to create your account",
+    "formErrors": "Please fix the errors below",
+    "personalData": "Personal Data",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "John Doe",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@email.com",
+    "passwordLabel": "Password",
+    "passwordHelper": "Minimum 8 characters, with uppercase, lowercase and numbers",
+    "confirmPassword": "Confirm Password",
+    "additionalData": "Additional Data",
+    "cpfLabel": "Tax ID",
+    "cpfPlaceholder": "000.000.000-00",
+    "phoneLabel": "Phone",
+    "phonePlaceholder": "(11) 99999-9999",
+    "paymentMethod": "Payment Method",
+    "pix": "PIX",
+    "pixDescription": "Instant transfer",
+    "creditCard": "Credit Card",
+    "creditCardDescription": "Visa, Mastercard, Elo",
+    "submitButton": "Create Account & Pay",
+    "securityMessage": "Your data is protected with SSL encryption",
+    "emailExists": "This email is already registered. Please sign in.",
+    "cpfExists": "This Tax ID is already registered.",
+    "hidePassword": "Hide password",
+    "showPassword": "Show password",
+    "goToLogin": "Go to login"
+  },
+  "planSummary": {
+    "description": "Your plan summary",
+    "annualPayment": "Annual one-time payment",
+    "monthlyPayment": "Monthly one-time payment",
+    "included": "What's included:",
+    "savings": "Save R$ {{amount}}",
+    "planName": "{{name}} Plan"
+  },
+  "confirmation": {
+    "title": "Payment Confirmed!",
+    "message": "Thank you for subscribing to the {{planName}} plan! Your journey to automate job searching has begun.",
+    "emailSent": "A confirmation email has been sent to your inbox.",
+    "goToDashboard": "Go to Dashboard",
+    "needHelp": "Need help? Contact our support at"
+  }
+}

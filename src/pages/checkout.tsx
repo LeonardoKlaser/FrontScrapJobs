@@ -4,8 +4,10 @@ import { PaymentForm } from '@/components/checkout/payment-form'
 import { useParams, useSearchParams } from 'react-router'
 import { usePlans } from '@/hooks/usePlans'
 import { Spinner } from '@/components/ui/spinner'
+import { useTranslation } from 'react-i18next'
 
 export default function CheckoutPage() {
+  const { t } = useTranslation('plans')
   const params = useParams()
   const [searchParams] = useSearchParams()
   const { data: plans, isLoading, isError } = usePlans()
@@ -25,10 +27,8 @@ export default function CheckoutPage() {
       <div className="flex min-h-screen items-center justify-center bg-background px-4">
         <Card className="w-full max-w-md border-border/50">
           <CardHeader>
-            <CardTitle>Erro ao carregar</CardTitle>
-            <CardDescription>
-              Não foi possível buscar os planos. Tente novamente mais tarde.
-            </CardDescription>
+            <CardTitle>{t('checkout.loadError')}</CardTitle>
+            <CardDescription>{t('checkout.loadErrorDescription')}</CardDescription>
           </CardHeader>
         </Card>
       </div>
@@ -42,10 +42,8 @@ export default function CheckoutPage() {
       <div className="flex min-h-screen items-center justify-center bg-background px-4">
         <Card className="w-full max-w-md border-border/50">
           <CardHeader>
-            <CardTitle>Plano não encontrado</CardTitle>
-            <CardDescription>
-              O plano solicitado não existe. Por favor, selecione um plano válido.
-            </CardDescription>
+            <CardTitle>{t('checkout.notFound')}</CardTitle>
+            <CardDescription>{t('checkout.notFoundDescription')}</CardDescription>
           </CardHeader>
         </Card>
       </div>
@@ -70,11 +68,9 @@ export default function CheckoutPage() {
       <div className="relative mx-auto max-w-6xl">
         <div className="animate-fade-in-up mb-10">
           <h1 className="text-gradient-primary text-3xl font-bold tracking-tight sm:text-4xl">
-            Finalize sua Assinatura
+            {t('checkout.title')}
           </h1>
-          <p className="mt-2 text-muted-foreground">
-            Escolha seu método de pagamento e comece a usar o ScrapJobs
-          </p>
+          <p className="mt-2 text-muted-foreground">{t('checkout.description')}</p>
         </div>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_2fr] lg:grid-cols-3">

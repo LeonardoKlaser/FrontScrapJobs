@@ -1,0 +1,80 @@
+{
+  "kpi": {
+    "revenue": "Revenue",
+    "revenueSubtitle": "Active subscription revenue",
+    "activeUsers": "Active Users",
+    "activeUsersSubtitle": "Total registered users",
+    "monitoredSites": "Monitored Sites",
+    "monitoredSitesSubtitle": "Sites with active scraping",
+    "errors24h": "Errors (24h)",
+    "errors24hSubtitle": "Failures in the last 24 hours"
+  },
+  "activityLogs": {
+    "title": "Latest Scraping Errors",
+    "subtitle": "Recent failures in the collection process",
+    "allGood": "All good",
+    "errorCount_one": "error",
+    "errorCount_other": "errors",
+    "dateTime": "Date/Time",
+    "site": "Site",
+    "errorMessage": "Error Message",
+    "empty": "No scraping errors recorded"
+  },
+  "addSite": {
+    "title": "Add New Site",
+    "description": "Configure a new career site for automatic monitoring",
+    "requiredFieldsError": "Please fill in the required fields: Site Name and Base URL.",
+    "addSuccess": "Site added successfully!",
+    "addError": "An error occurred while adding the site.",
+    "basicInfo": {
+      "title": "Basic Information",
+      "description": "Configure the fundamental job site information",
+      "nameLabel": "Site Name",
+      "namePlaceholder": "e.g.: Google Careers",
+      "urlLabel": "Career Page Base URL",
+      "urlPlaceholder": "https://careers.google.com/jobs/results/",
+      "activeLabel": "Active Monitoring",
+      "activeDescription": "The site will be checked automatically each cycle"
+    },
+    "strategy": {
+      "title": "Collection Strategy",
+      "description": "Select how data will be collected from the site",
+      "css": "CSS Selectors",
+      "cssDescription": "Collection via CSS selectors on the page HTML",
+      "api": "API",
+      "apiDescription": "Collection via direct API call to the site",
+      "selected": "Selected"
+    },
+    "cssConfig": {
+      "title": "CSS Selectors Configuration",
+      "description": "Configure selectors to extract data from pages",
+      "jobListItem": "Job List Item Selector",
+      "jobTitle": "Job Title Selector",
+      "jobLink": "Job Link Selector",
+      "linkAttribute": "Link Attribute",
+      "location": "Location Selector",
+      "nextPage": "Next Page Button Selector",
+      "jobDescription": "Job Description Selector",
+      "jobDescriptionTooltip": "Selector for the description on the detail page",
+      "requisitionId": "Requisition ID Selector",
+      "requisitionIdTooltip": "Selector for the unique job ID"
+    },
+    "apiConfig": {
+      "title": "API Configuration",
+      "description": "Configure parameters for API collection",
+      "endpointTemplate": "API Endpoint Template",
+      "endpointPlaceholder": "https://api.company.com/jobs?page={page_number}",
+      "httpMethod": "HTTP Method",
+      "headers": "Headers in JSON format",
+      "payload": "Request Body (Payload Template)",
+      "jsonMapping": "JSON Data Mapping",
+      "jsonMappingTooltip": "Defines the path to extract each data field from the API JSON response"
+    },
+    "logo": {
+      "title": "Company Logo",
+      "description": "Image displayed alongside the site name",
+      "chooseImage": "Choose Image"
+    },
+    "submitButton": "Register Site"
+  }
+}

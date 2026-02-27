@@ -1,4 +1,8 @@
+import { useTranslation } from 'react-i18next'
+
 export function ProblemPromiseSection() {
+  const { t } = useTranslation('landing')
+
   return (
     <section className="py-20 sm:py-24 px-4">
       <div className="container mx-auto">
@@ -6,25 +10,20 @@ export function ProblemPromiseSection() {
           {/* Problem */}
           <div className="space-y-6 animate-fade-in-up" style={{ animationDelay: '0ms' }}>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight tracking-tight text-balance">
-              A busca de emprego não deveria ser um segundo emprego.
+              {t('problem.heading')}
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed text-pretty">
-              Você passa horas navegando entre dezenas de sites de emprego, abrindo abas infinitas,
-              adaptando currículos para cada vaga e ainda assim perde oportunidades que surgem
-              quando você não está olhando. É frustrante, demorado e ineficiente.
+              {t('problem.description')}
             </p>
           </div>
 
           {/* Promise */}
           <div className="space-y-6 animate-fade-in-up" style={{ animationDelay: '150ms' }}>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight tracking-tight text-balance">
-              Recupere seu tempo.{' '}
-              <span className="text-gradient-primary">Candidate-se com inteligência.</span>
+              {t('problem.promiseHeading')}
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed text-pretty">
-              A scrapJobs automatiza toda sua busca de emprego, monitorando suas empresas favoritas
-              24/7 e enviando alertas inteligentes com análise de IA. Concentre sua energia no que
-              realmente importa: preparar-se para as entrevistas.
+              {t('problem.promiseDescription')}
             </p>
           </div>
         </div>
