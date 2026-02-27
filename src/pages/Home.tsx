@@ -207,14 +207,14 @@ export function Home() {
         ) : (
           <>
             <div className="overflow-x-auto rounded-lg border border-border/50">
-              <Table className="min-w-[600px] text-sm">
+              <Table className="text-sm">
                 <TableHeader className="bg-muted/40">
                   <TableRow>
-                    <TableHead className="font-medium">{t('latestJobs.jobTitle')}</TableHead>
-                    <TableHead className="font-medium">{t('latestJobs.company')}</TableHead>
-                    <TableHead className="font-medium">{t('latestJobs.location')}</TableHead>
-                    <TableHead className="font-medium">{t('latestJobs.link')}</TableHead>
-                    <TableHead className="font-medium text-right">
+                    <TableHead className="w-[40%] font-medium">{t('latestJobs.jobTitle')}</TableHead>
+                    <TableHead className="w-[20%] font-medium">{t('latestJobs.company')}</TableHead>
+                    <TableHead className="w-[15%] font-medium">{t('latestJobs.location')}</TableHead>
+                    <TableHead className="w-[10%] font-medium">{t('latestJobs.link')}</TableHead>
+                    <TableHead className="w-[15%] font-medium text-right">
                       {t('latestJobs.action')}
                     </TableHead>
                   </TableRow>
@@ -222,9 +222,15 @@ export function Home() {
                 <TableBody>
                   {jobs.map((job) => (
                     <TableRow key={job.id} className="group/row hover:bg-muted/30">
-                      <TableCell className="font-medium text-foreground">{job.title}</TableCell>
-                      <TableCell className="text-muted-foreground">{job.company}</TableCell>
-                      <TableCell className="text-muted-foreground">{job.location}</TableCell>
+                      <TableCell className="max-w-0 font-medium text-foreground">
+                        <span className="block truncate" title={job.title}>{job.title}</span>
+                      </TableCell>
+                      <TableCell className="max-w-0 text-muted-foreground">
+                        <span className="block truncate" title={job.company}>{job.company}</span>
+                      </TableCell>
+                      <TableCell className="max-w-0 text-muted-foreground">
+                        <span className="block truncate" title={job.location}>{job.location}</span>
+                      </TableCell>
                       <TableCell>
                         <a
                           href={job.job_link}
