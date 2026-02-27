@@ -17,6 +17,8 @@ const NotFound = lazy(() => import('@/pages/NotFound').then((m) => ({ default: m
 const EmpresasPage = lazy(() => import('@/pages/ListSites'))
 const AdicionarSitePage = lazy(() => import('@/pages/addNewSite'))
 const AccountPage = lazy(() => import('@/pages/accountPage'))
+const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'))
+const ResetPassword = lazy(() => import('@/pages/ResetPassword'))
 const CheckoutPage = lazy(() => import('@/pages/checkout'))
 const PaymentConfirmationPage = lazy(() => import('@/pages/paymentConfirmation'))
 const AdminDashboard = lazy(() => import('@/pages/adminDashboard'))
@@ -44,6 +46,8 @@ export const createRouter = (queryClient: QueryClient) =>
       children: [
         { index: true, element: <Landing /> },
         { path: PATHS.login, element: <Login /> },
+        { path: 'forgot-password', element: <ForgotPassword /> },
+        { path: 'reset-password', element: <ResetPassword /> },
         {
           path: 'checkout/:planId',
           element: <CheckoutPage />

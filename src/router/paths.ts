@@ -1,6 +1,8 @@
 export const PATHS = {
   landing: '/',
   login: '/login',
+  forgotPassword: '/forgot-password',
+  resetPassword: '/reset-password',
 
   checkout: (planId: string) => `/checkout/${planId}`,
   app: {
