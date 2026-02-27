@@ -24,11 +24,7 @@ export function LanguageSelector() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-muted-foreground hover:text-foreground"
-        >
+        <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
           <Globe className="size-[1.1rem]" />
           <span className="sr-only">{t('language.label')}</span>
         </Button>
@@ -40,8 +36,7 @@ export function LanguageSelector() {
             onClick={() => handleChange(lang.code)}
             className={i18n.language === lang.code ? 'bg-primary/10 text-primary' : ''}
           >
-            {lang.flag}{' '}
-            {lang.code === 'pt-BR' ? t('language.pt') : t('language.en')}
+            {lang.flag} {lang.code === 'pt-BR' ? t('language.pt') : t('language.en')}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
