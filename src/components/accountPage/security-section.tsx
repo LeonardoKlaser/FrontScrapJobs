@@ -72,7 +72,11 @@ export function SecuritySection() {
     setDeleteError('')
     try {
       await authService.deleteAccount(deletePassword)
-      await authService.logout()
+      try {
+        await authService.logout()
+      } catch {
+        /* best-effort: account already deleted */
+      }
       queryClient.clear()
       window.location.href = '/'
     } catch (err) {
