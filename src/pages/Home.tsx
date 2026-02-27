@@ -210,9 +210,13 @@ export function Home() {
               <Table className="text-sm">
                 <TableHeader className="bg-muted/40">
                   <TableRow>
-                    <TableHead className="w-[40%] font-medium">{t('latestJobs.jobTitle')}</TableHead>
+                    <TableHead className="w-[40%] font-medium">
+                      {t('latestJobs.jobTitle')}
+                    </TableHead>
                     <TableHead className="w-[20%] font-medium">{t('latestJobs.company')}</TableHead>
-                    <TableHead className="w-[15%] font-medium">{t('latestJobs.location')}</TableHead>
+                    <TableHead className="w-[15%] font-medium">
+                      {t('latestJobs.location')}
+                    </TableHead>
                     <TableHead className="w-[10%] font-medium">{t('latestJobs.link')}</TableHead>
                     <TableHead className="w-[15%] font-medium text-right">
                       {t('latestJobs.action')}
@@ -223,13 +227,19 @@ export function Home() {
                   {jobs.map((job) => (
                     <TableRow key={job.id} className="group/row hover:bg-muted/30">
                       <TableCell className="max-w-0 font-medium text-foreground">
-                        <span className="block truncate" title={job.title}>{job.title}</span>
+                        <span className="block truncate" title={job.title}>
+                          {job.title}
+                        </span>
                       </TableCell>
                       <TableCell className="max-w-0 text-muted-foreground">
-                        <span className="block truncate" title={job.company}>{job.company}</span>
+                        <span className="block truncate" title={job.company}>
+                          {job.company}
+                        </span>
                       </TableCell>
                       <TableCell className="max-w-0 text-muted-foreground">
-                        <span className="block truncate" title={job.location}>{job.location}</span>
+                        <span className="block truncate" title={job.location}>
+                          {job.location}
+                        </span>
                       </TableCell>
                       <TableCell>
                         <a

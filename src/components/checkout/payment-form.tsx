@@ -479,9 +479,7 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
                 </div>
               </div>
 
-              <div
-                className="relative flex items-center gap-4 rounded-lg border-2 border-border/50 p-4 opacity-50 pointer-events-none"
-              >
+              <div className="relative flex items-center gap-4 rounded-lg border-2 border-border/50 p-4 opacity-50 pointer-events-none">
                 <span className="absolute right-3 top-3 rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
                   Em breve
                 </span>

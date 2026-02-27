@@ -17,9 +17,7 @@ export default function TermsOfService() {
         <h1 className="font-display text-3xl font-bold tracking-tight text-foreground mb-2">
           Termos de Uso
         </h1>
-        <p className="text-sm text-muted-foreground mb-10">
-          Última atualização: Fevereiro de 2026
-        </p>
+        <p className="text-sm text-muted-foreground mb-10">Última atualização: Fevereiro de 2026</p>
 
         <div className="space-y-8 text-sm text-muted-foreground leading-relaxed">
           <section>
@@ -103,9 +101,7 @@ export default function TermsOfService() {
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-foreground mb-3">
-              9. Alterações nos Termos
-            </h2>
+            <h2 className="text-lg font-semibold text-foreground mb-3">9. Alterações nos Termos</h2>
             <p>
               Reservamo-nos o direito de modificar estes termos a qualquer momento. As alterações
               entram em vigor imediatamente após a publicação. O uso continuado do serviço após

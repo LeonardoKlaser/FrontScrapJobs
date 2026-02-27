@@ -17,9 +17,7 @@ export default function PrivacyPolicy() {
         <h1 className="font-display text-3xl font-bold tracking-tight text-foreground mb-2">
           Política de Privacidade
         </h1>
-        <p className="text-sm text-muted-foreground mb-10">
-          Última atualização: Fevereiro de 2026
-        </p>
+        <p className="text-sm text-muted-foreground mb-10">Última atualização: Fevereiro de 2026</p>
 
         <div className="space-y-8 text-sm text-muted-foreground leading-relaxed">
           <section>
@@ -76,12 +74,8 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-foreground mb-3">
-              5. Seus Direitos (LGPD)
-            </h2>
-            <p>
-              Em conformidade com a Lei Geral de Proteção de Dados (LGPD), você tem direito a:
-            </p>
+            <h2 className="text-lg font-semibold text-foreground mb-3">5. Seus Direitos (LGPD)</h2>
+            <p>Em conformidade com a Lei Geral de Proteção de Dados (LGPD), você tem direito a:</p>
             <ul className="list-disc pl-5 mt-2 space-y-1">
               <li>Acessar seus dados pessoais</li>
               <li>Corrigir dados incompletos ou inexatos</li>
@@ -95,15 +89,13 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-lg font-semibold text-foreground mb-3">6. Cookies</h2>
             <p>
-              Utilizamos cookies essenciais para autenticação e manutenção da sessão do usuário.
-              Não utilizamos cookies de rastreamento ou publicidade de terceiros.
+              Utilizamos cookies essenciais para autenticação e manutenção da sessão do usuário. Não
+              utilizamos cookies de rastreamento ou publicidade de terceiros.
             </p>
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-foreground mb-3">
-              7. Retenção de Dados
-            </h2>
+            <h2 className="text-lg font-semibold text-foreground mb-3">7. Retenção de Dados</h2>
             <p>
               Mantemos seus dados enquanto sua conta estiver ativa. Após a exclusão da conta, os
               dados são mantidos por 30 dias para fins de recuperação e então permanentemente
@@ -126,8 +118,7 @@ export default function PrivacyPolicy() {
             <h2 className="text-lg font-semibold text-foreground mb-3">9. Contato</h2>
             <p>
               Para exercer seus direitos ou esclarecer dúvidas sobre esta política, entre em
-              contato:{' '}
-              <span className="text-foreground">privacidade@scrapjobs.com.br</span>
+              contato: <span className="text-foreground">privacidade@scrapjobs.com.br</span>
             </p>
           </section>
         </div>

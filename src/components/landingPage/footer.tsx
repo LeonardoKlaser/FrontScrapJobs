@@ -22,7 +22,10 @@ export function Footer() {
             <Link to={PATHS.terms} className="hover:text-foreground transition-colors duration-150">
               {t('footer.terms')}
             </Link>
-            <Link to={PATHS.privacy} className="hover:text-foreground transition-colors duration-150">
+            <Link
+              to={PATHS.privacy}
+              className="hover:text-foreground transition-colors duration-150"
+            >
               {t('footer.privacy')}
             </Link>
           </div>

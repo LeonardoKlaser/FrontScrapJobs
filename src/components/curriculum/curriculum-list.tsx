@@ -125,9 +125,10 @@ export function CurriculumList({
                       setDeleteId(null)
                     },
                     onError: (err) => {
-                      const msg = isAxiosError(err) && err.response?.data?.error
-                        ? err.response.data.error
-                        : t('list.deleteError')
+                      const msg =
+                        isAxiosError(err) && err.response?.data?.error
+                          ? err.response.data.error
+                          : t('list.deleteError')
                       toast.error(msg)
                       setDeleteId(null)
                     }

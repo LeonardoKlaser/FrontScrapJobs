@@ -32,7 +32,10 @@ export default function Login() {
             {t('hero.title', 'Encontre as vagas certas, automaticamente.')}
           </h1>
           <p className="text-lg text-muted-foreground mb-8 max-w-md">
-            {t('hero.subtitle', 'O ScrapJobs monitora páginas de carreiras e analisa compatibilidade com seu currículo usando IA.')}
+            {t(
+              'hero.subtitle',
+              'O ScrapJobs monitora páginas de carreiras e analisa compatibilidade com seu currículo usando IA.'
+            )}
           </p>
           <div className="flex gap-8">
             <div>
@@ -55,12 +58,7 @@ export default function Login() {
       <div className="flex w-full lg:w-1/2 items-center justify-center px-4 bg-background">
         <div className="w-full max-w-sm animate-fade-in-up">
           <div className="mb-8 flex items-center justify-center lg:hidden">
-            <img
-              src={Logo}
-              alt="ScrapJobs"
-              className="h-32 w-32 select-none"
-              draggable={false}
-            />
+            <img src={Logo} alt="ScrapJobs" className="h-32 w-32 select-none" draggable={false} />
           </div>
           <h2 className="text-xl font-semibold text-foreground mb-1 lg:mb-2">
             {t('login.welcome', 'Bem-vindo de volta')}

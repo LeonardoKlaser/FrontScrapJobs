@@ -244,15 +244,8 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
   const [analysisResult, setAnalysisResult] = useState<ResumeAnalysis | null>(null)
 
   const { data: curricula } = useCurriculum()
-  const { data: historyData, isLoading: isLoadingHistory } = useAnalysisHistory(
-    open ? jobId : null
-  )
-  const {
-    mutate: analyzeJob,
-    isError,
-    error,
-    reset: resetAnalysis
-  } = useAnalyzeJob()
+  const { data: historyData, isLoading: isLoadingHistory } = useAnalysisHistory(open ? jobId : null)
+  const { mutate: analyzeJob, isError, error, reset: resetAnalysis } = useAnalyzeJob()
 
   // When dialog opens, reset state
   useEffect(() => {
@@ -345,9 +338,7 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
                 <Card
                   key={cv.id}
                   className={`cursor-pointer p-3 transition-all duration-150 ${
-                    selectedCvId === cv.id
-                      ? 'border-primary/50 bg-primary/5'
-                      : 'hover:bg-muted/30'
+                    selectedCvId === cv.id ? 'border-primary/50 bg-primary/5' : 'hover:bg-muted/30'
                   }`}
                   onClick={() => setSelectedCvId(cv.id)}
                 >
@@ -386,9 +377,7 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
                 <Loader2 className="h-8 w-8" />
               </div>
             </div>
-            <p className="text-sm text-muted-foreground animate-fade-in">
-              {t('analysis.loading')}
-            </p>
+            <p className="text-sm text-muted-foreground animate-fade-in">{t('analysis.loading')}</p>
           </div>
         )}
 
