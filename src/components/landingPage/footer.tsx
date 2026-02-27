@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 import { Zap } from 'lucide-react'
+import { PATHS } from '@/router/paths'
 
 export function Footer() {
   const { t } = useTranslation('landing')
@@ -17,12 +19,12 @@ export function Footer() {
           </div>
 
           <div className="flex items-center space-x-6 text-sm text-muted-foreground">
-            <a href="#" className="hover:text-foreground transition-colors duration-150">
+            <Link to={PATHS.terms} className="hover:text-foreground transition-colors duration-150">
               {t('footer.terms')}
-            </a>
-            <a href="#" className="hover:text-foreground transition-colors duration-150">
+            </Link>
+            <Link to={PATHS.privacy} className="hover:text-foreground transition-colors duration-150">
               {t('footer.privacy')}
-            </a>
+            </Link>
           </div>
 
           <p className="text-sm text-muted-foreground">
