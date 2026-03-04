@@ -48,12 +48,13 @@ export const WithoutGradient: Story = {
 }
 
 export const WithAction: Story = {
-  render: () => (
-    <PageHeader title="Meu Painel">
+  args: {
+    title: 'Meu Painel',
+    children: (
       <Button>
         <Plus />
         Adicionar novo
       </Button>
-    </PageHeader>
-  )
+    )
+  }
 }

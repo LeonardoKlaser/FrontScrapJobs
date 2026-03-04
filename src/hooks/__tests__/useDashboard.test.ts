@@ -27,7 +27,7 @@ describe('useDashboard', () => {
   })
 
   it('fetches dashboard data', async () => {
-    const mockData = { total_jobs: 10, active_sites: 3 }
+    const mockData = { monitored_urls_count: 3, new_jobs_today_count: 10, alerts_sent_count: 5, latest_jobs: [], user_monitored_urls: [] }
     vi.mocked(dashboardService.getDashboardData).mockResolvedValue(mockData as DashboardData)
 
     const { result } = renderHook(() => useDashboard(), { wrapper: createWrapper() })
@@ -44,7 +44,7 @@ describe('useLatestJobs', () => {
   })
 
   it('fetches jobs with params', async () => {
-    const mockData = { jobs: [], total: 0, page: 1, limit: 10 }
+    const mockData = { jobs: [], total_count: 0, page: 1, limit: 10 }
     vi.mocked(dashboardService.getLatestJobs).mockResolvedValue(mockData as PaginatedJobsResponse)
 
     const params = { days: 7, page: 1, limit: 10 }

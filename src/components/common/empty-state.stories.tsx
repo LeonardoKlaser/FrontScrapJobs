@@ -35,12 +35,10 @@ export const WithDescription: Story = {
 }
 
 export const WithAction: Story = {
-  render: () => (
-    <EmptyState
-      icon={SearchX}
-      title="Nenhuma vaga encontrada"
-      description="Tente ajustar seus filtros de busca"
-      action={<Button>Explorar empresas</Button>}
-    />
-  )
+  args: {
+    icon: SearchX,
+    title: 'Nenhuma vaga encontrada',
+    description: 'Tente ajustar seus filtros de busca',
+    action: <Button>Explorar empresas</Button>
+  }
 }

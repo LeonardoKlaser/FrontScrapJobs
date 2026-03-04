@@ -32,9 +32,8 @@ export const WithIcon: Story = {
 }
 
 export const WithChildren: Story = {
-  render: () => (
-    <SectionHeader title="Vagas Recentes">
-      <Badge>12 novas</Badge>
-    </SectionHeader>
-  )
+  args: {
+    title: 'Vagas Recentes',
+    children: <Badge>12 novas</Badge>
+  }
 }

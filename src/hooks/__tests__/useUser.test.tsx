@@ -26,7 +26,7 @@ describe('useUser', () => {
   })
 
   it('returns user data on success', async () => {
-    const mockUser = { id: 1, user_name: 'Test', email: 'test@email.com' }
+    const mockUser = { id: '1', user_name: 'Test', email: 'test@email.com', plan: undefined }
     vi.mocked(authService.getMe).mockResolvedValue(mockUser as User)
 
     const { result } = renderHook(() => useUser(), { wrapper: createWrapper() })

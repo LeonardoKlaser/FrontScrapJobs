@@ -28,7 +28,7 @@ describe('useCurriculum', () => {
   })
 
   it('fetches curriculums', async () => {
-    const mockData = [{ id: 1, name: 'Main CV' }]
+    const mockData = [{ id: 1, title: 'Main CV', summary: '', skills: '', languages: '', experiences: [], educations: [] }]
     vi.mocked(curriculumService.getCurriculums).mockResolvedValue(mockData as Curriculum[])
 
     const { result } = renderHook(() => useCurriculum(), { wrapper: createWrapper() })
@@ -45,7 +45,7 @@ describe('useUpdateCurriculum', () => {
   })
 
   it('calls updateCurriculum on mutate', async () => {
-    const curriculum = { id: 1, name: 'Updated' }
+    const curriculum = { id: 1, title: 'Updated', summary: '', skills: '', languages: '', experiences: [], educations: [] }
     vi.mocked(curriculumService.updateCurriculum).mockResolvedValue(curriculum as Curriculum)
 
     const { result } = renderHook(() => useUpdateCurriculum(), { wrapper: createWrapper() })

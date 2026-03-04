@@ -66,6 +66,6 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     )
     expect(screen.getByText('Tentar novamente')).toBeInTheDocument()
-    expect(screen.getByText('Voltar ao início')).toBeInTheDocument()
+    expect(screen.getByText('Página inicial')).toBeInTheDocument()
   })
 })

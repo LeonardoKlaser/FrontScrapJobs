@@ -38,18 +38,25 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     options: defaultOptions,
-    activeKey: 'all'
+    activeKey: 'all',
+    onChange: () => {}
   }
 }
 
 export const ManyOptions: Story = {
   args: {
     options: manyOptions,
-    activeKey: 'all'
+    activeKey: 'all',
+    onChange: () => {}
   }
 }
 
 export const Interactive: Story = {
+  args: {
+    options: defaultOptions,
+    activeKey: 'all',
+    onChange: () => {}
+  },
   render: () => {
     const [active, setActive] = useState('all')
     return createElement(FilterPills, {
