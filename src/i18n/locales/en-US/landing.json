@@ -4,7 +4,9 @@
     "heading1": "Stop Searching.",
     "heading2": "Start Getting Interviewed.",
     "subheading": "Automate your job search at top companies and get AI insights to make your resume stand out.",
-    "cta": "Start My Free Trial"
+    "cta": "Start My Free Trial",
+    "loginPrompt": "Already have an account?",
+    "loginLink": "Sign in"
   },
   "features": {
     "title": "An Unfair Advantage for Your Career",
@@ -69,13 +71,13 @@
   },
   "productVisualization": {
     "title": "See Exactly What You'll Receive",
-    "description": "No more generic alert emails. Our notifications are rich in data and insights to help you make the best decision.",
+    "description": "Get rich notifications with full details of jobs found at the companies you monitor.",
     "emailSubtitle": "New opportunity found!",
-    "aiAnalysis": "AI Analysis:",
-    "bullet1": "Your React and TypeScript skills are a perfect match",
-    "bullet2": "Next.js experience is a differentiator for this role",
-    "bullet3": "Consider highlighting your performance projects",
-    "applyNow": "Apply Now"
+    "jobDescription": "Job Description:",
+    "bullet1": "Requirements: 5+ years experience with React, TypeScript and Node.js",
+    "bullet2": "Responsibilities: Lead frontend squad, code reviews, architecture",
+    "bullet3": "Benefits: Remote, profit sharing, health plan, stock options",
+    "applyNow": "View Full Job"
   },
   "footer": {
     "terms": "Terms of Service",

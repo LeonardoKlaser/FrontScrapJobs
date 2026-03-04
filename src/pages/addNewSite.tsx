@@ -25,11 +25,12 @@ import {
   Code2,
   Webhook,
   Loader2,
-  CheckCircle
+  CheckCircle,
+  Play
 } from 'lucide-react'
 import { Tooltip } from '@/components/tooltip'
 import { PageHeader } from '@/components/common/page-header'
-import { useAddSiteConfig } from '@/hooks/useAddSiteConfig'
+import { useAddSiteConfig, useSandboxScrape } from '@/hooks/useAddSiteConfig'
 import { useButtonState } from '@/hooks/useButtonState'
 import { type SiteConfigFormData } from '@/services/siteCareerService'
 import { useTranslation } from 'react-i18next'
@@ -59,6 +60,12 @@ export default function AdicionarSitePage() {
   const [logoFile, setLogoFile] = useState<File | null>(null)
   const { mutate: addSite } = useAddSiteConfig()
   const {
+    mutate: testScrape,
+    data: sandboxResult,
+    isPending: isTesting,
+    reset: resetSandbox
+  } = useSandboxScrape()
+  const {
     buttonState,
     setLoading,
     setSuccess,
@@ -74,6 +81,26 @@ export default function AdicionarSitePage() {
     if (e.target.files && e.target.files[0]) {
       setLogoFile(e.target.files[0])
     }
+  }
+
+  const handleTestScrape = () => {
+    if (!formData.base_url) {
+      toast.error('URL base é obrigatória para testar')
+      return
+    }
+    resetSandbox()
+    testScrape(formData, {
+      onSuccess: (result) => {
+        if (result.success) {
+          toast.success(`${result.data?.length || 0} vaga(s) encontrada(s)`)
+        } else {
+          toast.error(result.message || 'Falha no scraping')
+        }
+      },
+      onError: (err) => {
+        toast.error(err?.message || 'Erro ao testar scraping')
+      }
+    })
   }
 
   const [validationError, setValidationError] = useState<string | null>(null)
@@ -556,9 +583,29 @@ export default function AdicionarSitePage() {
 
         {/* Submit */}
         <div
-          className="flex flex-col sm:flex-row sm:justify-end animate-fade-in-up"
+          className="flex flex-col sm:flex-row sm:justify-end gap-3 animate-fade-in-up"
           style={{ animationDelay: '250ms' }}
         >
+          <Button
+            type="button"
+            variant="outline"
+            size="lg"
+            className="w-full sm:w-auto"
+            onClick={handleTestScrape}
+            disabled={isTesting || !formData.base_url}
+          >
+            {isTesting ? (
+              <>
+                <Loader2 className="size-4 animate-spin" />
+                Testando...
+              </>
+            ) : (
+              <>
+                <Play className="size-4" />
+                Testar Scraping
+              </>
+            )}
+          </Button>
           <Button
             type="submit"
             variant={buttonState === 'success' ? 'outline' : 'glow'}
@@ -582,6 +629,63 @@ export default function AdicionarSitePage() {
           </Button>
         </div>
       </form>
+
+      {/* Sandbox Results */}
+      {sandboxResult && (
+        <Card className="animate-fade-in-up">
+          <CardHeader>
+            <CardTitle className="text-base">
+              Resultado do Teste
+              <Badge
+                className="ml-2"
+                variant={sandboxResult.success ? 'default' : 'destructive'}
+              >
+                {sandboxResult.success
+                  ? `${sandboxResult.data?.length || 0} vagas`
+                  : 'Erro'}
+              </Badge>
+            </CardTitle>
+            {sandboxResult.message && (
+              <CardDescription>{sandboxResult.message}</CardDescription>
+            )}
+          </CardHeader>
+          {sandboxResult.success && sandboxResult.data?.length > 0 && (
+            <CardContent>
+              <div className="rounded-lg border border-border/50 overflow-auto max-h-80">
+                <table className="w-full text-sm">
+                  <thead className="bg-muted/50 sticky top-0">
+                    <tr>
+                      <th className="text-left p-2 font-medium">Titulo</th>
+                      <th className="text-left p-2 font-medium">Empresa</th>
+                      <th className="text-left p-2 font-medium">Local</th>
+                      <th className="text-left p-2 font-medium">Link</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/50">
+                    {sandboxResult.data.map((job, i) => (
+                      <tr key={i}>
+                        <td className="p-2">{job.title}</td>
+                        <td className="p-2 text-muted-foreground">{job.company}</td>
+                        <td className="p-2 text-muted-foreground">{job.location}</td>
+                        <td className="p-2">
+                          <a
+                            href={job.job_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary hover:underline"
+                          >
+                            Ver
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          )}
+        </Card>
+      )}
     </div>
   )
 }

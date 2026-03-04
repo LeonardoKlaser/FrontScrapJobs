@@ -57,6 +57,12 @@ export function HeroSection() {
                 <ArrowRight className="w-5 h-5 ml-1" />
               </Button>
             </a>
+            <p className="text-sm text-muted-foreground mt-4">
+              {t('hero.loginPrompt')}{' '}
+              <a href="/login" className="text-primary hover:underline font-medium">
+                {t('hero.loginLink')}
+              </a>
+            </p>
           </div>
 
           {/* Decorative dots */}

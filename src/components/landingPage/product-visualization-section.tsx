@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 
 export function ProductVisualizationSection() {
   const { t } = useTranslation('landing')
@@ -37,7 +36,6 @@ export function ProductVisualizationSection() {
                       </p>
                     </div>
                   </div>
-                  <Badge>85% Match</Badge>
                 </div>
 
                 {/* Job Details */}
@@ -45,10 +43,10 @@ export function ProductVisualizationSection() {
                   <h3 className="text-lg font-bold text-foreground">Senior Frontend Developer</h3>
                   <p className="text-muted-foreground">Google • São Paulo, SP</p>
 
-                  {/* AI Analysis */}
+                  {/* Job Description */}
                   <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 space-y-2">
                     <h4 className="font-medium text-foreground">
-                      {t('productVisualization.aiAnalysis')}
+                      {t('productVisualization.jobDescription')}
                     </h4>
                     <ul className="text-sm text-muted-foreground space-y-1">
                       <li>• {t('productVisualization.bullet1')}</li>

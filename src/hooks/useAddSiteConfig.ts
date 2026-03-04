@@ -13,3 +13,9 @@ export function useAddSiteConfig() {
     }
   })
 }
+
+export function useSandboxScrape() {
+  return useMutation({
+    mutationFn: (config: SiteConfigFormData) => siteCareerService.sandboxScrape(config)
+  })
+}

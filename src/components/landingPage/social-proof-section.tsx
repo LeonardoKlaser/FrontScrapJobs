@@ -1,16 +1,75 @@
 import { useTranslation } from 'react-i18next'
 
+function GoogleLogo({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 272 92" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path d="M115.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18C71.25 34.32 81.24 25 93.5 25s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44S80.99 39.2 80.99 47.18c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z"/>
+      <path d="M163.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18c0-12.85 9.99-22.18 22.25-22.18s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44s-12.51 5.46-12.51 13.44c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z"/>
+      <path d="M209.75 26.34v39.82c0 16.38-9.66 23.07-21.08 23.07-10.75 0-17.22-7.19-19.66-13.07l8.48-3.53c1.51 3.61 5.21 7.87 11.17 7.87 7.31 0 11.84-4.51 11.84-13v-3.19h-.34c-2.18 2.69-6.38 5.04-11.68 5.04-11.09 0-21.25-9.66-21.25-22.09 0-12.52 10.16-22.26 21.25-22.26 5.29 0 9.49 2.35 11.68 4.96h.34v-3.61h9.25zm-8.56 20.92c0-7.81-5.21-13.52-11.84-13.52-6.72 0-12.35 5.71-12.35 13.52 0 7.73 5.63 13.36 12.35 13.36 6.63 0 11.84-5.63 11.84-13.36z"/>
+      <path d="M225 3v65h-9.5V3h9.5z"/>
+      <path d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z"/>
+      <path d="M35.29 41.19V32H67.4c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C16.32 69.35.36 53.89.36 34.91.36 15.93 16.32.47 35.7.47c10.5 0 17.98 4.12 23.6 9.49l-6.64 6.64c-4.03-3.78-9.49-6.72-16.97-6.72-13.86 0-24.7 11.17-24.7 25.03 0 13.86 10.84 25.03 24.7 25.03 8.99 0 14.11-3.61 17.39-6.89 2.66-2.66 4.41-6.46 5.1-11.65l-22.49-.01z"/>
+    </svg>
+  )
+}
+
+function AmazonLogo({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 603 182" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path d="M374.00 142.06c-34.52 25.45-84.55 39.00-127.60 39.00-60.40 0-114.77-22.33-155.87-59.47-3.23-2.92-.34-6.90 3.54-4.63 44.40 25.81 99.26 41.36 155.94 41.36 38.23 0 80.27-7.93 118.96-24.36 5.84-2.48 10.72 3.82 5.03 8.10z"/>
+      <path d="M388.40 125.90c-4.40-5.64-29.14-2.67-40.24-1.35-3.38.41-3.90-2.53-.85-4.65 19.71-13.85 52.03-9.85 55.81-5.21 3.78 4.67-.99 37.01-19.50 52.44-2.85 2.37-5.56 1.11-4.30-2.03 4.17-10.43 13.49-33.55 9.08-39.20z"/>
+      <path d="M349.14 23.73V7.57c0-2.45 1.86-4.09 4.09-4.09h72.42c2.33 0 4.19 1.68 4.19 4.09v13.84c-.03 2.33-1.99 5.38-5.46 10.21l-37.52 53.59c13.94-.34 28.67 1.74 41.30 8.86 2.85 1.61 3.63 3.97 3.85 6.30v17.23c0 2.37-2.60 5.13-5.34 3.70-22.31-11.69-51.95-12.97-76.58.13-2.50 1.34-5.13-.37-5.13-2.74V102.5c0-2.67.03-7.23 2.74-11.29l43.46-62.38h-37.83c-2.33 0-4.19-1.64-4.19-4.05v-.05z"/>
+      <path d="M124.83 108.91h-22.02c-2.11-.15-3.78-1.74-3.93-3.78V7.83c0-2.28 1.90-4.09 4.24-4.09h20.54c2.14.10 3.85 1.74 3.97 3.82v14.40h.41c5.31-14.03 15.29-20.56 28.74-20.56 13.66 0 22.21 6.53 28.34 20.56 5.28-14.03 17.26-20.56 30.15-20.56 9.15 0 19.15 3.78 25.26 12.27 6.93 9.42 5.52 23.10 5.52 35.12l-.03 56.15c0 2.28-1.90 4.12-4.24 4.12h-21.99c-2.20-.15-3.97-1.93-3.97-4.12V58.25c0-4.72.41-16.51-.61-20.93-1.64-7.43-6.53-9.52-12.88-9.52-5.31 0-10.87 3.54-13.14 9.21-2.28 5.67-2.05 15.15-2.05 21.24v46.90c0 2.28-1.90 4.12-4.24 4.12h-21.99c-2.23-.15-3.97-1.93-3.97-4.12l-.03-46.90c0-12.47 2.05-30.79-13.49-30.79-15.73 0-15.12 17.87-15.12 30.79v46.55c0 2.28-1.90 4.12-4.24 4.12l.05.04z"/>
+      <path d="M468.78 1.40c32.70 0 50.37 28.09 50.37 63.80 0 34.52-19.53 61.87-50.37 61.87-32.05 0-49.47-28.09-49.47-63.05 0-35.12 17.63-62.62 49.47-62.62zm.18 23.10c-16.20 0-17.22 22.09-17.22 35.86 0 13.80-.21 43.25 17.01 43.25 16.99 0 17.81-23.76 17.81-38.24 0-9.52-.41-20.93-3.29-29.97-2.50-7.83-7.43-10.90-14.32-10.90z"/>
+      <path d="M554.14 108.91h-21.90c-2.20-.15-3.97-1.93-3.97-4.12l-.03-97.00c.19-2.11 2.01-3.75 4.24-3.75h20.38c1.93.10 3.54 1.40 4.03 3.17v14.83h.41c6.32-13.59 15.15-20.04 30.69-20.04 9.79 0 19.36 3.54 25.49 13.21 5.71 9.00 5.71 24.14 5.71 35.00v55.01c-.24 2.01-2.05 3.63-4.24 3.63h-22.12c-2.05-.15-3.72-1.68-3.93-3.63V56.60c0-12.27 1.43-30.18-13.69-30.18-5.31 0-10.21 3.54-12.66 8.97-3.09 6.87-3.50 13.69-3.50 21.21v48.18c-.03 2.28-1.96 4.12-4.27 4.12h-.64z"/>
+      <path d="M308.48 62.23c0 8.49.21 15.59-4.09 23.14-3.47 6.11-9.00 9.86-15.12 9.86-8.39 0-13.31-6.39-13.31-15.84 0-18.62 16.68-22.02 32.52-22.02v4.86zm22.05 53.31c-1.44 1.29-3.54 1.37-5.18.51-7.28-6.05-8.59-8.86-12.58-14.62-12.03 12.27-20.56 15.93-36.14 15.93-18.47 0-32.82-11.39-32.82-34.18 0-17.81 9.64-29.93 23.38-35.86 11.90-5.24 28.53-6.18 41.26-7.62v-2.85c0-5.24.41-11.42-2.67-15.93-2.67-4.05-7.83-5.71-12.37-5.71-8.39 0-15.87 4.30-17.71 13.21-.37 1.99-1.83 3.93-3.82 4.03l-21.37-2.31c-1.80-.41-3.78-1.86-3.28-4.63C252.84 8.15 279.46.01 303.48.01c12.27 0 28.30 3.26 37.97 12.55 12.27 11.42 11.09 26.68 11.09 43.28v39.22c0 11.79 4.89 16.96 9.49 23.31 1.61 2.28 1.96 5.01-.10 6.72-5.18 4.33-14.40 12.37-19.46 16.88l-.07-.03.13.10z"/>
+    </svg>
+  )
+}
+
+function IFoodLogo({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 120 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <text x="0" y="30" fontFamily="Arial, sans-serif" fontWeight="bold" fontSize="32" letterSpacing="-1">iFood</text>
+    </svg>
+  )
+}
+
+function NubankLogo({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 140 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <text x="0" y="30" fontFamily="Arial, sans-serif" fontWeight="bold" fontSize="28" letterSpacing="-0.5">Nubank</text>
+    </svg>
+  )
+}
+
+function ItauLogo({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 90 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <text x="0" y="30" fontFamily="Arial, sans-serif" fontWeight="bold" fontSize="32" letterSpacing="-1">Itaú</text>
+    </svg>
+  )
+}
+
+function MercadoLivreLogo({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 220 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <text x="0" y="30" fontFamily="Arial, sans-serif" fontWeight="bold" fontSize="26" letterSpacing="-0.5">Mercado Livre</text>
+    </svg>
+  )
+}
+
+const companies = [
+  { name: 'Google', Logo: GoogleLogo },
+  { name: 'Amazon', Logo: AmazonLogo },
+  { name: 'iFood', Logo: IFoodLogo },
+  { name: 'Nubank', Logo: NubankLogo },
+  { name: 'Itaú', Logo: ItauLogo },
+  { name: 'Mercado Livre', Logo: MercadoLivreLogo },
+]
+
 export function SocialProofSection() {
   const { t } = useTranslation('landing')
-
-  const companies = [
-    { name: 'Google', logo: 'G' },
-    { name: 'Amazon', logo: 'A' },
-    { name: 'Microsoft', logo: 'M' },
-    { name: 'Netflix', logo: 'N' },
-    { name: 'Apple', logo: 'A' },
-    { name: 'Meta', logo: 'M' }
-  ]
 
   return (
     <section className="py-20 sm:py-24 border-t border-border/50">
@@ -23,10 +82,11 @@ export function SocialProofSection() {
           {companies.map((company, index) => (
             <div
               key={company.name}
-              className="flex items-center justify-center w-14 h-14 bg-card border border-border/50 rounded-lg text-muted-foreground font-bold text-lg hover:border-primary/30 hover:text-primary transition-all duration-200 animate-fade-in-up"
+              className="flex items-center justify-center h-14 px-5 bg-card border border-border/50 rounded-lg text-muted-foreground hover:border-primary/30 hover:text-primary transition-all duration-200 animate-fade-in-up"
               style={{ animationDelay: `${index * 80}ms` }}
+              title={company.name}
             >
-              {company.logo}
+              <company.Logo className="h-5 w-auto" />
             </div>
           ))}
         </div>

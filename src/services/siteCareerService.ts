@@ -60,5 +60,21 @@ export const siteCareerService = {
 
   unregisterUserFromSite: async (siteId: number): Promise<void> => {
     await api.delete(`/userSite/${siteId}`)
+  },
+
+  sandboxScrape: async (config: SiteConfigFormData) => {
+    const { data } = await api.post('/scrape-sandbox', config)
+    return data as {
+      success: boolean
+      message: string
+      data: Array<{
+        id: number
+        title: string
+        location: string
+        company: string
+        job_link: string
+        description: string
+      }>
+    }
   }
 }
