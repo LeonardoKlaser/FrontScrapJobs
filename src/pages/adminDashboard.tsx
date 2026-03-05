@@ -1,6 +1,7 @@
 import { DashboardHeader } from '@/components/adminDashboard/dashboard-header'
 import { KPICards } from '@/components/adminDashboard/kpi-cards'
 import { ChartsSection } from '@/components/adminDashboard/charts-section'
+import { EmailConfigSection } from '@/components/adminDashboard/email-config-section'
 import { ActivityLogs } from '@/components/adminDashboard/activity-logs'
 import { useAdminDashboard } from '@/hooks/useAdminDashboard'
 
@@ -24,7 +25,10 @@ export default function AdminDashboard() {
       <div className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
         <ChartsSection />
       </div>
-      <div className="animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+      <div className="animate-fade-in-up" style={{ animationDelay: '250ms' }}>
+        <EmailConfigSection />
+      </div>
+      <div className="animate-fade-in-up" style={{ animationDelay: '350ms' }}>
         <ActivityLogs errors={data?.recent_errors ?? []} isLoading={isLoading} />
       </div>
     </div>

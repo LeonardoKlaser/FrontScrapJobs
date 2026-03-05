@@ -21,3 +21,31 @@ export const adminDashboardService = {
     return data
   }
 }
+
+export interface EmailProviderConfig {
+  id: number
+  provider_name: string
+  is_active: boolean
+  priority: number
+  updated_at: string
+  updated_by: number | null
+}
+
+export interface UpdateEmailConfigPayload {
+  providers: {
+    provider_name: string
+    is_active: boolean
+    priority: number
+  }[]
+}
+
+export const emailConfigService = {
+  getConfig: async (): Promise<EmailProviderConfig[]> => {
+    const { data } = await api.get('/api/admin/email-config')
+    return data
+  },
+
+  updateConfig: async (payload: UpdateEmailConfigPayload): Promise<void> => {
+    await api.put('/api/admin/email-config', payload)
+  }
+}
