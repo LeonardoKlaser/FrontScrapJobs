@@ -22,6 +22,7 @@ export const dashboardService = {
     search?: string
     page?: number
     limit?: number
+    matched_only?: boolean
   }): Promise<PaginatedJobsResponse> => {
     try {
       const { data } = await api.get('/api/dashboard/jobs', { params })

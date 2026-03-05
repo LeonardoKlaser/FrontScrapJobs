@@ -4,6 +4,7 @@ export interface LatestJob {
   location: string
   company: string
   job_link: string
+  matched: boolean
 }
 
 export interface MonitoredURL {

@@ -13,6 +13,7 @@ export function useLatestJobs(params: {
   search?: string
   page?: number
   limit?: number
+  matched_only?: boolean
 }) {
   return useQuery({
     queryKey: ['latestJobs', params],
