@@ -24,7 +24,9 @@
     "analyzeAI": "Analisar com IA",
     "jobCount": "{{count}} vaga(s) encontrada(s)",
     "previous": "Anterior",
-    "next": "Próximo"
+    "next": "Próximo",
+    "relevantOnly": "Só relevantes",
+    "matchBadge": "Match"
   },
   "monitoredUrls": {
     "title": "Suas URLs monitoradas",

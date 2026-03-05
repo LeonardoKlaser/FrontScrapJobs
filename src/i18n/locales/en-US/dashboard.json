@@ -24,7 +24,9 @@
     "analyzeAI": "Analyze with AI",
     "jobCount": "{{count}} job(s) found",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "relevantOnly": "Relevant only",
+    "matchBadge": "Match"
   },
   "monitoredUrls": {
     "title": "Your monitored URLs",
