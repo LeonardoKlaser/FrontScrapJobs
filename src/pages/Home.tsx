@@ -19,6 +19,8 @@ import {
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Switch } from '@/components/ui/switch'
+import { Badge } from '@/components/ui/badge'
 import { SectionHeader } from '@/components/common/section-header'
 import { EmptyState } from '@/components/common/empty-state'
 import { SkeletonCard, SkeletonTable } from '@/components/common/skeleton'
@@ -86,12 +88,19 @@ export function Home() {
   const [search, setSearch] = useState('')
   const [searchInput, setSearchInput] = useState('')
   const [days, setDays] = useState(0)
+  const [matchedOnly, setMatchedOnly] = useState(true)
 
   const {
     data: jobsData,
     isLoading: isJobsLoading,
     isError: isJobsError
-  } = useLatestJobs({ page, limit: LIMIT, search, days: days || undefined })
+  } = useLatestJobs({
+    page,
+    limit: LIMIT,
+    search,
+    days: days || undefined,
+    matched_only: matchedOnly
+  })
 
   if (isDashboardLoading) {
     return (
@@ -154,6 +163,11 @@ export function Home() {
     setPage(1)
   }
 
+  const handleMatchedOnlyChange = (checked: boolean) => {
+    setMatchedOnly(checked)
+    setPage(1)
+  }
+
   return (
     <div className="flex flex-col gap-10">
       {/* Stats */}
@@ -165,7 +179,18 @@ export function Home() {
 
       {/* Jobs section */}
       <div className="flex flex-col gap-5 animate-fade-in-up" style={{ animationDelay: '240ms' }}>
-        <SectionHeader title={t('latestJobs.title')} icon={Sparkles} />
+        <SectionHeader title={t('latestJobs.title')} icon={Sparkles}>
+          <div className="flex items-center gap-2">
+            <label htmlFor="matched-only" className="text-sm text-muted-foreground cursor-pointer">
+              {t('latestJobs.relevantOnly')}
+            </label>
+            <Switch
+              id="matched-only"
+              checked={matchedOnly}
+              onCheckedChange={handleMatchedOnlyChange}
+            />
+          </div>
+        </SectionHeader>
 
         {/* Search & Filter */}
         <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3">
@@ -227,8 +252,15 @@ export function Home() {
                   {jobs.map((job) => (
                     <TableRow key={job.id} className="group/row hover:bg-muted/30">
                       <TableCell className="max-w-0 font-medium text-foreground">
-                        <span className="block truncate" title={job.title}>
-                          {job.title}
+                        <span className="flex items-center gap-2">
+                          <span className="truncate" title={job.title}>
+                            {job.title}
+                          </span>
+                          {!matchedOnly && job.matched && (
+                            <Badge variant="default" className="shrink-0 text-xs">
+                              {t('latestJobs.matchBadge')}
+                            </Badge>
+                          )}
                         </span>
                       </TableCell>
                       <TableCell className="max-w-0 text-muted-foreground">
