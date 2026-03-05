@@ -26,7 +26,15 @@ describe('useSiteCareer', () => {
   })
 
   it('fetches site career list', async () => {
-    const mockSites = [{ site_id: 1, site_name: 'Example Corp', base_url: 'https://example.com', logo_url: '', is_subscribed: false }]
+    const mockSites = [
+      {
+        site_id: 1,
+        site_name: 'Example Corp',
+        base_url: 'https://example.com',
+        logo_url: '',
+        is_subscribed: false
+      }
+    ]
     vi.mocked(siteCareerService.getAllSiteCareer).mockResolvedValue(mockSites as SiteCareer[])
 
     const { result } = renderHook(() => useSiteCareer(), { wrapper: createWrapper() })

@@ -27,7 +27,13 @@ describe('useDashboard', () => {
   })
 
   it('fetches dashboard data', async () => {
-    const mockData = { monitored_urls_count: 3, new_jobs_today_count: 10, alerts_sent_count: 5, latest_jobs: [], user_monitored_urls: [] }
+    const mockData = {
+      monitored_urls_count: 3,
+      new_jobs_today_count: 10,
+      alerts_sent_count: 5,
+      latest_jobs: [],
+      user_monitored_urls: []
+    }
     vi.mocked(dashboardService.getDashboardData).mockResolvedValue(mockData as DashboardData)
 
     const { result } = renderHook(() => useDashboard(), { wrapper: createWrapper() })

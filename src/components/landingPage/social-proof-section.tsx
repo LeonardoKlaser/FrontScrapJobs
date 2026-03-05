@@ -6,7 +6,7 @@ const companies = [
   { name: 'iFood', weight: 700, tracking: '-0.02em' },
   { name: 'Nubank', weight: 600, tracking: '-0.01em' },
   { name: 'Itaú', weight: 700, tracking: '-0.02em' },
-  { name: 'Mercado Livre', weight: 600, tracking: '-0.01em' },
+  { name: 'Mercado Livre', weight: 600, tracking: '-0.01em' }
 ]
 
 export function SocialProofSection() {
@@ -27,7 +27,7 @@ export function SocialProofSection() {
               style={{
                 animationDelay: `${index * 80}ms`,
                 fontWeight: company.weight,
-                letterSpacing: company.tracking,
+                letterSpacing: company.tracking
               }}
             >
               {company.name}

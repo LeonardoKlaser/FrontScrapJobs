@@ -58,7 +58,14 @@ describe('curriculumService', () => {
     it('sends POST /curriculum', async () => {
       vi.mocked(api.post).mockResolvedValue({})
 
-      const newCv = { title: 'New CV', summary: '', skills: '', languages: '', experiences: [], educations: [] } as Omit<Curriculum, 'id'>
+      const newCv = {
+        title: 'New CV',
+        summary: '',
+        skills: '',
+        languages: '',
+        experiences: [],
+        educations: []
+      } as Omit<Curriculum, 'id'>
       await curriculumService.newCurriculum(newCv)
 
       expect(api.post).toHaveBeenCalledWith('/curriculum', newCv)
@@ -67,7 +74,15 @@ describe('curriculumService', () => {
 
   describe('updateCurriculum', () => {
     it('sends PUT /curriculum/:id and returns data', async () => {
-      const curriculum = { id: 1, title: 'Updated CV', summary: '', skills: '', languages: '', experiences: [], educations: [] }
+      const curriculum = {
+        id: 1,
+        title: 'Updated CV',
+        summary: '',
+        skills: '',
+        languages: '',
+        experiences: [],
+        educations: []
+      }
       vi.mocked(api.put).mockResolvedValue({ data: curriculum })
 
       const result = await curriculumService.updateCurriculum(curriculum as Curriculum)

@@ -636,18 +636,11 @@ export default function AdicionarSitePage() {
           <CardHeader>
             <CardTitle className="text-base">
               Resultado do Teste
-              <Badge
-                className="ml-2"
-                variant={sandboxResult.success ? 'default' : 'destructive'}
-              >
-                {sandboxResult.success
-                  ? `${sandboxResult.data?.length || 0} vagas`
-                  : 'Erro'}
+              <Badge className="ml-2" variant={sandboxResult.success ? 'default' : 'destructive'}>
+                {sandboxResult.success ? `${sandboxResult.data?.length || 0} vagas` : 'Erro'}
               </Badge>
             </CardTitle>
-            {sandboxResult.message && (
-              <CardDescription>{sandboxResult.message}</CardDescription>
-            )}
+            {sandboxResult.message && <CardDescription>{sandboxResult.message}</CardDescription>}
           </CardHeader>
           {sandboxResult.success && sandboxResult.data?.length > 0 && (
             <CardContent>
