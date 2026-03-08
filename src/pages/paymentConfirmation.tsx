@@ -1,4 +1,4 @@
-import { useNavigate, useSearchParams } from 'react-router'
+import { useNavigate, useSearchParams, useLocation } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { CheckCircle2, ArrowRight, Mail } from 'lucide-react'
 import { PATHS } from '@/router/paths'
@@ -8,8 +8,10 @@ export default function PaymentConfirmationPage() {
   const { t } = useTranslation('plans')
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
+  const location = useLocation()
 
   const planName = searchParams.get('plan') || 'seu plano'
+  const isPublicRoute = !location.pathname.startsWith('/app')
 
   return (
     <div className="flex min-h-[80vh] items-center justify-center px-4 py-12">
@@ -52,10 +54,10 @@ export default function PaymentConfirmationPage() {
           <div className="animate-fade-in-up" style={{ animationDelay: '400ms' }}>
             <Button
               variant="glow"
-              onClick={() => navigate(PATHS.app.home)}
+              onClick={() => navigate(isPublicRoute ? PATHS.login : PATHS.app.home)}
               className="h-11 w-full text-base"
             >
-              {t('confirmation.goToDashboard')}
+              {t(isPublicRoute ? 'confirmation.goToLogin' : 'confirmation.goToDashboard')}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>

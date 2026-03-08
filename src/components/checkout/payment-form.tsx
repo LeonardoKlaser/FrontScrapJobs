@@ -17,7 +17,8 @@ import {
   PhoneIcon,
   FileTextIcon,
   CreditCardIcon,
-  QrCodeIcon
+  QrCodeIcon,
+  ShieldCheck
 } from 'lucide-react'
 import type { Plan } from '@/models/plan'
 import { api } from '@/services/api'
@@ -528,6 +529,10 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
             <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
               <Lock className="h-3.5 w-3.5 text-primary" />
               <span>{t('paymentForm.securityMessage')}</span>
+            </div>
+            <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
+              <ShieldCheck className="h-3.5 w-3.5 text-primary" />
+              <span>{t('paymentForm.lgpdBadge')}</span>
             </div>
           </div>
         </form>

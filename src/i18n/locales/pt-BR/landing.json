@@ -100,6 +100,18 @@
     "planName": "Plano {{name}}",
     "perMonth": "/mês",
     "savePerYear": "Economize R$ {{amount}} por ano",
-    "cta": "Começar a Automatizar"
+    "cta": "Começar a Automatizar",
+    "savingsAnchor": "Economize até 15 horas de busca maçante por mês",
+    "guarantee": "Satisfação garantida nos primeiros 7 dias ou devolvemos seu PIX integralmente"
+  },
+  "lgpd": {
+    "badge": "Em conformidade com LGPD e GDPR",
+    "encryption": "Seus dados são protegidos com criptografia de ponta a ponta",
+    "noSharing": "Nunca compartilhamos seus dados com terceiros"
+  },
+  "stats": {
+    "sitesAnalyzed": "Sites monitorados",
+    "jobsCollected": "Vagas coletadas",
+    "trustLine": "Dados reais da nossa plataforma, atualizados em tempo real"
   }
 }

@@ -7,12 +7,14 @@ import { PricingSection } from '@/components/landingPage/pricing-section'
 import { ProblemPromiseSection } from '@/components/landingPage/problem-promise'
 import { ProductVisualizationSection } from '@/components/landingPage/product-visualization-section'
 import { SocialProofSection } from '@/components/landingPage/social-proof-section'
+import { StatsCounterSection } from '@/components/landingPage/stats-counter-section'
 
 export function Landing() {
   return (
     <div>
       <HeroSection />
       <SocialProofSection />
+      <StatsCounterSection />
       <ProblemPromiseSection />
       <HowItWorksSection />
       <FeaturesSection />

@@ -56,6 +56,10 @@ export const createRouter = (queryClient: QueryClient) =>
         {
           path: 'checkout/:planId',
           element: <CheckoutPage />
+        },
+        {
+          path: 'payment-confirmation',
+          element: <PaymentConfirmationPage />
         }
       ]
     },

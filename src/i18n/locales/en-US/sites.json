@@ -39,6 +39,14 @@
     "title": "AI Compatibility Analysis",
     "description": "Comparison between your resume and the selected job",
     "loading": "Analyzing compatibility...",
+    "loadingSteps": [
+      "Analyzing your resume...",
+      "Extracting skills and experiences...",
+      "Checking job requirements...",
+      "Running semantic analysis with OpenAI...",
+      "Calculating compatibility score...",
+      "Preparing your personalized report..."
+    ],
     "error": "Analysis failed. Please try again.",
     "strengths": "Strengths",
     "gaps": "Gaps and Improvements",

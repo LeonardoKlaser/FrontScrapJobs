@@ -7,6 +7,7 @@ export const PATHS = {
   privacy: '/privacy',
 
   checkout: (planId: string) => `/checkout/${planId}`,
+  paymentConfirmation: '/payment-confirmation',
   app: {
     home: '/app',
     curriculum: '/app/curriculum',

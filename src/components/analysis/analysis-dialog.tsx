@@ -10,6 +10,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import {
   Loader2,
   CheckCircle,
@@ -50,6 +51,42 @@ function getScoreBadgeVariant(score: number) {
 function getScoreIcon(score: number) {
   if (score >= 60) return TrendingUp
   return TrendingDown
+}
+
+function AnalyzingState() {
+  const { t } = useTranslation('sites')
+  const steps = t('analysis.loadingSteps', { returnObjects: true }) as string[]
+  const [currentStep, setCurrentStep] = useState(0)
+
+  const progressPerStep = 100 / steps.length
+  const progress = Math.min((currentStep + 1) * progressPerStep, 95)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentStep((prev) => (prev < steps.length - 1 ? prev + 1 : prev))
+    }, 2500)
+    return () => clearInterval(interval)
+  }, [steps.length])
+
+  return (
+    <div className="flex flex-col items-center justify-center py-10 gap-5">
+      <div className="relative">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="absolute inset-0 h-8 w-8 animate-ping opacity-20 text-primary">
+          <Loader2 className="h-8 w-8" />
+        </div>
+      </div>
+      <div className="w-full max-w-xs space-y-3">
+        <Progress value={progress} className="h-2" />
+        <p
+          key={currentStep}
+          className="text-sm text-muted-foreground text-center animate-fade-in"
+        >
+          {steps[currentStep]}
+        </p>
+      </div>
+    </div>
+  )
 }
 
 function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: number }) {
@@ -369,17 +406,7 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
         )}
 
         {/* Analyzing */}
-        {step === 'analyzing' && (
-          <div className="flex flex-col items-center justify-center py-14 gap-3">
-            <div className="relative">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              <div className="absolute inset-0 h-8 w-8 animate-ping opacity-20 text-primary">
-                <Loader2 className="h-8 w-8" />
-              </div>
-            </div>
-            <p className="text-sm text-muted-foreground animate-fade-in">{t('analysis.loading')}</p>
-          </div>
-        )}
+        {step === 'analyzing' && <AnalyzingState />}
 
         {/* New analysis result */}
         {step === 'result' && analysisResult && jobId !== null && (

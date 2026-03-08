@@ -31,6 +31,7 @@
     "creditCardDescription": "Visa, Mastercard, Elo",
     "submitButton": "Create Account & Pay",
     "securityMessage": "Your data is protected with SSL encryption",
+    "lgpdBadge": "LGPD and GDPR Compliant",
     "emailExists": "This email is already registered. Please sign in.",
     "cpfExists": "This Tax ID is already registered.",
     "hidePassword": "Hide password",
@@ -51,6 +52,7 @@
     "message": "Thank you for subscribing to the {{planName}} plan! Your journey to automate job searching has begun.",
     "emailSent": "A confirmation email has been sent to your inbox.",
     "goToDashboard": "Go to Dashboard",
+    "goToLogin": "Sign In and Access",
     "needHelp": "Need help? Contact our support at"
   },
   "renew": {

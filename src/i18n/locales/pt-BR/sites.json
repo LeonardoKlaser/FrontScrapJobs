@@ -39,6 +39,14 @@
     "title": "Análise de Compatibilidade com IA",
     "description": "Comparação entre seu currículo e a vaga selecionada",
     "loading": "Analisando compatibilidade...",
+    "loadingSteps": [
+      "Analisando seu currículo...",
+      "Extraindo habilidades e experiências...",
+      "Consultando requisitos da vaga...",
+      "Executando análise semântica com OpenAI...",
+      "Calculando score de compatibilidade...",
+      "Preparando seu relatório personalizado..."
+    ],
     "error": "Erro ao executar análise. Tente novamente.",
     "strengths": "Pontos Fortes",
     "gaps": "Lacunas e Melhorias",

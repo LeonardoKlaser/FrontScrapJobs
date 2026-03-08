@@ -100,6 +100,18 @@
     "planName": "{{name}} Plan",
     "perMonth": "/mo",
     "savePerYear": "Save R$ {{amount}} per year",
-    "cta": "Start Automating"
+    "cta": "Start Automating",
+    "savingsAnchor": "Save up to 15 hours of tedious job searching per month",
+    "guarantee": "Satisfaction guaranteed in the first 7 days or we refund your PIX in full"
+  },
+  "lgpd": {
+    "badge": "LGPD and GDPR Compliant",
+    "encryption": "Your data is protected with end-to-end encryption",
+    "noSharing": "We never share your data with third parties"
+  },
+  "stats": {
+    "sitesAnalyzed": "Monitored sites",
+    "jobsCollected": "Jobs collected",
+    "trustLine": "Real data from our platform, updated in real time"
   }
 }

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Check } from 'lucide-react'
+import { Check, Clock, ShieldCheck, Lock } from 'lucide-react'
 import { usePlans } from '@/hooks/usePlans'
 import { useNavigate } from 'react-router'
 import { PATHS } from '@/router/paths'
@@ -110,6 +110,11 @@ export function PricingSection() {
                         </p>
                       )}
                     </div>
+                    {/* Savings Anchoring */}
+                    <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground mt-3">
+                      <Clock className="w-3.5 h-3.5 text-primary" />
+                      {t('pricing.savingsAnchor')}
+                    </p>
                   </CardHeader>
 
                   <CardContent className="space-y-6">
@@ -131,10 +136,32 @@ export function PricingSection() {
                     >
                       {t('pricing.cta')}
                     </Button>
+
+                    {/* Risk-Free Guarantee */}
+                    <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground text-center pt-2 border-t border-border/50">
+                      <ShieldCheck className="w-4 h-4 text-primary flex-shrink-0" />
+                      {t('pricing.guarantee')}
+                    </p>
                   </CardContent>
                 </Card>
               )
             })}
+          </div>
+
+          {/* LGPD/GDPR Badge */}
+          <div className="mt-12 flex flex-col items-center gap-2 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+            <div className="flex items-center gap-4 rounded-xl border border-border/50 bg-card px-6 py-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                <Lock className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
+                  <ShieldCheck className="h-4 w-4 text-primary" />
+                  {t('lgpd.badge')}
+                </p>
+                <p className="text-xs text-muted-foreground">{t('lgpd.encryption')}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
