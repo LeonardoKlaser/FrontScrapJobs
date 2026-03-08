@@ -4,9 +4,11 @@
     "heading1": "Stop Searching.",
     "heading2": "Start Getting Interviewed.",
     "subheading": "Automate your job search at top companies and get AI insights to make your resume stand out.",
-    "cta": "Start My Free Trial",
+    "cta": "Start Automating",
     "loginPrompt": "Already have an account?",
-    "loginLink": "Sign in"
+    "loginLink": "Sign in",
+    "microcopy": "Instant access • Cancel anytime",
+    "dashboardAlt": "ScrapJobs dashboard showing monitored jobs and AI alerts"
   },
   "features": {
     "title": "An Unfair Advantage for Your Career",
@@ -67,7 +69,7 @@
     },
     "ctaTitle": "Ready to Accelerate Your Career?",
     "ctaDescription": "Leave manual job searching in the past. Focus your energy on what really matters: preparing for interviews and landing your dream job.",
-    "ctaButton": "Start My Free Trial"
+    "ctaButton": "Start Automating"
   },
   "productVisualization": {
     "title": "See Exactly What You'll Receive",
@@ -77,7 +79,8 @@
     "bullet1": "Requirements: 5+ years experience with React, TypeScript and Node.js",
     "bullet2": "Responsibilities: Lead frontend squad, code reviews, architecture",
     "bullet3": "Benefits: Remote, profit sharing, health plan, stock options",
-    "applyNow": "View Full Job"
+    "applyNow": "View Full Job",
+    "emailAlt": "ScrapJobs analysis email with 85/100 compatibility score"
   },
   "footer": {
     "terms": "Terms of Service",

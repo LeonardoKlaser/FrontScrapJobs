@@ -1,12 +1,26 @@
 import { useTranslation } from 'react-i18next'
 
 const companies = [
-  { name: 'Google', weight: 500, tracking: '-0.03em' },
-  { name: 'Amazon', weight: 700, tracking: '-0.02em' },
-  { name: 'iFood', weight: 700, tracking: '-0.02em' },
-  { name: 'Nubank', weight: 600, tracking: '-0.01em' },
-  { name: 'Itaú', weight: 700, tracking: '-0.02em' },
-  { name: 'Mercado Livre', weight: 600, tracking: '-0.01em' }
+  {
+    name: 'PicPay',
+    logo: 'https://scrapjobs-state-bucket.s3.amazonaws.com/logos/5510926d-65b9-446b-b317-d43021a3d5db.png',
+  },
+  {
+    name: 'Nubank',
+    logo: 'https://scrapjobs-state-bucket.s3.amazonaws.com/logos/1630b6e3-7956-4677-85e2-f92b34a01364.png',
+  },
+  {
+    name: 'iFood',
+    logo: 'https://scrapjobs-state-bucket.s3.amazonaws.com/logos/373e4794-7189-489a-8844-7df3273d2322.jpeg',
+  },
+  {
+    name: 'Natura',
+    logo: 'https://scrapjobs-state-bucket.s3.amazonaws.com/logos/192c7f6c-fe02-4e11-a118-8f19a51d5a9f.png',
+  },
+  {
+    name: 'Airbnb',
+    logo: 'https://scrapjobs-state-bucket.s3.amazonaws.com/logos/32cfc476-25f7-4061-92af-c91e872e277f.jpeg',
+  },
 ]
 
 export function SocialProofSection() {
@@ -21,17 +35,13 @@ export function SocialProofSection() {
 
         <div className="flex items-center justify-center flex-wrap gap-x-10 gap-y-6 md:gap-x-14">
           {companies.map((company, index) => (
-            <span
+            <img
               key={company.name}
-              className="text-xl md:text-2xl text-muted-foreground/40 hover:text-primary/70 transition-colors duration-300 select-none animate-fade-in-up"
-              style={{
-                animationDelay: `${index * 80}ms`,
-                fontWeight: company.weight,
-                letterSpacing: company.tracking
-              }}
-            >
-              {company.name}
-            </span>
+              src={company.logo}
+              alt={company.name}
+              className="h-10 md:h-12 w-auto object-contain rounded-lg opacity-70 hover:opacity-100 transition-all duration-300 animate-fade-in-up"
+              style={{ animationDelay: `${index * 80}ms` }}
+            />
           ))}
         </div>
       </div>

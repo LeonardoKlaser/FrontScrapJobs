@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
-import { Zap, ArrowRight } from 'lucide-react'
+import { Zap, ArrowRight, ShieldCheck } from 'lucide-react'
+import dashboardImg from '@/assets/ScrapJobs Dashboard.png'
 
 export function HeroSection() {
   const { t } = useTranslation('landing')
@@ -12,73 +13,80 @@ export function HeroSection() {
       {/* Subtle grid overlay — dark lines on light bg, light lines on dark bg */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.04)_1px,transparent_1px)] bg-[size:64px_64px] dark:bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)]" />
 
-      <div className="container mx-auto text-center relative z-10">
-        <div className="max-w-4xl mx-auto space-y-8">
-          {/* Logo */}
-          <div
-            className="flex items-center justify-center mb-12 animate-fade-in-up"
-            style={{ animationDelay: '0ms' }}
-          >
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <Zap className="w-5 h-5 text-primary-foreground" />
+      <div className="container mx-auto relative z-10">
+        <div className="grid md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+          {/* Left column — Text */}
+          <div className="space-y-8 text-left">
+            {/* Logo */}
+            <div
+              className="flex items-center mb-4 animate-fade-in-up"
+              style={{ animationDelay: '0ms' }}
+            >
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                  <Zap className="w-5 h-5 text-primary-foreground" />
+                </div>
+                <span className="text-2xl font-bold text-foreground">{t('hero.brand')}</span>
               </div>
-              <span className="text-2xl font-bold text-foreground">{t('hero.brand')}</span>
             </div>
-          </div>
 
-          {/* Headline */}
-          <h1
-            className="text-3xl sm:text-5xl md:text-7xl font-bold leading-tight tracking-tight animate-fade-in-up text-balance"
-            style={{ animationDelay: '100ms' }}
-          >
-            <span className="text-foreground">{t('hero.heading1')}</span>
-            <br />
-            <span className="text-gradient-primary">{t('hero.heading2')}</span>
-          </h1>
+            {/* Headline */}
+            <h1
+              className="text-3xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight animate-fade-in-up text-balance"
+              style={{ animationDelay: '100ms' }}
+            >
+              <span className="text-foreground">{t('hero.heading1')}</span>
+              <br />
+              <span className="text-gradient-primary">{t('hero.heading2')}</span>
+            </h1>
 
-          {/* Subheadline */}
-          <p
-            className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in-up text-pretty"
-            style={{ animationDelay: '200ms' }}
-          >
-            {t('hero.subheading')}
-          </p>
-
-          {/* CTA */}
-          <div className="animate-fade-in-up" style={{ animationDelay: '300ms' }}>
-            <a href="#pricing">
-              <Button
-                variant="glow"
-                size="lg"
-                className="w-full sm:w-auto px-8 py-4 text-lg font-medium rounded-lg hover:scale-105 transition-transform duration-200 animate-pulse-glow"
-              >
-                {t('hero.cta')}
-                <ArrowRight className="w-5 h-5 ml-1" />
-              </Button>
-            </a>
-            <p className="text-sm text-muted-foreground mt-4">
-              {t('hero.loginPrompt')}{' '}
-              <a href="/login" className="text-primary hover:underline font-medium">
-                {t('hero.loginLink')}
-              </a>
+            {/* Subheadline */}
+            <p
+              className="text-lg sm:text-xl text-muted-foreground leading-relaxed animate-fade-in-up text-pretty"
+              style={{ animationDelay: '200ms' }}
+            >
+              {t('hero.subheading')}
             </p>
+
+            {/* CTA */}
+            <div className="animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+              <a href="#pricing">
+                <Button
+                  variant="glow"
+                  size="lg"
+                  className="w-full sm:w-auto px-8 py-4 text-lg font-medium rounded-lg hover:scale-105 transition-transform duration-200 animate-pulse-glow"
+                >
+                  {t('hero.cta')}
+                  <ArrowRight className="w-5 h-5 ml-1" />
+                </Button>
+              </a>
+
+              {/* Micro-copy */}
+              <p className="flex items-center gap-2 text-sm text-muted-foreground mt-4">
+                <ShieldCheck className="w-4 h-4 text-primary" />
+                {t('hero.microcopy')}
+              </p>
+
+              <p className="text-sm text-muted-foreground mt-3">
+                {t('hero.loginPrompt')}{' '}
+                <a href="/login" className="text-primary hover:underline font-medium">
+                  {t('hero.loginLink')}
+                </a>
+              </p>
+            </div>
           </div>
 
-          {/* Decorative dots */}
-          <div className="mt-16 relative animate-fade-in" style={{ animationDelay: '500ms' }}>
-            <div className="flex items-center justify-center space-x-8 opacity-40">
-              <div className="w-3 h-3 bg-primary rounded-full animate-pulse" />
-              <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse delay-100" />
-              <div className="w-4 h-4 bg-primary/60 rounded-full animate-pulse delay-200" />
-              <div className="w-2 h-2 bg-primary rounded-full animate-pulse delay-300" />
-              <div className="w-3 h-3 bg-muted-foreground rounded-full animate-pulse delay-400" />
-            </div>
-            <div className="flex items-center justify-center space-x-12 mt-4 opacity-25">
-              <div className="w-2 h-2 bg-primary rounded-full animate-pulse delay-500" />
-              <div className="w-3 h-3 bg-primary/50 rounded-full animate-pulse delay-600" />
-              <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse delay-700" />
-            </div>
+          {/* Right column — Dashboard Image */}
+          <div
+            className="mt-12 md:mt-0 animate-fade-in-up"
+            style={{ animationDelay: '400ms' }}
+          >
+            <img
+              src={dashboardImg}
+              alt={t('hero.dashboardAlt')}
+              loading="eager"
+              className="max-w-full rounded-2xl border border-white/10 shadow-2xl shadow-emerald-500/20 overflow-hidden"
+            />
           </div>
         </div>
       </div>

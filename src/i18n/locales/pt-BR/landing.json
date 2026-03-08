@@ -4,9 +4,11 @@
     "heading1": "Pare de Procurar.",
     "heading2": "Comece a Ser Entrevistado.",
     "subheading": "Automatize sua busca de emprego nas melhores empresas e receba insights de IA para seu currículo se destacar.",
-    "cta": "Iniciar Meu Teste Gratuito",
+    "cta": "Começar a Automatizar",
     "loginPrompt": "Já tem uma conta?",
-    "loginLink": "Fazer login"
+    "loginLink": "Fazer login",
+    "microcopy": "Liberação imediata • Cancele a qualquer momento",
+    "dashboardAlt": "Dashboard do ScrapJobs mostrando vagas monitoradas e alertas de IA"
   },
   "features": {
     "title": "Uma Vantagem Injusta para Sua Carreira",
@@ -67,7 +69,7 @@
     },
     "ctaTitle": "Pronto para Acelerar sua Carreira?",
     "ctaDescription": "Deixe a busca de emprego manual no passado. Concentre sua energia no que realmente importa: preparar-se para as entrevistas e conseguir o emprego dos seus sonhos.",
-    "ctaButton": "Iniciar Meu Teste Gratuito"
+    "ctaButton": "Começar a Automatizar"
   },
   "productVisualization": {
     "title": "Veja Exatamente o Que Você Receberá",
@@ -77,7 +79,8 @@
     "bullet1": "Requisitos: 5+ anos de experiência com React, TypeScript e Node.js",
     "bullet2": "Responsabilidades: Liderar squad de frontend, code reviews, arquitetura",
     "bullet3": "Benefícios: Remoto, PLR, plano de saúde, stock options",
-    "applyNow": "Ver Vaga Completa"
+    "applyNow": "Ver Vaga Completa",
+    "emailAlt": "Email de análise do ScrapJobs com score de compatibilidade 85/100"
   },
   "footer": {
     "terms": "Termos de Serviço",
