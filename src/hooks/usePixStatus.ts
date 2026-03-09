@@ -7,6 +7,7 @@ export function usePixStatus(pixId: string | null) {
     queryFn: () => checkPixStatus(pixId!),
     enabled: !!pixId,
     refetchInterval: (query) => {
+      if (query.state.error) return false
       const status = query.state.data
       if (status && status !== 'PENDING') return false
       return 3000
