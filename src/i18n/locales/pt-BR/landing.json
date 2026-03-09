@@ -65,7 +65,7 @@
     },
     "limits": {
       "question": "Quantas empresas posso monitorar?",
-      "answer": "Depende do seu plano! O plano Beta Tester permite até 3 sites, o Profissional até 15 e o Premium até 50 sites."
+      "answer": "Depende do seu plano! O plano Básico permite até 3 sites, o Profissional até 8 e o Premium até 30 sites."
     },
     "ctaTitle": "Pronto para Acelerar sua Carreira?",
     "ctaDescription": "Deixe a busca de emprego manual no passado. Concentre sua energia no que realmente importa: preparar-se para as entrevistas e conseguir o emprego dos seus sonhos.",
@@ -94,9 +94,9 @@
     "title": "Preço Simples e Transparente",
     "loading": "Carregando planos...",
     "monthly": "Mensal",
-    "annual": "Anual",
-    "discount": "-20%",
-    "popular": "Popular",
+    "quarterly": "Trimestral",
+    "discount": "-15%",
+    "popular": "Mais Popular",
     "planName": "Plano {{name}}",
     "perMonth": "/mês",
     "savePerYear": "Economize R$ {{amount}} por ano",

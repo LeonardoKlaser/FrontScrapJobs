@@ -19,6 +19,7 @@ const mockAnalysis: ResumeAnalysis = {
     overallScoreQualitative: 'Alto',
     summary: 'Boa compatibilidade'
   },
+  atsKeywords: { matched: ['React'], missing: ['Docker'] },
   strengthsForThisJob: [{ point: 'React', relevanceToJob: 'Alta' }],
   gapsAndImprovementAreas: [{ areaDescription: 'Docker', jobRequirementImpacted: 'DevOps' }],
   actionableResumeSuggestions: [

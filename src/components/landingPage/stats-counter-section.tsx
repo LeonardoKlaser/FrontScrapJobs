@@ -89,9 +89,7 @@ export function StatsCounterSection() {
           </div>
         </div>
 
-        <p className="text-center text-xs text-muted-foreground mt-4">
-          {t('stats.trustLine')}
-        </p>
+        <p className="text-center text-xs text-muted-foreground mt-4">{t('stats.trustLine')}</p>
       </div>
     </section>
   )

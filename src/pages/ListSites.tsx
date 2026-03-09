@@ -154,7 +154,7 @@ export default function EmpresasPage() {
         {filteredCompanies?.map((company, index) => (
           <button
             key={company.site_id}
-            className="animate-fade-in-up hover-lift group relative flex flex-col items-center gap-3 rounded-lg border border-border/50 bg-card p-5 text-center transition-all duration-150 hover:border-primary/20 hover:bg-card/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="animate-fade-in-up hover-lift group relative flex flex-col items-center gap-2 sm:gap-3 rounded-lg border border-border/50 bg-card p-3 sm:p-5 text-center transition-all duration-150 hover:border-primary/20 hover:bg-card/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             style={{ animationDelay: `${150 + index * 40}ms` }}
             onClick={() => handleCompanyClick(company)}
           >
@@ -163,7 +163,7 @@ export default function EmpresasPage() {
                 <CheckCircle className="size-3" />
               </Badge>
             )}
-            <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-muted/30 p-2">
+            <div className="flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center rounded-lg bg-muted/30 p-2">
               {company.logo_url ? (
                 <img
                   src={company.logo_url}

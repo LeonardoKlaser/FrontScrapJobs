@@ -56,6 +56,7 @@
     "emailSent": "Email enviado",
     "emailSuccess": "Email enviado com sucesso!",
     "emailError": "Erro ao enviar email. Tente novamente.",
+    "atsKeywords": "Palavras-chave ATS",
     "selectCurriculum": "Selecione o currículo para comparar com esta vaga:",
     "generate": "Gerar Análise",
     "redo": "Refazer Análise"

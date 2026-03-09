@@ -57,6 +57,10 @@
     "currentPlan": "Plano atual",
     "renew": "Renovar",
     "subscribe": "Assinar",
-    "free": "Grátis"
+    "free": "Grátis",
+    "weekdaysOnlyLabel": "Apenas dias úteis",
+    "weekdaysOnlyDescription": "Receber notificações somente de segunda a sexta",
+    "preferencesUpdated": "Preferências atualizadas!",
+    "preferencesError": "Erro ao atualizar preferências"
   }
 }

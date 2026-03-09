@@ -5,7 +5,21 @@
     "notFound": "Plano não encontrado",
     "notFoundDescription": "O plano solicitado não existe. Por favor, selecione um plano válido.",
     "title": "Finalize sua Assinatura",
-    "description": "Escolha seu método de pagamento e comece a usar o ScrapJobs"
+    "description": "Escolha seu método de pagamento e comece a usar o ScrapJobs",
+    "stepData": "Seus Dados",
+    "stepPayment": "Pagamento"
+  },
+  "pixQrCode": {
+    "title": "Escaneie o QR Code",
+    "subtitle": "Abra o app do seu banco e escaneie o QR Code abaixo ou copie o código PIX",
+    "copyCode": "Copiar código PIX",
+    "codeCopied": "Código copiado!",
+    "awaitingPayment": "Aguardando pagamento...",
+    "paymentConfirmed": "Pagamento confirmado! Redirecionando...",
+    "qrExpired": "QR Code expirado",
+    "qrExpiredDescription": "O tempo para pagamento expirou. Gere um novo QR Code para continuar.",
+    "generateNewQr": "Gerar novo QR Code",
+    "expiresIn": "Expira em"
   },
   "paymentForm": {
     "title": "Criar Conta",
@@ -29,7 +43,7 @@
     "pixDescription": "Transferência instantânea",
     "creditCard": "Cartão de Crédito",
     "creditCardDescription": "Visa, Mastercard, Elo",
-    "submitButton": "Criar Conta e Pagar",
+    "submitButton": "Gerar PIX",
     "securityMessage": "Seus dados são protegidos com criptografia SSL",
     "lgpdBadge": "Em conformidade com LGPD e GDPR",
     "emailExists": "Este e-mail já possui cadastro. Faça login.",
@@ -41,8 +55,8 @@
   },
   "planSummary": {
     "description": "Resumo do seu plano",
-    "annualPayment": "Pagamento único anual",
-    "monthlyPayment": "Pagamento único mensal",
+    "quarterlyPayment": "Pagamento trimestral",
+    "monthlyPayment": "Pagamento mensal",
     "included": "O que está incluído:",
     "savings": "Economia de R$ {{amount}}",
     "planName": "Plano {{name}}"

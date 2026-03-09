@@ -3,24 +3,24 @@ import { useTranslation } from 'react-i18next'
 const companies = [
   {
     name: 'PicPay',
-    logo: 'https://scrapjobs-state-bucket.s3.amazonaws.com/logos/5510926d-65b9-446b-b317-d43021a3d5db.png',
+    logo: 'https://scrapjobs-state-bucket.s3.amazonaws.com/logos/5510926d-65b9-446b-b317-d43021a3d5db.png'
   },
   {
     name: 'Nubank',
-    logo: 'https://scrapjobs-state-bucket.s3.amazonaws.com/logos/1630b6e3-7956-4677-85e2-f92b34a01364.png',
+    logo: 'https://scrapjobs-state-bucket.s3.amazonaws.com/logos/1630b6e3-7956-4677-85e2-f92b34a01364.png'
   },
   {
     name: 'iFood',
-    logo: 'https://scrapjobs-state-bucket.s3.amazonaws.com/logos/373e4794-7189-489a-8844-7df3273d2322.jpeg',
+    logo: 'https://scrapjobs-state-bucket.s3.amazonaws.com/logos/373e4794-7189-489a-8844-7df3273d2322.jpeg'
   },
   {
     name: 'Natura',
-    logo: 'https://scrapjobs-state-bucket.s3.amazonaws.com/logos/192c7f6c-fe02-4e11-a118-8f19a51d5a9f.png',
+    logo: 'https://scrapjobs-state-bucket.s3.amazonaws.com/logos/192c7f6c-fe02-4e11-a118-8f19a51d5a9f.png'
   },
   {
     name: 'Airbnb',
-    logo: 'https://scrapjobs-state-bucket.s3.amazonaws.com/logos/32cfc476-25f7-4061-92af-c91e872e277f.jpeg',
-  },
+    logo: 'https://scrapjobs-state-bucket.s3.amazonaws.com/logos/32cfc476-25f7-4061-92af-c91e872e277f.jpeg'
+  }
 ]
 
 export function SocialProofSection() {

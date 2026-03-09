@@ -13,8 +13,12 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Switch } from '@/components/ui/switch'
+import { Label } from '@/components/ui/label'
 import { usePlans } from '@/hooks/usePlans'
 import { Link } from 'react-router'
+import { userService } from '@/services/userService'
+import { toast } from 'sonner'
 import type { User } from '@/models/user'
 
 interface PlanSectionProps {
@@ -31,6 +35,19 @@ export function PlanSection({ user }: PlanSectionProps) {
   const usagePercentage = maxUsage > 0 ? (currentUsage / maxUsage) * 100 : 0
   const benefits = user?.plan?.features ?? []
   const isPremium = user?.plan?.name === 'Premium'
+
+  const [weekdaysOnly, setWeekdaysOnly] = useState(user?.weekdays_only ?? false)
+
+  const handleWeekdaysToggle = async (checked: boolean) => {
+    setWeekdaysOnly(checked)
+    try {
+      await userService.updatePreferences({ weekdays_only: checked })
+      toast.success(t('plan.preferencesUpdated'))
+    } catch {
+      setWeekdaysOnly(!checked)
+      toast.error(t('plan.preferencesError'))
+    }
+  }
 
   return (
     <div className="space-y-6 animate-fade-in-up">
@@ -70,6 +87,20 @@ export function PlanSection({ user }: PlanSectionProps) {
               {new Date(user.expires_at).toLocaleDateString('pt-BR')}
             </p>
           )}
+
+          <div className="flex items-center justify-between rounded-lg border border-border/50 bg-muted/30 p-4">
+            <div className="space-y-0.5">
+              <Label htmlFor="weekdays-only" className="text-sm font-medium">
+                {t('plan.weekdaysOnlyLabel')}
+              </Label>
+              <p className="text-xs text-muted-foreground">{t('plan.weekdaysOnlyDescription')}</p>
+            </div>
+            <Switch
+              id="weekdays-only"
+              checked={weekdaysOnly}
+              onCheckedChange={handleWeekdaysToggle}
+            />
+          </div>
 
           {benefits.length > 0 && (
             <div>
@@ -137,9 +168,7 @@ export function PlanSection({ user }: PlanSectionProps) {
                 <div>
                   <p className="font-semibold text-foreground">{plan.name}</p>
                   <p className="text-sm text-muted-foreground">
-                    {plan.price === 0
-                      ? t('plan.free', 'Grátis')
-                      : `R$ ${plan.price.toFixed(2).replace('.', ',')}/mês`}
+                    {`R$ ${plan.price.toFixed(2).replace('.', ',')}/mês`}
                   </p>
                 </div>
                 <Link to={`/checkout/${plan.id}`}>

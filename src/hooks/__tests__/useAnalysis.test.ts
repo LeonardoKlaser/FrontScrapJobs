@@ -28,6 +28,7 @@ const mockAnalysis: ResumeAnalysis = {
     overallScoreQualitative: 'Alto',
     summary: 'Boa compatibilidade'
   },
+  atsKeywords: { matched: [], missing: [] },
   strengthsForThisJob: [],
   gapsAndImprovementAreas: [],
   actionableResumeSuggestions: [],

@@ -77,10 +77,7 @@ export function HeroSection() {
           </div>
 
           {/* Right column — Dashboard Image */}
-          <div
-            className="mt-12 md:mt-0 animate-fade-in-up"
-            style={{ animationDelay: '400ms' }}
-          >
+          <div className="mt-12 md:mt-0 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
             <img
               src={dashboardImg}
               alt={t('hero.dashboardAlt')}

@@ -149,7 +149,10 @@ export function PricingSection() {
           </div>
 
           {/* LGPD/GDPR Badge */}
-          <div className="mt-12 flex flex-col items-center gap-2 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+          <div
+            className="mt-12 flex flex-col items-center gap-2 animate-fade-in-up"
+            style={{ animationDelay: '400ms' }}
+          >
             <div className="flex items-center gap-4 rounded-xl border border-border/50 bg-card px-6 py-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                 <Lock className="h-5 w-5 text-primary" />

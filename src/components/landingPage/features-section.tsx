@@ -36,7 +36,7 @@ export function FeaturesSection() {
     <section className="py-20 sm:py-24 px-4">
       <div className="container mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight text-balance">
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight text-balance">
             {t('features.title')}
           </h2>
         </div>
@@ -50,7 +50,7 @@ export function FeaturesSection() {
               }`}
               style={{ animationDelay: `${index * 120}ms` }}
             >
-              <CardContent className="p-8 space-y-4">
+              <CardContent className="p-5 sm:p-8 space-y-4">
                 <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                   <feature.icon className="w-6 h-6 text-primary" />
                 </div>
