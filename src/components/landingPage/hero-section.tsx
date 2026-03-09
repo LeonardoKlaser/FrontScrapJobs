@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
-import { Zap, ArrowRight, ShieldCheck } from 'lucide-react'
+import { ArrowRight, ShieldCheck } from 'lucide-react'
+import { Logo } from '@/components/common/logo'
 import dashboardImg from '@/assets/ScrapJobs Dashboard.png'
 
 export function HeroSection() {
@@ -19,15 +20,10 @@ export function HeroSection() {
           <div className="space-y-8 text-left">
             {/* Logo */}
             <div
-              className="flex items-center mb-4 animate-fade-in-up"
+              className="mb-4 animate-fade-in-up"
               style={{ animationDelay: '0ms' }}
             >
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-primary-foreground" />
-                </div>
-                <span className="text-2xl font-bold text-foreground">{t('hero.brand')}</span>
-              </div>
+              <Logo size={32} showText textClassName="text-2xl" />
             </div>
 
             {/* Headline */}

@@ -9,6 +9,7 @@ import {
 import { Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ModeToggle } from '@/components/common/mode-toggle'
+import { Logo } from '@/components/common/logo'
 import { PATHS } from '@/router/paths'
 import { useUser } from '@/hooks/useUser'
 import { useAuth } from '@/hooks/useAuth'
@@ -46,9 +47,9 @@ export function AppHeader() {
         <Link
           to={PATHS.app.home}
           prefetch="intent"
-          className="flex items-center gap-2 text-lg font-semibold"
+          className="flex items-center"
         >
-          Scrap<span className="text-primary">Jobs</span>
+          <Logo size={24} showText textClassName="text-lg" />
         </Link>
 
         <NavigationMenu viewport={false} className="hidden md:block">

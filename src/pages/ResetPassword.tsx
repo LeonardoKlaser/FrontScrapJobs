@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { authService } from '@/services/authService'
 import { isAxiosError } from 'axios'
-import Logo from '@/assets/logo_dark_contornado.webp'
+import { Logo } from '@/components/common/logo'
 
 export default function ResetPassword() {
   const { t } = useTranslation('auth')
@@ -62,7 +62,7 @@ export default function ResetPassword() {
 
       <div className="animate-fade-in-up relative w-full max-w-md rounded-lg border border-border/50 bg-card p-8">
         <div className="mb-6 flex items-center justify-center">
-          <img src={Logo} alt="ScrapJobs" className="h-16 w-16 select-none" draggable={false} />
+          <Logo size={64} />
         </div>
 
         {success ? (

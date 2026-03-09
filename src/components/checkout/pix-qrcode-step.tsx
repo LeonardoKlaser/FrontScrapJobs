@@ -7,6 +7,7 @@ import { Spinner } from '@/components/ui/spinner'
 import { usePixStatus } from '@/hooks/usePixStatus'
 import { useNavigate } from 'react-router'
 import { useTranslation } from 'react-i18next'
+import { QRCodeSVG } from 'qrcode.react'
 import type { PixQRCodeData } from '@/services/paymentService'
 
 interface PixQRCodeStepProps {
@@ -121,10 +122,11 @@ export function PixQRCodeStep({ pixData, onGenerateNew }: PixQRCodeStepProps) {
       <CardContent className="flex flex-col items-center gap-6">
         {/* QR Code Image */}
         <div className="rounded-xl border border-border/50 bg-white p-4">
-          <img
-            src={`data:image/png;base64,${pixData.br_code_base64}`}
-            alt="QR Code PIX"
-            className="h-52 w-52"
+          <QRCodeSVG
+            value={pixData.br_code}
+            size={208}
+            level="M"
+            marginSize={0}
           />
         </div>
 

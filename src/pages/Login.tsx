@@ -2,7 +2,7 @@ import { AuthForm } from '@/components/forms/Auth'
 import { PATHS } from '@/router/paths'
 import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router'
-import Logo from '@/assets/logo_dark_contornado.webp'
+import { Logo } from '@/components/common/logo'
 import { useUser } from '@/hooks/useUser'
 import { useTranslation } from 'react-i18next'
 
@@ -22,12 +22,7 @@ export default function Login() {
         <div className="pointer-events-none absolute -left-24 -top-24 h-[400px] w-[400px] rounded-full bg-primary/5 blur-[100px]" />
         <div className="pointer-events-none absolute right-0 bottom-0 h-[300px] w-[300px] rounded-full bg-primary/3 blur-[80px]" />
         <div className="relative z-10">
-          <img
-            src={Logo}
-            alt="ScrapJobs"
-            className="h-20 w-20 mb-8 select-none"
-            draggable={false}
-          />
+          <Logo size={80} showText className="mb-8" />
           <h1 className="font-display text-3xl font-bold tracking-tight text-foreground mb-4">
             {t('hero.title', 'Encontre as vagas certas, automaticamente.')}
           </h1>
@@ -58,7 +53,7 @@ export default function Login() {
       <div className="flex w-full lg:w-1/2 items-center justify-center px-4 bg-background">
         <div className="w-full max-w-sm animate-fade-in-up">
           <div className="mb-8 flex items-center justify-center lg:hidden">
-            <img src={Logo} alt="ScrapJobs" className="h-32 w-32 select-none" draggable={false} />
+            <Logo size={80} showText />
           </div>
           <h2 className="text-xl font-semibold text-foreground mb-1 lg:mb-2">
             {t('login.welcome', 'Bem-vindo de volta')}
