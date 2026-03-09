@@ -10,12 +10,12 @@ import { PATHS } from '@/router/paths'
 
 export function PricingSection() {
   const { t } = useTranslation('landing')
-  const [isAnnual, setIsAnnual] = useState(false)
+  const [isQuarterly, setIsQuarterly] = useState(false)
   const { data: plans, isLoading } = usePlans()
   const navigate = useNavigate()
 
   const handleChoosePlan = (planId: number, planName: string) => {
-    const period = planName === 'Beta Tester' ? 'monthly' : isAnnual ? 'annual' : 'monthly'
+    const period = planName === 'Beta Tester' ? 'monthly' : isQuarterly ? 'quarterly' : 'monthly'
     navigate(PATHS.checkout(planId.toString()) + `?period=${period}`)
   }
 
@@ -45,9 +45,9 @@ export function PricingSection() {
           <div className="flex items-center justify-center mb-12">
             <div className="bg-card border border-border/50 rounded-lg p-1 flex">
               <button
-                onClick={() => setIsAnnual(false)}
+                onClick={() => setIsQuarterly(false)}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                  !isAnnual
+                  !isQuarterly
                     ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
@@ -55,15 +55,15 @@ export function PricingSection() {
                 {t('pricing.monthly')}
               </button>
               <button
-                onClick={() => setIsAnnual(true)}
+                onClick={() => setIsQuarterly(true)}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring relative ${
-                  isAnnual
+                  isQuarterly
                     ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                {t('pricing.annual')}
-                {isAnnual && (
+                {t('pricing.quarterly')}
+                {isQuarterly && (
                   <Badge className="absolute -top-2 -right-2 text-xs">
                     {t('pricing.discount')}
                   </Badge>
@@ -76,9 +76,9 @@ export function PricingSection() {
             {plans?.map((plan, index) => {
               const isBetaTester = plan.name === 'Beta Tester'
               const isFeatured = index === featuredIndex
-              const showAnnual = isAnnual && !isBetaTester
-              const displayPrice = showAnnual
-                ? (plan.price * 0.8).toFixed(2)
+              const showQuarterly = isQuarterly && !isBetaTester
+              const displayPrice = showQuarterly
+                ? (plan.price * 0.85).toFixed(2)
                 : plan.price.toFixed(2)
 
               return (
@@ -102,10 +102,10 @@ export function PricingSection() {
                     <div className="mt-4">
                       <span className="text-4xl font-bold text-foreground">R$ {displayPrice}</span>
                       <span className="text-muted-foreground">{t('pricing.perMonth')}</span>
-                      {showAnnual && (
+                      {showQuarterly && (
                         <p className="text-sm text-primary mt-1">
-                          {t('pricing.savePerYear', {
-                            amount: (plan.price * 0.2 * 12).toFixed(2)
+                          {t('pricing.savePerQuarter', {
+                            amount: (plan.price * 0.15 * 3).toFixed(2)
                           })}
                         </p>
                       )}

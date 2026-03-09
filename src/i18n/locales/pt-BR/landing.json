@@ -99,7 +99,7 @@
     "popular": "Mais Popular",
     "planName": "Plano {{name}}",
     "perMonth": "/mês",
-    "savePerYear": "Economize R$ {{amount}} por ano",
+    "savePerQuarter": "Economize R$ {{amount}} por trimestre",
     "cta": "Começar a Automatizar",
     "savingsAnchor": "Economize até 15 horas de busca maçante por mês",
     "guarantee": "Satisfação garantida nos primeiros 7 dias ou devolvemos seu PIX integralmente"

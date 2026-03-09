@@ -41,7 +41,7 @@
   },
   "planSummary": {
     "description": "Your plan summary",
-    "annualPayment": "Annual one-time payment",
+    "quarterlyPayment": "Quarterly payment",
     "monthlyPayment": "Monthly one-time payment",
     "included": "What's included:",
     "savings": "Save R$ {{amount}}",
