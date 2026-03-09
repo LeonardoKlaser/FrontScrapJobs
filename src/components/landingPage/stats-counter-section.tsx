@@ -52,7 +52,7 @@ export function StatsCounterSection() {
   const { t } = useTranslation('landing')
   const { data: stats } = usePublicStats()
 
-  const sites = useCountUp(stats?.total_sites ?? 0)
+  const sites = useCountUp(stats?.monitored_sites ?? 0)
   const jobs = useCountUp(stats?.total_jobs ?? 0)
 
   if (!stats) return null

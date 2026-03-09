@@ -1,7 +1,7 @@
 import { api } from './api'
 
 export interface PlatformStats {
-  total_sites: number
+  monitored_sites: number
   total_jobs: number
 }
 
