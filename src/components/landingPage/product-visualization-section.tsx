@@ -8,10 +8,10 @@ export function ProductVisualizationSection() {
   return (
     <section className="py-20 sm:py-24 px-4 bg-card/30">
       <div className="container mx-auto">
-        <div className="grid lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center max-w-6xl mx-auto">
           {/* Text Content */}
           <div className="space-y-6 animate-fade-in-up">
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground leading-tight tracking-tight text-balance">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-foreground leading-tight tracking-tight text-balance">
               {t('productVisualization.title')}
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed text-pretty">
@@ -22,7 +22,7 @@ export function ProductVisualizationSection() {
           {/* Email Mockup */}
           <div className="relative animate-fade-in-up" style={{ animationDelay: '200ms' }}>
             <Card className="bg-card border-border/50 glow-border">
-              <CardContent className="p-6 space-y-4">
+              <CardContent className="p-4 sm:p-6 space-y-4">
                 {/* Email Header */}
                 <div className="flex items-center justify-between pb-4 border-b border-border/50">
                   <div className="flex items-center space-x-2">

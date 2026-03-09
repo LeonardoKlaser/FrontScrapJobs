@@ -1,9 +1,11 @@
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Zap, ArrowRight } from 'lucide-react'
+import { usePublicStats } from '@/hooks/usePublicStats'
 
 export function HeroSection() {
   const { t } = useTranslation('landing')
+  const { data: stats } = usePublicStats()
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
       {/* Radial emerald gradient background */}
@@ -29,7 +31,7 @@ export function HeroSection() {
 
           {/* Headline */}
           <h1
-            className="text-3xl sm:text-5xl md:text-7xl font-bold leading-tight tracking-tight animate-fade-in-up text-balance"
+            className="text-2xl sm:text-5xl md:text-7xl font-bold leading-tight tracking-tight animate-fade-in-up text-balance"
             style={{ animationDelay: '100ms' }}
           >
             <span className="text-foreground">{t('hero.heading1')}</span>
@@ -39,7 +41,7 @@ export function HeroSection() {
 
           {/* Subheadline */}
           <p
-            className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in-up text-pretty"
+            className="text-base sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in-up text-pretty"
             style={{ animationDelay: '200ms' }}
           >
             {t('hero.subheading')}
@@ -65,16 +67,38 @@ export function HeroSection() {
             </p>
           </div>
 
+          {/* Public Stats */}
+          {stats && (
+            <div
+              className="flex items-center justify-center gap-6 sm:gap-10 animate-fade-in-up"
+              style={{ animationDelay: '400ms' }}
+            >
+              <div className="text-center">
+                <p className="font-display text-2xl sm:text-3xl font-bold text-foreground">
+                  +{stats.monitored_sites.toLocaleString('pt-BR')}
+                </p>
+                <p className="text-xs sm:text-sm text-muted-foreground">{t('hero.statsSites')}</p>
+              </div>
+              <div className="h-8 w-px bg-border/50" />
+              <div className="text-center">
+                <p className="font-display text-2xl sm:text-3xl font-bold text-foreground">
+                  +{stats.total_jobs.toLocaleString('pt-BR')}
+                </p>
+                <p className="text-xs sm:text-sm text-muted-foreground">{t('hero.statsJobs')}</p>
+              </div>
+            </div>
+          )}
+
           {/* Decorative dots */}
           <div className="mt-16 relative animate-fade-in" style={{ animationDelay: '500ms' }}>
-            <div className="flex items-center justify-center space-x-8 opacity-40">
-              <div className="w-3 h-3 bg-primary rounded-full animate-pulse" />
-              <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse delay-100" />
-              <div className="w-4 h-4 bg-primary/60 rounded-full animate-pulse delay-200" />
-              <div className="w-2 h-2 bg-primary rounded-full animate-pulse delay-300" />
-              <div className="w-3 h-3 bg-muted-foreground rounded-full animate-pulse delay-400" />
+            <div className="flex items-center justify-center space-x-4 sm:space-x-8 opacity-40">
+              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-primary rounded-full animate-pulse" />
+              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-muted-foreground rounded-full animate-pulse delay-100" />
+              <div className="w-3 h-3 sm:w-4 sm:h-4 bg-primary/60 rounded-full animate-pulse delay-200" />
+              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-primary rounded-full animate-pulse delay-300" />
+              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-muted-foreground rounded-full animate-pulse delay-400" />
             </div>
-            <div className="flex items-center justify-center space-x-12 mt-4 opacity-25">
+            <div className="flex items-center justify-center space-x-6 sm:space-x-12 mt-4 opacity-25">
               <div className="w-2 h-2 bg-primary rounded-full animate-pulse delay-500" />
               <div className="w-3 h-3 bg-primary/50 rounded-full animate-pulse delay-600" />
               <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse delay-700" />

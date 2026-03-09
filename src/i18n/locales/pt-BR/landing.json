@@ -4,9 +4,11 @@
     "heading1": "Pare de Procurar.",
     "heading2": "Comece a Ser Entrevistado.",
     "subheading": "Automatize sua busca de emprego nas melhores empresas e receba insights de IA para seu currículo se destacar.",
-    "cta": "Iniciar Meu Teste Gratuito",
+    "cta": "Começar Agora",
     "loginPrompt": "Já tem uma conta?",
-    "loginLink": "Fazer login"
+    "loginLink": "Fazer login",
+    "statsSites": "sites monitorados",
+    "statsJobs": "vagas coletadas"
   },
   "features": {
     "title": "Uma Vantagem Injusta para Sua Carreira",
@@ -63,11 +65,11 @@
     },
     "limits": {
       "question": "Quantas empresas posso monitorar?",
-      "answer": "Depende do seu plano! O plano Beta Tester permite até 3 sites, o Profissional até 15 e o Premium até 50 sites."
+      "answer": "Depende do seu plano! O plano Básico permite até 3 sites, o Profissional até 8 e o Premium até 30 sites."
     },
     "ctaTitle": "Pronto para Acelerar sua Carreira?",
     "ctaDescription": "Deixe a busca de emprego manual no passado. Concentre sua energia no que realmente importa: preparar-se para as entrevistas e conseguir o emprego dos seus sonhos.",
-    "ctaButton": "Iniciar Meu Teste Gratuito"
+    "ctaButton": "Começar Agora"
   },
   "productVisualization": {
     "title": "Veja Exatamente o Que Você Receberá",
@@ -91,12 +93,14 @@
     "title": "Preço Simples e Transparente",
     "loading": "Carregando planos...",
     "monthly": "Mensal",
-    "annual": "Anual",
-    "discount": "-20%",
-    "popular": "Popular",
+    "quarterly": "Trimestral",
+    "discount": "-15%",
+    "popular": "Mais Popular",
     "planName": "Plano {{name}}",
     "perMonth": "/mês",
-    "savePerYear": "Economize R$ {{amount}} por ano",
-    "cta": "Começar a Automatizar"
+    "perQuarter": "/trimestre",
+    "savePerQuarter": "Economize R$ {{amount}}",
+    "decoyComparison": "Apenas +R$3/mês vs Profissional — 3.75x mais sites + IA ilimitada",
+    "cta": "Começar Agora"
   }
 }

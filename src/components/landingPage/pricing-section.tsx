@@ -10,12 +10,12 @@ import { PATHS } from '@/router/paths'
 
 export function PricingSection() {
   const { t } = useTranslation('landing')
-  const [isAnnual, setIsAnnual] = useState(false)
+  const [isQuarterly, setIsQuarterly] = useState(false)
   const { data: plans, isLoading } = usePlans()
   const navigate = useNavigate()
 
-  const handleChoosePlan = (planId: number, planName: string) => {
-    const period = planName === 'Beta Tester' ? 'monthly' : isAnnual ? 'annual' : 'monthly'
+  const handleChoosePlan = (planId: number) => {
+    const period = isQuarterly ? 'quarterly' : 'monthly'
     navigate(PATHS.checkout(planId.toString()) + `?period=${period}`)
   }
 
@@ -29,13 +29,14 @@ export function PricingSection() {
     )
   }
 
-  const featuredIndex = plans && plans.length > 1 ? 1 : 0
+  // Premium is the last plan — featured with decoy effect
+  const featuredIndex = plans ? plans.length - 1 : 0
 
   return (
     <section id="pricing" className="py-20 sm:py-24 px-4">
       <div className="container mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight text-balance">
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight text-balance">
             {t('pricing.title')}
           </h2>
         </div>
@@ -45,9 +46,9 @@ export function PricingSection() {
           <div className="flex items-center justify-center mb-12">
             <div className="bg-card border border-border/50 rounded-lg p-1 flex">
               <button
-                onClick={() => setIsAnnual(false)}
+                onClick={() => setIsQuarterly(false)}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                  !isAnnual
+                  !isQuarterly
                     ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
@@ -55,15 +56,15 @@ export function PricingSection() {
                 {t('pricing.monthly')}
               </button>
               <button
-                onClick={() => setIsAnnual(true)}
+                onClick={() => setIsQuarterly(true)}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring relative ${
-                  isAnnual
+                  isQuarterly
                     ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                {t('pricing.annual')}
-                {isAnnual && (
+                {t('pricing.quarterly')}
+                {isQuarterly && (
                   <Badge className="absolute -top-2 -right-2 text-xs">
                     {t('pricing.discount')}
                   </Badge>
@@ -72,14 +73,14 @@ export function PricingSection() {
             </div>
           </div>
 
-          <div className="flex justify-center gap-8 flex-wrap">
+          <div className="flex justify-center gap-4 sm:gap-8 flex-wrap">
             {plans?.map((plan, index) => {
-              const isBetaTester = plan.name === 'Beta Tester'
               const isFeatured = index === featuredIndex
-              const showAnnual = isAnnual && !isBetaTester
-              const displayPrice = showAnnual
-                ? (plan.price * 0.8).toFixed(2)
+              const displayPrice = isQuarterly
+                ? ((plan.price * 3 * 0.85) / 3).toFixed(2)
                 : plan.price.toFixed(2)
+              const quarterlyTotal = (plan.price * 3 * 0.85).toFixed(2)
+              const quarterlySavings = (plan.price * 3 * 0.15).toFixed(2)
 
               return (
                 <Card
@@ -102,18 +103,25 @@ export function PricingSection() {
                     <div className="mt-4">
                       <span className="text-4xl font-bold text-foreground">R$ {displayPrice}</span>
                       <span className="text-muted-foreground">{t('pricing.perMonth')}</span>
-                      {showAnnual && (
-                        <p className="text-sm text-primary mt-1">
-                          {t('pricing.savePerYear', {
-                            amount: (plan.price * 0.2 * 12).toFixed(2)
-                          })}
-                        </p>
+                      {isQuarterly && (
+                        <div className="mt-1 space-y-0.5">
+                          <p className="text-sm text-muted-foreground">
+                            R$ {quarterlyTotal} {t('pricing.perQuarter')}
+                          </p>
+                          <p className="text-sm text-primary">
+                            {t('pricing.savePerQuarter', { amount: quarterlySavings })}
+                          </p>
+                        </div>
                       )}
                     </div>
+                    {isFeatured && (
+                      <p className="text-xs text-primary mt-2 font-medium">
+                        {t('pricing.decoyComparison')}
+                      </p>
+                    )}
                   </CardHeader>
 
                   <CardContent className="space-y-6">
-                    {/* Features List */}
                     <ul className="space-y-3">
                       {plan.features.map((feature, featureIndex) => (
                         <li key={featureIndex} className="flex items-center space-x-3">
@@ -123,11 +131,10 @@ export function PricingSection() {
                       ))}
                     </ul>
 
-                    {/* CTA Button */}
                     <Button
                       variant={isFeatured ? 'glow' : 'default'}
                       className="w-full py-3 text-lg font-medium"
-                      onClick={() => handleChoosePlan(plan.id, plan.name)}
+                      onClick={() => handleChoosePlan(plan.id)}
                     >
                       {t('pricing.cta')}
                     </Button>

@@ -16,6 +16,11 @@ export interface Gap {
   jobRequirementImpacted: string
 }
 
+export interface AtsKeywords {
+  matched: string[]
+  missing: string[]
+}
+
 export interface Suggestion {
   suggestion: string
   curriculumSectionToApply: string
@@ -25,6 +30,7 @@ export interface Suggestion {
 
 export interface ResumeAnalysis {
   matchAnalysis: MatchAnalysis
+  atsKeywords: AtsKeywords
   strengthsForThisJob: Strength[]
   gapsAndImprovementAreas: Gap[]
   actionableResumeSuggestions: Suggestion[]

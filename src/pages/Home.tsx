@@ -231,7 +231,50 @@ export function Home() {
           <EmptyState icon={FileText} title={t('latestJobs.empty')} />
         ) : (
           <>
-            <div className="overflow-x-auto rounded-lg border border-border/50">
+            {/* Mobile: card layout */}
+            <div className="flex flex-col gap-3 sm:hidden">
+              {jobs.map((job) => (
+                <Card key={job.id} className="p-4 space-y-2.5">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-foreground text-sm leading-snug line-clamp-2">
+                        {job.title}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">{job.company}</p>
+                    </div>
+                    {!matchedOnly && job.matched && (
+                      <Badge variant="default" className="shrink-0 text-xs">
+                        {t('latestJobs.matchBadge')}
+                      </Badge>
+                    )}
+                  </div>
+                  {job.location && <p className="text-xs text-muted-foreground">{job.location}</p>}
+                  <div className="flex items-center gap-2 pt-1">
+                    <a
+                      href={job.job_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-xs text-primary hover:underline underline-offset-4"
+                    >
+                      {t('latestJobs.viewJob')}
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="gap-1.5 ml-auto text-xs h-7"
+                      onClick={() => setSelectedJobId(job.id)}
+                    >
+                      <Bot className="h-3 w-3" />
+                      {t('latestJobs.analyzeAI')}
+                    </Button>
+                  </div>
+                </Card>
+              ))}
+            </div>
+
+            {/* Desktop: table layout */}
+            <div className="hidden sm:block overflow-x-auto rounded-lg border border-border/50">
               <Table className="text-sm">
                 <TableHeader className="bg-muted/40">
                   <TableRow>
@@ -366,34 +409,55 @@ export function Home() {
             }
           />
         ) : (
-          <div className="overflow-x-auto rounded-lg border border-border/50">
-            <Table className="min-w-[540px] text-sm">
-              <TableHeader className="bg-muted/40">
-                <TableRow>
-                  <TableHead className="font-medium">{t('monitoredUrls.name')}</TableHead>
-                  <TableHead className="font-medium">{t('monitoredUrls.url')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {monitoredUrls.map((url) => (
-                  <TableRow key={url.site_name + url.base_url} className="hover:bg-muted/30">
-                    <TableCell className="font-medium text-foreground">{url.site_name}</TableCell>
-                    <TableCell className="max-w-xs truncate">
-                      <a
-                        href={url.base_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-primary hover:underline underline-offset-4"
-                      >
-                        {url.base_url}
-                        <ExternalLink className="h-3 w-3 shrink-0" />
-                      </a>
-                    </TableCell>
+          <>
+            {/* Mobile: card layout */}
+            <div className="flex flex-col gap-2 sm:hidden">
+              {monitoredUrls.map((url) => (
+                <Card key={url.site_name + url.base_url} className="p-3 space-y-1">
+                  <p className="text-sm font-medium text-foreground">{url.site_name}</p>
+                  <a
+                    href={url.base_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-xs text-primary hover:underline underline-offset-4 break-all"
+                  >
+                    {url.base_url}
+                    <ExternalLink className="h-3 w-3 shrink-0" />
+                  </a>
+                </Card>
+              ))}
+            </div>
+
+            {/* Desktop: table layout */}
+            <div className="hidden sm:block overflow-x-auto rounded-lg border border-border/50">
+              <Table className="text-sm">
+                <TableHeader className="bg-muted/40">
+                  <TableRow>
+                    <TableHead className="font-medium">{t('monitoredUrls.name')}</TableHead>
+                    <TableHead className="font-medium">{t('monitoredUrls.url')}</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                </TableHeader>
+                <TableBody>
+                  {monitoredUrls.map((url) => (
+                    <TableRow key={url.site_name + url.base_url} className="hover:bg-muted/30">
+                      <TableCell className="font-medium text-foreground">{url.site_name}</TableCell>
+                      <TableCell className="max-w-xs truncate">
+                        <a
+                          href={url.base_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-primary hover:underline underline-offset-4"
+                        >
+                          {url.base_url}
+                          <ExternalLink className="h-3 w-3 shrink-0" />
+                        </a>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </>
         )}
       </div>
 

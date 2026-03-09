@@ -56,6 +56,7 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
   const { t } = useTranslation('sites')
   const {
     matchAnalysis,
+    atsKeywords,
     strengthsForThisJob,
     gapsAndImprovementAreas,
     actionableResumeSuggestions,
@@ -80,7 +81,7 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
   return (
     <div className="space-y-5 max-h-[60vh] overflow-y-auto pr-1 scrollbar-thin">
       {/* Score hero */}
-      <Card className="flex flex-col items-center gap-4 p-5 sm:flex-row sm:items-center sm:gap-5 border-border/50">
+      <Card className="flex flex-col items-center gap-4 p-3 sm:p-5 sm:flex-row sm:items-center sm:gap-5 border-border/50">
         <div className="relative flex h-20 w-20 shrink-0 items-center justify-center">
           <svg className="absolute inset-0 h-20 w-20 -rotate-90" viewBox="0 0 80 80">
             <circle
@@ -121,9 +122,41 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
         </div>
       </Card>
 
+      {/* ATS Keywords */}
+      {(atsKeywords?.matched?.length > 0 || atsKeywords?.missing?.length > 0) && (
+        <div className="animate-fade-in-up" style={{ animationDelay: '50ms' }}>
+          <h4 className="font-semibold text-foreground flex items-center gap-2 mb-3 text-sm">
+            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/10">
+              <Target className="h-3.5 w-3.5 text-primary" />
+            </div>
+            {t('analysis.atsKeywords')}
+          </h4>
+          <div className="flex flex-wrap gap-1.5">
+            {atsKeywords.matched?.map((kw) => (
+              <span
+                key={kw}
+                className="inline-flex items-center gap-1 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 text-xs font-medium"
+              >
+                <CheckCircle className="h-3 w-3" />
+                {kw}
+              </span>
+            ))}
+            {atsKeywords.missing?.map((kw) => (
+              <span
+                key={kw}
+                className="inline-flex items-center gap-1 rounded-md bg-red-500/10 text-red-400 border border-red-500/20 px-2.5 py-1 text-xs font-medium"
+              >
+                <AlertTriangle className="h-3 w-3" />
+                {kw}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Strengths */}
       {strengthsForThisJob?.length > 0 && (
-        <div className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+        <div className="animate-fade-in-up" style={{ animationDelay: '150ms' }}>
           <h4 className="font-semibold text-foreground flex items-center gap-2 mb-3 text-sm">
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/10">
               <CheckCircle className="h-3.5 w-3.5 text-primary" />
@@ -149,7 +182,7 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
 
       {/* Gaps */}
       {gapsAndImprovementAreas?.length > 0 && (
-        <div className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+        <div className="animate-fade-in-up" style={{ animationDelay: '250ms' }}>
           <h4 className="font-semibold text-foreground flex items-center gap-2 mb-3 text-sm">
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-warning/10">
               <AlertTriangle className="h-3.5 w-3.5 text-warning" />
@@ -175,7 +208,7 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
 
       {/* Suggestions */}
       {actionableResumeSuggestions?.length > 0 && (
-        <div className="animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+        <div className="animate-fade-in-up" style={{ animationDelay: '350ms' }}>
           <h4 className="font-semibold text-foreground flex items-center gap-2 mb-3 text-sm">
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-info/10">
               <Lightbulb className="h-3.5 w-3.5 text-info" />
@@ -207,7 +240,7 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
 
       {/* Final Considerations */}
       {finalConsiderations && (
-        <div className="animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+        <div className="animate-fade-in-up" style={{ animationDelay: '450ms' }}>
           <h4 className="font-semibold text-foreground flex items-center gap-2 mb-3 text-sm">
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/10">
               <Target className="h-3.5 w-3.5 text-primary" />

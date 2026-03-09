@@ -15,18 +15,20 @@ import {
   MailIcon,
   LockIcon,
   PhoneIcon,
-  FileTextIcon,
-  CreditCardIcon,
-  QrCodeIcon
+  FileTextIcon
 } from 'lucide-react'
 import type { Plan } from '@/models/plan'
 import { api } from '@/services/api'
 import axios from 'axios'
 import { useTranslation } from 'react-i18next'
+import type { PixQRCodeData } from '@/services/paymentService'
 
 interface PaymentFormProps {
   plan: Plan
-  billingPeriod: 'monthly' | 'annual'
+  billingPeriod: 'monthly' | 'quarterly'
+  onPixCreated: (pixData: PixQRCodeData) => void
+  isLoading: boolean
+  setIsLoading: (loading: boolean) => void
 }
 
 interface FormData {
@@ -36,18 +38,22 @@ interface FormData {
   confirmPassword: string
   cpfCnpj: string
   phone: string
-  paymentMethod: 'pix' | 'card' | ''
 }
 
 interface FormErrors {
   [key: string]: string
 }
 
-export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
+export function PaymentForm({
+  plan,
+  billingPeriod,
+  onPixCreated,
+  isLoading,
+  setIsLoading
+}: PaymentFormProps) {
   const { t } = useTranslation('plans')
   const { t: tAuth } = useTranslation('auth')
   const { t: tCommon } = useTranslation('common')
-  const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [errors, setErrors] = useState<FormErrors>({})
@@ -57,8 +63,7 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
     password: '',
     confirmPassword: '',
     cpfCnpj: '',
-    phone: '',
-    paymentMethod: 'pix'
+    phone: ''
   })
 
   const debounceTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({})
@@ -183,10 +188,6 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
       }
     }
 
-    if (!formData.paymentMethod) {
-      newErrors.paymentMethod = tAuth('validation.paymentMethodRequired')
-    }
-
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -207,15 +208,11 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
         password: formData.password,
         tax: formData.cpfCnpj.replace(/\D/g, ''),
         cellphone: formData.phone.replace(/\D/g, ''),
-        methods: [formData.paymentMethod === 'card' ? 'CREDIT_CARD' : 'PIX'],
+        methods: ['PIX'],
         billing_period: billingPeriod
       })
 
-      const { url } = responsePayment.data
-      if (url) {
-        window.location.href = url
-        return
-      }
+      onPixCreated(responsePayment.data as PixQRCodeData)
     } catch (err) {
       const message =
         axios.isAxiosError(err) && err.response?.data?.error
@@ -430,74 +427,6 @@ export function PaymentForm({ plan, billingPeriod }: PaymentFormProps) {
               </div>
               {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
             </div>
-          </fieldset>
-
-          {/* Payment Method Section */}
-          <fieldset
-            className="space-y-4 border-t border-border/50 pt-8 animate-fade-in-up"
-            style={{ animationDelay: '200ms' }}
-          >
-            <legend className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-              {t('paymentForm.paymentMethod')}
-            </legend>
-
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div
-                className={`group flex cursor-pointer items-center gap-4 rounded-lg border-2 p-4 transition-all duration-150 ${
-                  formData.paymentMethod === 'pix'
-                    ? 'border-primary bg-primary/10'
-                    : 'border-border/50 hover:border-primary/30'
-                }`}
-                onClick={() => {
-                  setFormData((prev) => ({ ...prev, paymentMethod: 'pix' }))
-                  setErrors((prev) => ({ ...prev, paymentMethod: '' }))
-                }}
-              >
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  value="pix"
-                  checked={formData.paymentMethod === 'pix'}
-                  onChange={() => {
-                    setFormData((prev) => ({ ...prev, paymentMethod: 'pix' }))
-                    setErrors((prev) => ({ ...prev, paymentMethod: '' }))
-                  }}
-                  className="sr-only"
-                />
-                <div
-                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-colors ${
-                    formData.paymentMethod === 'pix'
-                      ? 'bg-primary/20 text-primary'
-                      : 'bg-muted text-muted-foreground'
-                  }`}
-                >
-                  <QrCodeIcon className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="font-semibold text-foreground">{t('paymentForm.pix')}</p>
-                  <p className="text-xs text-muted-foreground">{t('paymentForm.pixDescription')}</p>
-                </div>
-              </div>
-
-              <div className="relative flex items-center gap-4 rounded-lg border-2 border-border/50 p-4 opacity-50 pointer-events-none">
-                <span className="absolute right-3 top-3 rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
-                  Em breve
-                </span>
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-                  <CreditCardIcon className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="font-semibold text-foreground">{t('paymentForm.creditCard')}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {t('paymentForm.creditCardDescription')}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {errors.paymentMethod && (
-              <p className="text-sm text-destructive">{errors.paymentMethod}</p>
-            )}
           </fieldset>
 
           {/* Submit Button */}
