@@ -33,7 +33,12 @@ export const siteCareerService = {
 
   addSiteConfig: async (formData: SiteConfigFormData, logoFile: File | null) => {
     const multipartData = new FormData()
-    multipartData.append('siteData', JSON.stringify(formData))
+
+    const cleanedData = Object.fromEntries(
+      Object.entries(formData).map(([key, value]) => [key, value === '' ? null : value])
+    )
+
+    multipartData.append('siteData', JSON.stringify(cleanedData))
 
     if (logoFile) {
       multipartData.append('logo', logoFile)
@@ -63,7 +68,12 @@ export const siteCareerService = {
   },
 
   sandboxScrape: async (config: SiteConfigFormData) => {
-    const { data } = await api.post('/scrape-sandbox', config)
+    const cleanedData = Object.fromEntries(
+      Object.entries(config).map(([key, value]) => [key, value === '' ? null : value])
+    )
+
+    const { data } = await api.post('/scrape-sandbox', cleanedData)
+
     return data as {
       success: boolean
       message: string
