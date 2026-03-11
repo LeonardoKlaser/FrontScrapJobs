@@ -17,10 +17,10 @@ export function HeroSection() {
       <div className="container mx-auto relative z-10">
         <div className="grid md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
           {/* Left column — Text */}
-          <div className="space-y-8 text-left">
+          <div className="space-y-8 text-center md:text-left">
             {/* Logo */}
             <div
-              className="mb-4 animate-fade-in-up"
+              className="mb-4 animate-fade-in-up flex justify-center md:justify-start"
               style={{ animationDelay: '0ms' }}
             >
               <Logo size={32} showText textClassName="text-2xl" />
@@ -58,12 +58,12 @@ export function HeroSection() {
               </a>
 
               {/* Micro-copy */}
-              <p className="flex items-center gap-2 text-sm text-muted-foreground mt-4">
+              <p className="flex items-center justify-center md:justify-start gap-2 text-sm text-muted-foreground mt-4">
                 <ShieldCheck className="w-4 h-4 text-primary" />
                 {t('hero.microcopy')}
               </p>
 
-              <p className="text-sm text-muted-foreground mt-3">
+              <p className="text-sm text-muted-foreground mt-3 text-center md:text-left">
                 {t('hero.loginPrompt')}{' '}
                 <a href="/login" className="text-primary hover:underline font-medium">
                   {t('hero.loginLink')}

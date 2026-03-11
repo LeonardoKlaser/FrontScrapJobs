@@ -72,7 +72,7 @@ export function PricingSection() {
             </div>
           </div>
 
-          <div className="flex justify-center gap-8 flex-wrap">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {plans?.map((plan, index) => {
               const isBetaTester = plan.name === 'Beta Tester'
               const isFeatured = index === featuredIndex
@@ -84,7 +84,7 @@ export function PricingSection() {
               return (
                 <Card
                   key={plan.id}
-                  className={`bg-card border-border/50 transition-all duration-300 animate-fade-in-up hover-lift min-w-0 w-full sm:min-w-[280px] max-w-[340px] flex-1 relative overflow-visible ${
+                  className={`bg-card border-border/50 transition-all duration-300 animate-fade-in-up hover-lift relative overflow-visible ${
                     isFeatured ? 'border-primary/50 glow-border' : 'hover:border-primary/30'
                   }`}
                   style={{ animationDelay: `${index * 150}ms` }}

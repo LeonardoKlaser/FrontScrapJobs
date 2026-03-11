@@ -17,7 +17,7 @@ export function FaqSection() {
     <section className="py-20 sm:py-24 px-4 bg-card/30">
       <div className="container mx-auto">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 max-w-6xl mx-auto">
-          <div className="space-y-6 animate-fade-in-up">
+          <div className="space-y-6 text-center lg:text-left animate-fade-in-up">
             <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-foreground leading-tight tracking-tight text-balance">
               {t('faq.ctaTitle')}
             </h2>

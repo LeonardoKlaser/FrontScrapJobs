@@ -8,7 +8,7 @@ export function ProblemPromiseSection() {
       <div className="container mx-auto">
         <div className="grid md:grid-cols-2 gap-8 md:gap-16 max-w-6xl mx-auto">
           {/* Problem */}
-          <div className="space-y-6 animate-fade-in-up" style={{ animationDelay: '0ms' }}>
+          <div className="space-y-6 text-center md:text-left animate-fade-in-up" style={{ animationDelay: '0ms' }}>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight tracking-tight text-balance">
               {t('problem.heading')}
             </h2>
@@ -18,7 +18,7 @@ export function ProblemPromiseSection() {
           </div>
 
           {/* Promise */}
-          <div className="space-y-6 animate-fade-in-up" style={{ animationDelay: '150ms' }}>
+          <div className="space-y-6 text-center md:text-left animate-fade-in-up" style={{ animationDelay: '150ms' }}>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight tracking-tight text-balance">
               {t('problem.promiseHeading')}
             </h2>
