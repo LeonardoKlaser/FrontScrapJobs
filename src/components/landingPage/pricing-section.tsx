@@ -35,7 +35,7 @@ export function PricingSection() {
     <section id="pricing" className="py-20 sm:py-24 px-4">
       <div className="container mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight text-balance">
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight text-balance">
             {t('pricing.title')}
           </h2>
         </div>
@@ -84,7 +84,7 @@ export function PricingSection() {
               return (
                 <Card
                   key={plan.id}
-                  className={`bg-card border-border/50 transition-all duration-300 animate-fade-in-up hover-lift min-w-[280px] max-w-[340px] flex-1 relative overflow-visible ${
+                  className={`bg-card border-border/50 transition-all duration-300 animate-fade-in-up hover-lift min-w-0 w-full sm:min-w-[280px] max-w-[340px] flex-1 relative overflow-visible ${
                     isFeatured ? 'border-primary/50 glow-border' : 'hover:border-primary/30'
                   }`}
                   style={{ animationDelay: `${index * 150}ms` }}

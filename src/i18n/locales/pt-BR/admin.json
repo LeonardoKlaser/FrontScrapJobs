@@ -43,6 +43,8 @@
       "cssDescription": "Coleta via seletores CSS no HTML da página",
       "api": "API",
       "apiDescription": "Coleta via chamada direta à API do site",
+      "headless": "Navegador Headless",
+      "headlessDescription": "Renderiza JavaScript via Chrome antes de extrair com seletores CSS",
       "selected": "Selecionado"
     },
     "cssConfig": {

@@ -43,6 +43,8 @@
       "cssDescription": "Collection via CSS selectors on the page HTML",
       "api": "API",
       "apiDescription": "Collection via direct API call to the site",
+      "headless": "Headless Browser",
+      "headlessDescription": "Renders JavaScript via Chrome before extracting with CSS selectors",
       "selected": "Selected"
     },
     "cssConfig": {

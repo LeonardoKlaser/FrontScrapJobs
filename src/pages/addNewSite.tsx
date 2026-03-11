@@ -24,6 +24,7 @@ import {
   Globe,
   Code2,
   Webhook,
+  Monitor,
   Loader2,
   CheckCircle,
   Play
@@ -235,7 +236,7 @@ export default function AdicionarSitePage() {
               <CardDescription>{t('addSite.strategy.description')}</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <button
                   type="button"
                   onClick={() => handleInputChange('scraping_type', 'CSS')}
@@ -301,13 +302,46 @@ export default function AdicionarSitePage() {
                     </Badge>
                   )}
                 </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleInputChange('scraping_type', 'HEADLESS')}
+                  className={`relative flex items-start gap-3 rounded-lg border p-4 text-left transition-all duration-150 ${
+                    formData.scraping_type === 'HEADLESS'
+                      ? 'border-primary/50 bg-primary/5 ring-1 ring-primary/20'
+                      : 'border-border/50 hover:border-primary/20 hover:bg-muted/30'
+                  }`}
+                >
+                  <div
+                    className={`mt-0.5 rounded-md p-2 ${
+                      formData.scraping_type === 'HEADLESS'
+                        ? 'bg-primary/10 text-primary'
+                        : 'bg-muted text-muted-foreground'
+                    }`}
+                  >
+                    <Monitor className="size-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground">
+                      {t('addSite.strategy.headless')}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {t('addSite.strategy.headlessDescription')}
+                    </p>
+                  </div>
+                  {formData.scraping_type === 'HEADLESS' && (
+                    <Badge variant="default" className="absolute top-3 right-3 text-xs">
+                      {t('addSite.strategy.selected')}
+                    </Badge>
+                  )}
+                </button>
               </div>
             </CardContent>
           </Card>
         </div>
 
         {/* CSS Selectors */}
-        {formData.scraping_type === 'CSS' && (
+        {(formData.scraping_type === 'CSS' || formData.scraping_type === 'HEADLESS') && (
           <div className="animate-fade-in-up">
             <Card>
               <CardHeader>

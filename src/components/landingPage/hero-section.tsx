@@ -7,7 +7,7 @@ import dashboardImg from '@/assets/ScrapJobs Dashboard.png'
 export function HeroSection() {
   const { t } = useTranslation('landing')
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center px-6 sm:px-8 overflow-hidden">
       {/* Radial emerald gradient background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(16,185,129,0.12),transparent)]" />
 
@@ -28,7 +28,7 @@ export function HeroSection() {
 
             {/* Headline */}
             <h1
-              className="text-3xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight animate-fade-in-up text-balance"
+              className="text-2xl min-[400px]:text-3xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight animate-fade-in-up text-balance"
               style={{ animationDelay: '100ms' }}
             >
               <span className="text-foreground">{t('hero.heading1')}</span>
@@ -73,7 +73,7 @@ export function HeroSection() {
           </div>
 
           {/* Right column — Dashboard Image */}
-          <div className="mt-12 md:mt-0 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+          <div className="mt-12 md:mt-0 animate-fade-in-up max-w-sm sm:max-w-full mx-auto" style={{ animationDelay: '400ms' }}>
             <img
               src={dashboardImg}
               alt={t('hero.dashboardAlt')}

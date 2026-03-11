@@ -1,7 +1,7 @@
 import type { SiteCareer, UserSiteRequest } from '@/models/siteCareer'
 import { api } from './api'
 
-export type ScrapingType = 'CSS' | 'API'
+export type ScrapingType = 'CSS' | 'API' | 'HEADLESS'
 
 export interface SiteConfigFormData {
   base_url: string

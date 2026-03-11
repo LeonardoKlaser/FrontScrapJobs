@@ -6,7 +6,7 @@ export function ProblemPromiseSection() {
   return (
     <section className="py-20 sm:py-24 px-4">
       <div className="container mx-auto">
-        <div className="grid md:grid-cols-2 gap-16 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-16 max-w-6xl mx-auto">
           {/* Problem */}
           <div className="space-y-6 animate-fade-in-up" style={{ animationDelay: '0ms' }}>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight tracking-tight text-balance">
