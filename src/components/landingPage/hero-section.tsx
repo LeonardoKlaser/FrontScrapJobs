@@ -19,7 +19,10 @@ export function HeroSection() {
           {/* Left column — Text */}
           <div className="space-y-8 text-center md:text-left">
             {/* Logo */}
-            <div className="mb-4 animate-fade-in-up flex justify-center md:justify-start" style={{ animationDelay: '0ms' }}>
+            <div
+              className="mb-4 animate-fade-in-up flex justify-center md:justify-start"
+              style={{ animationDelay: '0ms' }}
+            >
               <Logo size={32} showText textClassName="text-2xl" />
             </div>
 
@@ -70,7 +73,10 @@ export function HeroSection() {
           </div>
 
           {/* Right column — Dashboard Image */}
-          <div className="mt-12 md:mt-0 animate-fade-in-up max-w-sm sm:max-w-full mx-auto" style={{ animationDelay: '400ms' }}>
+          <div
+            className="mt-12 md:mt-0 animate-fade-in-up max-w-sm sm:max-w-full mx-auto"
+            style={{ animationDelay: '400ms' }}
+          >
             <img
               src={dashboardImg}
               alt={t('hero.dashboardAlt')}
