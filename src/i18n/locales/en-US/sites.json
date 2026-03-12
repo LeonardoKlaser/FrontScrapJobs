@@ -30,7 +30,7 @@
     "instruction": "Enter keywords or roles of interest to receive alerts.",
     "keywordsLabel": "Keywords (separate with commas)",
     "keywordsPlaceholder": "e.g.: Frontend, React, Mid-level",
-    "slotsAvailable": "Available slots",
+    "slotsAvailable": "Available company slots",
     "limitButton": "Limit Reached",
     "confirmSubscription": "Confirm Subscription",
     "registering": "Registering..."

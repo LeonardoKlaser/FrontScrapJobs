@@ -3,7 +3,15 @@ import { api } from './api'
 import type { User } from '@/models/user'
 
 export const authService = {
-  login: async (credentials: LoginInput): Promise<{ token: string }> => {
+  login: async (
+    credentials: LoginInput
+  ): Promise<{
+    id: number
+    user_name: string
+    email: string
+    cellphone?: string
+    is_admin: boolean
+  }> => {
     const { data } = await api.post('/login', credentials)
     return data
   },

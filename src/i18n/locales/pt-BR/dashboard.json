@@ -26,15 +26,26 @@
     "previous": "Anterior",
     "next": "Próximo",
     "relevantOnly": "Só relevantes",
-    "matchBadge": "Match"
+    "matchBadge": "Match",
+    "filterCompany": "Empresa",
+    "filterCompanyAll": "Todas as empresas",
+    "filterLocation": "Localização",
+    "filterLocationAll": "Todas",
+    "filterLocationNational": "Nacional",
+    "filterLocationInternational": "Internacional",
+    "filterLocationRemote": "Remoto",
+    "filterLocationSearch": "Buscar localização...",
+    "clearFilters": "Limpar filtros"
   },
   "monitoredUrls": {
-    "title": "Suas URLs monitoradas",
+    "title": "Empresas monitoradas",
     "newUrl": "Nova URL",
-    "empty": "Você ainda não adicionou URLs para monitorar.",
+    "empty": "Você ainda não adicionou empresas para monitorar.",
     "addCompany": "Adicionar empresa",
     "name": "Nome",
-    "url": "URL"
+    "remove": "Remover",
+    "removeSuccess": "Empresa removida com sucesso",
+    "removeError": "Erro ao remover empresa"
   },
   "error": {
     "loadDashboard": "Erro ao carregar o dashboard"

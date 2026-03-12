@@ -235,12 +235,12 @@ export function PaymentForm({
       </CardHeader>
 
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Error Alert */}
-          {Object.values(errors).some(Boolean) && (
+        <form onSubmit={handleSubmit} noValidate className="space-y-8">
+          {/* Submit Error Alert */}
+          {errors.submit && (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{errors.submit || t('paymentForm.formErrors')}</AlertDescription>
+              <AlertDescription>{errors.submit}</AlertDescription>
             </Alert>
           )}
 
@@ -265,10 +265,9 @@ export function PaymentForm({
                   onChange={handleInputChange}
                   disabled={isLoading}
                   className={`pl-10 ${errors.name ? 'border-destructive' : ''}`}
-                  required
                 />
               </div>
-              {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
+              {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
             </div>
 
             <div className="space-y-2">
@@ -287,11 +286,10 @@ export function PaymentForm({
                   onBlur={() => handleFieldBlur('email', formData.email)}
                   disabled={isLoading}
                   className={`pl-10 ${errors.email ? 'border-destructive' : ''}`}
-                  required
                 />
               </div>
               {errors.email && (
-                <p className="text-sm text-destructive">
+                <p className="text-xs text-destructive">
                   {errors.email}
                   {errors.email === t('paymentForm.emailExists') && (
                     <>
@@ -320,7 +318,6 @@ export function PaymentForm({
                   onChange={handleInputChange}
                   disabled={isLoading}
                   className={`pl-10 pr-10 ${errors.password ? 'border-destructive' : ''}`}
-                  required
                 />
                 <button
                   type="button"
@@ -333,7 +330,7 @@ export function PaymentForm({
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
-              {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
+              {errors.password && <p className="text-xs text-destructive">{errors.password}</p>}
               <p className="text-xs text-muted-foreground">{t('paymentForm.passwordHelper')}</p>
             </div>
 
@@ -352,7 +349,6 @@ export function PaymentForm({
                   onChange={handleInputChange}
                   disabled={isLoading}
                   className={`pl-10 pr-10 ${errors.confirmPassword ? 'border-destructive' : ''}`}
-                  required
                 />
                 <button
                   type="button"
@@ -372,7 +368,7 @@ export function PaymentForm({
                 </button>
               </div>
               {errors.confirmPassword && (
-                <p className="text-sm text-destructive">{errors.confirmPassword}</p>
+                <p className="text-xs text-destructive">{errors.confirmPassword}</p>
               )}
             </div>
           </fieldset>
@@ -402,10 +398,9 @@ export function PaymentForm({
                   onBlur={() => handleFieldBlur('cpfCnpj', formData.cpfCnpj)}
                   disabled={isLoading}
                   className={`pl-10 font-mono ${errors.cpfCnpj ? 'border-destructive' : ''}`}
-                  required
                 />
               </div>
-              {errors.cpfCnpj && <p className="text-sm text-destructive">{errors.cpfCnpj}</p>}
+              {errors.cpfCnpj && <p className="text-xs text-destructive">{errors.cpfCnpj}</p>}
             </div>
 
             <div className="space-y-2">
@@ -423,10 +418,9 @@ export function PaymentForm({
                   onChange={handleInputChange}
                   disabled={isLoading}
                   className={`pl-10 font-mono ${errors.phone ? 'border-destructive' : ''}`}
-                  required
                 />
               </div>
-              {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
+              {errors.phone && <p className="text-xs text-destructive">{errors.phone}</p>}
             </div>
           </fieldset>
 

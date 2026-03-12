@@ -5,9 +5,11 @@ export interface LatestJob {
   company: string
   job_link: string
   matched: boolean
+  created_at?: string
 }
 
 export interface MonitoredURL {
+  site_id: number
   site_name: string
   base_url: string
 }
@@ -20,9 +22,7 @@ export interface DashboardData {
   user_monitored_urls: MonitoredURL[]
 }
 
-export interface PaginatedJobsResponse {
+export interface JobsResponse {
   jobs: LatestJob[]
   total_count: number
-  page: number
-  limit: number
 }

@@ -122,12 +122,7 @@ export function PixQRCodeStep({ pixData, onGenerateNew }: PixQRCodeStepProps) {
       <CardContent className="flex flex-col items-center gap-6">
         {/* QR Code Image */}
         <div className="rounded-xl border border-border/50 bg-white p-4">
-          <QRCodeSVG
-            value={pixData.br_code}
-            size={208}
-            level="M"
-            marginSize={0}
-          />
+          <QRCodeSVG value={pixData.br_code} size={208} level="M" marginSize={0} />
         </div>
 
         {/* Copy Button */}

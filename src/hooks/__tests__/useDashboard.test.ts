@@ -2,7 +2,7 @@ import { renderHook, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { dashboardService } from '@/services/dashboardService'
 import { useDashboard, useLatestJobs } from '@/hooks/useDashboard'
-import type { DashboardData, PaginatedJobsResponse } from '@/models/dashboard'
+import type { DashboardData, JobsResponse } from '@/models/dashboard'
 import type { ReactNode } from 'react'
 import { createElement } from 'react'
 
@@ -50,10 +50,10 @@ describe('useLatestJobs', () => {
   })
 
   it('fetches jobs with params', async () => {
-    const mockData = { jobs: [], total_count: 0, page: 1, limit: 10 }
-    vi.mocked(dashboardService.getLatestJobs).mockResolvedValue(mockData as PaginatedJobsResponse)
+    const mockData = { jobs: [], total_count: 0 }
+    vi.mocked(dashboardService.getLatestJobs).mockResolvedValue(mockData as JobsResponse)
 
-    const params = { days: 7, page: 1, limit: 10 }
+    const params = { days: 7 }
     const { result } = renderHook(() => useLatestJobs(params), { wrapper: createWrapper() })
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))

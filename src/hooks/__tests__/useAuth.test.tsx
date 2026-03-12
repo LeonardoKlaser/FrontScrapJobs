@@ -44,7 +44,13 @@ describe('useAuth', () => {
 
   describe('login', () => {
     it('calls authService.login and navigates to /app on success', async () => {
-      vi.mocked(authService.login).mockResolvedValue({ token: 'abc' })
+      const mockLoginResponse = {
+        id: 1,
+        user_name: 'Test',
+        email: 'test@email.com',
+        is_admin: false
+      }
+      vi.mocked(authService.login).mockResolvedValue(mockLoginResponse)
 
       const { result } = renderHook(() => useAuth(), { wrapper: createWrapper() })
 
@@ -64,7 +70,12 @@ describe('useAuth', () => {
 
     it('redirects to "from" param when present and starts with /app', async () => {
       mockSearchParamsValue = new URLSearchParams('from=/app/curriculum')
-      vi.mocked(authService.login).mockResolvedValue({ token: 'abc' })
+      vi.mocked(authService.login).mockResolvedValue({
+        id: 1,
+        user_name: 'Test',
+        email: 'test@email.com',
+        is_admin: false
+      })
 
       const { result } = renderHook(() => useAuth(), { wrapper: createWrapper() })
 
@@ -77,7 +88,12 @@ describe('useAuth', () => {
 
     it('ignores "from" param that does not start with /app', async () => {
       mockSearchParamsValue = new URLSearchParams('from=/login')
-      vi.mocked(authService.login).mockResolvedValue({ token: 'abc' })
+      vi.mocked(authService.login).mockResolvedValue({
+        id: 1,
+        user_name: 'Test',
+        email: 'test@email.com',
+        is_admin: false
+      })
 
       const { result } = renderHook(() => useAuth(), { wrapper: createWrapper() })
 
@@ -114,8 +130,15 @@ describe('useAuth', () => {
     })
 
     it('sets loading state during login', async () => {
-      let resolveLogin: (value: { token: string }) => void
-      const loginPromise = new Promise<{ token: string }>((resolve) => {
+      type LoginResponse = {
+        id: number
+        user_name: string
+        email: string
+        cellphone?: string
+        is_admin: boolean
+      }
+      let resolveLogin: (value: LoginResponse) => void
+      const loginPromise = new Promise<LoginResponse>((resolve) => {
         resolveLogin = resolve
       })
       vi.mocked(authService.login).mockReturnValue(loginPromise)
@@ -134,7 +157,7 @@ describe('useAuth', () => {
       expect(result.current.loading).toBe(true)
 
       await act(async () => {
-        resolveLogin!({ token: 'abc' })
+        resolveLogin!({ id: 1, user_name: 'Test', email: 'test@email.com', is_admin: false })
         await loginPromiseResult!
       })
 

@@ -19,7 +19,12 @@ describe('authService', () => {
 
   describe('login', () => {
     it('sends POST /login and returns data', async () => {
-      const mockData = { token: 'abc123' }
+      const mockData = {
+        id: 1,
+        user_name: 'Test User',
+        email: 'test@email.com',
+        is_admin: false
+      }
       vi.mocked(api.post).mockResolvedValue({ data: mockData })
 
       const result = await authService.login({ email: 'test@email.com', password: '12345678' })

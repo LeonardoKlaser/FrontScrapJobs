@@ -1,6 +1,6 @@
 import { api } from './api'
 import axios from 'axios'
-import type { DashboardData, PaginatedJobsResponse } from '@/models/dashboard'
+import type { DashboardData, JobsResponse } from '@/models/dashboard'
 
 export const dashboardService = {
   getDashboardData: async (): Promise<DashboardData> => {
@@ -20,10 +20,8 @@ export const dashboardService = {
   getLatestJobs: async (params: {
     days?: number
     search?: string
-    page?: number
-    limit?: number
     matched_only?: boolean
-  }): Promise<PaginatedJobsResponse> => {
+  }): Promise<JobsResponse> => {
     try {
       const { data } = await api.get('/api/dashboard/jobs', { params })
       return data

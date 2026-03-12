@@ -20,6 +20,8 @@ export function useUnregisterUserSite() {
     mutationFn: (siteId: number) => siteCareerService.unregisterUserFromSite(siteId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['siteCareerList'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboardData'] })
+      queryClient.invalidateQueries({ queryKey: ['latestJobs'] })
     }
   })
 }

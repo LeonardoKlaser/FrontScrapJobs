@@ -137,11 +137,11 @@ export function SecuritySection() {
               variant={buttonState === 'success' ? 'outline' : 'glow'}
               type="submit"
               disabled={isDisabled}
-              className={
+              className={`px-4 py-2 ${
                 buttonState === 'success'
                   ? 'animate-success-flash border-primary/50 text-primary'
                   : ''
-              }
+              }`}
             >
               {buttonState === 'loading' ? (
                 <>

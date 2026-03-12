@@ -43,11 +43,7 @@ export function LogoMark({ size = 32, className }: { size?: number; className?: 
       </defs>
       <rect width="48" height="48" rx={r} fill="url(#sj-bg)" />
       {/* Lightning bolt / S shape */}
-      <path
-        d="M28 6L14 26h7l-4 16 14-18h-7l4-18z"
-        fill="white"
-        fillOpacity="0.95"
-      />
+      <path d="M28 6L14 26h7l-4 16 14-18h-7l4-18z" fill="white" fillOpacity="0.95" />
     </svg>
   )
 }

@@ -44,11 +44,7 @@ export function AppHeader() {
       bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60"
     >
       <div className="mx-auto flex h-12 max-w-6xl items-center justify-between px-4">
-        <Link
-          to={PATHS.app.home}
-          prefetch="intent"
-          className="flex items-center"
-        >
+        <Link to={PATHS.app.home} prefetch="intent" className="flex items-center">
           <Logo size={24} showText textClassName="text-lg" />
         </Link>
 

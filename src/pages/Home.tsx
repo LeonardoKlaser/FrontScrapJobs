@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import {
@@ -14,7 +14,11 @@ import {
   ExternalLink,
   Sparkles,
   BarChart3,
-  Link2
+  Link2,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+  Trash2
 } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -40,8 +44,11 @@ import {
   TableCell
 } from '@/components/ui/table'
 import { useDashboard, useLatestJobs } from '@/hooks/useDashboard'
+import { useUnregisterUserSite } from '@/hooks/useRegisterUserSite'
 import { AnalysisDialog } from '@/components/analysis/analysis-dialog'
 import { PATHS } from '@/router/paths'
+import { categorizeLocation } from '@/lib/location'
+import { toast } from 'sonner'
 
 function StatsCard({
   title,
@@ -71,6 +78,26 @@ function StatsCard({
   )
 }
 
+type SortField = 'title' | 'company' | 'location' | 'matched'
+type SortDir = 'asc' | 'desc'
+
+function SortIcon({
+  field,
+  sortField,
+  sortDir
+}: {
+  field: SortField
+  sortField: SortField | null
+  sortDir: SortDir
+}) {
+  if (sortField !== field) return <ArrowUpDown className="h-3.5 w-3.5 ml-1 opacity-40" />
+  return sortDir === 'asc' ? (
+    <ArrowUp className="h-3.5 w-3.5 ml-1" />
+  ) : (
+    <ArrowDown className="h-3.5 w-3.5 ml-1" />
+  )
+}
+
 const LIMIT = 10
 
 export function Home() {
@@ -90,15 +117,30 @@ export function Home() {
   const [days, setDays] = useState(0)
   const [matchedOnly, setMatchedOnly] = useState(true)
 
+  // Filters
+  const [filterCompany, setFilterCompany] = useState('__all__')
+  const [filterLocationCategory, setFilterLocationCategory] = useState('__all__')
+  const [filterLocationText, setFilterLocationText] = useState('')
+
+  // Sorting
+  const [sortField, setSortField] = useState<SortField | null>(null)
+  const [sortDir, setSortDir] = useState<SortDir>('asc')
+
   const {
     data: jobsData,
     isLoading: isJobsLoading,
     isError: isJobsError
   } = useLatestJobs({
-    page,
-    limit: LIMIT,
     search,
     days: days || undefined,
+    matched_only: matchedOnly
+  })
+
+  const unregisterSite = useUnregisterUserSite()
+
+  // Also fetch all jobs for 24h count when matchedOnly differs
+  const { data: allJobsData } = useLatestJobs({
+    days: 1,
     matched_only: matchedOnly
   })
 
@@ -129,6 +171,8 @@ export function Home() {
     )
   }
 
+  const jobs24hCount = allJobsData?.total_count ?? data?.new_jobs_today_count ?? 0
+
   const stats = [
     {
       title: t('stats.monitoredUrls'),
@@ -137,7 +181,7 @@ export function Home() {
     },
     {
       title: t('stats.newJobs24h'),
-      value: data?.new_jobs_today_count ?? 0,
+      value: jobs24hCount,
       icon: FileText
     },
     {
@@ -149,9 +193,55 @@ export function Home() {
 
   const monitoredUrls = data?.user_monitored_urls || []
 
-  const jobs = jobsData?.jobs || []
-  const totalCount = jobsData?.total_count ?? 0
+  const allJobs = jobsData?.jobs || []
+
+  // Unique companies for filter dropdown
+  const uniqueCompanies = useMemo(
+    () => [...new Set(allJobs.map((j) => j.company).filter(Boolean))].sort(),
+    [allJobs]
+  )
+
+  // Apply client-side filters
+  const filteredJobs = useMemo(
+    () =>
+      allJobs.filter((job) => {
+        if (filterCompany !== '__all__' && job.company !== filterCompany) return false
+
+        if (filterLocationCategory !== '__all__') {
+          const cat = categorizeLocation(job.location)
+          if (filterLocationCategory === 'National' && cat !== 'National') return false
+          if (filterLocationCategory === 'International' && cat !== 'International') return false
+          if (filterLocationCategory === 'Remote' && cat !== 'Remote') return false
+        }
+
+        if (filterLocationText.trim()) {
+          const searchLower = filterLocationText.toLowerCase()
+          if (!job.location?.toLowerCase().includes(searchLower)) return false
+        }
+
+        return true
+      }),
+    [allJobs, filterCompany, filterLocationCategory, filterLocationText]
+  )
+
+  // Apply sorting
+  const sortedJobs = useMemo(() => {
+    if (!sortField) return filteredJobs
+    const dir = sortDir === 'asc' ? 1 : -1
+    return [...filteredJobs].sort((a, b) => {
+      if (sortField === 'matched') {
+        return (Number(a.matched) - Number(b.matched)) * dir
+      }
+      const valA = (a[sortField] || '').toLowerCase()
+      const valB = (b[sortField] || '').toLowerCase()
+      return valA.localeCompare(valB) * dir
+    })
+  }, [filteredJobs, sortField, sortDir])
+
+  // Client-side pagination
+  const totalCount = sortedJobs.length
   const totalPages = Math.ceil(totalCount / LIMIT)
+  const paginatedJobs = sortedJobs.slice((page - 1) * LIMIT, page * LIMIT)
 
   const handleSearch = () => {
     setSearch(searchInput)
@@ -166,6 +256,37 @@ export function Home() {
   const handleMatchedOnlyChange = (checked: boolean) => {
     setMatchedOnly(checked)
     setPage(1)
+  }
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))
+    } else {
+      setSortField(field)
+      setSortDir('asc')
+    }
+    setPage(1)
+  }
+
+  const resetFilters = () => {
+    setFilterCompany('__all__')
+    setFilterLocationCategory('__all__')
+    setFilterLocationText('')
+    setPage(1)
+  }
+
+  const hasActiveFilters =
+    filterCompany !== '__all__' || filterLocationCategory !== '__all__' || filterLocationText !== ''
+
+  const handleRemoveSite = (siteId: number) => {
+    unregisterSite.mutate(siteId, {
+      onSuccess: () => {
+        toast.success(t('monitoredUrls.removeSuccess'))
+      },
+      onError: () => {
+        toast.error(t('monitoredUrls.removeError'))
+      }
+    })
   }
 
   return (
@@ -192,7 +313,7 @@ export function Home() {
           </div>
         </SectionHeader>
 
-        {/* Search & Filter */}
+        {/* Search & Period Filter */}
         <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3">
           <div className="relative flex-1 min-w-0 sm:min-w-[200px] max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -220,20 +341,87 @@ export function Home() {
           </Select>
         </div>
 
+        {/* Company & Location Filters */}
+        <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3">
+          <Select
+            value={filterCompany}
+            onValueChange={(v) => {
+              setFilterCompany(v)
+              setPage(1)
+            }}
+          >
+            <SelectTrigger className="w-full sm:w-[220px]">
+              <SelectValue placeholder={t('latestJobs.filterCompany')} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__all__">{t('latestJobs.filterCompanyAll')}</SelectItem>
+              {uniqueCompanies.map((company) => (
+                <SelectItem key={company} value={company}>
+                  {company}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={filterLocationCategory}
+            onValueChange={(v) => {
+              setFilterLocationCategory(v)
+              setPage(1)
+            }}
+          >
+            <SelectTrigger className="w-full sm:w-[200px]">
+              <SelectValue placeholder={t('latestJobs.filterLocation')} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__all__">{t('latestJobs.filterLocationAll')}</SelectItem>
+              <SelectItem value="National">{t('latestJobs.filterLocationNational')}</SelectItem>
+              <SelectItem value="International">
+                {t('latestJobs.filterLocationInternational')}
+              </SelectItem>
+              <SelectItem value="Remote">{t('latestJobs.filterLocationRemote')}</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <div className="relative flex-1 min-w-0 sm:min-w-[180px] max-w-xs">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder={t('latestJobs.filterLocationSearch')}
+              value={filterLocationText}
+              onChange={(e) => {
+                setFilterLocationText(e.target.value)
+                setPage(1)
+              }}
+              className="pl-9"
+            />
+          </div>
+
+          {hasActiveFilters && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={resetFilters}
+              className="text-muted-foreground"
+            >
+              {t('latestJobs.clearFilters')}
+            </Button>
+          )}
+        </div>
+
         {/* Table */}
-        {isJobsLoading && jobs.length === 0 ? (
+        {isJobsLoading && allJobs.length === 0 ? (
           <div className="flex justify-center py-12">
             <Loader2 className="h-6 w-6 animate-spin text-primary" />
           </div>
         ) : isJobsError ? (
           <p className="text-sm text-destructive">{t('latestJobs.loadError')}</p>
-        ) : jobs.length === 0 ? (
+        ) : paginatedJobs.length === 0 ? (
           <EmptyState icon={FileText} title={t('latestJobs.empty')} />
         ) : (
           <>
             {/* Mobile: card layout */}
             <div className="flex flex-col gap-3 sm:hidden">
-              {jobs.map((job) => (
+              {paginatedJobs.map((job) => (
                 <Card key={job.id} className="p-4 space-y-2.5">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
@@ -278,12 +466,32 @@ export function Home() {
               <Table className="text-sm">
                 <TableHeader className="bg-muted/40">
                   <TableRow>
-                    <TableHead className="w-[40%] font-medium">
-                      {t('latestJobs.jobTitle')}
+                    <TableHead
+                      className="w-[40%] font-medium cursor-pointer select-none"
+                      onClick={() => handleSort('title')}
+                    >
+                      <span className="inline-flex items-center">
+                        {t('latestJobs.jobTitle')}
+                        <SortIcon field="title" sortField={sortField} sortDir={sortDir} />
+                      </span>
                     </TableHead>
-                    <TableHead className="w-[20%] font-medium">{t('latestJobs.company')}</TableHead>
-                    <TableHead className="w-[15%] font-medium">
-                      {t('latestJobs.location')}
+                    <TableHead
+                      className="w-[20%] font-medium cursor-pointer select-none"
+                      onClick={() => handleSort('company')}
+                    >
+                      <span className="inline-flex items-center">
+                        {t('latestJobs.company')}
+                        <SortIcon field="company" sortField={sortField} sortDir={sortDir} />
+                      </span>
+                    </TableHead>
+                    <TableHead
+                      className="w-[15%] font-medium cursor-pointer select-none"
+                      onClick={() => handleSort('location')}
+                    >
+                      <span className="inline-flex items-center">
+                        {t('latestJobs.location')}
+                        <SortIcon field="location" sortField={sortField} sortDir={sortDir} />
+                      </span>
                     </TableHead>
                     <TableHead className="w-[10%] font-medium">{t('latestJobs.link')}</TableHead>
                     <TableHead className="w-[15%] font-medium text-right">
@@ -292,7 +500,7 @@ export function Home() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {jobs.map((job) => (
+                  {paginatedJobs.map((job) => (
                     <TableRow key={job.id} className="group/row hover:bg-muted/30">
                       <TableCell className="max-w-0 font-medium text-foreground">
                         <span className="flex items-center gap-2">
@@ -380,7 +588,7 @@ export function Home() {
         )}
       </div>
 
-      {/* Monitored URLs */}
+      {/* Monitored Companies */}
       <div className="flex flex-col gap-5 animate-fade-in-up" style={{ animationDelay: '320ms' }}>
         <SectionHeader title={t('monitoredUrls.title')} icon={Link2}>
           <Button
@@ -413,17 +621,17 @@ export function Home() {
             {/* Mobile: card layout */}
             <div className="flex flex-col gap-2 sm:hidden">
               {monitoredUrls.map((url) => (
-                <Card key={url.site_name + url.base_url} className="p-3 space-y-1">
+                <Card key={url.site_id} className="p-3 flex items-center justify-between">
                   <p className="text-sm font-medium text-foreground">{url.site_name}</p>
-                  <a
-                    href={url.base_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs text-primary hover:underline underline-offset-4 break-all"
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-destructive hover:text-destructive hover:bg-destructive/10 h-8 w-8 p-0"
+                    onClick={() => handleRemoveSite(url.site_id)}
+                    disabled={unregisterSite.isPending}
                   >
-                    {url.base_url}
-                    <ExternalLink className="h-3 w-3 shrink-0" />
-                  </a>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </Card>
               ))}
             </div>
@@ -434,23 +642,26 @@ export function Home() {
                 <TableHeader className="bg-muted/40">
                   <TableRow>
                     <TableHead className="font-medium">{t('monitoredUrls.name')}</TableHead>
-                    <TableHead className="font-medium">{t('monitoredUrls.url')}</TableHead>
+                    <TableHead className="font-medium w-[100px] text-right">
+                      {t('latestJobs.action')}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {monitoredUrls.map((url) => (
-                    <TableRow key={url.site_name + url.base_url} className="hover:bg-muted/30">
+                    <TableRow key={url.site_id} className="hover:bg-muted/30">
                       <TableCell className="font-medium text-foreground">{url.site_name}</TableCell>
-                      <TableCell className="max-w-xs truncate">
-                        <a
-                          href={url.base_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-primary hover:underline underline-offset-4"
+                      <TableCell className="text-right">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="text-destructive hover:text-destructive hover:bg-destructive/10 gap-1.5"
+                          onClick={() => handleRemoveSite(url.site_id)}
+                          disabled={unregisterSite.isPending}
                         >
-                          {url.base_url}
-                          <ExternalLink className="h-3 w-3 shrink-0" />
-                        </a>
+                          <Trash2 className="h-3.5 w-3.5" />
+                          {t('monitoredUrls.remove')}
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}

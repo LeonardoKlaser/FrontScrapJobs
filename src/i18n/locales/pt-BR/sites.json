@@ -30,7 +30,7 @@
     "instruction": "Insira palavras-chave ou cargos de interesse para receber alertas.",
     "keywordsLabel": "Palavras-chave (separe com vírgulas)",
     "keywordsPlaceholder": "Ex: Front-end, React, Pleno",
-    "slotsAvailable": "Slots disponíveis",
+    "slotsAvailable": "Slots de empresas disponíveis",
     "limitButton": "Limite Atingido",
     "confirmSubscription": "Confirmar Inscrição",
     "registering": "Registrando..."

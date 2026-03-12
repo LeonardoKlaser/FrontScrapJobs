@@ -19,10 +19,7 @@ export function HeroSection() {
           {/* Left column — Text */}
           <div className="space-y-8 text-center md:text-left">
             {/* Logo */}
-            <div
-              className="mb-4 animate-fade-in-up flex justify-center md:justify-start"
-              style={{ animationDelay: '0ms' }}
-            >
+            <div className="mb-4 animate-fade-in-up flex justify-center md:justify-start" style={{ animationDelay: '0ms' }}>
               <Logo size={32} showText textClassName="text-2xl" />
             </div>
 

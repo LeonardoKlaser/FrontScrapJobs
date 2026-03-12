@@ -26,15 +26,26 @@
     "previous": "Previous",
     "next": "Next",
     "relevantOnly": "Relevant only",
-    "matchBadge": "Match"
+    "matchBadge": "Match",
+    "filterCompany": "Company",
+    "filterCompanyAll": "All companies",
+    "filterLocation": "Location",
+    "filterLocationAll": "All",
+    "filterLocationNational": "National",
+    "filterLocationInternational": "International",
+    "filterLocationRemote": "Remote",
+    "filterLocationSearch": "Search location...",
+    "clearFilters": "Clear filters"
   },
   "monitoredUrls": {
-    "title": "Your monitored URLs",
+    "title": "Monitored companies",
     "newUrl": "New URL",
-    "empty": "You haven't added any URLs to monitor yet.",
+    "empty": "You haven't added any companies to monitor yet.",
     "addCompany": "Add company",
     "name": "Name",
-    "url": "URL"
+    "remove": "Remove",
+    "removeSuccess": "Company removed successfully",
+    "removeError": "Failed to remove company"
   },
   "error": {
     "loadDashboard": "Failed to load dashboard"
