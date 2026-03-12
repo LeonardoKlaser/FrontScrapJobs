@@ -144,6 +144,51 @@ export function Home() {
     matched_only: matchedOnly
   })
 
+  const allJobs = jobsData?.jobs || []
+
+  // Unique companies for filter dropdown
+  const uniqueCompanies = useMemo(
+    () => [...new Set(allJobs.map((j) => j.company).filter(Boolean))].sort(),
+    [allJobs]
+  )
+
+  // Apply client-side filters
+  const filteredJobs = useMemo(
+    () =>
+      allJobs.filter((job) => {
+        if (filterCompany !== '__all__' && job.company !== filterCompany) return false
+
+        if (filterLocationCategory !== '__all__') {
+          const cat = categorizeLocation(job.location)
+          if (filterLocationCategory === 'National' && cat !== 'National') return false
+          if (filterLocationCategory === 'International' && cat !== 'International') return false
+          if (filterLocationCategory === 'Remote' && cat !== 'Remote') return false
+        }
+
+        if (filterLocationText.trim()) {
+          const searchLower = filterLocationText.toLowerCase()
+          if (!job.location?.toLowerCase().includes(searchLower)) return false
+        }
+
+        return true
+      }),
+    [allJobs, filterCompany, filterLocationCategory, filterLocationText]
+  )
+
+  // Apply sorting
+  const sortedJobs = useMemo(() => {
+    if (!sortField) return filteredJobs
+    const dir = sortDir === 'asc' ? 1 : -1
+    return [...filteredJobs].sort((a, b) => {
+      if (sortField === 'matched') {
+        return (Number(a.matched) - Number(b.matched)) * dir
+      }
+      const valA = (a[sortField] || '').toLowerCase()
+      const valB = (b[sortField] || '').toLowerCase()
+      return valA.localeCompare(valB) * dir
+    })
+  }, [filteredJobs, sortField, sortDir])
+
   if (isDashboardLoading) {
     return (
       <div className="flex flex-col gap-10">
@@ -192,51 +237,6 @@ export function Home() {
   ]
 
   const monitoredUrls = data?.user_monitored_urls || []
-
-  const allJobs = jobsData?.jobs || []
-
-  // Unique companies for filter dropdown
-  const uniqueCompanies = useMemo(
-    () => [...new Set(allJobs.map((j) => j.company).filter(Boolean))].sort(),
-    [allJobs]
-  )
-
-  // Apply client-side filters
-  const filteredJobs = useMemo(
-    () =>
-      allJobs.filter((job) => {
-        if (filterCompany !== '__all__' && job.company !== filterCompany) return false
-
-        if (filterLocationCategory !== '__all__') {
-          const cat = categorizeLocation(job.location)
-          if (filterLocationCategory === 'National' && cat !== 'National') return false
-          if (filterLocationCategory === 'International' && cat !== 'International') return false
-          if (filterLocationCategory === 'Remote' && cat !== 'Remote') return false
-        }
-
-        if (filterLocationText.trim()) {
-          const searchLower = filterLocationText.toLowerCase()
-          if (!job.location?.toLowerCase().includes(searchLower)) return false
-        }
-
-        return true
-      }),
-    [allJobs, filterCompany, filterLocationCategory, filterLocationText]
-  )
-
-  // Apply sorting
-  const sortedJobs = useMemo(() => {
-    if (!sortField) return filteredJobs
-    const dir = sortDir === 'asc' ? 1 : -1
-    return [...filteredJobs].sort((a, b) => {
-      if (sortField === 'matched') {
-        return (Number(a.matched) - Number(b.matched)) * dir
-      }
-      const valA = (a[sortField] || '').toLowerCase()
-      const valB = (b[sortField] || '').toLowerCase()
-      return valA.localeCompare(valB) * dir
-    })
-  }, [filteredJobs, sortField, sortDir])
 
   // Client-side pagination
   const totalCount = sortedJobs.length
