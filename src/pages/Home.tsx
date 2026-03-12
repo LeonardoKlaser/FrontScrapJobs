@@ -18,13 +18,17 @@ import {
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
-  Trash2
+  Trash2,
+  ListFilter,
+  X
 } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
+import { Label } from '@/components/ui/label'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { SectionHeader } from '@/components/common/section-header'
 import { EmptyState } from '@/components/common/empty-state'
 import { SkeletonCard, SkeletonTable } from '@/components/common/skeleton'
@@ -278,6 +282,9 @@ export function Home() {
   const hasActiveFilters =
     filterCompany !== '__all__' || filterLocationCategory !== '__all__' || filterLocationText !== ''
 
+  const activeFilterCount =
+    (filterCompany !== '__all__' ? 1 : 0) + (filterLocationCategory !== '__all__' ? 1 : 0)
+
   const handleRemoveSite = (siteId: number) => {
     unregisterSite.mutate(siteId, {
       onSuccess: () => {
@@ -300,6 +307,7 @@ export function Home() {
 
       {/* Jobs section */}
       <div className="flex flex-col gap-5 animate-fade-in-up" style={{ animationDelay: '240ms' }}>
+        {/* Line 1: Title + Matched Only toggle */}
         <SectionHeader title={t('latestJobs.title')} icon={Sparkles}>
           <div className="flex items-center gap-2">
             <label htmlFor="matched-only" className="text-sm text-muted-foreground cursor-pointer">
@@ -313,23 +321,25 @@ export function Home() {
           </div>
         </SectionHeader>
 
-        {/* Search & Period Filter */}
-        <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3">
-          <div className="relative flex-1 min-w-0 sm:min-w-[200px] max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        {/* Line 2: Toolbar — Search + Period + Filters Popover */}
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="relative min-w-0 max-w-xs flex-1 sm:min-w-[180px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
             <Input
               placeholder={t('latestJobs.searchPlaceholder')}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-              className="pl-9"
+              className="pl-9 h-9"
             />
           </div>
-          <Button size="sm" variant="outline" onClick={handleSearch}>
+
+          <Button size="sm" variant="outline" onClick={handleSearch} className="h-9">
             {t('latestJobs.search')}
           </Button>
+
           <Select value={String(days)} onValueChange={handleDaysChange}>
-            <SelectTrigger className="w-full sm:w-[180px]">
+            <SelectTrigger className="w-[150px] h-9">
               <SelectValue placeholder={t('latestJobs.period')} />
             </SelectTrigger>
             <SelectContent>
@@ -339,52 +349,85 @@ export function Home() {
               <SelectItem value="30">{t('latestJobs.last30days')}</SelectItem>
             </SelectContent>
           </Select>
-        </div>
 
-        {/* Company & Location Filters */}
-        <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3">
-          <Select
-            value={filterCompany}
-            onValueChange={(v) => {
-              setFilterCompany(v)
-              setPage(1)
-            }}
-          >
-            <SelectTrigger className="w-full sm:w-[220px]">
-              <SelectValue placeholder={t('latestJobs.filterCompany')} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="__all__">{t('latestJobs.filterCompanyAll')}</SelectItem>
-              {uniqueCompanies.map((company) => (
-                <SelectItem key={company} value={company}>
-                  {company}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="h-9 gap-2 relative">
+                <ListFilter className="h-3.5 w-3.5" />
+                {t('latestJobs.filters', 'Filtros')}
+                {activeFilterCount > 0 && (
+                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[10px] font-semibold text-primary-foreground">
+                    {activeFilterCount}
+                  </span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-80 space-y-4">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium">{t('latestJobs.filters', 'Filtros')}</p>
+                {hasActiveFilters && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={resetFilters}
+                    className="h-auto px-2 py-1 text-xs text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="h-3 w-3 mr-1" />
+                    {t('latestJobs.clearFilters')}
+                  </Button>
+                )}
+              </div>
 
-          <Select
-            value={filterLocationCategory}
-            onValueChange={(v) => {
-              setFilterLocationCategory(v)
-              setPage(1)
-            }}
-          >
-            <SelectTrigger className="w-full sm:w-[200px]">
-              <SelectValue placeholder={t('latestJobs.filterLocation')} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="__all__">{t('latestJobs.filterLocationAll')}</SelectItem>
-              <SelectItem value="National">{t('latestJobs.filterLocationNational')}</SelectItem>
-              <SelectItem value="International">
-                {t('latestJobs.filterLocationInternational')}
-              </SelectItem>
-              <SelectItem value="Remote">{t('latestJobs.filterLocationRemote')}</SelectItem>
-            </SelectContent>
-          </Select>
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground">{t('latestJobs.filterCompany')}</Label>
+                <Select
+                  value={filterCompany}
+                  onValueChange={(v) => {
+                    setFilterCompany(v)
+                    setPage(1)
+                  }}
+                >
+                  <SelectTrigger className="w-full h-9">
+                    <SelectValue placeholder={t('latestJobs.filterCompanyAll')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__all__">{t('latestJobs.filterCompanyAll')}</SelectItem>
+                    {uniqueCompanies.map((company) => (
+                      <SelectItem key={company} value={company}>
+                        {company}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-          <div className="relative flex-1 min-w-0 sm:min-w-[180px] max-w-xs">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground">{t('latestJobs.filterLocation')}</Label>
+                <Select
+                  value={filterLocationCategory}
+                  onValueChange={(v) => {
+                    setFilterLocationCategory(v)
+                    setPage(1)
+                  }}
+                >
+                  <SelectTrigger className="w-full h-9">
+                    <SelectValue placeholder={t('latestJobs.filterLocationAll')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__all__">{t('latestJobs.filterLocationAll')}</SelectItem>
+                    <SelectItem value="National">{t('latestJobs.filterLocationNational')}</SelectItem>
+                    <SelectItem value="International">
+                      {t('latestJobs.filterLocationInternational')}
+                    </SelectItem>
+                    <SelectItem value="Remote">{t('latestJobs.filterLocationRemote')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </PopoverContent>
+          </Popover>
+
+          <div className="relative min-w-0 max-w-sm flex-1 sm:min-w-[200px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
             <Input
               placeholder={t('latestJobs.filterLocationSearch')}
               value={filterLocationText}
@@ -392,20 +435,9 @@ export function Home() {
                 setFilterLocationText(e.target.value)
                 setPage(1)
               }}
-              className="pl-9"
+              className="pl-9 h-9"
             />
           </div>
-
-          {hasActiveFilters && (
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={resetFilters}
-              className="text-muted-foreground"
-            >
-              {t('latestJobs.clearFilters')}
-            </Button>
-          )}
         </div>
 
         {/* Table */}

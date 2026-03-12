@@ -35,7 +35,8 @@
     "filterLocationInternational": "International",
     "filterLocationRemote": "Remote",
     "filterLocationSearch": "Search location...",
-    "clearFilters": "Clear filters"
+    "clearFilters": "Clear filters",
+    "filters": "Filters"
   },
   "monitoredUrls": {
     "title": "Monitored companies",

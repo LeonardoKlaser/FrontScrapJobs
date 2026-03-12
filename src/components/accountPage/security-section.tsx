@@ -132,7 +132,7 @@ export function SecuritySection() {
               </div>
             </div>
           </CardContent>
-          <CardFooter>
+          <CardFooter className="pt-2">
             <Button
               variant={buttonState === 'success' ? 'outline' : 'glow'}
               type="submit"

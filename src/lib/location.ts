@@ -1,6 +1,38 @@
 const BRAZIL_KEYWORDS = [
   'brasil',
   'brazil',
+  'osasco',
+  'campinas',
+  'curitiba',
+  'florianópolis',
+  'florianopolis',
+  'porto alegre',
+  'belo horizonte',
+  'recife',
+  'fortaleza',
+  'salvador',
+  'brasília',
+  'brasilia',
+  'manaus',
+  'belém',
+  'belem',
+  'goiânia',
+  'goiania',
+  'guarulhos',
+  'são bernardo',
+  'sao bernardo',
+  'santo andré',
+  'santo andre',
+  'são josé',
+  'sao jose',
+  'joinville',
+  'londrina',
+  'maringá',
+  'maringa',
+  'niterói',
+  'niteroi',
+  'são leopoldo',
+  'sao leopoldo',
   'acre',
   'alagoas',
   'amapá',
@@ -43,7 +75,7 @@ const BRAZIL_KEYWORDS = [
 
 const BRAZIL_ACRONYMS_REGEX = new RegExp(
   '(?:^|[\\s,\\-/])' +
-    '(AC|AL|AP|AM|BA|CE|DF|ES|GO|MA|MT|MS|MG|PA|PB|PR|PE|PI|' +
+    '(BR|AC|AL|AP|AM|BA|CE|DF|ES|GO|MA|MT|MS|MG|PA|PB|PR|PE|PI|' +
     'RJ|RN|RS|RO|RR|SC|SP|SE|TO)' +
     '(?:[\\s,\\-/]|$)'
 )
