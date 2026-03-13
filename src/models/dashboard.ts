@@ -5,6 +5,7 @@ export interface LatestJob {
   company: string
   job_link: string
   matched: boolean
+  has_analysis: boolean
   created_at?: string
 }
 

@@ -22,6 +22,7 @@
     "action": "Action",
     "viewJob": "View job",
     "analyzeAI": "Analyze with AI",
+    "viewAnalysis": "View analysis",
     "jobCount": "{{count}} job(s) found",
     "previous": "Previous",
     "next": "Next",

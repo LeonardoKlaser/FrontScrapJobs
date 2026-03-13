@@ -20,7 +20,8 @@ import {
   ArrowDown,
   Trash2,
   ListFilter,
-  X
+  X,
+  Eye
 } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -485,8 +486,17 @@ export function Home() {
                       className="gap-1.5 ml-auto text-xs h-7"
                       onClick={() => setSelectedJobId(job.id)}
                     >
-                      <Bot className="h-3 w-3" />
-                      {t('latestJobs.analyzeAI')}
+                      {job.has_analysis ? (
+                        <>
+                          <Eye className="h-3 w-3" />
+                          {t('latestJobs.viewAnalysis')}
+                        </>
+                      ) : (
+                        <>
+                          <Bot className="h-3 w-3" />
+                          {t('latestJobs.analyzeAI')}
+                        </>
+                      )}
                     </Button>
                   </div>
                 </Card>
@@ -574,8 +584,17 @@ export function Home() {
                           className="gap-1.5 opacity-70 group-hover/row:opacity-100 transition-opacity"
                           onClick={() => setSelectedJobId(job.id)}
                         >
-                          <Bot className="h-3.5 w-3.5" />
-                          {t('latestJobs.analyzeAI')}
+                          {job.has_analysis ? (
+                            <>
+                              <Eye className="h-3.5 w-3.5" />
+                              {t('latestJobs.viewAnalysis')}
+                            </>
+                          ) : (
+                            <>
+                              <Bot className="h-3.5 w-3.5" />
+                              {t('latestJobs.analyzeAI')}
+                            </>
+                          )}
                         </Button>
                       </TableCell>
                     </TableRow>

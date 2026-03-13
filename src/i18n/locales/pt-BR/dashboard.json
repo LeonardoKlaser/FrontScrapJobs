@@ -22,6 +22,7 @@
     "action": "Ação",
     "viewJob": "Ver vaga",
     "analyzeAI": "Analisar com IA",
+    "viewAnalysis": "Ver análise",
     "jobCount": "{{count}} vaga(s) encontrada(s)",
     "previous": "Anterior",
     "next": "Próximo",
