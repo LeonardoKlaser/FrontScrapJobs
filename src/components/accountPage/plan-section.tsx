@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Check, ArrowUpRight, Sparkles } from 'lucide-react'
 import {
@@ -33,10 +33,19 @@ export function PlanSection({ user }: PlanSectionProps) {
   const currentUsage = user?.monitored_sites_count ?? 0
   const maxUsage = user?.plan?.max_sites ?? 0
   const usagePercentage = maxUsage > 0 ? (currentUsage / maxUsage) * 100 : 0
+  const analysisUsed = user?.monthly_analysis_count ?? 0
+  const analysisMax = user?.plan?.max_ai_analyses ?? 0
+  const analysisPercentage = analysisMax > 0 ? (analysisUsed / analysisMax) * 100 : 0
   const benefits = user?.plan?.features ?? []
   const isPremium = user?.plan?.name === 'Premium'
 
   const [weekdaysOnly, setWeekdaysOnly] = useState(user?.weekdays_only ?? false)
+
+  useEffect(() => {
+    if (user?.weekdays_only !== undefined) {
+      setWeekdaysOnly(user.weekdays_only)
+    }
+  }, [user?.weekdays_only])
 
   const handleWeekdaysToggle = async (checked: boolean) => {
     setWeekdaysOnly(checked)
@@ -74,10 +83,10 @@ export function PlanSection({ user }: PlanSectionProps) {
             <div className="rounded-lg border border-border/50 bg-muted/30 p-4">
               <p className="text-xs font-medium text-muted-foreground">{t('plan.aiAnalyses')}</p>
               <p className="mt-1 font-display text-2xl font-bold text-foreground">
-                {user?.plan?.max_ai_analyses === -1
-                  ? t('plan.unlimited')
-                  : (user?.plan?.max_ai_analyses ?? 0)}
+                {analysisUsed}
+                <span className="text-sm font-normal text-muted-foreground"> / {analysisMax}</span>
               </p>
+              <Progress value={analysisPercentage} className="mt-3 h-1.5" />
             </div>
           </div>
 

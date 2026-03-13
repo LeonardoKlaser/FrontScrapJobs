@@ -10,5 +10,6 @@ export interface User {
   plan: Plan | undefined
   expires_at?: string
   monitored_sites_count?: number
+  monthly_analysis_count?: number
   weekdays_only?: boolean
 }
