@@ -25,7 +25,6 @@ describe('authLoader', () => {
 
   it('returns user data on success', async () => {
     const mockUser: User = {
-      id: '1',
       user_name: 'Test',
       email: 'test@email.com',
       plan: undefined
@@ -55,7 +54,6 @@ describe('authLoader', () => {
 
   it('uses staleTime of 5 minutes', async () => {
     const mockUser: User = {
-      id: '1',
       user_name: 'Test',
       email: 'test@email.com',
       plan: undefined
