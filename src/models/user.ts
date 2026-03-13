@@ -5,7 +5,7 @@ export interface User {
   email: string
   cellphone?: string
   tax?: string
-  is_admin?: boolean
+  is_admin: boolean
   plan: Plan | undefined
   expires_at?: string
   monitored_sites_count?: number

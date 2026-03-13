@@ -27,6 +27,7 @@ describe('authLoader', () => {
     const mockUser: User = {
       user_name: 'Test',
       email: 'test@email.com',
+      is_admin: false,
       plan: undefined
     }
     vi.mocked(authService.getMe).mockResolvedValue(mockUser)
@@ -56,6 +57,7 @@ describe('authLoader', () => {
     const mockUser: User = {
       user_name: 'Test',
       email: 'test@email.com',
+      is_admin: false,
       plan: undefined
     }
     vi.mocked(authService.getMe).mockResolvedValue(mockUser)
