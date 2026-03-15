@@ -221,6 +221,7 @@ export default function EmpresasPage() {
       </Card>
 
       <RegistrationModal
+        key={selectedCompany?.site_id}
         isOpen={isPopupOpen}
         onClose={() => setPopupOpen(false)}
         companyName={selectedCompany?.site_name}

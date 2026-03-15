@@ -1,0 +1,56 @@
+{
+  "status": {
+    "applied": "Apliquei",
+    "in_review": "Em análise",
+    "technical_test": "Teste técnico",
+    "interview": "Entrevista {{round}}",
+    "interviewNoRound": "Entrevista",
+    "offer": "Oferta",
+    "hired": "Contratado",
+    "rejected": "Rejeitado",
+    "withdrawn": "Desisti"
+  },
+  "kanban": {
+    "title": "Minhas Candidaturas",
+    "emptyColumn": "Nenhuma vaga",
+    "emptyState": "Ainda não registrou nenhuma candidatura.",
+    "emptyStateHint": "Vá ao Dashboard e clique em \"Apliquei\" numa vaga para começar.",
+    "roundLabel": "Rodada {{round}}",
+    "daysAgo": "{{count}} dia(s)",
+    "today": "hoje",
+    "confirmReject": "Tem certeza que deseja marcar como rejeitado?",
+    "confirmWithdraw": "Tem certeza que deseja marcar como desistência?",
+    "interviewPrompt": "Qual é o número da entrevista?",
+    "interviewRoundPlaceholder": "Ex: 1, 2, 3...",
+    "errorState": "Erro ao carregar candidaturas. Tente novamente."
+  },
+  "drawer": {
+    "notesLabel": "Notas",
+    "notesPlaceholder": "Adicione notas sobre esta candidatura...",
+    "save": "Salvar notas",
+    "appliedAt": "Se candidatou em",
+    "updatedAt": "Última atualização",
+    "removeApplication": "Remover candidatura",
+    "removeConfirm": "Tem certeza? Esta ação não pode ser desfeita.",
+    "viewJob": "Ver vaga"
+  },
+  "dashboard": {
+    "applied": "Apliquei",
+    "changeStatus": "Alterar status",
+    "statusUpdated": "Status atualizado"
+  },
+  "toast": {
+    "createSuccess": "Candidatura registrada com sucesso",
+    "createError": "Erro ao registrar candidatura",
+    "updateSuccess": "Status atualizado com sucesso",
+    "updateError": "Erro ao atualizar status",
+    "deleteSuccess": "Candidatura removida",
+    "deleteError": "Erro ao remover candidatura",
+    "noteSaved": "Notas salvas",
+    "noteError": "Erro ao salvar notas",
+    "alreadyExists": "Candidatura já existe para esta vaga"
+  },
+  "nav": {
+    "label": "Candidaturas"
+  }
+}

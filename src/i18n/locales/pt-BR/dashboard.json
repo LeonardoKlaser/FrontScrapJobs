@@ -2,14 +2,15 @@
   "stats": {
     "monitoredUrls": "URLs monitoradas",
     "newJobs24h": "Vagas novas (24h)",
-    "alertsSent": "Alertas enviados"
+    "alertsSent": "Notificações enviadas",
+    "alertsSentDescription": "Total de e-mails com vagas compatíveis enviados"
   },
   "latestJobs": {
     "title": "Últimas vagas",
     "searchPlaceholder": "Buscar por título...",
     "search": "Buscar",
     "period": "Período",
-    "all": "Todas",
+    "all": "Todo o período",
     "last24h": "Últimas 24h",
     "last7days": "Últimos 7 dias",
     "last30days": "Últimos 30 dias",

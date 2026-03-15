@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -15,22 +16,24 @@ import { useUser } from '@/hooks/useUser'
 import { useAuth } from '@/hooks/useAuth'
 import { cn } from '@/lib/utils'
 
-const baseItems = [
-  { title: 'Início', href: PATHS.app.home },
-  { title: 'Currículo', href: PATHS.app.curriculum },
-  { title: 'Empresas', href: PATHS.app.listSites },
-  { title: 'Minha Conta', href: PATHS.app.accountPage }
-]
-
-const adminItems = [
-  { title: 'Admin', href: PATHS.app.adminDashboard },
-  { title: 'Adicionar Site', href: PATHS.app.addNewSite }
-]
-
 export function AppHeader() {
   const [open, setOpen] = useState(false)
   const { data: user, isLoading } = useUser()
   const { logout } = useAuth()
+  const { t } = useTranslation('common')
+
+  const baseItems = [
+    { title: t('nav.home'), href: PATHS.app.home },
+    { title: t('nav.curriculum'), href: PATHS.app.curriculum },
+    { title: t('nav.companies'), href: PATHS.app.listSites },
+    { title: t('nav.applications'), href: PATHS.app.applications },
+    { title: t('nav.myAccount'), href: PATHS.app.accountPage }
+  ]
+
+  const adminItems = [
+    { title: t('nav.admin'), href: PATHS.app.adminDashboard },
+    { title: t('nav.addSite'), href: PATHS.app.addNewSite }
+  ]
 
   const items = user?.is_admin ? [...baseItems, ...adminItems] : baseItems
 
@@ -84,7 +87,7 @@ export function AppHeader() {
               className="text-muted-foreground"
               onClick={handleLogout}
             >
-              Sair
+              {t('nav.logout')}
             </Button>
           )}
 
@@ -93,7 +96,7 @@ export function AppHeader() {
             variant="ghost"
             className="md:hidden"
             onClick={() => setOpen((p) => !p)}
-            aria-label="Abrir menu"
+            aria-label={t('nav.openMenu')}
           >
             <Menu className="h-5 w-5" />
           </Button>

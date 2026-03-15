@@ -25,6 +25,7 @@ const RenewSubscription = lazy(() => import('@/pages/RenewSubscription'))
 const AdminDashboard = lazy(() => import('@/pages/adminDashboard'))
 const TermsOfService = lazy(() => import('@/pages/TermsOfService'))
 const PrivacyPolicy = lazy(() => import('@/pages/PrivacyPolicy'))
+const Applications = lazy(() => import('@/pages/Applications'))
 
 const curriculumLazy = async () => {
   const { Curriculum } = await import('@/pages/Curriculum')
@@ -99,6 +100,16 @@ export const createRouter = (queryClient: QueryClient) =>
             <AdminGuard>
               <AdicionarSitePage />
             </AdminGuard>
+          )
+        },
+        {
+          path: PATHS.app.applications,
+          element: (
+            <Suspense
+              fallback={<LoadingSection variant="section" label="Carregando candidaturas..." />}
+            >
+              <Applications />
+            </Suspense>
           )
         },
         {

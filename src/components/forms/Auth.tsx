@@ -70,7 +70,7 @@ export function AuthForm() {
         <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>
       )}
 
-      <Button variant="glow" disabled={loading} className="mt-1 h-10">
+      <Button variant="glow" disabled={loading} className="mt-1 h-12 text-base font-semibold">
         {loading ? (
           <Loader2Icon className="h-4 w-4 animate-spin" />
         ) : (

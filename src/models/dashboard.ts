@@ -1,3 +1,5 @@
+import type { ApplicationStatus } from './application'
+
 export interface LatestJob {
   id: number
   title: string
@@ -7,6 +9,9 @@ export interface LatestJob {
   matched: boolean
   has_analysis: boolean
   created_at?: string
+  application_id?: number
+  application_status?: ApplicationStatus
+  interview_round?: number
 }
 
 export interface MonitoredURL {

@@ -8,9 +8,8 @@ export function SocialProofSection() {
   if (!logos || logos.length === 0) return null
 
   // Duplicate logos enough times to fill viewport smoothly
-  const duplicated = logos.length < 3
-    ? [...logos, ...logos, ...logos, ...logos]
-    : [...logos, ...logos]
+  const duplicated =
+    logos.length < 3 ? [...logos, ...logos, ...logos, ...logos] : [...logos, ...logos]
 
   return (
     <section className="py-16 sm:py-20 border-t border-border/50">

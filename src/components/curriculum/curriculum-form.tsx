@@ -183,6 +183,39 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
     }
   }
 
+  const handlePaste = (
+    e: React.ClipboardEvent<HTMLInputElement>,
+    field: 'skills' | 'languages',
+    setInput: (val: string) => void,
+    currentInput: string
+  ) => {
+    const pasted = e.clipboardData.getData('text')
+    if (!pasted.includes(',')) return
+
+    e.preventDefault()
+    const raw = currentInput.trim() ? currentInput.trim() + pasted : pasted
+    const newItems = raw
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean)
+
+    const existing = formData[field]
+      ? formData[field]
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : []
+
+    const existingLower = new Set(existing.map((s) => s.toLowerCase()))
+    const unique = newItems.filter((item) => !existingLower.has(item.toLowerCase()))
+
+    if (unique.length === 0) return
+
+    const merged = [...existing, ...unique].join(', ')
+    setFormData({ ...formData, [field]: merged })
+    setInput('')
+  }
+
   const removeLanguage = (languageToRemove: string) => {
     const languagesArray = formData.languages
       .split(',')
@@ -250,6 +283,7 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
             value={skillInput}
             onChange={(e) => setSkillInput(e.target.value)}
             onKeyDown={handleSkillKeyDown}
+            onPaste={(e) => handlePaste(e, 'skills', setSkillInput, skillInput)}
           />
           {skillsArray.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-2">
@@ -279,6 +313,7 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
             value={languageInput}
             onChange={(e) => setLanguageInput(e.target.value)}
             onKeyDown={handleLanguageKeyDown}
+            onPaste={(e) => handlePaste(e, 'languages', setLanguageInput, languageInput)}
           />
           {languagesArray.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-2">

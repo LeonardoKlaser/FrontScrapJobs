@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import {
@@ -21,7 +21,8 @@ import {
   Trash2,
   ListFilter,
   X,
-  Eye
+  Eye,
+  ClipboardCheck
 } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -54,17 +55,23 @@ import { AnalysisDialog } from '@/components/analysis/analysis-dialog'
 import { PATHS } from '@/router/paths'
 import { categorizeLocation } from '@/lib/location'
 import { toast } from 'sonner'
+import { ApplicationStatusDropdown } from '@/components/common/application-status-dropdown'
+import { useCreateApplication, useUpdateApplication } from '@/hooks/useApplications'
+import { STATUS_COLORS } from '@/models/application'
+import type { ApplicationStatus } from '@/models/application'
 
 function StatsCard({
   title,
   value,
   icon: Icon,
-  delay
+  delay,
+  description
 }: {
   title: string
   value: number
   icon: React.ElementType
   delay: number
+  description?: string
 }) {
   return (
     <Card
@@ -79,6 +86,7 @@ function StatsCard({
         <p className="text-sm text-muted-foreground">{title}</p>
       </div>
       <p className="font-display text-3xl font-bold tracking-tight text-foreground">{value}</p>
+      {description && <p className="text-xs text-muted-foreground">{description}</p>}
     </Card>
   )
 }
@@ -117,8 +125,16 @@ export function Home() {
   const navigate = useNavigate()
 
   const [page, setPage] = useState(1)
-  const [search, setSearch] = useState('')
   const [searchInput, setSearchInput] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchInput)
+      setPage(1)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [searchInput])
   const [days, setDays] = useState(0)
   const [matchedOnly, setMatchedOnly] = useState(true)
 
@@ -136,12 +152,41 @@ export function Home() {
     isLoading: isJobsLoading,
     isError: isJobsError
   } = useLatestJobs({
-    search,
+    search: debouncedSearch,
     days: days || undefined,
     matched_only: matchedOnly
   })
 
   const unregisterSite = useUnregisterUserSite()
+
+  const { t: tApp } = useTranslation('applications')
+  const createApplication = useCreateApplication()
+  const updateApplication = useUpdateApplication()
+
+  const handleApply = (jobId: number) => {
+    createApplication.mutate(jobId, {
+      onSuccess: () => toast.success(tApp('toast.createSuccess')),
+      onError: (err) => toast.error(err.message)
+    })
+  }
+
+  const handleStatusChange = (
+    applicationId: number,
+    status: ApplicationStatus,
+    interviewRound?: number
+  ) => {
+    updateApplication.mutate(
+      {
+        id: applicationId,
+        status,
+        interview_round: status === 'interview' ? interviewRound : null
+      },
+      {
+        onSuccess: () => toast.success(tApp('toast.updateSuccess')),
+        onError: (err) => toast.error(err.message)
+      }
+    )
+  }
 
   // Also fetch all jobs for 24h count when matchedOnly differs
   const { data: allJobsData } = useLatestJobs({
@@ -237,7 +282,8 @@ export function Home() {
     {
       title: t('stats.alertsSent'),
       value: data?.alerts_sent_count ?? 0,
-      icon: BellRing
+      icon: BellRing,
+      description: t('stats.alertsSentDescription')
     }
   ]
 
@@ -247,11 +293,6 @@ export function Home() {
   const totalCount = sortedJobs.length
   const totalPages = Math.ceil(totalCount / LIMIT)
   const paginatedJobs = sortedJobs.slice((page - 1) * LIMIT, page * LIMIT)
-
-  const handleSearch = () => {
-    setSearch(searchInput)
-    setPage(1)
-  }
 
   const handleDaysChange = (value: string) => {
     setDays(Number(value))
@@ -330,14 +371,22 @@ export function Home() {
               placeholder={t('latestJobs.searchPlaceholder')}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-              className="pl-9 h-9"
+              className="pl-9 pr-9 h-9"
             />
+            {searchInput && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchInput('')
+                  setDebouncedSearch('')
+                  setPage(1)
+                }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
           </div>
-
-          <Button size="sm" variant="outline" onClick={handleSearch} className="h-9">
-            {t('latestJobs.search')}
-          </Button>
 
           <Select value={String(days)} onValueChange={handleDaysChange}>
             <SelectTrigger className="w-[150px] h-9">
@@ -380,7 +429,9 @@ export function Home() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-xs text-muted-foreground">{t('latestJobs.filterCompany')}</Label>
+                <Label className="text-xs text-muted-foreground">
+                  {t('latestJobs.filterCompany')}
+                </Label>
                 <Select
                   value={filterCompany}
                   onValueChange={(v) => {
@@ -403,7 +454,9 @@ export function Home() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-xs text-muted-foreground">{t('latestJobs.filterLocation')}</Label>
+                <Label className="text-xs text-muted-foreground">
+                  {t('latestJobs.filterLocation')}
+                </Label>
                 <Select
                   value={filterLocationCategory}
                   onValueChange={(v) => {
@@ -416,7 +469,9 @@ export function Home() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="__all__">{t('latestJobs.filterLocationAll')}</SelectItem>
-                    <SelectItem value="National">{t('latestJobs.filterLocationNational')}</SelectItem>
+                    <SelectItem value="National">
+                      {t('latestJobs.filterLocationNational')}
+                    </SelectItem>
                     <SelectItem value="International">
                       {t('latestJobs.filterLocationInternational')}
                     </SelectItem>
@@ -468,6 +523,18 @@ export function Home() {
                         {t('latestJobs.matchBadge')}
                       </Badge>
                     )}
+                    {job.application_status && (
+                      <span
+                        className="shrink-0 rounded-full px-2 py-0.5 text-xs font-medium text-white"
+                        style={{
+                          backgroundColor: STATUS_COLORS[job.application_status]
+                        }}
+                      >
+                        {job.application_status === 'interview' && job.interview_round
+                          ? tApp('status.interview', { round: job.interview_round })
+                          : tApp(`status.${job.application_status}`)}
+                      </span>
+                    )}
                   </div>
                   {job.location && <p className="text-xs text-muted-foreground">{job.location}</p>}
                   <div className="flex items-center gap-2 pt-1">
@@ -480,6 +547,18 @@ export function Home() {
                       {t('latestJobs.viewJob')}
                       <ExternalLink className="h-3 w-3" />
                     </a>
+                    {!job.application_id && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="gap-1 text-xs h-7"
+                        onClick={() => handleApply(job.id)}
+                        disabled={createApplication.isPending}
+                      >
+                        <ClipboardCheck className="h-3 w-3" />
+                        {tApp('dashboard.applied')}
+                      </Button>
+                    )}
                     <Button
                       size="sm"
                       variant="outline"
@@ -509,7 +588,7 @@ export function Home() {
                 <TableHeader className="bg-muted/40">
                   <TableRow>
                     <TableHead
-                      className="w-[40%] font-medium cursor-pointer select-none"
+                      className="w-[35%] font-medium cursor-pointer select-none"
                       onClick={() => handleSort('title')}
                     >
                       <span className="inline-flex items-center">
@@ -536,9 +615,7 @@ export function Home() {
                       </span>
                     </TableHead>
                     <TableHead className="w-[10%] font-medium">{t('latestJobs.link')}</TableHead>
-                    <TableHead className="w-[15%] font-medium text-right">
-                      {t('latestJobs.action')}
-                    </TableHead>
+                    <TableHead className="w-[20%] font-medium text-right" />
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -578,24 +655,46 @@ export function Home() {
                         </a>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="gap-1.5 opacity-70 group-hover/row:opacity-100 transition-opacity"
-                          onClick={() => setSelectedJobId(job.id)}
-                        >
-                          {job.has_analysis ? (
-                            <>
-                              <Eye className="h-3.5 w-3.5" />
-                              {t('latestJobs.viewAnalysis')}
-                            </>
+                        <div className="flex items-center gap-1.5 justify-end">
+                          {job.application_id && job.application_status ? (
+                            <ApplicationStatusDropdown
+                              currentStatus={job.application_status}
+                              interviewRound={job.interview_round}
+                              onStatusChange={(status, round) =>
+                                handleStatusChange(job.application_id!, status, round)
+                              }
+                            />
                           ) : (
-                            <>
-                              <Bot className="h-3.5 w-3.5" />
-                              {t('latestJobs.analyzeAI')}
-                            </>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="gap-1.5 text-xs h-7"
+                              onClick={() => handleApply(job.id)}
+                              disabled={createApplication.isPending}
+                            >
+                              <ClipboardCheck className="h-3.5 w-3.5" />
+                              {tApp('dashboard.applied')}
+                            </Button>
                           )}
-                        </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="gap-1.5 opacity-70 group-hover/row:opacity-100 transition-opacity text-xs h-7"
+                            onClick={() => setSelectedJobId(job.id)}
+                          >
+                            {job.has_analysis ? (
+                              <>
+                                <Eye className="h-3.5 w-3.5" />
+                                {t('latestJobs.viewAnalysis')}
+                              </>
+                            ) : (
+                              <>
+                                <Bot className="h-3.5 w-3.5" />
+                                {t('latestJobs.analyzeAI')}
+                              </>
+                            )}
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}

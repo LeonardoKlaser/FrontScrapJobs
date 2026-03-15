@@ -1,0 +1,56 @@
+{
+  "status": {
+    "applied": "Applied",
+    "in_review": "In Review",
+    "technical_test": "Technical Test",
+    "interview": "Interview {{round}}",
+    "interviewNoRound": "Interview",
+    "offer": "Offer",
+    "hired": "Hired",
+    "rejected": "Rejected",
+    "withdrawn": "Withdrawn"
+  },
+  "kanban": {
+    "title": "My Applications",
+    "emptyColumn": "No jobs",
+    "emptyState": "You haven't tracked any applications yet.",
+    "emptyStateHint": "Go to the Dashboard and click \"Applied\" on a job to get started.",
+    "roundLabel": "Round {{round}}",
+    "daysAgo": "{{count}} day(s)",
+    "today": "today",
+    "confirmReject": "Are you sure you want to mark as rejected?",
+    "confirmWithdraw": "Are you sure you want to mark as withdrawn?",
+    "interviewPrompt": "What is the interview round number?",
+    "interviewRoundPlaceholder": "E.g.: 1, 2, 3...",
+    "errorState": "Failed to load applications. Please try again."
+  },
+  "drawer": {
+    "notesLabel": "Notes",
+    "notesPlaceholder": "Add notes about this application...",
+    "save": "Save notes",
+    "appliedAt": "Applied on",
+    "updatedAt": "Last updated",
+    "removeApplication": "Remove application",
+    "removeConfirm": "Are you sure? This action cannot be undone.",
+    "viewJob": "View job"
+  },
+  "dashboard": {
+    "applied": "Applied",
+    "changeStatus": "Change status",
+    "statusUpdated": "Status updated"
+  },
+  "toast": {
+    "createSuccess": "Application tracked successfully",
+    "createError": "Failed to track application",
+    "updateSuccess": "Status updated successfully",
+    "updateError": "Failed to update status",
+    "deleteSuccess": "Application removed",
+    "deleteError": "Failed to remove application",
+    "noteSaved": "Notes saved",
+    "noteError": "Failed to save notes",
+    "alreadyExists": "Application already exists for this job"
+  },
+  "nav": {
+    "label": "Applications"
+  }
+}

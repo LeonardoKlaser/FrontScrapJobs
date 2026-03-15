@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Building2, Loader2 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
@@ -33,6 +33,10 @@ export function RegistrationModal({
   const { t } = useTranslation('sites')
   const [keywords, setKeywords] = useState('')
   const hasNoSlots = remainingSlots === 0 && !isAlreadyRegistered
+
+  useEffect(() => {
+    if (isOpen) setKeywords('')
+  }, [isOpen])
 
   const isRegisterButtonDisabled =
     hasNoSlots || isLoading || (!keywords.trim() && !isAlreadyRegistered)

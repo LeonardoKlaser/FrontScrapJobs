@@ -16,7 +16,8 @@ export const PATHS = {
     addNewSite: '/app/add-new-site',
     accountPage: '/app/accountPage',
     paymentConfirmation: '/app/payment-confirmation',
-    renew: '/app/renew'
+    renew: '/app/renew',
+    applications: '/app/applications'
   },
   notFound: '*'
 } as const

@@ -2,14 +2,15 @@
   "stats": {
     "monitoredUrls": "Monitored URLs",
     "newJobs24h": "New jobs (24h)",
-    "alertsSent": "Alerts sent"
+    "alertsSent": "Notifications sent",
+    "alertsSentDescription": "Total emails sent with matching jobs"
   },
   "latestJobs": {
     "title": "Latest jobs",
     "searchPlaceholder": "Search by title...",
     "search": "Search",
     "period": "Period",
-    "all": "All",
+    "all": "All time",
     "last24h": "Last 24h",
     "last7days": "Last 7 days",
     "last30days": "Last 30 days",
