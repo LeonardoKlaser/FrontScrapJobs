@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CurriculumList } from '@/components/curriculum/curriculum-list'
 import { CurriculumForm } from '@/components/curriculum/curriculum-form'
@@ -9,6 +9,14 @@ export function Curriculum() {
   const { t } = useTranslation('curriculum')
   const { data: curriculums } = useCurriculum()
   const [selectedCurriculumId, setSelectedCurriculumId] = useState<number | null>(null)
+  const [hasAutoSelected, setHasAutoSelected] = useState(false)
+
+  useEffect(() => {
+    if (!hasAutoSelected && curriculums?.length && selectedCurriculumId === null) {
+      setSelectedCurriculumId(curriculums[0].id)
+      setHasAutoSelected(true)
+    }
+  }, [curriculums, hasAutoSelected, selectedCurriculumId])
 
   const selectedCurriculum = curriculums?.find((cv) => cv.id === selectedCurriculumId)
 
