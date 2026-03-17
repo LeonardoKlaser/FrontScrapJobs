@@ -2,10 +2,12 @@ import type { Curriculum } from '@/models/curriculum'
 import { curriculumService } from '@/services/curriculumService'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-export function useCurriculum() {
+export function useCurriculum(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: ['curriculumList'],
-    queryFn: curriculumService.getCurriculums
+    queryFn: curriculumService.getCurriculums,
+    staleTime: 5 * 60 * 1000,
+    enabled: options?.enabled ?? true
   })
 }
 
