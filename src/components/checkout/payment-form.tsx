@@ -23,6 +23,8 @@ import { api } from '@/services/api'
 import axios from 'axios'
 import { useTranslation } from 'react-i18next'
 import type { PixQRCodeData } from '@/services/paymentService'
+import { Link } from 'react-router'
+import { PATHS } from '@/router/paths'
 
 interface PaymentFormProps {
   plan: Plan
@@ -292,9 +294,9 @@ export function PaymentForm({
                   {errors.email === t('paymentForm.emailExists') && (
                     <>
                       {' '}
-                      <a href="/login" className="font-medium underline">
+                      <Link to={PATHS.login} className="font-medium underline">
                         {t('paymentForm.goToLogin')}
-                      </a>
+                      </Link>
                     </>
                   )}
                 </p>
