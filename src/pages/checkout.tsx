@@ -3,7 +3,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/ca
 import { PlanSummary } from '@/components/checkout/plan-summary'
 import { PaymentForm } from '@/components/checkout/payment-form'
 import { PixQRCodeStep } from '@/components/checkout/pix-qrcode-step'
-import { useParams, useSearchParams, Link } from 'react-router'
+import { useParams, Link } from 'react-router'
 import { usePlans } from '@/hooks/usePlans'
 import { PATHS } from '@/router/paths'
 import { Spinner } from '@/components/ui/spinner'
@@ -54,7 +54,6 @@ function StepIndicator({ step }: { step: 1 | 2 }) {
 export default function CheckoutPage() {
   const { t } = useTranslation('plans')
   const params = useParams()
-  const [searchParams] = useSearchParams()
   const { data: plans, isLoading: plansLoading, isError } = usePlans()
   const [step, setStep] = useState<1 | 2>(1)
   const [pixData, setPixData] = useState<PixQRCodeData | null>(null)
@@ -109,9 +108,7 @@ export default function CheckoutPage() {
     )
   }
 
-  const periodParam = searchParams.get('period')
-  const billingPeriod: 'monthly' | 'quarterly' =
-    periodParam === 'quarterly' ? 'quarterly' : 'monthly'
+  const billingPeriod = 'monthly' as const
 
   return (
     <div className="min-h-screen bg-background px-4 py-12 sm:px-6 lg:px-8">
@@ -140,7 +137,7 @@ export default function CheckoutPage() {
 
         <div className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-3">
           <div className="animate-fade-in-up lg:col-span-1" style={{ animationDelay: '100ms' }}>
-            <PlanSummary plan={plan} billingPeriod={billingPeriod} />
+            <PlanSummary plan={plan} />
           </div>
           <div className="animate-fade-in-up lg:col-span-2" style={{ animationDelay: '200ms' }}>
             {step === 1 && (

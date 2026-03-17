@@ -26,7 +26,7 @@ import type { PixQRCodeData } from '@/services/paymentService'
 
 interface PaymentFormProps {
   plan: Plan
-  billingPeriod: 'monthly' | 'quarterly'
+  billingPeriod: 'monthly'
   onPixCreated: (pixData: PixQRCodeData) => void
   isLoading: boolean
   setIsLoading: (loading: boolean) => void

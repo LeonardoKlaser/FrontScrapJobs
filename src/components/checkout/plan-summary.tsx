@@ -6,16 +6,12 @@ import { useTranslation } from 'react-i18next'
 
 interface PlanSummaryProps {
   plan: Plan
-  billingPeriod: 'monthly' | 'quarterly'
 }
 
-export function PlanSummary({ plan, billingPeriod }: PlanSummaryProps) {
+export function PlanSummary({ plan }: PlanSummaryProps) {
   const { t } = useTranslation('plans')
-  const isQuarterly = billingPeriod === 'quarterly'
-  const totalPrice = isQuarterly ? plan.price * 3 * 0.85 : plan.price
-  const periodLabel = isQuarterly
-    ? t('planSummary.quarterlyPayment')
-    : t('planSummary.monthlyPayment')
+  const totalPrice = plan.price
+  const periodLabel = t('planSummary.monthlyPayment')
 
   return (
     <Card className="sticky top-8 border-primary/30 bg-card">
@@ -37,11 +33,6 @@ export function PlanSummary({ plan, billingPeriod }: PlanSummaryProps) {
             </span>
           </div>
           <p className="mt-2 text-sm text-muted-foreground">{periodLabel}</p>
-          {isQuarterly && (
-            <Badge className="mt-2">
-              {t('planSummary.savings', { amount: (plan.price * 3 * 0.15).toFixed(2) })}
-            </Badge>
-          )}
         </div>
 
         {/* Benefits */}
