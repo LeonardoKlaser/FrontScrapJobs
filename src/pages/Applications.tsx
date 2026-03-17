@@ -111,10 +111,6 @@ export default function Applications() {
         onError: () => {
           queryClient.setQueryData(['applications'], previousApps)
           toast.error(t('toast.updateError'))
-        },
-        onSettled: () => {
-          queryClient.invalidateQueries({ queryKey: ['applications'] })
-          queryClient.invalidateQueries({ queryKey: ['latestJobs'] })
         }
       }
     )
