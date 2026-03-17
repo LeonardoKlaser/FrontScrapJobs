@@ -41,10 +41,8 @@
   },
   "planSummary": {
     "description": "Your plan summary",
-    "quarterlyPayment": "Quarterly payment",
     "monthlyPayment": "Monthly one-time payment",
     "included": "What's included:",
-    "savings": "Save R$ {{amount}}",
     "planName": "{{name}} Plan"
   },
   "confirmation": {

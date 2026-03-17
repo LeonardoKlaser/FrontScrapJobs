@@ -55,10 +55,8 @@
   },
   "planSummary": {
     "description": "Resumo do seu plano",
-    "quarterlyPayment": "Pagamento trimestral",
     "monthlyPayment": "Pagamento mensal",
     "included": "O que está incluído:",
-    "savings": "Economia de R$ {{amount}}",
     "planName": "Plano {{name}}"
   },
   "confirmation": {
