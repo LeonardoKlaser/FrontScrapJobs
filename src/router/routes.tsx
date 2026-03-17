@@ -68,7 +68,7 @@ export const createRouter = (queryClient: QueryClient) =>
       path: PATHS.app.home,
       element: <MainLayout />,
       loader: authLoader(queryClient),
-      shouldRevalidate: () => true,
+      shouldRevalidate: ({ nextUrl, currentUrl }) => nextUrl.pathname !== currentUrl.pathname,
       children: [
         {
           index: true,
