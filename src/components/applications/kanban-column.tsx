@@ -20,7 +20,7 @@ export function KanbanColumn({ status, items, onCardClick }: Props) {
   return (
     <div
       ref={setNodeRef}
-      className={`min-w-[160px] flex-1 rounded-lg bg-muted/30 p-2.5 transition-colors ${
+      className={`min-w-[220px] flex-1 rounded-lg bg-muted/30 p-2.5 transition-colors ${
         isOver ? 'ring-2 ring-primary/40 bg-primary/5' : ''
       }`}
     >
@@ -29,9 +29,12 @@ export function KanbanColumn({ status, items, onCardClick }: Props) {
           {label}
         </span>
         <Badge
-          variant="default"
-          className="h-5 min-w-[20px] justify-center text-[10px] font-bold"
-          style={{ backgroundColor: STATUS_COLORS[status] }}
+          variant="outline"
+          className="h-5 min-w-[20px] justify-center text-[10px] font-bold border-0"
+          style={{
+            backgroundColor: `${STATUS_COLORS[status]}1F`,
+            color: STATUS_COLORS[status]
+          }}
         >
           {items.length}
         </Badge>
