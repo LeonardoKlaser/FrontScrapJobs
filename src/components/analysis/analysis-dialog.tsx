@@ -310,7 +310,7 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
   const [selectedCvId, setSelectedCvId] = useState<number | null>(null)
   const [analysisResult, setAnalysisResult] = useState<ResumeAnalysis | null>(null)
 
-  const { data: curricula } = useCurriculum()
+  const { data: curricula } = useCurriculum({ enabled: open })
   const { data: historyData, isLoading: isLoadingHistory } = useAnalysisHistory(open ? jobId : null)
   const { mutate: analyzeJob, isError, error, reset: resetAnalysis } = useAnalyzeJob()
 
