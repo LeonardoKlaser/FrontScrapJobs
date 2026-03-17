@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -10,13 +9,11 @@ import { PATHS } from '@/router/paths'
 
 export function PricingSection() {
   const { t } = useTranslation('landing')
-  const [isQuarterly, setIsQuarterly] = useState(false)
   const { data: plans, isLoading } = usePlans()
   const navigate = useNavigate()
 
-  const handleChoosePlan = (planId: number, planName: string) => {
-    const period = planName === 'Beta Tester' ? 'monthly' : isQuarterly ? 'quarterly' : 'monthly'
-    navigate(PATHS.checkout(planId.toString()) + `?period=${period}`)
+  const handleChoosePlan = (planId: number) => {
+    navigate(PATHS.checkout(planId.toString()))
   }
 
   if (isLoading) {
@@ -41,45 +38,10 @@ export function PricingSection() {
         </div>
 
         <div className="max-w-7xl mx-auto">
-          {/* Pricing Toggle */}
-          <div className="flex items-center justify-center mb-12">
-            <div className="bg-card border border-border/50 rounded-lg p-1 flex">
-              <button
-                onClick={() => setIsQuarterly(false)}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                  !isQuarterly
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                {t('pricing.monthly')}
-              </button>
-              <button
-                onClick={() => setIsQuarterly(true)}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring relative ${
-                  isQuarterly
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                {t('pricing.quarterly')}
-                {isQuarterly && (
-                  <Badge className="absolute -top-2 -right-2 text-xs">
-                    {t('pricing.discount')}
-                  </Badge>
-                )}
-              </button>
-            </div>
-          </div>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {plans?.map((plan, index) => {
-              const isBetaTester = plan.name === 'Beta Tester'
               const isFeatured = index === featuredIndex
-              const showQuarterly = isQuarterly && !isBetaTester
-              const displayPrice = showQuarterly
-                ? (plan.price * 0.85).toFixed(2)
-                : plan.price.toFixed(2)
+              const displayPrice = plan.price.toFixed(2)
 
               return (
                 <Card
@@ -102,13 +64,6 @@ export function PricingSection() {
                     <div className="mt-4">
                       <span className="text-4xl font-bold text-foreground">R$ {displayPrice}</span>
                       <span className="text-muted-foreground">{t('pricing.perMonth')}</span>
-                      {showQuarterly && (
-                        <p className="text-sm text-primary mt-1">
-                          {t('pricing.savePerQuarter', {
-                            amount: (plan.price * 0.15 * 3).toFixed(2)
-                          })}
-                        </p>
-                      )}
                     </div>
                     {/* Savings Anchoring */}
                     <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground mt-3">
@@ -132,7 +87,7 @@ export function PricingSection() {
                     <Button
                       variant={isFeatured ? 'glow' : 'default'}
                       className="w-full py-3 text-lg font-medium"
-                      onClick={() => handleChoosePlan(plan.id, plan.name)}
+                      onClick={() => handleChoosePlan(plan.id)}
                     >
                       {t('pricing.cta')}
                     </Button>
