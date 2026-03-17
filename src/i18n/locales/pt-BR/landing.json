@@ -94,12 +94,9 @@
     "title": "Preço Simples e Transparente",
     "loading": "Carregando planos...",
     "monthly": "Mensal",
-    "quarterly": "Trimestral",
-    "discount": "-15%",
     "popular": "Mais Popular",
     "planName": "Plano {{name}}",
     "perMonth": "/mês",
-    "savePerQuarter": "Economize R$ {{amount}} por trimestre",
     "cta": "Começar a Automatizar",
     "savingsAnchor": "Economize até 15 horas de busca maçante por mês",
     "guarantee": "Satisfação garantida nos primeiros 7 dias ou devolvemos seu PIX integralmente"
