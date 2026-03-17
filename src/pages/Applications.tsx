@@ -229,7 +229,7 @@ export default function Applications() {
         </div>
 
         {/* Terminal columns */}
-        <div className="flex gap-4 opacity-60">
+        <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin opacity-60">
           {TERMINAL_STATUSES.map((status) => (
             <KanbanColumn
               key={status}
