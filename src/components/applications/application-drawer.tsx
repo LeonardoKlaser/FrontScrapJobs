@@ -75,7 +75,7 @@ export function ApplicationDrawer({ app, open, onClose, onDelete }: Props) {
               </p>
             </SheetHeader>
 
-            <div className="space-y-6 px-4">
+            <div className="space-y-6 px-4 pb-4">
               {/* External link */}
               <a
                 href={app.job.job_link}
