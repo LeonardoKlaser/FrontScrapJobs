@@ -108,8 +108,6 @@ export default function CheckoutPage() {
     )
   }
 
-  const billingPeriod = 'monthly' as const
-
   return (
     <div className="min-h-screen bg-background px-4 py-12 sm:px-6 lg:px-8">
       {/* Ambient glow */}
@@ -143,7 +141,6 @@ export default function CheckoutPage() {
             {step === 1 && (
               <PaymentForm
                 plan={plan}
-                billingPeriod={billingPeriod}
                 onPixCreated={handlePixCreated}
                 isLoading={isSubmitting}
                 setIsLoading={setIsSubmitting}

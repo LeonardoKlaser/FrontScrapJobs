@@ -26,7 +26,6 @@ import type { PixQRCodeData } from '@/services/paymentService'
 
 interface PaymentFormProps {
   plan: Plan
-  billingPeriod: 'monthly'
   onPixCreated: (pixData: PixQRCodeData) => void
   isLoading: boolean
   setIsLoading: (loading: boolean) => void
@@ -47,7 +46,6 @@ interface FormErrors {
 
 export function PaymentForm({
   plan,
-  billingPeriod,
   onPixCreated,
   isLoading,
   setIsLoading
@@ -210,7 +208,7 @@ export function PaymentForm({
         tax: formData.cpfCnpj.replace(/\D/g, ''),
         cellphone: formData.phone.replace(/\D/g, ''),
         methods: ['PIX'],
-        billing_period: billingPeriod
+        billing_period: 'monthly'
       })
 
       onPixCreated(responsePayment.data as PixQRCodeData)
