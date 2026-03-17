@@ -14,7 +14,7 @@ export interface CreatePaymentRequest {
   tax: string
   cellphone: string
   methods: string[]
-  billing_period: 'monthly' | 'quarterly'
+  billing_period: 'monthly'
 }
 
 export async function createPayment(
