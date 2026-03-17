@@ -117,10 +117,6 @@ export const createRouter = (queryClient: QueryClient) =>
           element: <AccountPage />
         },
         {
-          path: 'payment-confirmation', // Nova rota
-          element: <PaymentConfirmationPage />
-        },
-        {
           path: 'renew',
           element: <RenewSubscription />
         }

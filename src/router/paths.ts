@@ -15,7 +15,6 @@ export const PATHS = {
     adminDashboard: '/app/admin-dashboard',
     addNewSite: '/app/add-new-site',
     accountPage: '/app/accountPage',
-    paymentConfirmation: '/app/payment-confirmation',
     renew: '/app/renew',
     applications: '/app/applications'
   },
