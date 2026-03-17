@@ -5,7 +5,9 @@
     "notFound": "Plan not found",
     "notFoundDescription": "The requested plan does not exist. Please select a valid plan.",
     "title": "Complete Your Subscription",
-    "description": "Choose your payment method and start using ScrapJobs"
+    "description": "Choose your payment method and start using ScrapJobs",
+    "stepData": "Your Details",
+    "stepPayment": "Payment"
   },
   "paymentForm": {
     "title": "Create Account",
