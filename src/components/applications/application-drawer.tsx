@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ExternalLink, Trash2 } from 'lucide-react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
@@ -22,10 +22,13 @@ export function ApplicationDrawer({ app, open, onClose, onDelete }: Props) {
   const updateApplication = useUpdateApplication()
   const [notes, setNotes] = useState('')
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const savedNotes = useRef('')
 
   useEffect(() => {
     if (app) {
-      setNotes(app.notes ?? '')
+      const initial = app.notes ?? ''
+      setNotes(initial)
+      savedNotes.current = initial
       setConfirmDelete(false)
     }
   }, [app])
@@ -46,7 +49,10 @@ export function ApplicationDrawer({ app, open, onClose, onDelete }: Props) {
     updateApplication.mutate(
       { id: app.id, notes },
       {
-        onSuccess: () => toast.success(t('toast.noteSaved')),
+        onSuccess: () => {
+          savedNotes.current = notes
+          toast.success(t('toast.noteSaved'))
+        },
         onError: (err) => toast.error(err.message)
       }
     )
@@ -109,7 +115,7 @@ export function ApplicationDrawer({ app, open, onClose, onDelete }: Props) {
                   size="sm"
                   variant="outline"
                   onClick={handleSaveNotes}
-                  disabled={notes === (app.notes ?? '')}
+                  disabled={notes === savedNotes.current}
                 >
                   {t('drawer.save')}
                 </Button>
