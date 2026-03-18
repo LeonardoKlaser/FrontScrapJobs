@@ -303,141 +303,144 @@ export function Home() {
   const totalPages = Math.ceil(totalCount / LIMIT)
   const paginatedJobs = sortedJobs.slice((page - 1) * LIMIT, page * LIMIT)
 
-  const columns = [
-    columnHelper.accessor('title', {
-      header: () => (
-        <button
-          type="button"
-          className="inline-flex items-center select-none"
-          onClick={() => handleSort('title')}
-        >
-          {t('latestJobs.jobTitle')}
-          <SortIcon field="title" sortField={sortField} sortDir={sortDir} />
-        </button>
-      ),
-      cell: (info) => (
-        <span className="flex items-center gap-2">
-          <span className="truncate font-medium text-foreground" title={info.getValue()}>
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor('title', {
+        header: () => (
+          <button
+            type="button"
+            className="inline-flex items-center select-none"
+            onClick={() => handleSort('title')}
+          >
+            {t('latestJobs.jobTitle')}
+            <SortIcon field="title" sortField={sortField} sortDir={sortDir} />
+          </button>
+        ),
+        cell: (info) => (
+          <span className="flex items-center gap-2">
+            <span className="truncate font-medium text-foreground" title={info.getValue()}>
+              {info.getValue()}
+            </span>
+            {!matchedOnly && info.row.original.matched && (
+              <Badge variant="default" className="shrink-0 text-xs">
+                {t('latestJobs.matchBadge')}
+              </Badge>
+            )}
+          </span>
+        ),
+        size: 300,
+        minSize: 120
+      }),
+      columnHelper.accessor('company', {
+        header: () => (
+          <button
+            type="button"
+            className="inline-flex items-center select-none"
+            onClick={() => handleSort('company')}
+          >
+            {t('latestJobs.company')}
+            <SortIcon field="company" sortField={sortField} sortDir={sortDir} />
+          </button>
+        ),
+        cell: (info) => (
+          <span className="block truncate text-muted-foreground" title={info.getValue()}>
             {info.getValue()}
           </span>
-          {!matchedOnly && info.row.original.matched && (
-            <Badge variant="default" className="shrink-0 text-xs">
-              {t('latestJobs.matchBadge')}
-            </Badge>
-          )}
-        </span>
-      ),
-      size: 300,
-      minSize: 120
-    }),
-    columnHelper.accessor('company', {
-      header: () => (
-        <button
-          type="button"
-          className="inline-flex items-center select-none"
-          onClick={() => handleSort('company')}
-        >
-          {t('latestJobs.company')}
-          <SortIcon field="company" sortField={sortField} sortDir={sortDir} />
-        </button>
-      ),
-      cell: (info) => (
-        <span className="block truncate text-muted-foreground" title={info.getValue()}>
-          {info.getValue()}
-        </span>
-      ),
-      size: 160,
-      minSize: 80
-    }),
-    columnHelper.accessor('location', {
-      header: () => (
-        <button
-          type="button"
-          className="inline-flex items-center select-none"
-          onClick={() => handleSort('location')}
-        >
-          {t('latestJobs.location')}
-          <SortIcon field="location" sortField={sortField} sortDir={sortDir} />
-        </button>
-      ),
-      cell: (info) => (
-        <span className="block truncate text-muted-foreground" title={info.getValue()}>
-          {info.getValue()}
-        </span>
-      ),
-      size: 140,
-      minSize: 80
-    }),
-    columnHelper.accessor('job_link', {
-      header: () => t('latestJobs.link'),
-      cell: (info) => (
-        <a
-          href={info.getValue()}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-primary hover:underline underline-offset-4"
-        >
-          {t('latestJobs.viewJob')}
-          <ExternalLink className="h-3 w-3" />
-        </a>
-      ),
-      size: 100,
-      minSize: 60,
-      enableResizing: false
-    }),
-    columnHelper.display({
-      id: 'actions',
-      header: () => null,
-      cell: ({ row }) => {
-        const job = row.original
-        return (
-          <div className="flex items-center gap-1.5 justify-end">
-            {job.application_id && job.application_status ? (
-              <ApplicationStatusDropdown
-                currentStatus={job.application_status}
-                interviewRound={job.interview_round}
-                onStatusChange={(status, round) =>
-                  handleStatusChange(job.application_id!, status, round)
-                }
-              />
-            ) : (
+        ),
+        size: 160,
+        minSize: 80
+      }),
+      columnHelper.accessor('location', {
+        header: () => (
+          <button
+            type="button"
+            className="inline-flex items-center select-none"
+            onClick={() => handleSort('location')}
+          >
+            {t('latestJobs.location')}
+            <SortIcon field="location" sortField={sortField} sortDir={sortDir} />
+          </button>
+        ),
+        cell: (info) => (
+          <span className="block truncate text-muted-foreground" title={info.getValue()}>
+            {info.getValue()}
+          </span>
+        ),
+        size: 140,
+        minSize: 80
+      }),
+      columnHelper.accessor('job_link', {
+        header: () => t('latestJobs.link'),
+        cell: (info) => (
+          <a
+            href={info.getValue()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-primary hover:underline underline-offset-4"
+          >
+            {t('latestJobs.viewJob')}
+            <ExternalLink className="h-3 w-3" />
+          </a>
+        ),
+        size: 100,
+        minSize: 60,
+        enableResizing: false
+      }),
+      columnHelper.display({
+        id: 'actions',
+        header: () => null,
+        cell: ({ row }) => {
+          const job = row.original
+          return (
+            <div className="flex items-center gap-1.5 justify-end">
+              {job.application_id && job.application_status ? (
+                <ApplicationStatusDropdown
+                  currentStatus={job.application_status}
+                  interviewRound={job.interview_round}
+                  onStatusChange={(status, round) =>
+                    handleStatusChange(job.application_id!, status, round)
+                  }
+                />
+              ) : (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="gap-1.5 text-xs h-7"
+                  onClick={() => handleApply(job.id)}
+                  disabled={createApplication.isPending}
+                >
+                  <ClipboardCheck className="h-3.5 w-3.5" />
+                  {tApp('dashboard.applied')}
+                </Button>
+              )}
               <Button
                 size="sm"
                 variant="outline"
-                className="gap-1.5 text-xs h-7"
-                onClick={() => handleApply(job.id)}
-                disabled={createApplication.isPending}
+                className="gap-1.5 opacity-70 group-hover/row:opacity-100 transition-opacity text-xs h-7"
+                onClick={() => setSelectedJobId(job.id)}
               >
-                <ClipboardCheck className="h-3.5 w-3.5" />
-                {tApp('dashboard.applied')}
+                {job.has_analysis ? (
+                  <>
+                    <Eye className="h-3.5 w-3.5" />
+                    {t('latestJobs.viewAnalysis')}
+                  </>
+                ) : (
+                  <>
+                    <Bot className="h-3.5 w-3.5" />
+                    {t('latestJobs.analyzeAI')}
+                  </>
+                )}
               </Button>
-            )}
-            <Button
-              size="sm"
-              variant="outline"
-              className="gap-1.5 opacity-70 group-hover/row:opacity-100 transition-opacity text-xs h-7"
-              onClick={() => setSelectedJobId(job.id)}
-            >
-              {job.has_analysis ? (
-                <>
-                  <Eye className="h-3.5 w-3.5" />
-                  {t('latestJobs.viewAnalysis')}
-                </>
-              ) : (
-                <>
-                  <Bot className="h-3.5 w-3.5" />
-                  {t('latestJobs.analyzeAI')}
-                </>
-              )}
-            </Button>
-          </div>
-        )
-      },
-      size: 180,
-      minSize: 140,
-      enableResizing: false
-    })
-  ]
+            </div>
+          )
+        },
+        size: 180,
+        minSize: 140,
+        enableResizing: false
+      })
+    ],
+    [sortField, sortDir, matchedOnly, createApplication.isPending, t, tApp]
+  )
 
   const table = useReactTable({
     data: paginatedJobs,
