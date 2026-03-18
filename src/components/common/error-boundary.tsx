@@ -25,7 +25,9 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('ErrorBoundary caught:', error, errorInfo)
+    if (import.meta.env.DEV) {
+      console.error('ErrorBoundary caught:', error, errorInfo)
+    }
   }
 
   handleRetry = () => {
@@ -55,7 +57,7 @@ export class ErrorBoundary extends Component<Props, State> {
                   Ocorreu um erro inesperado. Tente recarregar a página.
                 </p>
               </div>
-              {this.state.error && (
+              {import.meta.env.DEV && this.state.error && (
                 <code className="block w-full rounded-md bg-muted/50 px-3 py-2 text-xs font-mono text-muted-foreground truncate">
                   {this.state.error.message}
                 </code>
