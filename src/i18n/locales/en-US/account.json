@@ -57,6 +57,10 @@
     "currentPlan": "Current plan",
     "renew": "Renew",
     "subscribe": "Subscribe",
-    "free": "Free"
+    "free": "Free",
+    "weekdaysOnlyLabel": "Weekdays only",
+    "weekdaysOnlyDescription": "Receive notifications only Monday through Friday",
+    "preferencesUpdated": "Preferences updated!",
+    "preferencesError": "Failed to update preferences"
   }
 }

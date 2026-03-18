@@ -9,6 +9,18 @@
     "stepData": "Your Details",
     "stepPayment": "Payment"
   },
+  "pixQrCode": {
+    "title": "Scan the QR Code",
+    "subtitle": "Open your bank app and scan the QR Code below or copy the PIX code",
+    "copyCode": "Copy PIX code",
+    "codeCopied": "Code copied!",
+    "awaitingPayment": "Awaiting payment...",
+    "paymentConfirmed": "Payment confirmed! Redirecting...",
+    "qrExpired": "QR Code expired",
+    "qrExpiredDescription": "The payment time has expired. Generate a new QR Code to continue.",
+    "generateNewQr": "Generate new QR Code",
+    "expiresIn": "Expires in"
+  },
   "paymentForm": {
     "title": "Create Account",
     "description": "Fill in your details to create your account",
