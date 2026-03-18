@@ -631,12 +631,12 @@ export default function AdicionarSitePage() {
             {isTesting ? (
               <>
                 <Loader2 className="size-4 animate-spin" />
-                Testando...
+                {t('addSite.sandbox.testing')}
               </>
             ) : (
               <>
                 <Play className="size-4" />
-                Testar Scraping
+                {t('addSite.sandbox.testButton')}
               </>
             )}
           </Button>
@@ -669,9 +669,11 @@ export default function AdicionarSitePage() {
         <Card className="animate-fade-in-up">
           <CardHeader>
             <CardTitle className="text-base">
-              Resultado do Teste
+              {t('addSite.sandbox.resultTitle')}
               <Badge className="ml-2" variant={sandboxResult.success ? 'default' : 'destructive'}>
-                {sandboxResult.success ? `${sandboxResult.data?.length || 0} vagas` : 'Erro'}
+                {sandboxResult.success
+                  ? `${sandboxResult.data?.length || 0} ${t('addSite.sandbox.jobs')}`
+                  : t('addSite.sandbox.error')}
               </Badge>
             </CardTitle>
             {sandboxResult.message && <CardDescription>{sandboxResult.message}</CardDescription>}
@@ -682,10 +684,18 @@ export default function AdicionarSitePage() {
                 <table className="w-full text-sm">
                   <thead className="bg-muted/50 sticky top-0">
                     <tr>
-                      <th className="text-left p-2 font-medium">Titulo</th>
-                      <th className="text-left p-2 font-medium">Empresa</th>
-                      <th className="text-left p-2 font-medium">Local</th>
-                      <th className="text-left p-2 font-medium">Link</th>
+                      <th className="text-left p-2 font-medium">
+                        {t('addSite.sandbox.columns.title')}
+                      </th>
+                      <th className="text-left p-2 font-medium">
+                        {t('addSite.sandbox.columns.company')}
+                      </th>
+                      <th className="text-left p-2 font-medium">
+                        {t('addSite.sandbox.columns.location')}
+                      </th>
+                      <th className="text-left p-2 font-medium">
+                        {t('addSite.sandbox.columns.link')}
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border/50">
@@ -701,7 +711,7 @@ export default function AdicionarSitePage() {
                             rel="noopener noreferrer"
                             className="text-primary hover:underline"
                           >
-                            Ver
+                            {t('addSite.sandbox.viewLink')}
                           </a>
                         </td>
                       </tr>

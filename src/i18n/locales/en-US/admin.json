@@ -77,6 +77,28 @@
       "description": "Image displayed alongside the site name",
       "chooseImage": "Choose Image"
     },
-    "submitButton": "Register Site"
+    "submitButton": "Register Site",
+    "sandbox": {
+      "testing": "Testing...",
+      "testButton": "Test Scraping",
+      "resultTitle": "Test Result",
+      "jobs": "jobs",
+      "error": "Error",
+      "columns": {
+        "title": "Title",
+        "company": "Company",
+        "location": "Location",
+        "link": "Link"
+      },
+      "viewLink": "View"
+    }
+  },
+  "charts": {
+    "monthlyRevenue": "Monthly Revenue",
+    "last6Months": "Last 6 months",
+    "revenuePlaceholder": "Revenue history coming soon",
+    "usersVsCancellations": "Users vs. Cancellations",
+    "thisMonth": "This month",
+    "usersPlaceholder": "User history coming soon"
   }
 }

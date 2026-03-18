@@ -77,6 +77,28 @@
       "description": "Imagem exibida junto ao nome do site",
       "chooseImage": "Escolher Imagem"
     },
-    "submitButton": "Cadastrar Site"
+    "submitButton": "Cadastrar Site",
+    "sandbox": {
+      "testing": "Testando...",
+      "testButton": "Testar Scraping",
+      "resultTitle": "Resultado do Teste",
+      "jobs": "vagas",
+      "error": "Erro",
+      "columns": {
+        "title": "Titulo",
+        "company": "Empresa",
+        "location": "Local",
+        "link": "Link"
+      },
+      "viewLink": "Ver"
+    }
+  },
+  "charts": {
+    "monthlyRevenue": "Receita Mensal",
+    "last6Months": "Últimos 6 meses",
+    "revenuePlaceholder": "Histórico de receita em breve",
+    "usersVsCancellations": "Usuários vs. Cancelamentos",
+    "thisMonth": "Este mês",
+    "usersPlaceholder": "Histórico de usuários em breve"
   }
 }
