@@ -248,56 +248,6 @@ export function Home() {
     })
   }, [filteredJobs, sortField, sortDir])
 
-  if (isDashboardLoading) {
-    return (
-      <div className="flex flex-col gap-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <SkeletonCard key={i} />
-          ))}
-        </div>
-        <SkeletonTable rows={4} />
-      </div>
-    )
-  }
-
-  if (isDashboardError) {
-    return (
-      <div className="flex flex-col items-center justify-center h-64 gap-3 animate-fade-in-up">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
-          <BarChart3 className="h-6 w-6 text-destructive" />
-        </div>
-        <p className="text-sm font-medium text-foreground">{t('error.loadDashboard')}</p>
-        <p className="text-xs text-muted-foreground max-w-sm text-center">
-          {dashboardError.message}
-        </p>
-      </div>
-    )
-  }
-
-  const jobs24hCount = allJobsData?.total_count ?? data?.new_jobs_today_count ?? 0
-
-  const stats = [
-    {
-      title: t('stats.monitoredUrls'),
-      value: data?.monitored_urls_count ?? 0,
-      icon: Globe
-    },
-    {
-      title: t('stats.newJobs24h'),
-      value: jobs24hCount,
-      icon: FileText
-    },
-    {
-      title: t('stats.alertsSent'),
-      value: data?.alerts_sent_count ?? 0,
-      icon: BellRing,
-      description: t('stats.alertsSentDescription')
-    }
-  ]
-
-  const monitoredUrls = data?.user_monitored_urls || []
-
   // Client-side pagination
   const totalCount = sortedJobs.length
   const totalPages = Math.ceil(totalCount / LIMIT)
@@ -449,6 +399,56 @@ export function Home() {
     columnResizeMode: 'onChange',
     enableColumnResizing: true
   })
+
+  if (isDashboardLoading) {
+    return (
+      <div className="flex flex-col gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </div>
+        <SkeletonTable rows={4} />
+      </div>
+    )
+  }
+
+  if (isDashboardError) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 gap-3 animate-fade-in-up">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
+          <BarChart3 className="h-6 w-6 text-destructive" />
+        </div>
+        <p className="text-sm font-medium text-foreground">{t('error.loadDashboard')}</p>
+        <p className="text-xs text-muted-foreground max-w-sm text-center">
+          {dashboardError.message}
+        </p>
+      </div>
+    )
+  }
+
+  const jobs24hCount = allJobsData?.total_count ?? data?.new_jobs_today_count ?? 0
+
+  const stats = [
+    {
+      title: t('stats.monitoredUrls'),
+      value: data?.monitored_urls_count ?? 0,
+      icon: Globe
+    },
+    {
+      title: t('stats.newJobs24h'),
+      value: jobs24hCount,
+      icon: FileText
+    },
+    {
+      title: t('stats.alertsSent'),
+      value: data?.alerts_sent_count ?? 0,
+      icon: BellRing,
+      description: t('stats.alertsSentDescription')
+    }
+  ]
+
+  const monitoredUrls = data?.user_monitored_urls || []
 
   const handleDaysChange = (value: string) => {
     setDays(Number(value))
