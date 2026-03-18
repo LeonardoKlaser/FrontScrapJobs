@@ -96,7 +96,7 @@ function AnalysisResult({
   curriculumId?: number
 }) {
   const { t } = useTranslation('sites')
-  const { data: curricula } = useCurriculum({ enabled: false })
+  const { data: curricula } = useCurriculum({ enabled: !!curriculumId })
   const curriculumName = curricula?.find((c) => c.id === curriculumId)?.title
   const {
     matchAnalysis,

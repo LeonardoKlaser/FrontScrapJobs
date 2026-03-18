@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import {
@@ -253,6 +253,56 @@ export function Home() {
   const totalPages = Math.ceil(totalCount / LIMIT)
   const paginatedJobs = sortedJobs.slice((page - 1) * LIMIT, page * LIMIT)
 
+  const handleSort = useCallback(
+    (field: SortField) => {
+      if (sortField !== field) {
+        setSortField(field)
+        setSortDir('asc')
+      } else if (sortDir === 'asc') {
+        setSortDir('desc')
+      } else {
+        setSortField(null)
+        setSortDir(null)
+      }
+      setPage(1)
+    },
+    [sortField, sortDir]
+  )
+
+  const handleDaysChange = (value: string) => {
+    setDays(Number(value))
+    setPage(1)
+  }
+
+  const handleMatchedOnlyChange = (checked: boolean) => {
+    setMatchedOnly(checked)
+    setPage(1)
+  }
+
+  const resetFilters = () => {
+    setFilterCompany('__all__')
+    setFilterLocationCategory('__all__')
+    setFilterLocationText('')
+    setPage(1)
+  }
+
+  const hasActiveFilters =
+    filterCompany !== '__all__' || filterLocationCategory !== '__all__' || filterLocationText !== ''
+
+  const activeFilterCount =
+    (filterCompany !== '__all__' ? 1 : 0) + (filterLocationCategory !== '__all__' ? 1 : 0)
+
+  const handleRemoveSite = (siteId: number) => {
+    unregisterSite.mutate(siteId, {
+      onSuccess: () => {
+        toast.success(t('monitoredUrls.removeSuccess'))
+      },
+      onError: () => {
+        toast.error(t('monitoredUrls.removeError'))
+      }
+    })
+  }
+
   const columns = useMemo(
     () => [
       columnHelper.accessor('title', {
@@ -389,7 +439,7 @@ export function Home() {
         enableResizing: false
       })
     ],
-    [sortField, sortDir, matchedOnly, createApplication.isPending, t, tApp]
+    [sortField, sortDir, matchedOnly, createApplication.isPending, handleSort, t, tApp]
   )
 
   const table = useReactTable({
@@ -449,53 +499,6 @@ export function Home() {
   ]
 
   const monitoredUrls = data?.user_monitored_urls || []
-
-  const handleDaysChange = (value: string) => {
-    setDays(Number(value))
-    setPage(1)
-  }
-
-  const handleMatchedOnlyChange = (checked: boolean) => {
-    setMatchedOnly(checked)
-    setPage(1)
-  }
-
-  const handleSort = (field: SortField) => {
-    if (sortField !== field) {
-      setSortField(field)
-      setSortDir('asc')
-    } else if (sortDir === 'asc') {
-      setSortDir('desc')
-    } else {
-      setSortField(null)
-      setSortDir(null)
-    }
-    setPage(1)
-  }
-
-  const resetFilters = () => {
-    setFilterCompany('__all__')
-    setFilterLocationCategory('__all__')
-    setFilterLocationText('')
-    setPage(1)
-  }
-
-  const hasActiveFilters =
-    filterCompany !== '__all__' || filterLocationCategory !== '__all__' || filterLocationText !== ''
-
-  const activeFilterCount =
-    (filterCompany !== '__all__' ? 1 : 0) + (filterLocationCategory !== '__all__' ? 1 : 0)
-
-  const handleRemoveSite = (siteId: number) => {
-    unregisterSite.mutate(siteId, {
-      onSuccess: () => {
-        toast.success(t('monitoredUrls.removeSuccess'))
-      },
-      onError: () => {
-        toast.error(t('monitoredUrls.removeError'))
-      }
-    })
-  }
 
   return (
     <div className="flex flex-col gap-10">
