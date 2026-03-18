@@ -192,11 +192,11 @@ export function Home() {
   const unregisterSite = useUnregisterUserSite()
 
   const { t: tApp } = useTranslation('applications')
-  const updateApplication = useUpdateApplication()
+  const { mutate: updateApplicationMutate } = useUpdateApplication()
 
   const handleStatusChange = useCallback(
     (applicationId: number, status: ApplicationStatus, interviewRound?: number) => {
-      updateApplication.mutate(
+      updateApplicationMutate(
         {
           id: applicationId,
           status,
@@ -208,7 +208,7 @@ export function Home() {
         }
       )
     },
-    [updateApplication, tApp]
+    [updateApplicationMutate, tApp]
   )
 
   // Also fetch all jobs for 24h count when matchedOnly differs
@@ -740,10 +740,7 @@ export function Home() {
 
             {/* Desktop: table layout */}
             <div className="hidden sm:block overflow-x-auto rounded-lg border border-border/50">
-              <table
-                className="text-sm w-full"
-                style={{ tableLayout: 'fixed' }}
-              >
+              <table className="text-sm min-w-full">
                 <thead className="bg-muted/40">
                   {table.getHeaderGroups().map((headerGroup) => (
                     <tr key={headerGroup.id}>

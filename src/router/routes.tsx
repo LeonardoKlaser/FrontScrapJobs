@@ -28,13 +28,9 @@ const TermsOfService = lazy(() => import('@/pages/TermsOfService'))
 const PrivacyPolicy = lazy(() => import('@/pages/PrivacyPolicy'))
 const Applications = lazy(() => import('@/pages/Applications'))
 
-const curriculumLazy = async () => {
-  const { Curriculum } = await import('@/pages/Curriculum')
-
-  return {
-    Component: Curriculum
-  }
-}
+const CurriculumPage = lazy(() =>
+  import('@/pages/Curriculum').then((m) => ({ default: m.Curriculum }))
+)
 
 function AdminGuard({ children }: { children: React.ReactNode }) {
   const user = useUser()
@@ -77,7 +73,7 @@ export const createRouter = (queryClient: QueryClient) =>
         },
         {
           path: PATHS.app.curriculum,
-          lazy: curriculumLazy
+          element: <CurriculumPage />
         },
         {
           path: PATHS.app.listSites,
