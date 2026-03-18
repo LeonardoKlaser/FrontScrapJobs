@@ -159,7 +159,7 @@ export function RegistrationModal({
                   </Button>
                 </div>
               </div>
-              <div className="flex flex-col gap-2 pt-1">
+              <div className="flex flex-col gap-2 pt-2">
                 <Button
                   variant="glow"
                   className="w-full"
@@ -176,9 +176,9 @@ export function RegistrationModal({
                   )}
                 </Button>
                 <Button
-                  variant="destructive"
+                  variant="ghost"
                   size="sm"
-                  className="w-full"
+                  className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
                   onClick={handleUnregister}
                 >
                   {t('popup.unsubscribe')}

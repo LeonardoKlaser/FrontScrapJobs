@@ -357,6 +357,13 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
     }
   }, [open, step, isLoadingHistory, historyData])
 
+  // Auto-select when there's only one curriculum
+  useEffect(() => {
+    if (step === 'select' && curricula?.length === 1 && !selectedCvId) {
+      setSelectedCvId(curricula[0].id)
+    }
+  }, [step, curricula, selectedCvId])
+
   const handleAnalyze = () => {
     if (!jobId || !selectedCvId) return
     setStep('analyzing')
