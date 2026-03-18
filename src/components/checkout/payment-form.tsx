@@ -46,12 +46,7 @@ interface FormErrors {
   [key: string]: string
 }
 
-export function PaymentForm({
-  plan,
-  onPixCreated,
-  isLoading,
-  setIsLoading
-}: PaymentFormProps) {
+export function PaymentForm({ plan, onPixCreated, isLoading, setIsLoading }: PaymentFormProps) {
   const { t } = useTranslation('plans')
   const { t: tAuth } = useTranslation('auth')
   const { t: tCommon } = useTranslation('common')

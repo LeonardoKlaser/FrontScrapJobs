@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ShieldCheck, Loader2, CheckCircle } from 'lucide-react'
+import { ShieldCheck, Loader2, CheckCircle, Eye, EyeOff } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -35,6 +35,10 @@ export function SecuritySection() {
     isDisabled
   } = useButtonState()
 
+  const [showOldPassword, setShowOldPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [showDeletePassword, setShowDeletePassword] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [deletePassword, setDeletePassword] = useState('')
   const [deleteLoading, setDeleteLoading] = useState(false)
@@ -109,7 +113,21 @@ export function SecuritySection() {
             <div className="max-w-md space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="old_password">{t('security.currentPassword')}</Label>
-                <Input id="old_password" type="password" {...register('old_password')} />
+                <div className="relative">
+                  <Input
+                    id="old_password"
+                    type={showOldPassword ? 'text' : 'password'}
+                    className="pr-10"
+                    {...register('old_password')}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowOldPassword((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    {showOldPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
                 {errors.old_password && (
                   <p className="text-xs text-destructive">{errors.old_password.message}</p>
                 )}
@@ -117,7 +135,21 @@ export function SecuritySection() {
 
               <div className="space-y-2">
                 <Label htmlFor="new_password">{t('security.newPassword')}</Label>
-                <Input id="new_password" type="password" {...register('new_password')} />
+                <div className="relative">
+                  <Input
+                    id="new_password"
+                    type={showNewPassword ? 'text' : 'password'}
+                    className="pr-10"
+                    {...register('new_password')}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
                 {errors.new_password && (
                   <p className="text-xs text-destructive">{errors.new_password.message}</p>
                 )}
@@ -125,7 +157,25 @@ export function SecuritySection() {
 
               <div className="space-y-2">
                 <Label htmlFor="confirm_password">{t('security.confirmPassword')}</Label>
-                <Input id="confirm_password" type="password" {...register('confirm_password')} />
+                <div className="relative">
+                  <Input
+                    id="confirm_password"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    className="pr-10"
+                    {...register('confirm_password')}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
                 {errors.confirm_password && (
                   <p className="text-xs text-destructive">{errors.confirm_password.message}</p>
                 )}
@@ -187,12 +237,22 @@ export function SecuritySection() {
               'Digite sua senha para confirmar a exclusão da conta.'
             )}
           </p>
-          <Input
-            type="password"
-            placeholder={t('security.passwordPlaceholder', 'Sua senha')}
-            value={deletePassword}
-            onChange={(e) => setDeletePassword(e.target.value)}
-          />
+          <div className="relative">
+            <Input
+              type={showDeletePassword ? 'text' : 'password'}
+              placeholder={t('security.passwordPlaceholder', 'Sua senha')}
+              className="pr-10"
+              value={deletePassword}
+              onChange={(e) => setDeletePassword(e.target.value)}
+            />
+            <button
+              type="button"
+              onClick={() => setShowDeletePassword((v) => !v)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+            >
+              {showDeletePassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          </div>
           {deleteError && <p className="text-sm text-destructive">{deleteError}</p>}
           <div className="flex justify-end gap-2 mt-4">
             <Button variant="outline" onClick={() => setShowDeleteDialog(false)}>

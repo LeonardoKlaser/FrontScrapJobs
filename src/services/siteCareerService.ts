@@ -67,6 +67,10 @@ export const siteCareerService = {
     await api.delete(`/userSite/${siteId}`)
   },
 
+  updateUserSiteFilters: async (siteId: number, targetWords: string[]): Promise<void> => {
+    await api.patch(`/userSite/${siteId}`, { target_words: targetWords })
+  },
+
   sandboxScrape: async (config: SiteConfigFormData) => {
     const cleanedData = Object.fromEntries(
       Object.entries(config).map(([key, value]) => [key, value === '' ? null : value])

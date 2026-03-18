@@ -14,6 +14,17 @@ export function useRegisterUserSite() {
   })
 }
 
+export function useUpdateUserSiteFilters() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ siteId, targetWords }: { siteId: number; targetWords: string[] }) =>
+      siteCareerService.updateUserSiteFilters(siteId, targetWords),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['siteCareerList'] })
+    }
+  })
+}
+
 export function useUnregisterUserSite() {
   const queryClient = useQueryClient()
   return useMutation({

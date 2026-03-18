@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { loginSchema, type LoginInput } from '@/validators/auth'
@@ -5,12 +6,13 @@ import { useAuth } from '@/hooks/useAuth'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import { ArrowRightIcon, Loader2Icon, MailIcon, LockIcon } from 'lucide-react'
+import { ArrowRightIcon, Loader2Icon, MailIcon, LockIcon, Eye, EyeOff } from 'lucide-react'
 import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
 
 export function AuthForm() {
   const { login, loading, error } = useAuth()
+  const [showPassword, setShowPassword] = useState(false)
   const { t } = useTranslation('auth')
   const {
     register,
@@ -57,11 +59,18 @@ export function AuthForm() {
           <LockIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             id="password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             placeholder={t('passwordPlaceholder', 'senha')}
-            className="pl-10"
+            className="pl-10 pr-10"
             {...register('password')}
           />
+          <button
+            type="button"
+            onClick={() => setShowPassword((v) => !v)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+          >
+            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </button>
         </div>
         {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
       </div>
@@ -70,7 +79,12 @@ export function AuthForm() {
         <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>
       )}
 
-      <Button type="submit" variant="glow" disabled={loading} className="mt-1 h-12 text-base font-semibold">
+      <Button
+        type="submit"
+        variant="glow"
+        disabled={loading}
+        className="mt-1 h-12 text-base font-semibold"
+      >
         {loading ? (
           <Loader2Icon className="h-4 w-4 animate-spin" />
         ) : (

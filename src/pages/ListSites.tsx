@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Building2, CheckCircle, Radar, Search, Send } from 'lucide-react'
+import { Building2, CheckCircle, Radar, Search, Send, X } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -10,7 +10,11 @@ import { RegistrationModal } from '@/components/companyPopup'
 import { useSiteCareer } from '@/hooks/useSiteCareer'
 import { useRequestSite } from '@/hooks/useRequestSite'
 import type { SiteCareer } from '@/models/siteCareer'
-import { useRegisterUserSite, useUnregisterUserSite } from '@/hooks/useRegisterUserSite'
+import {
+  useRegisterUserSite,
+  useUnregisterUserSite,
+  useUpdateUserSiteFilters
+} from '@/hooks/useRegisterUserSite'
 import { useUser } from '@/hooks/useUser'
 import { FilterPills } from '@/components/common/filter-pills'
 import { EmptyState } from '@/components/common/empty-state'
@@ -25,9 +29,18 @@ export default function EmpresasPage() {
   const { data } = useSiteCareer()
   const { data: user } = useUser()
   const [filter, setFilter] = useState('all')
+  const hasAutoSelected = useRef(false)
+
+  useEffect(() => {
+    if (!hasAutoSelected.current && data && data.some((c) => c.is_subscribed)) {
+      setFilter('subscribed')
+      hasAutoSelected.current = true
+    }
+  }, [data])
   const { mutate: requestSite, isPending } = useRequestSite()
   const { mutate: registerUserToSite, isPending: isRegisteringUser } = useRegisterUserSite()
   const { mutate: unregisterUser } = useUnregisterUserSite()
+  const { mutate: updateFilters, isPending: isUpdatingFilters } = useUpdateUserSiteFilters()
 
   const filters = [
     { key: 'all', label: t('filterAll') },
@@ -88,6 +101,18 @@ export default function EmpresasPage() {
     })
   }
 
+  const handleUpdateFilters = (targetWords: string[]) => {
+    if (!selectedCompany) return
+    updateFilters(
+      { siteId: selectedCompany.site_id, targetWords },
+      {
+        onSuccess: () => {
+          setPopupOpen(false)
+        }
+      }
+    )
+  }
+
   const handleUnregister = () => {
     if (selectedCompany) {
       unregisterUser(selectedCompany.site_id, {
@@ -141,8 +166,17 @@ export default function EmpresasPage() {
             placeholder={t('search')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9"
+            className="pl-9 pr-9"
           />
+          {searchTerm && (
+            <button
+              type="button"
+              onClick={() => setSearchTerm('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
         </div>
         <div className="flex justify-center">
           <FilterPills options={filters} activeKey={filter} onChange={setFilter} />
@@ -231,6 +265,9 @@ export default function EmpresasPage() {
         isLoading={isRegisteringUser}
         onRegister={handleRegister}
         onUnRegister={handleUnregister}
+        currentTargetWords={selectedCompany?.target_words}
+        onUpdateFilters={handleUpdateFilters}
+        isUpdatingFilters={isUpdatingFilters}
       />
     </div>
   )

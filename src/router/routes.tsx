@@ -4,6 +4,7 @@ import { createBrowserRouter, Navigate } from 'react-router'
 import { MainLayout } from '@/layouts/MainLayout'
 import { PublicLayout } from '@/layouts/PublicLayout'
 import { authLoader } from './loaders/authLoader'
+import { guestLoader } from './loaders/guestLoader'
 import { PATHS } from './paths'
 
 import type { QueryClient } from '@tanstack/react-query'
@@ -49,9 +50,9 @@ export const createRouter = (queryClient: QueryClient) =>
       element: <PublicLayout />,
       children: [
         { index: true, element: <Landing /> },
-        { path: PATHS.login, element: <Login /> },
-        { path: 'forgot-password', element: <ForgotPassword /> },
-        { path: 'reset-password', element: <ResetPassword /> },
+        { path: PATHS.login, element: <Login />, loader: guestLoader(queryClient) },
+        { path: 'forgot-password', element: <ForgotPassword />, loader: guestLoader(queryClient) },
+        { path: 'reset-password', element: <ResetPassword />, loader: guestLoader(queryClient) },
         { path: 'terms', element: <TermsOfService /> },
         { path: 'privacy', element: <PrivacyPolicy /> },
         {

@@ -69,7 +69,7 @@ export function ApplicationDrawer({ app, open, onClose, onDelete }: Props) {
         {app ? (
           <>
             <SheetHeader className="pb-4">
-              <SheetTitle className="text-lg leading-tight">{app.job.title}</SheetTitle>
+              <SheetTitle className="text-lg leading-tight pr-8">{app.job.title}</SheetTitle>
               <p className="text-sm text-muted-foreground">
                 {app.job.company} · {app.job.location}
               </p>

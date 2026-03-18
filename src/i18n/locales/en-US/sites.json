@@ -4,7 +4,7 @@
   "stats": {
     "companies": "Companies",
     "subscribed": "Subscribed",
-    "freeSlots": "Free slots"
+    "freeSlots": "Available monitors"
   },
   "search": "Search company...",
   "filterAll": "All",
@@ -30,10 +30,14 @@
     "instruction": "Enter keywords or roles of interest to receive alerts.",
     "keywordsLabel": "Keywords (separate with commas)",
     "keywordsPlaceholder": "e.g.: Frontend, React, Mid-level",
-    "slotsAvailable": "Available company slots",
+    "slotsAvailable": "Available monitors",
     "limitButton": "Limit Reached",
     "confirmSubscription": "Confirm Subscription",
-    "registering": "Registering..."
+    "registering": "Registering...",
+    "keywordsEdit": "Alert keywords",
+    "addKeyword": "Add",
+    "saveFilters": "Save changes",
+    "saving": "Saving..."
   },
   "analysis": {
     "title": "AI Compatibility Analysis",
@@ -58,6 +62,9 @@
     "emailError": "Failed to send email. Please try again.",
     "selectCurriculum": "Select the resume to compare with this job:",
     "generate": "Generate Analysis",
-    "redo": "Redo Analysis"
+    "redo": "Redo Analysis",
+    "curriculumUsed": "Resume used",
+    "curriculumDeleted": "Resume removed",
+    "atsKeywords": "ATS Keywords"
   }
 }

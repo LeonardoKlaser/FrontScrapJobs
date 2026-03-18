@@ -86,8 +86,18 @@ function AnalyzingState() {
   )
 }
 
-function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: number }) {
+function AnalysisResult({
+  analysis,
+  jobId,
+  curriculumId
+}: {
+  analysis: ResumeAnalysis
+  jobId: number
+  curriculumId?: number
+}) {
   const { t } = useTranslation('sites')
+  const { data: curricula } = useCurriculum({ enabled: false })
+  const curriculumName = curricula?.find((c) => c.id === curriculumId)?.title
   const {
     matchAnalysis,
     atsKeywords,
@@ -114,6 +124,16 @@ function AnalysisResult({ analysis, jobId }: { analysis: ResumeAnalysis; jobId: 
 
   return (
     <div className="space-y-5 max-h-[60vh] overflow-y-auto pr-1 scrollbar-thin">
+      {/* Curriculum used */}
+      {curriculumId && (
+        <p className="text-xs text-muted-foreground">
+          {t('analysis.curriculumUsed', 'Currículo utilizado')}:{' '}
+          <span className="font-medium text-foreground">
+            {curriculumName ?? t('analysis.curriculumDeleted', 'Currículo removido')}
+          </span>
+        </p>
+      )}
+
       {/* Score hero */}
       <Card className="flex flex-col items-center gap-4 p-3 sm:p-5 sm:flex-row sm:items-center sm:gap-5 border-border/50">
         <div className="relative flex h-20 w-20 shrink-0 items-center justify-center">
@@ -386,7 +406,11 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
         {/* Previous analysis (history) */}
         {step === 'history' && analysisResult && jobId !== null && (
           <div className="space-y-4">
-            <AnalysisResult analysis={analysisResult} jobId={jobId} />
+            <AnalysisResult
+              analysis={analysisResult}
+              jobId={jobId}
+              curriculumId={historyData?.curriculum_id}
+            />
             <div className="flex justify-center pt-2 border-t border-border/50">
               <Button variant="outline" size="sm" onClick={handleRedo} className="gap-2">
                 <RefreshCw className="h-3.5 w-3.5" />
@@ -440,7 +464,11 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
 
         {/* New analysis result */}
         {step === 'result' && analysisResult && jobId !== null && (
-          <AnalysisResult analysis={analysisResult} jobId={jobId} />
+          <AnalysisResult
+            analysis={analysisResult}
+            jobId={jobId}
+            curriculumId={selectedCvId ?? undefined}
+          />
         )}
       </DialogContent>
     </Dialog>

@@ -1,19 +1,10 @@
 import { AuthForm } from '@/components/forms/Auth'
-import { PATHS } from '@/router/paths'
-import { useEffect } from 'react'
-import { Link, useNavigate } from 'react-router'
+import { Link } from 'react-router'
 import { Logo } from '@/components/common/logo'
-import { useUser } from '@/hooks/useUser'
 import { useTranslation } from 'react-i18next'
 
 export default function Login() {
-  const { data: user } = useUser()
-  const navigate = useNavigate()
   const { t } = useTranslation('auth')
-
-  useEffect(() => {
-    if (user) navigate(PATHS.app.home)
-  }, [user, navigate])
 
   return (
     <div className="flex min-h-screen">
@@ -52,7 +43,7 @@ export default function Login() {
       {/* Right Panel — Form */}
       <div className="flex w-full lg:w-1/2 items-center justify-center px-4 bg-background">
         <div className="w-full max-w-sm animate-fade-in-up">
-          <div className="mb-8 flex items-center justify-center lg:hidden">
+          <div className="mb-8 flex flex-col items-center justify-center lg:hidden">
             <Logo size={80} showText />
           </div>
           <h2 className="text-xl font-semibold text-foreground mb-1 lg:mb-2">

@@ -4,7 +4,7 @@
   "stats": {
     "companies": "Empresas",
     "subscribed": "Inscritas",
-    "freeSlots": "Slots livres"
+    "freeSlots": "Monitoramentos disponíveis"
   },
   "search": "Buscar empresa...",
   "filterAll": "Todas",
@@ -30,10 +30,14 @@
     "instruction": "Insira palavras-chave ou cargos de interesse para receber alertas.",
     "keywordsLabel": "Palavras-chave (separe com vírgulas)",
     "keywordsPlaceholder": "Ex: Front-end, React, Pleno",
-    "slotsAvailable": "Slots de empresas disponíveis",
+    "slotsAvailable": "Monitoramentos disponíveis",
     "limitButton": "Limite Atingido",
     "confirmSubscription": "Confirmar Inscrição",
-    "registering": "Registrando..."
+    "registering": "Registrando...",
+    "keywordsEdit": "Palavras-chave para alertas",
+    "addKeyword": "Adicionar",
+    "saveFilters": "Salvar alterações",
+    "saving": "Salvando..."
   },
   "analysis": {
     "title": "Análise de Compatibilidade com IA",
@@ -59,6 +63,8 @@
     "atsKeywords": "Palavras-chave ATS",
     "selectCurriculum": "Selecione o currículo para comparar com esta vaga:",
     "generate": "Gerar Análise",
-    "redo": "Refazer Análise"
+    "redo": "Refazer Análise",
+    "curriculumUsed": "Currículo utilizado",
+    "curriculumDeleted": "Currículo removido"
   }
 }

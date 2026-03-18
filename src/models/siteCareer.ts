@@ -4,6 +4,7 @@ export interface SiteCareer {
   base_url: string
   logo_url: string
   is_subscribed: boolean
+  target_words?: string[]
 }
 
 export interface UserSiteRequest {

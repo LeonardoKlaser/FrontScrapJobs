@@ -42,6 +42,13 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import {
+  useReactTable,
+  getCoreRowModel,
+  flexRender,
+  createColumnHelper
+} from '@tanstack/react-table'
+import type { LatestJob } from '@/models/dashboard'
+import {
   Table,
   TableHeader,
   TableRow,
@@ -92,7 +99,7 @@ function StatsCard({
 }
 
 type SortField = 'title' | 'company' | 'location' | 'matched'
-type SortDir = 'asc' | 'desc'
+type SortDir = 'asc' | 'desc' | null
 
 function SortIcon({
   field,
@@ -103,7 +110,8 @@ function SortIcon({
   sortField: SortField | null
   sortDir: SortDir
 }) {
-  if (sortField !== field) return <ArrowUpDown className="h-3.5 w-3.5 ml-1 opacity-40" />
+  if (sortField !== field || !sortDir)
+    return <ArrowUpDown className="h-3.5 w-3.5 ml-1 opacity-40" />
   return sortDir === 'asc' ? (
     <ArrowUp className="h-3.5 w-3.5 ml-1" />
   ) : (
@@ -112,6 +120,7 @@ function SortIcon({
 }
 
 const LIMIT = 10
+const columnHelper = createColumnHelper<LatestJob>()
 
 export function Home() {
   const { t } = useTranslation('dashboard')
@@ -145,7 +154,7 @@ export function Home() {
 
   // Sorting
   const [sortField, setSortField] = useState<SortField | null>(null)
-  const [sortDir, setSortDir] = useState<SortDir>('asc')
+  const [sortDir, setSortDir] = useState<SortDir>(null)
 
   const {
     data: jobsData,
@@ -294,6 +303,150 @@ export function Home() {
   const totalPages = Math.ceil(totalCount / LIMIT)
   const paginatedJobs = sortedJobs.slice((page - 1) * LIMIT, page * LIMIT)
 
+  const columns = [
+    columnHelper.accessor('title', {
+      header: () => (
+        <button
+          type="button"
+          className="inline-flex items-center select-none"
+          onClick={() => handleSort('title')}
+        >
+          {t('latestJobs.jobTitle')}
+          <SortIcon field="title" sortField={sortField} sortDir={sortDir} />
+        </button>
+      ),
+      cell: (info) => (
+        <span className="flex items-center gap-2">
+          <span className="truncate font-medium text-foreground" title={info.getValue()}>
+            {info.getValue()}
+          </span>
+          {!matchedOnly && info.row.original.matched && (
+            <Badge variant="default" className="shrink-0 text-xs">
+              {t('latestJobs.matchBadge')}
+            </Badge>
+          )}
+        </span>
+      ),
+      size: 300,
+      minSize: 120
+    }),
+    columnHelper.accessor('company', {
+      header: () => (
+        <button
+          type="button"
+          className="inline-flex items-center select-none"
+          onClick={() => handleSort('company')}
+        >
+          {t('latestJobs.company')}
+          <SortIcon field="company" sortField={sortField} sortDir={sortDir} />
+        </button>
+      ),
+      cell: (info) => (
+        <span className="block truncate text-muted-foreground" title={info.getValue()}>
+          {info.getValue()}
+        </span>
+      ),
+      size: 160,
+      minSize: 80
+    }),
+    columnHelper.accessor('location', {
+      header: () => (
+        <button
+          type="button"
+          className="inline-flex items-center select-none"
+          onClick={() => handleSort('location')}
+        >
+          {t('latestJobs.location')}
+          <SortIcon field="location" sortField={sortField} sortDir={sortDir} />
+        </button>
+      ),
+      cell: (info) => (
+        <span className="block truncate text-muted-foreground" title={info.getValue()}>
+          {info.getValue()}
+        </span>
+      ),
+      size: 140,
+      minSize: 80
+    }),
+    columnHelper.accessor('job_link', {
+      header: () => t('latestJobs.link'),
+      cell: (info) => (
+        <a
+          href={info.getValue()}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-primary hover:underline underline-offset-4"
+        >
+          {t('latestJobs.viewJob')}
+          <ExternalLink className="h-3 w-3" />
+        </a>
+      ),
+      size: 100,
+      minSize: 60,
+      enableResizing: false
+    }),
+    columnHelper.display({
+      id: 'actions',
+      header: () => null,
+      cell: ({ row }) => {
+        const job = row.original
+        return (
+          <div className="flex items-center gap-1.5 justify-end">
+            {job.application_id && job.application_status ? (
+              <ApplicationStatusDropdown
+                currentStatus={job.application_status}
+                interviewRound={job.interview_round}
+                onStatusChange={(status, round) =>
+                  handleStatusChange(job.application_id!, status, round)
+                }
+              />
+            ) : (
+              <Button
+                size="sm"
+                variant="outline"
+                className="gap-1.5 text-xs h-7"
+                onClick={() => handleApply(job.id)}
+                disabled={createApplication.isPending}
+              >
+                <ClipboardCheck className="h-3.5 w-3.5" />
+                {tApp('dashboard.applied')}
+              </Button>
+            )}
+            <Button
+              size="sm"
+              variant="outline"
+              className="gap-1.5 opacity-70 group-hover/row:opacity-100 transition-opacity text-xs h-7"
+              onClick={() => setSelectedJobId(job.id)}
+            >
+              {job.has_analysis ? (
+                <>
+                  <Eye className="h-3.5 w-3.5" />
+                  {t('latestJobs.viewAnalysis')}
+                </>
+              ) : (
+                <>
+                  <Bot className="h-3.5 w-3.5" />
+                  {t('latestJobs.analyzeAI')}
+                </>
+              )}
+            </Button>
+          </div>
+        )
+      },
+      size: 180,
+      minSize: 140,
+      enableResizing: false
+    })
+  ]
+
+  const table = useReactTable({
+    data: paginatedJobs,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    columnResizeMode: 'onChange',
+    enableColumnResizing: true
+  })
+
   const handleDaysChange = (value: string) => {
     setDays(Number(value))
     setPage(1)
@@ -305,11 +458,14 @@ export function Home() {
   }
 
   const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))
-    } else {
+    if (sortField !== field) {
       setSortField(field)
       setSortDir('asc')
+    } else if (sortDir === 'asc') {
+      setSortDir('desc')
+    } else {
+      setSortField(null)
+      setSortDir(null)
     }
     setPage(1)
   }
@@ -584,122 +740,52 @@ export function Home() {
 
             {/* Desktop: table layout */}
             <div className="hidden sm:block overflow-x-auto rounded-lg border border-border/50">
-              <Table className="text-sm">
-                <TableHeader className="bg-muted/40">
-                  <TableRow>
-                    <TableHead
-                      className="w-[35%] font-medium cursor-pointer select-none"
-                      onClick={() => handleSort('title')}
-                    >
-                      <span className="inline-flex items-center">
-                        {t('latestJobs.jobTitle')}
-                        <SortIcon field="title" sortField={sortField} sortDir={sortDir} />
-                      </span>
-                    </TableHead>
-                    <TableHead
-                      className="w-[20%] font-medium cursor-pointer select-none"
-                      onClick={() => handleSort('company')}
-                    >
-                      <span className="inline-flex items-center">
-                        {t('latestJobs.company')}
-                        <SortIcon field="company" sortField={sortField} sortDir={sortDir} />
-                      </span>
-                    </TableHead>
-                    <TableHead
-                      className="w-[15%] font-medium cursor-pointer select-none"
-                      onClick={() => handleSort('location')}
-                    >
-                      <span className="inline-flex items-center">
-                        {t('latestJobs.location')}
-                        <SortIcon field="location" sortField={sortField} sortDir={sortDir} />
-                      </span>
-                    </TableHead>
-                    <TableHead className="w-[10%] font-medium">{t('latestJobs.link')}</TableHead>
-                    <TableHead className="w-[20%] font-medium text-right" />
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {paginatedJobs.map((job) => (
-                    <TableRow key={job.id} className="group/row hover:bg-muted/30">
-                      <TableCell className="max-w-0 font-medium text-foreground">
-                        <span className="flex items-center gap-2">
-                          <span className="truncate" title={job.title}>
-                            {job.title}
-                          </span>
-                          {!matchedOnly && job.matched && (
-                            <Badge variant="default" className="shrink-0 text-xs">
-                              {t('latestJobs.matchBadge')}
-                            </Badge>
-                          )}
-                        </span>
-                      </TableCell>
-                      <TableCell className="max-w-0 text-muted-foreground">
-                        <span className="block truncate" title={job.company}>
-                          {job.company}
-                        </span>
-                      </TableCell>
-                      <TableCell className="max-w-0 text-muted-foreground">
-                        <span className="block truncate" title={job.location}>
-                          {job.location}
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        <a
-                          href={job.job_link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-primary hover:underline underline-offset-4"
+              <table className="text-sm w-full" style={{ width: table.getTotalSize() }}>
+                <thead className="bg-muted/40">
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <tr key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => (
+                        <th
+                          key={header.id}
+                          className="relative font-medium px-4 py-3 text-left"
+                          style={{ width: header.getSize() }}
                         >
-                          {t('latestJobs.viewJob')}
-                          <ExternalLink className="h-3 w-3" />
-                        </a>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center gap-1.5 justify-end">
-                          {job.application_id && job.application_status ? (
-                            <ApplicationStatusDropdown
-                              currentStatus={job.application_status}
-                              interviewRound={job.interview_round}
-                              onStatusChange={(status, round) =>
-                                handleStatusChange(job.application_id!, status, round)
-                              }
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          {header.column.getCanResize() && (
+                            <div
+                              onMouseDown={header.getResizeHandler()}
+                              onTouchStart={header.getResizeHandler()}
+                              className={`absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none ${
+                                header.column.getIsResizing()
+                                  ? 'bg-primary opacity-100'
+                                  : 'bg-border/50 opacity-0 hover:opacity-100'
+                              }`}
                             />
-                          ) : (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="gap-1.5 text-xs h-7"
-                              onClick={() => handleApply(job.id)}
-                              disabled={createApplication.isPending}
-                            >
-                              <ClipboardCheck className="h-3.5 w-3.5" />
-                              {tApp('dashboard.applied')}
-                            </Button>
                           )}
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="gap-1.5 opacity-70 group-hover/row:opacity-100 transition-opacity text-xs h-7"
-                            onClick={() => setSelectedJobId(job.id)}
-                          >
-                            {job.has_analysis ? (
-                              <>
-                                <Eye className="h-3.5 w-3.5" />
-                                {t('latestJobs.viewAnalysis')}
-                              </>
-                            ) : (
-                              <>
-                                <Bot className="h-3.5 w-3.5" />
-                                {t('latestJobs.analyzeAI')}
-                              </>
-                            )}
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
+                        </th>
+                      ))}
+                    </tr>
                   ))}
-                </TableBody>
-              </Table>
+                </thead>
+                <tbody>
+                  {table.getRowModel().rows.map((row) => (
+                    <tr
+                      key={row.id}
+                      className="group/row hover:bg-muted/30 border-t border-border/20"
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <td
+                          key={cell.id}
+                          className="px-4 py-2.5 overflow-hidden text-ellipsis whitespace-nowrap"
+                          style={{ width: cell.column.getSize() }}
+                        >
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
 
             {/* Pagination */}
