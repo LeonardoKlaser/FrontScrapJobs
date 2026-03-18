@@ -42,13 +42,6 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import {
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-  createColumnHelper
-} from '@tanstack/react-table'
-import type { LatestJob } from '@/models/dashboard'
-import {
   Table,
   TableHeader,
   TableRow,
@@ -121,7 +114,6 @@ function SortIcon({
 }
 
 const LIMIT = 10
-const columnHelper = createColumnHelper<LatestJob>()
 
 function ApplyButton({ jobId }: { jobId: number }) {
   const { t } = useTranslation('applications')
@@ -316,144 +308,6 @@ export function Home() {
       }
     })
   }
-
-  const columns = useMemo(
-    () => [
-      columnHelper.accessor('title', {
-        header: () => (
-          <button
-            type="button"
-            className="inline-flex items-center select-none"
-            onClick={() => handleSort('title')}
-          >
-            {t('latestJobs.jobTitle')}
-            <SortIcon field="title" sortField={sortField} sortDir={sortDir} />
-          </button>
-        ),
-        cell: (info) => (
-          <span className="flex items-center gap-2">
-            <span className="truncate font-medium text-foreground" title={info.getValue()}>
-              {info.getValue()}
-            </span>
-            {!matchedOnly && info.row.original.matched && (
-              <Badge variant="default" className="shrink-0 text-xs">
-                {t('latestJobs.matchBadge')}
-              </Badge>
-            )}
-          </span>
-        ),
-        size: 300,
-        minSize: 120
-      }),
-      columnHelper.accessor('company', {
-        header: () => (
-          <button
-            type="button"
-            className="inline-flex items-center select-none"
-            onClick={() => handleSort('company')}
-          >
-            {t('latestJobs.company')}
-            <SortIcon field="company" sortField={sortField} sortDir={sortDir} />
-          </button>
-        ),
-        cell: (info) => (
-          <span className="block truncate text-muted-foreground" title={info.getValue()}>
-            {info.getValue()}
-          </span>
-        ),
-        size: 160,
-        minSize: 80
-      }),
-      columnHelper.accessor('location', {
-        header: () => (
-          <button
-            type="button"
-            className="inline-flex items-center select-none"
-            onClick={() => handleSort('location')}
-          >
-            {t('latestJobs.location')}
-            <SortIcon field="location" sortField={sortField} sortDir={sortDir} />
-          </button>
-        ),
-        cell: (info) => (
-          <span className="block truncate text-muted-foreground" title={info.getValue()}>
-            {info.getValue()}
-          </span>
-        ),
-        size: 140,
-        minSize: 80
-      }),
-      columnHelper.accessor('job_link', {
-        header: () => t('latestJobs.link'),
-        cell: (info) => (
-          <a
-            href={safeHref(info.getValue())}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-primary hover:underline underline-offset-4"
-          >
-            {t('latestJobs.viewJob')}
-            <ExternalLink className="h-3 w-3" />
-          </a>
-        ),
-        size: 100,
-        minSize: 60,
-        enableResizing: false
-      }),
-      columnHelper.display({
-        id: 'actions',
-        header: () => null,
-        cell: ({ row }) => {
-          const job = row.original
-          return (
-            <div className="flex items-center gap-1.5 justify-end">
-              {job.application_id && job.application_status ? (
-                <ApplicationStatusDropdown
-                  currentStatus={job.application_status}
-                  interviewRound={job.interview_round}
-                  onStatusChange={(status, round) =>
-                    handleStatusChange(job.application_id!, status, round)
-                  }
-                />
-              ) : (
-                <ApplyButton jobId={job.id} />
-              )}
-              <Button
-                size="sm"
-                variant="outline"
-                className="gap-1.5 opacity-70 group-hover/row:opacity-100 transition-opacity text-xs h-7"
-                onClick={() => setSelectedJobId(job.id)}
-              >
-                {job.has_analysis ? (
-                  <>
-                    <Eye className="h-3.5 w-3.5" />
-                    {t('latestJobs.viewAnalysis')}
-                  </>
-                ) : (
-                  <>
-                    <Bot className="h-3.5 w-3.5" />
-                    {t('latestJobs.analyzeAI')}
-                  </>
-                )}
-              </Button>
-            </div>
-          )
-        },
-        size: 180,
-        minSize: 140,
-        enableResizing: false
-      })
-    ],
-    [sortField, sortDir, matchedOnly, handleSort, handleStatusChange, t, tApp]
-  )
-
-  const table = useReactTable({
-    data: paginatedJobs,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    columnResizeMode: 'onChange',
-    enableColumnResizing: true
-  })
 
   if (isDashboardLoading) {
     return (
@@ -740,60 +594,127 @@ export function Home() {
 
             {/* Desktop: table layout */}
             <div className="hidden sm:block overflow-x-auto rounded-lg border border-border/50">
-              <table className="text-sm min-w-full">
-                <thead className="bg-muted/40">
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <tr key={headerGroup.id}>
-                      {headerGroup.headers.map((header) => (
-                        <th
-                          key={header.id}
-                          className="relative font-medium px-4 py-3 text-left"
-                          style={{ width: header.getSize() }}
-                        >
-                          {flexRender(header.column.columnDef.header, header.getContext())}
-                          {header.column.getCanResize() && (
-                            <div
-                              onMouseDown={header.getResizeHandler()}
-                              onTouchStart={header.getResizeHandler()}
-                              className={`absolute right-0 top-0 h-full w-4 cursor-col-resize select-none touch-none -translate-x-1/2 ${
-                                header.column.getIsResizing()
-                                  ? 'bg-primary/60 opacity-100'
-                                  : 'opacity-0 hover:opacity-100'
-                              }`}
-                            >
-                              <div
-                                className={`mx-auto h-full w-0.5 ${
-                                  header.column.getIsResizing()
-                                    ? 'bg-primary'
-                                    : 'bg-border'
-                                }`}
-                              />
-                            </div>
+              <Table className="text-sm">
+                <TableHeader className="bg-muted/40">
+                  <TableRow>
+                    <TableHead className="font-medium w-[40%]">
+                      <button
+                        type="button"
+                        className="inline-flex items-center select-none"
+                        onClick={() => handleSort('title')}
+                      >
+                        {t('latestJobs.jobTitle')}
+                        <SortIcon field="title" sortField={sortField} sortDir={sortDir} />
+                      </button>
+                    </TableHead>
+                    <TableHead className="font-medium w-[15%]">
+                      <button
+                        type="button"
+                        className="inline-flex items-center select-none"
+                        onClick={() => handleSort('company')}
+                      >
+                        {t('latestJobs.company')}
+                        <SortIcon field="company" sortField={sortField} sortDir={sortDir} />
+                      </button>
+                    </TableHead>
+                    <TableHead className="font-medium w-[12%]">
+                      <button
+                        type="button"
+                        className="inline-flex items-center select-none"
+                        onClick={() => handleSort('location')}
+                      >
+                        {t('latestJobs.location')}
+                        <SortIcon field="location" sortField={sortField} sortDir={sortDir} />
+                      </button>
+                    </TableHead>
+                    <TableHead className="font-medium w-[8%]">
+                      {t('latestJobs.link')}
+                    </TableHead>
+                    <TableHead className="w-[25%]" />
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {paginatedJobs.map((job) => (
+                    <TableRow key={job.id} className="group/row hover:bg-muted/30">
+                      <TableCell className="max-w-0">
+                        <span className="flex items-center gap-2">
+                          <span
+                            className="truncate font-medium text-foreground"
+                            title={job.title}
+                          >
+                            {job.title}
+                          </span>
+                          {!matchedOnly && job.matched && (
+                            <Badge variant="default" className="shrink-0 text-xs">
+                              {t('latestJobs.matchBadge')}
+                            </Badge>
                           )}
-                        </th>
-                      ))}
-                    </tr>
-                  ))}
-                </thead>
-                <tbody>
-                  {table.getRowModel().rows.map((row) => (
-                    <tr
-                      key={row.id}
-                      className="group/row hover:bg-muted/30 border-t border-border/20"
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <td
-                          key={cell.id}
-                          className="px-4 py-2.5 overflow-hidden text-ellipsis whitespace-nowrap"
-                          style={{ width: cell.column.getSize() }}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <span
+                          className="block truncate text-muted-foreground"
+                          title={job.company}
                         >
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </td>
-                      ))}
-                    </tr>
+                          {job.company}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <span
+                          className="block truncate text-muted-foreground"
+                          title={job.location}
+                        >
+                          {job.location}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <a
+                          href={safeHref(job.job_link)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-primary hover:underline underline-offset-4"
+                        >
+                          {t('latestJobs.viewJob')}
+                          <ExternalLink className="h-3 w-3" />
+                        </a>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1.5 justify-end">
+                          {job.application_id && job.application_status ? (
+                            <ApplicationStatusDropdown
+                              currentStatus={job.application_status}
+                              interviewRound={job.interview_round}
+                              onStatusChange={(status, round) =>
+                                handleStatusChange(job.application_id!, status, round)
+                              }
+                            />
+                          ) : (
+                            <ApplyButton jobId={job.id} />
+                          )}
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="gap-1.5 opacity-70 group-hover/row:opacity-100 transition-opacity text-xs h-7"
+                            onClick={() => setSelectedJobId(job.id)}
+                          >
+                            {job.has_analysis ? (
+                              <>
+                                <Eye className="h-3.5 w-3.5" />
+                                {t('latestJobs.viewAnalysis')}
+                              </>
+                            ) : (
+                              <>
+                                <Bot className="h-3.5 w-3.5" />
+                                {t('latestJobs.analyzeAI')}
+                              </>
+                            )}
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
 
             {/* Pagination */}
