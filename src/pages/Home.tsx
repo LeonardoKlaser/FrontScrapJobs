@@ -60,6 +60,7 @@ import { useDashboard, useLatestJobs } from '@/hooks/useDashboard'
 import { useUnregisterUserSite } from '@/hooks/useRegisterUserSite'
 import { AnalysisDialog } from '@/components/analysis/analysis-dialog'
 import { PATHS } from '@/router/paths'
+import { safeHref } from '@/utils/url'
 import { categorizeLocation } from '@/lib/location'
 import { toast } from 'sonner'
 import { ApplicationStatusDropdown } from '@/components/common/application-status-dropdown'
@@ -386,7 +387,7 @@ export function Home() {
         header: () => t('latestJobs.link'),
         cell: (info) => (
           <a
-            href={info.getValue()}
+            href={safeHref(info.getValue())}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-primary hover:underline underline-offset-4"
@@ -705,7 +706,7 @@ export function Home() {
                   {job.location && <p className="text-xs text-muted-foreground">{job.location}</p>}
                   <div className="flex items-center gap-2 pt-1">
                     <a
-                      href={job.job_link}
+                      href={safeHref(job.job_link)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 text-xs text-primary hover:underline underline-offset-4"

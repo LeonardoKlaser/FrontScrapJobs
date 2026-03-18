@@ -9,6 +9,7 @@ import { ApplicationStatusDropdown } from '@/components/common/application-statu
 import { useUpdateApplication } from '@/hooks/useApplications'
 import type { ApplicationStatus, JobApplicationWithJob } from '@/models/application'
 import { toast } from 'sonner'
+import { safeHref } from '@/utils/url'
 
 interface Props {
   app: JobApplicationWithJob | null
@@ -78,7 +79,7 @@ export function ApplicationDrawer({ app, open, onClose, onDelete }: Props) {
             <div className="space-y-6 px-4 pb-4">
               {/* External link */}
               <a
-                href={app.job.job_link}
+                href={safeHref(app.job.job_link)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"

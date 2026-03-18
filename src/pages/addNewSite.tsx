@@ -35,6 +35,7 @@ import { useAddSiteConfig, useSandboxScrape } from '@/hooks/useAddSiteConfig'
 import { useButtonState } from '@/hooks/useButtonState'
 import { type SiteConfigFormData } from '@/services/siteCareerService'
 import { useTranslation } from 'react-i18next'
+import { safeHref } from '@/utils/url'
 
 export default function AdicionarSitePage() {
   const { t } = useTranslation('admin')
@@ -706,7 +707,7 @@ export default function AdicionarSitePage() {
                         <td className="p-2 text-muted-foreground">{job.location}</td>
                         <td className="p-2">
                           <a
-                            href={job.job_link}
+                            href={safeHref(job.job_link)}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-primary hover:underline"
