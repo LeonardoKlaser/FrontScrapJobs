@@ -9,7 +9,8 @@ export function authLoader(queryClient: QueryClient) {
       const user = await queryClient.fetchQuery({
         queryKey: ['user'],
         queryFn: () => authService.getMe(),
-        staleTime: 5 * 60 * 1000 // 5 minutes
+        staleTime: 5 * 60 * 1000, // 5 minutes
+        retry: 1
       })
       return user
     } catch {

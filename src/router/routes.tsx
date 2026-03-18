@@ -32,7 +32,7 @@ const curriculumLazy = async () => {
   const { Curriculum } = await import('@/pages/Curriculum')
 
   return {
-    element: <Curriculum />
+    Component: Curriculum
   }
 }
 

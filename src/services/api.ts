@@ -5,10 +5,20 @@ export const api = axios.create({
   withCredentials: true
 })
 
+let isRedirecting = false
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    if (isRedirecting) return Promise.reject(error)
+
+    const requestUrl = error.config?.url
+
     if (error.response?.status === 401) {
+      // Skip redirect for /api/me — the authLoader handles that
+      if (requestUrl === '/api/me') {
+        return Promise.reject(error)
+      }
       const path = window.location.pathname
       const publicPaths = [
         '/',
@@ -23,6 +33,7 @@ api.interceptors.response.use(
         path.startsWith('/checkout/') ||
         path === '/payment-confirmation'
       if (!isPublic) {
+        isRedirecting = true
         window.location.href = `/login?from=${encodeURIComponent(path)}`
       }
     }
@@ -31,6 +42,7 @@ api.interceptors.response.use(
       error.response?.data?.error === 'subscription_expired' &&
       window.location.pathname !== '/app/renew'
     ) {
+      isRedirecting = true
       window.location.href = '/app/renew'
     }
     return Promise.reject(error)

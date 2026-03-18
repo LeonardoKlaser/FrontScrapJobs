@@ -740,7 +740,10 @@ export function Home() {
 
             {/* Desktop: table layout */}
             <div className="hidden sm:block overflow-x-auto rounded-lg border border-border/50">
-              <table className="text-sm w-full" style={{ width: table.getTotalSize() }}>
+              <table
+                className="text-sm w-full"
+                style={{ tableLayout: 'fixed' }}
+              >
                 <thead className="bg-muted/40">
                   {table.getHeaderGroups().map((headerGroup) => (
                     <tr key={headerGroup.id}>
@@ -755,12 +758,20 @@ export function Home() {
                             <div
                               onMouseDown={header.getResizeHandler()}
                               onTouchStart={header.getResizeHandler()}
-                              className={`absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none ${
+                              className={`absolute right-0 top-0 h-full w-4 cursor-col-resize select-none touch-none -translate-x-1/2 ${
                                 header.column.getIsResizing()
-                                  ? 'bg-primary opacity-100'
-                                  : 'bg-border/50 opacity-0 hover:opacity-100'
+                                  ? 'bg-primary/60 opacity-100'
+                                  : 'opacity-0 hover:opacity-100'
                               }`}
-                            />
+                            >
+                              <div
+                                className={`mx-auto h-full w-0.5 ${
+                                  header.column.getIsResizing()
+                                    ? 'bg-primary'
+                                    : 'bg-border'
+                                }`}
+                              />
+                            </div>
                           )}
                         </th>
                       ))}

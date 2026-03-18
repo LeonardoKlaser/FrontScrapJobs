@@ -46,7 +46,7 @@ export function AppHeader() {
       className="sticky top-0 z-40 w-full border-b border-border/40
       bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60"
     >
-      <div className="mx-auto flex h-12 max-w-6xl items-center justify-between px-4">
+      <div className="mx-auto flex h-12 max-w-7xl items-center justify-between px-4">
         <Link to={PATHS.app.home} prefetch="intent" className="flex items-center">
           <Logo size={24} showText textClassName="text-lg" />
         </Link>
