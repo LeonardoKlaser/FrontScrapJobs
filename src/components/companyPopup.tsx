@@ -11,7 +11,7 @@ interface RegistrationModalProps {
   isOpen: boolean
   onClose: () => void
   companyName: string | undefined
-  companyLogo: string | undefined
+  companyLogo: string | null | undefined
   remainingSlots: number
   isAlreadyRegistered: boolean | undefined
   isLoading: boolean

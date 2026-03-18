@@ -20,9 +20,7 @@ import {
   CheckCircle
 } from 'lucide-react'
 import type { Curriculum, Experience, Education } from '@/models/curriculum'
-import { curriculumService } from '@/services/curriculumService'
-import { useUpdateCurriculum } from '@/hooks/useCurriculum'
-import { useQueryClient } from '@tanstack/react-query'
+import { useCreateCurriculum, useUpdateCurriculum } from '@/hooks/useCurriculum'
 import { useButtonState } from '@/hooks/useButtonState'
 import { toast } from 'sonner'
 
@@ -55,7 +53,7 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
   const [skillInput, setSkillInput] = useState('')
   const [languageInput, setLanguageInput] = useState('')
   const { mutate: updateCurriculum, isPending: isUpdating } = useUpdateCurriculum()
-  const queryClient = useQueryClient()
+  const { mutate: createCurriculum } = useCreateCurriculum()
 
   useEffect(() => {
     if (curriculum) {
@@ -90,10 +88,17 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
           }
         )
       } else {
-        await curriculumService.newCurriculum(formData)
-        queryClient.invalidateQueries({ queryKey: ['curriculumList'] })
-        setBtnSuccess()
-        toast.success(t('form.createSuccess'))
+        createCurriculum(formData, {
+          onSuccess: () => {
+            setBtnSuccess()
+            toast.success(t('form.createSuccess'))
+          },
+          onError: () => {
+            setBtnError()
+            toast.error(t('form.saveError'))
+          }
+        })
+        return
       }
     } catch {
       setBtnError()
@@ -111,14 +116,14 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
     })
   }
 
-  const removeExperience = (id: string) => {
+  const removeExperience = (id: string | undefined) => {
     setFormData({
       ...formData,
       experiences: formData.experiences.filter((exp) => exp.id !== id)
     })
   }
 
-  const updateExperience = (id: string, field: keyof Experience, value: string) => {
+  const updateExperience = (id: string | undefined, field: keyof Experience, value: string) => {
     setFormData({
       ...formData,
       experiences: formData.experiences.map((exp) =>
@@ -137,14 +142,14 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
     })
   }
 
-  const removeEducation = (id: string) => {
+  const removeEducation = (id: string | undefined) => {
     setFormData({
       ...formData,
       educations: formData.educations.filter((edu) => edu.id !== id)
     })
   }
 
-  const updateEducation = (id: string, field: keyof Education, value: string) => {
+  const updateEducation = (id: string | undefined, field: keyof Education, value: string) => {
     setFormData({
       ...formData,
       educations: formData.educations.map((edu) =>

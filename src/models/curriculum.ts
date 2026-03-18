@@ -1,12 +1,12 @@
 export interface Experience {
-  id: string
+  id?: string
   company: string
   title: string
   description: string
 }
 
 export interface Education {
-  id: string
+  id?: string
   institution: string
   degree: string
   year: string

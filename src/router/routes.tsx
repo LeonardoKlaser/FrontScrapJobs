@@ -39,7 +39,7 @@ const curriculumLazy = async () => {
 function AdminGuard({ children }: { children: React.ReactNode }) {
   const user = useUser()
   if (user.isLoading) return <LoadingSection variant="full" label="Verificando permissões..." />
-  if (!user.data?.is_admin) return <Navigate to={PATHS.app.home} replace />
+  if (user.isError || !user.data?.is_admin) return <Navigate to={PATHS.app.home} replace />
   return <>{children}</>
 }
 

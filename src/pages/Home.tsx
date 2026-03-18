@@ -122,6 +122,28 @@ function SortIcon({
 const LIMIT = 10
 const columnHelper = createColumnHelper<LatestJob>()
 
+function ApplyButton({ jobId }: { jobId: number }) {
+  const { t } = useTranslation('applications')
+  const createApplication = useCreateApplication()
+  return (
+    <Button
+      size="sm"
+      variant="outline"
+      className="gap-1.5 text-xs h-7"
+      onClick={() =>
+        createApplication.mutate(jobId, {
+          onSuccess: () => toast.success(t('toast.createSuccess')),
+          onError: (err) => toast.error(err.message)
+        })
+      }
+      disabled={createApplication.isPending}
+    >
+      <ClipboardCheck className="h-3.5 w-3.5" />
+      {t('dashboard.applied')}
+    </Button>
+  )
+}
+
 export function Home() {
   const { t } = useTranslation('dashboard')
   const {
@@ -169,33 +191,24 @@ export function Home() {
   const unregisterSite = useUnregisterUserSite()
 
   const { t: tApp } = useTranslation('applications')
-  const createApplication = useCreateApplication()
   const updateApplication = useUpdateApplication()
 
-  const handleApply = (jobId: number) => {
-    createApplication.mutate(jobId, {
-      onSuccess: () => toast.success(tApp('toast.createSuccess')),
-      onError: (err) => toast.error(err.message)
-    })
-  }
-
-  const handleStatusChange = (
-    applicationId: number,
-    status: ApplicationStatus,
-    interviewRound?: number
-  ) => {
-    updateApplication.mutate(
-      {
-        id: applicationId,
-        status,
-        interview_round: status === 'interview' ? interviewRound : null
-      },
-      {
-        onSuccess: () => toast.success(tApp('toast.updateSuccess')),
-        onError: (err) => toast.error(err.message)
-      }
-    )
-  }
+  const handleStatusChange = useCallback(
+    (applicationId: number, status: ApplicationStatus, interviewRound?: number) => {
+      updateApplication.mutate(
+        {
+          id: applicationId,
+          status,
+          interview_round: status === 'interview' ? interviewRound : null
+        },
+        {
+          onSuccess: () => toast.success(tApp('toast.updateSuccess')),
+          onError: (err) => toast.error(err.message)
+        }
+      )
+    },
+    [updateApplication, tApp]
+  )
 
   // Also fetch all jobs for 24h count when matchedOnly differs
   const { data: allJobsData } = useLatestJobs({
@@ -402,16 +415,7 @@ export function Home() {
                   }
                 />
               ) : (
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="gap-1.5 text-xs h-7"
-                  onClick={() => handleApply(job.id)}
-                  disabled={createApplication.isPending}
-                >
-                  <ClipboardCheck className="h-3.5 w-3.5" />
-                  {tApp('dashboard.applied')}
-                </Button>
+                <ApplyButton jobId={job.id} />
               )}
               <Button
                 size="sm"
@@ -439,7 +443,7 @@ export function Home() {
         enableResizing: false
       })
     ],
-    [sortField, sortDir, matchedOnly, createApplication.isPending, handleSort, t, tApp]
+    [sortField, sortDir, matchedOnly, handleSort, handleStatusChange, t, tApp]
   )
 
   const table = useReactTable({
@@ -709,18 +713,7 @@ export function Home() {
                       {t('latestJobs.viewJob')}
                       <ExternalLink className="h-3 w-3" />
                     </a>
-                    {!job.application_id && (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="gap-1 text-xs h-7"
-                        onClick={() => handleApply(job.id)}
-                        disabled={createApplication.isPending}
-                      >
-                        <ClipboardCheck className="h-3 w-3" />
-                        {tApp('dashboard.applied')}
-                      </Button>
-                    )}
+                    {!job.application_id && <ApplyButton jobId={job.id} />}
                     <Button
                       size="sm"
                       variant="outline"

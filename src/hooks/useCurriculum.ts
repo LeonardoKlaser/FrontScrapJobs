@@ -11,6 +11,16 @@ export function useCurriculum(options?: { enabled?: boolean }) {
   })
 }
 
+export function useCreateCurriculum() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: curriculumService.newCurriculum,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['curriculumList'] })
+    }
+  })
+}
+
 export function useUpdateCurriculum() {
   const queryClient = useQueryClient()
   return useMutation({

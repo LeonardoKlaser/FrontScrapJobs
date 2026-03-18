@@ -1,5 +1,5 @@
 import type React from 'react'
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -63,6 +63,13 @@ export function PaymentForm({ plan, onPixCreated, isLoading, setIsLoading }: Pay
   })
 
   const debounceTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({})
+
+  useEffect(() => {
+    const timers = debounceTimers.current
+    return () => {
+      Object.values(timers).forEach(clearTimeout)
+    }
+  }, [])
 
   const validateFieldOnServer = useCallback(
     async (field: 'email' | 'cpfCnpj', value: string) => {

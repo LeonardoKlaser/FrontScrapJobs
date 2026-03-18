@@ -2,7 +2,7 @@ export interface SiteCareer {
   site_id: number
   site_name: string
   base_url: string
-  logo_url: string
+  logo_url: string | null
   is_subscribed: boolean
   target_words?: string[]
 }

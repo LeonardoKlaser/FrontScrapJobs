@@ -9,10 +9,21 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      const isLoginPage = window.location.pathname === '/login'
-      const isPublicPage = window.location.pathname === '/'
-      if (!isLoginPage && !isPublicPage) {
-        window.location.href = `/login?from=${encodeURIComponent(window.location.pathname)}`
+      const path = window.location.pathname
+      const publicPaths = [
+        '/',
+        '/login',
+        '/forgot-password',
+        '/reset-password',
+        '/terms',
+        '/privacy'
+      ]
+      const isPublic =
+        publicPaths.some((p) => path === p) ||
+        path.startsWith('/checkout/') ||
+        path === '/payment-confirmation'
+      if (!isPublic) {
+        window.location.href = `/login?from=${encodeURIComponent(path)}`
       }
     }
     if (

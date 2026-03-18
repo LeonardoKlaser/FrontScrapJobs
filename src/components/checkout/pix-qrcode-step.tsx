@@ -6,6 +6,7 @@ import { CheckCircle2, Copy, Clock, QrCodeIcon, RefreshCw } from 'lucide-react'
 import { Spinner } from '@/components/ui/spinner'
 import { usePixStatus } from '@/hooks/usePixStatus'
 import { useNavigate } from 'react-router'
+import { PATHS } from '@/router/paths'
 import { useTranslation } from 'react-i18next'
 import { QRCodeSVG } from 'qrcode.react'
 import type { PixQRCodeData } from '@/services/paymentService'
@@ -51,7 +52,7 @@ export function PixQRCodeStep({ pixData, onGenerateNew }: PixQRCodeStepProps) {
   useEffect(() => {
     if (status === 'PAID') {
       const timer = setTimeout(() => {
-        navigate('/payment-confirmation')
+        navigate(PATHS.paymentConfirmation)
       }, 2000)
       return () => clearTimeout(timer)
     }
