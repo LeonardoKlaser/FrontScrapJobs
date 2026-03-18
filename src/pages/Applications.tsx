@@ -16,7 +16,11 @@ import {
   useUpdateApplication,
   useDeleteApplication
 } from '@/hooks/useApplications'
-import type { ApplicationStatus, JobApplicationWithJob } from '@/models/application'
+import type {
+  ApplicationStatus,
+  ApplicationsResponse,
+  JobApplicationWithJob
+} from '@/models/application'
 import { APPLICATION_STATUSES } from '@/models/application'
 import { KanbanColumn } from '@/components/applications/kanban-column'
 import { KanbanCardPreview } from '@/components/applications/kanban-card'
@@ -83,12 +87,11 @@ export default function Applications() {
     round?: number | null
   ) => {
     const previousApps = queryClient.getQueryData(['applications'])
-    queryClient.setQueryData(['applications'], (old: unknown) => {
-      const data = old as { applications?: JobApplicationWithJob[] } | undefined
-      if (!data?.applications) return old
+    queryClient.setQueryData<ApplicationsResponse>(['applications'], (old) => {
+      if (!old?.applications) return old
       return {
-        ...data,
-        applications: data.applications.map((a) =>
+        ...old,
+        applications: old.applications.map((a) =>
           a.id === appId
             ? {
                 ...a,
