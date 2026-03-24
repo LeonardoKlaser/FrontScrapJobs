@@ -1,76 +1,21 @@
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { PlanSummary } from '@/components/checkout/plan-summary'
 import { PaymentForm } from '@/components/checkout/payment-form'
-import { PixQRCodeStep } from '@/components/checkout/pix-qrcode-step'
 import { useParams, Link } from 'react-router'
 import { usePlans } from '@/hooks/usePlans'
 import { PATHS } from '@/router/paths'
 import { Spinner } from '@/components/ui/spinner'
-import { ArrowLeft, Check } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import type { PixQRCodeData } from '@/services/paymentService'
-
-function StepIndicator({ step }: { step: 1 | 2 }) {
-  const { t } = useTranslation('plans')
-
-  return (
-    <div className="mb-8 flex items-center justify-center gap-3">
-      <div className="flex items-center gap-2">
-        <div
-          className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium transition-colors ${
-            step >= 1 ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
-          }`}
-        >
-          {step > 1 ? <Check className="h-4 w-4" /> : '1'}
-        </div>
-        <span
-          className={`text-sm font-medium ${step >= 1 ? 'text-foreground' : 'text-muted-foreground'}`}
-        >
-          {t('checkout.stepData')}
-        </span>
-      </div>
-
-      <div className="h-px w-12 bg-border" />
-
-      <div className="flex items-center gap-2">
-        <div
-          className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium transition-colors ${
-            step >= 2 ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
-          }`}
-        >
-          2
-        </div>
-        <span
-          className={`text-sm font-medium ${step >= 2 ? 'text-foreground' : 'text-muted-foreground'}`}
-        >
-          {t('checkout.stepPayment')}
-        </span>
-      </div>
-    </div>
-  )
-}
 
 export default function CheckoutPage() {
   const { t } = useTranslation('plans')
   const params = useParams()
   const { data: plans, isLoading: plansLoading, isError } = usePlans()
-  const [step, setStep] = useState<1 | 2>(1)
-  const [pixData, setPixData] = useState<PixQRCodeData | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const planId = parseInt(params.planId || '', 10)
-
-  const handlePixCreated = useCallback((data: PixQRCodeData) => {
-    setPixData(data)
-    setStep(2)
-    setIsSubmitting(false)
-  }, [])
-
-  const handleGenerateNew = useCallback(() => {
-    setPixData(null)
-    setStep(1)
-  }, [])
 
   if (plansLoading) {
     return (
@@ -131,24 +76,12 @@ export default function CheckoutPage() {
           <p className="mt-2 text-muted-foreground">{t('checkout.description')}</p>
         </div>
 
-        <StepIndicator step={step} />
-
         <div className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-3">
           <div className="animate-fade-in-up lg:col-span-1" style={{ animationDelay: '100ms' }}>
             <PlanSummary plan={plan} />
           </div>
           <div className="animate-fade-in-up lg:col-span-2" style={{ animationDelay: '200ms' }}>
-            {step === 1 && (
-              <PaymentForm
-                plan={plan}
-                onPixCreated={handlePixCreated}
-                isLoading={isSubmitting}
-                setIsLoading={setIsSubmitting}
-              />
-            )}
-            {step === 2 && pixData && (
-              <PixQRCodeStep pixData={pixData} onGenerateNew={handleGenerateNew} />
-            )}
+            <PaymentForm plan={plan} isLoading={isSubmitting} setIsLoading={setIsSubmitting} />
           </div>
         </div>
       </div>

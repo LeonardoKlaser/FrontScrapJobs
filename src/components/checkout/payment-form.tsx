@@ -22,13 +22,11 @@ import type { Plan } from '@/models/plan'
 import { api } from '@/services/api'
 import axios from 'axios'
 import { useTranslation } from 'react-i18next'
-import type { PixQRCodeData } from '@/services/paymentService'
 import { Link } from 'react-router'
 import { PATHS } from '@/router/paths'
 
 interface PaymentFormProps {
   plan: Plan
-  onPixCreated: (pixData: PixQRCodeData) => void
   isLoading: boolean
   setIsLoading: (loading: boolean) => void
 }
@@ -46,7 +44,7 @@ interface FormErrors {
   [key: string]: string
 }
 
-export function PaymentForm({ plan, onPixCreated, isLoading, setIsLoading }: PaymentFormProps) {
+export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps) {
   const { t } = useTranslation('plans')
   const { t: tAuth } = useTranslation('auth')
   const { t: tCommon } = useTranslation('common')
@@ -205,17 +203,16 @@ export function PaymentForm({ plan, onPixCreated, isLoading, setIsLoading }: Pay
     setIsLoading(true)
 
     try {
-      const responsePayment = await api.post(`/api/payments/create/${plan.id}`, {
+      const response = await api.post(`/api/payments/create/${plan.id}`, {
         name: formData.name,
         email: formData.email,
         password: formData.password,
         tax: formData.cpfCnpj.replace(/\D/g, ''),
-        cellphone: formData.phone.replace(/\D/g, ''),
-        methods: ['PIX'],
-        billing_period: 'monthly'
+        cellphone: formData.phone.replace(/\D/g, '')
       })
 
-      onPixCreated(responsePayment.data as PixQRCodeData)
+      const { checkout_url } = response.data as { checkout_url: string }
+      window.location.href = checkout_url
     } catch (err) {
       const message =
         axios.isAxiosError(err) && err.response?.data?.error
@@ -224,7 +221,6 @@ export function PaymentForm({ plan, onPixCreated, isLoading, setIsLoading }: Pay
             ? err.message
             : tCommon('status.error')
       setErrors({ submit: message })
-    } finally {
       setIsLoading(false)
     }
   }

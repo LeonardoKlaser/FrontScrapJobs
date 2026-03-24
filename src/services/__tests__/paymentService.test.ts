@@ -1,7 +1,6 @@
 import { vi } from 'vitest'
 import { api } from '@/services/api'
-import { createPayment, checkPixStatus } from '@/services/paymentService'
-import type { CreatePaymentRequest } from '@/services/paymentService'
+import { createPayment, CreatePaymentRequest } from '@/services/paymentService'
 
 vi.mock('@/services/api', () => ({
   api: {
@@ -19,64 +18,38 @@ describe('paymentService', () => {
   })
 
   describe('createPayment', () => {
-    it('sends POST to /api/payments/create/:planId with correct body', async () => {
-      const mockResponse = {
-        pix_id: 'pix-123',
-        br_code: 'code-abc',
-        br_code_base64: 'base64data',
-        expires_at: '2026-03-18T12:00:00Z'
-      }
+    const planId = 2
+    const paymentData: CreatePaymentRequest = {
+      name: 'João Silva',
+      email: 'joao@email.com',
+      password: 'senha1234',
+      tax: '123.456.789-00',
+      cellphone: '11999999999'
+    }
+
+    it('sends POST /api/payments/create/{planId} with correct data', async () => {
+      const mockResponse = { checkout_url: 'https://checkout.abacatepay.com/abc123' }
       vi.mocked(api.post).mockResolvedValue({ data: mockResponse })
 
-      const requestData: CreatePaymentRequest = {
-        name: 'Test User',
-        email: 'test@email.com',
-        password: 'securePass123',
-        tax: '12345678900',
-        cellphone: '11999998888',
-        methods: ['PIX'],
-        billing_period: 'monthly'
-      }
+      const result = await createPayment(planId, paymentData)
 
-      const result = await createPayment(1, requestData)
-
-      expect(api.post).toHaveBeenCalledWith('/api/payments/create/1', requestData)
+      expect(api.post).toHaveBeenCalledWith(`/api/payments/create/${planId}`, paymentData)
       expect(result).toEqual(mockResponse)
     })
 
-    it('propagates errors on failure', async () => {
+    it('returns checkout_url from response', async () => {
+      const checkoutUrl = 'https://checkout.abacatepay.com/xyz789'
+      vi.mocked(api.post).mockResolvedValue({ data: { checkout_url: checkoutUrl } })
+
+      const result = await createPayment(planId, paymentData)
+
+      expect(result.checkout_url).toBe(checkoutUrl)
+    })
+
+    it('propagates errors from api.post', async () => {
       vi.mocked(api.post).mockRejectedValue(new Error('Network error'))
 
-      await expect(
-        createPayment(1, {
-          name: 'Test',
-          email: 'test@email.com',
-          password: 'pass1234',
-          tax: '123',
-          cellphone: '119',
-          methods: ['PIX'],
-          billing_period: 'monthly'
-        })
-      ).rejects.toThrow('Network error')
-    })
-  })
-
-  describe('checkPixStatus', () => {
-    it('sends GET to /api/payments/pix/status/:pixId and returns status', async () => {
-      vi.mocked(api.get).mockResolvedValue({ data: { status: 'PAID' } })
-
-      const result = await checkPixStatus('pix-123')
-
-      expect(api.get).toHaveBeenCalledWith('/api/payments/pix/status/pix-123')
-      expect(result).toBe('PAID')
-    })
-
-    it('returns PENDING status correctly', async () => {
-      vi.mocked(api.get).mockResolvedValue({ data: { status: 'PENDING' } })
-
-      const result = await checkPixStatus('pix-456')
-
-      expect(result).toBe('PENDING')
+      await expect(createPayment(planId, paymentData)).rejects.toThrow('Network error')
     })
   })
 })

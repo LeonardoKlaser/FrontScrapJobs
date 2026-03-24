@@ -92,7 +92,7 @@ function StatsCard({
   )
 }
 
-type SortField = 'title' | 'company' | 'location' | 'matched'
+type SortField = 'title' | 'company' | 'location' | 'matched' | 'created_at'
 type SortDir = 'asc' | 'desc' | null
 
 function SortIcon({
@@ -168,8 +168,8 @@ export function Home() {
   const [filterLocationText, setFilterLocationText] = useState('')
 
   // Sorting
-  const [sortField, setSortField] = useState<SortField | null>(null)
-  const [sortDir, setSortDir] = useState<SortDir>(null)
+  const [sortField, setSortField] = useState<SortField | null>('created_at')
+  const [sortDir, setSortDir] = useState<SortDir>('desc')
 
   const {
     data: jobsData,
@@ -247,6 +247,11 @@ export function Home() {
     return [...filteredJobs].sort((a, b) => {
       if (sortField === 'matched') {
         return (Number(a.matched) - Number(b.matched)) * dir
+      }
+      if (sortField === 'created_at') {
+        const dateA = new Date(a.created_at || 0).getTime()
+        const dateB = new Date(b.created_at || 0).getTime()
+        return (dateA - dateB) * dir
       }
       const valA = (a[sortField] || '').toLowerCase()
       const valB = (b[sortField] || '').toLowerCase()
@@ -594,7 +599,7 @@ export function Home() {
 
             {/* Desktop: table layout */}
             <div className="hidden sm:block overflow-x-auto rounded-lg border border-border/50">
-              <Table className="text-sm">
+              <Table className="table-fixed text-sm">
                 <TableHeader className="bg-muted/40">
                   <TableRow>
                     <TableHead className="font-medium w-[40%]">
@@ -607,7 +612,7 @@ export function Home() {
                         <SortIcon field="title" sortField={sortField} sortDir={sortDir} />
                       </button>
                     </TableHead>
-                    <TableHead className="font-medium w-[15%]">
+                    <TableHead className="font-medium w-[20%]">
                       <button
                         type="button"
                         className="inline-flex items-center select-none"
@@ -617,7 +622,7 @@ export function Home() {
                         <SortIcon field="company" sortField={sortField} sortDir={sortDir} />
                       </button>
                     </TableHead>
-                    <TableHead className="font-medium w-[12%]">
+                    <TableHead className="font-medium w-[15%]">
                       <button
                         type="button"
                         className="inline-flex items-center select-none"
@@ -627,21 +632,16 @@ export function Home() {
                         <SortIcon field="location" sortField={sortField} sortDir={sortDir} />
                       </button>
                     </TableHead>
-                    <TableHead className="font-medium w-[8%]">
-                      {t('latestJobs.link')}
-                    </TableHead>
-                    <TableHead className="w-[25%]" />
+                    <TableHead className="font-medium w-[10%]">{t('latestJobs.link')}</TableHead>
+                    <TableHead className="w-[15%]" />
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {paginatedJobs.map((job) => (
                     <TableRow key={job.id} className="group/row hover:bg-muted/30">
-                      <TableCell className="max-w-0">
+                      <TableCell className="max-w-0 whitespace-nowrap">
                         <span className="flex items-center gap-2">
-                          <span
-                            className="truncate font-medium text-foreground"
-                            title={job.title}
-                          >
+                          <span className="truncate font-medium text-foreground" title={job.title}>
                             {job.title}
                           </span>
                           {!matchedOnly && job.matched && (
@@ -651,19 +651,13 @@ export function Home() {
                           )}
                         </span>
                       </TableCell>
-                      <TableCell>
-                        <span
-                          className="block truncate text-muted-foreground"
-                          title={job.company}
-                        >
+                      <TableCell className="max-w-0 whitespace-nowrap">
+                        <span className="block truncate text-muted-foreground" title={job.company}>
                           {job.company}
                         </span>
                       </TableCell>
-                      <TableCell>
-                        <span
-                          className="block truncate text-muted-foreground"
-                          title={job.location}
-                        >
+                      <TableCell className="max-w-0 whitespace-nowrap">
+                        <span className="block truncate text-muted-foreground" title={job.location}>
                           {job.location}
                         </span>
                       </TableCell>
