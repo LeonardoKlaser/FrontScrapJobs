@@ -1,5 +1,6 @@
 import type React from 'react'
 import { useState, useRef, useCallback, useEffect } from 'react'
+import { useNavigate } from 'react-router'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -16,14 +17,27 @@ import {
   LockIcon,
   PhoneIcon,
   FileTextIcon,
-  ShieldCheck
+  ShieldCheck,
+  CreditCard
 } from 'lucide-react'
 import type { Plan } from '@/models/plan'
 import { api } from '@/services/api'
+import { createPayment, checkPaymentStatus } from '@/services/paymentService'
 import axios from 'axios'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { PATHS } from '@/router/paths'
+
+declare global {
+  interface Window {
+    PagarmeCheckout: {
+      init: (
+        onSuccess: (data: { pagarmetoken: string }) => boolean,
+        onError: (error: { message: string }) => boolean
+      ) => void
+    }
+  }
+}
 
 interface PaymentFormProps {
   plan: Plan
@@ -44,13 +58,35 @@ interface FormErrors {
   [key: string]: string
 }
 
+function usePagarmeScript() {
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [hasError, setHasError] = useState(false)
+
+  useEffect(() => {
+    const script = document.createElement('script')
+    script.src = 'https://checkout.pagar.me/v1/tokenizecard.js'
+    script.dataset.pagarmeCheckoutPublicKey = import.meta.env.VITE_PAGARME_PUBLIC_KEY
+    script.onload = () => setIsLoaded(true)
+    script.onerror = () => setHasError(true)
+    document.head.appendChild(script)
+    return () => {
+      document.head.removeChild(script)
+    }
+  }, [])
+
+  return { isLoaded, hasError }
+}
+
 export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps) {
   const { t } = useTranslation('plans')
   const { t: tAuth } = useTranslation('auth')
   const { t: tCommon } = useTranslation('common')
+  const navigate = useNavigate()
+  const { isLoaded: scriptLoaded, hasError: scriptError } = usePagarmeScript()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [errors, setErrors] = useState<FormErrors>({})
+  const [pollingStatus, setPollingStatus] = useState<'idle' | 'polling' | 'timeout'>('idle')
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -61,11 +97,15 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
   })
 
   const debounceTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({})
+  const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const pollingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     const timers = debounceTimers.current
     return () => {
       Object.values(timers).forEach(clearTimeout)
+      if (pollingRef.current) clearInterval(pollingRef.current)
+      if (pollingTimeoutRef.current) clearTimeout(pollingTimeoutRef.current)
     }
   }, [])
 
@@ -92,7 +132,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
           return next
         })
       } catch {
-        // Silently ignore validation errors — form submit will catch issues
+        // Silently ignore validation errors
       }
     },
     [formData.email, formData.cpfCnpj, t]
@@ -193,26 +233,43 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const startPolling = (email: string) => {
+    setPollingStatus('polling')
 
-    if (!validateForm()) {
-      return
-    }
+    pollingRef.current = setInterval(async () => {
+      try {
+        const result = await checkPaymentStatus(email)
+        if (result.status === 'confirmed') {
+          if (pollingRef.current) clearInterval(pollingRef.current)
+          if (pollingTimeoutRef.current) clearTimeout(pollingTimeoutRef.current)
+          navigate(`${PATHS.paymentConfirmation}?plan=${encodeURIComponent(plan.name)}`)
+        }
+      } catch {
+        // Continue polling on errors
+      }
+    }, 3000)
 
-    setIsLoading(true)
+    pollingTimeoutRef.current = setTimeout(() => {
+      if (pollingRef.current) clearInterval(pollingRef.current)
+      setPollingStatus('timeout')
+      setIsLoading(false)
+    }, 120000)
+  }
 
+  const submitPayment = async (cardToken: string) => {
     try {
-      const response = await api.post(`/api/payments/create/${plan.id}`, {
+      const result = await createPayment(plan.id, {
         name: formData.name,
         email: formData.email,
         password: formData.password,
         tax: formData.cpfCnpj.replace(/\D/g, ''),
-        cellphone: formData.phone.replace(/\D/g, '')
+        cellphone: formData.phone.replace(/\D/g, ''),
+        card_token: cardToken
       })
 
-      const { checkout_url } = response.data as { checkout_url: string }
-      window.location.href = checkout_url
+      if (result.status === 'processing') {
+        startPolling(formData.email)
+      }
     } catch (err) {
       const message =
         axios.isAxiosError(err) && err.response?.data?.error
@@ -225,6 +282,61 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
     }
   }
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    if (!validateForm()) return
+
+    if (!scriptLoaded || !window.PagarmeCheckout) {
+      setErrors({ submit: t('paymentForm.scriptLoadError') })
+      return
+    }
+
+    setIsLoading(true)
+    setErrors({})
+
+    window.PagarmeCheckout.init(
+      (data) => {
+        submitPayment(data.pagarmetoken)
+        return true
+      },
+      (error) => {
+        setErrors({ submit: error.message || t('paymentForm.cardError') })
+        setIsLoading(false)
+        return false
+      }
+    )
+  }
+
+  // Polling overlay
+  if (pollingStatus === 'polling') {
+    return (
+      <Card className="w-full border-border/50">
+        <CardContent className="flex flex-col items-center justify-center py-16 space-y-4">
+          <Spinner className="h-10 w-10 text-primary" />
+          <h3 className="text-lg font-semibold">{t('paymentForm.processingPayment')}</h3>
+          <p className="text-sm text-muted-foreground text-center max-w-md">
+            {t('paymentForm.processingDescription')}
+          </p>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  if (pollingStatus === 'timeout') {
+    return (
+      <Card className="w-full border-border/50">
+        <CardContent className="flex flex-col items-center justify-center py-16 space-y-4">
+          <AlertCircle className="h-10 w-10 text-yellow-500" />
+          <h3 className="text-lg font-semibold">{t('paymentForm.processingPayment')}</h3>
+          <p className="text-sm text-muted-foreground text-center max-w-md">
+            {t('paymentForm.paymentTimeout')}
+          </p>
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
     <Card className="w-full border-border/50">
       <CardHeader>
@@ -233,12 +345,25 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
       </CardHeader>
 
       <CardContent>
-        <form onSubmit={handleSubmit} noValidate className="space-y-8">
+        <form
+          data-pagarmecheckout-form
+          onSubmit={handleSubmit}
+          noValidate
+          className="space-y-8"
+        >
           {/* Submit Error Alert */}
           {errors.submit && (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>{errors.submit}</AlertDescription>
+            </Alert>
+          )}
+
+          {/* Script load error */}
+          {scriptError && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{t('paymentForm.scriptLoadError')}</AlertDescription>
             </Alert>
           )}
 
@@ -422,6 +547,90 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
             </div>
           </fieldset>
 
+          {/* Card Data Section */}
+          <fieldset
+            className="space-y-4 border-t border-border/50 pt-8 animate-fade-in-up"
+            style={{ animationDelay: '200ms' }}
+          >
+            <legend className="text-sm font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+              <CreditCard className="h-4 w-4" />
+              {t('paymentForm.cardData')}
+            </legend>
+
+            <div className="space-y-2">
+              <Label htmlFor="card_holder" className="text-muted-foreground">
+                {t('paymentForm.cardHolder')}
+              </Label>
+              <Input
+                id="card_holder"
+                data-pagarmecheckout-element="holder_name"
+                type="text"
+                placeholder={t('paymentForm.cardHolderPlaceholder')}
+                disabled={isLoading}
+                className="uppercase"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="card_number" className="text-muted-foreground">
+                {t('paymentForm.cardNumber')}
+              </Label>
+              <Input
+                id="card_number"
+                data-pagarmecheckout-element="number"
+                type="text"
+                placeholder={t('paymentForm.cardNumberPlaceholder')}
+                disabled={isLoading}
+                className="font-mono"
+              />
+            </div>
+
+            <div className="grid grid-cols-3 gap-3">
+              <div className="space-y-2">
+                <Label htmlFor="card_exp_month" className="text-muted-foreground">
+                  {t('paymentForm.cardExpMonth')}
+                </Label>
+                <Input
+                  id="card_exp_month"
+                  data-pagarmecheckout-element="exp_month"
+                  type="text"
+                  placeholder={t('paymentForm.cardExpMonthPlaceholder')}
+                  disabled={isLoading}
+                  className="font-mono text-center"
+                  maxLength={2}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="card_exp_year" className="text-muted-foreground">
+                  {t('paymentForm.cardExpYear')}
+                </Label>
+                <Input
+                  id="card_exp_year"
+                  data-pagarmecheckout-element="exp_year"
+                  type="text"
+                  placeholder={t('paymentForm.cardExpYearPlaceholder')}
+                  disabled={isLoading}
+                  className="font-mono text-center"
+                  maxLength={2}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="card_cvv" className="text-muted-foreground">
+                  {t('paymentForm.cardCvv')}
+                </Label>
+                <Input
+                  id="card_cvv"
+                  data-pagarmecheckout-element="cvv"
+                  type="text"
+                  placeholder={t('paymentForm.cardCvvPlaceholder')}
+                  disabled={isLoading}
+                  className="font-mono text-center"
+                  maxLength={4}
+                />
+              </div>
+            </div>
+          </fieldset>
+
           {/* Submit Button */}
           <div className="space-y-4 border-t border-border/50 pt-8">
             <Button
@@ -429,6 +638,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
               variant="glow"
               disabled={
                 isLoading ||
+                scriptError ||
                 errors.email === t('paymentForm.emailExists') ||
                 errors.cpfCnpj === t('paymentForm.cpfExists')
               }

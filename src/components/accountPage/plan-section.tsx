@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useQueryClient } from '@tanstack/react-query'
 import { Check, ArrowUpRight, Sparkles } from 'lucide-react'
 import {
   Card,
@@ -12,12 +13,21 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { usePlans } from '@/hooks/usePlans'
 import { Link } from 'react-router'
 import { userService } from '@/services/userService'
+import { cancelSubscription } from '@/services/paymentService'
+import { Spinner } from '@/components/ui/spinner'
 import { toast } from 'sonner'
 import type { User } from '@/models/user'
 
@@ -27,8 +37,28 @@ interface PlanSectionProps {
 
 export function PlanSection({ user }: PlanSectionProps) {
   const { t } = useTranslation('account')
+  const { t: tCommon } = useTranslation('common')
+  const queryClient = useQueryClient()
   const [showManageDialog, setShowManageDialog] = useState(false)
+  const [showCancelDialog, setShowCancelDialog] = useState(false)
+  const [isCanceling, setIsCanceling] = useState(false)
   const { data: plans } = usePlans()
+
+  const handleCancelSubscription = async () => {
+    setIsCanceling(true)
+    try {
+      await cancelSubscription()
+      toast.success(t('plan.cancelSuccess'))
+      setShowCancelDialog(false)
+      queryClient.invalidateQueries({ queryKey: ['user'] })
+    } catch {
+      toast.error(t('plan.cancelError'))
+    } finally {
+      setIsCanceling(false)
+    }
+  }
+
+  const hasActiveSubscription = user?.expires_at && new Date(user.expires_at) > new Date()
 
   const currentUsage = user?.monitored_sites_count ?? 0
   const maxUsage = user?.plan?.max_sites ?? 0
@@ -146,8 +176,45 @@ export function PlanSection({ user }: PlanSectionProps) {
               <ArrowUpRight className="h-3.5 w-3.5" />
             </Button>
           )}
+          {hasActiveSubscription && (
+            <Button
+              variant="destructive"
+              size="sm"
+              className="w-full sm:w-auto"
+              onClick={() => setShowCancelDialog(true)}
+            >
+              {t('plan.cancel')}
+            </Button>
+          )}
         </CardFooter>
       </Card>
+
+      <Dialog open={showCancelDialog} onOpenChange={setShowCancelDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('plan.cancelTitle')}</DialogTitle>
+            <DialogDescription>
+              {t('plan.cancelDescription', {
+                date: user?.expires_at
+                  ? new Date(user.expires_at).toLocaleDateString('pt-BR')
+                  : ''
+              })}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex justify-end gap-3 mt-4">
+            <Button variant="outline" onClick={() => setShowCancelDialog(false)}>
+              {tCommon('actions.back')}
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleCancelSubscription}
+              disabled={isCanceling}
+            >
+              {isCanceling ? <Spinner className="h-4 w-4" /> : t('plan.confirmCancel')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={showManageDialog} onOpenChange={setShowManageDialog}>
         <DialogContent>

@@ -61,6 +61,12 @@
     "weekdaysOnlyLabel": "Apenas dias úteis",
     "weekdaysOnlyDescription": "Receber notificações somente de segunda a sexta",
     "preferencesUpdated": "Preferências atualizadas!",
-    "preferencesError": "Erro ao atualizar preferências"
+    "preferencesError": "Erro ao atualizar preferências",
+    "cancel": "Cancelar Assinatura",
+    "cancelTitle": "Cancelar Assinatura",
+    "cancelDescription": "Tem certeza que deseja cancelar? Você manterá acesso até {{date}}.",
+    "confirmCancel": "Confirmar Cancelamento",
+    "cancelSuccess": "Assinatura cancelada com sucesso",
+    "cancelError": "Erro ao cancelar assinatura"
   }
 }

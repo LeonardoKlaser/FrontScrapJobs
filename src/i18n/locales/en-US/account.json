@@ -61,6 +61,12 @@
     "weekdaysOnlyLabel": "Weekdays only",
     "weekdaysOnlyDescription": "Receive notifications only Monday through Friday",
     "preferencesUpdated": "Preferences updated!",
-    "preferencesError": "Failed to update preferences"
+    "preferencesError": "Failed to update preferences",
+    "cancel": "Cancel Subscription",
+    "cancelTitle": "Cancel Subscription",
+    "cancelDescription": "Are you sure? You will keep access until {{date}}.",
+    "confirmCancel": "Confirm Cancellation",
+    "cancelSuccess": "Subscription cancelled successfully",
+    "cancelError": "Failed to cancel subscription"
   }
 }
