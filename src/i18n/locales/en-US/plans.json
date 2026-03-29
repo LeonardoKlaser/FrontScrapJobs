@@ -68,7 +68,6 @@
     "processingDescription": "We are confirming your payment. This may take a few seconds.",
     "paymentTimeout": "Payment is being processed. You will receive an email when confirmed.",
     "cardError": "Card error. Please check your details and try again.",
-    "scriptLoadError": "Failed to load payment module. Please reload the page.",
     "nextStep": "Go to Payment",
     "prevStep": "Back to personal data",
     "finishPayment": "Finish Payment",
