@@ -68,7 +68,12 @@
     "processingDescription": "Estamos confirmando seu pagamento. Isso pode levar alguns segundos.",
     "paymentTimeout": "O pagamento está sendo processado. Você receberá um e-mail quando confirmado.",
     "cardError": "Erro no cartão. Verifique os dados e tente novamente.",
-    "scriptLoadError": "Erro ao carregar o módulo de pagamento. Recarregue a página."
+    "scriptLoadError": "Erro ao carregar o módulo de pagamento. Recarregue a página.",
+    "nextStep": "Ir para o Pagamento",
+    "prevStep": "Voltar para dados pessoais",
+    "finishPayment": "Finalizar Pagamento",
+    "cardExpiryPlaceholder": "MM/AA",
+    "tokenizationError": "Erro ao processar cartão. Verifique os dados e tente novamente."
   },
   "planSummary": {
     "description": "Resumo do seu plano",
