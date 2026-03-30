@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Spinner } from '@/components/ui/spinner'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { AlertCircle, Lock, CreditCard, ArrowLeft, ShieldCheck } from 'lucide-react'
+import { AlertCircle, Lock, CreditCard, ArrowLeft, ShieldCheck, MapPin } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { CardData } from '@/services/paymentService'
 
@@ -14,12 +14,27 @@ interface CardFormState {
   cardNumber: string
   expDate: string
   cvv: string
+  zipCode: string
+  street: string
+  number: string
+  neighborhood: string
+  city: string
+  state: string
+}
+
+export interface AddressData {
+  zipCode: string
+  street: string
+  number: string
+  neighborhood: string
+  city: string
+  state: string
 }
 
 interface CardPaymentStepProps {
   isLoading: boolean
   error: string
-  onSubmit: (cardData: CardData) => void
+  onSubmit: (cardData: CardData, addressData: AddressData) => void
   onBack: () => void
 }
 
@@ -48,6 +63,11 @@ function parseExpDate(expDate: string): { month: number; year: number } {
   }
 }
 
+const BRAZILIAN_STATES = [
+  'AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG',
+  'PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO',
+]
+
 export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaymentStepProps) {
   const { t } = useTranslation('plans')
   const [cardForm, setCardForm] = useState<CardFormState>({
@@ -55,6 +75,12 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
     cardNumber: '',
     expDate: '',
     cvv: '',
+    zipCode: '',
+    street: '',
+    number: '',
+    neighborhood: '',
+    city: '',
+    state: '',
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,13 +100,23 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     const { month, year } = parseExpDate(cardForm.expDate)
-    onSubmit({
-      holderName: cardForm.holderName,
-      cardNumber: cardForm.cardNumber.replace(/\s/g, ''),
-      expMonth: month,
-      expYear: year,
-      cvv: cardForm.cvv,
-    })
+    onSubmit(
+      {
+        holderName: cardForm.holderName,
+        cardNumber: cardForm.cardNumber.replace(/\s/g, ''),
+        expMonth: month,
+        expYear: year,
+        cvv: cardForm.cvv,
+      },
+      {
+        zipCode: cardForm.zipCode.replace(/\D/g, ''),
+        street: cardForm.street,
+        number: cardForm.number,
+        neighborhood: cardForm.neighborhood,
+        city: cardForm.city,
+        state: cardForm.state,
+      }
+    )
   }
 
   return (
@@ -102,6 +138,112 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
+
+      <fieldset className="space-y-4 animate-fade-in-up">
+        <legend className="text-sm font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+          <MapPin className="h-4 w-4" />
+          {t('paymentForm.billingAddress')}
+        </legend>
+
+        <div className="grid grid-cols-3 gap-3">
+          <div className="space-y-2">
+            <Label htmlFor="zipCode" className="text-muted-foreground">
+              {t('paymentForm.zipCode')}
+            </Label>
+            <Input
+              id="zipCode"
+              name="zipCode"
+              type="text"
+              inputMode="numeric"
+              placeholder={t('paymentForm.zipCodePlaceholder')}
+              value={cardForm.zipCode}
+              onChange={handleChange}
+              disabled={isLoading}
+              maxLength={9}
+            />
+          </div>
+          <div className="col-span-2 space-y-2">
+            <Label htmlFor="street" className="text-muted-foreground">
+              {t('paymentForm.street')}
+            </Label>
+            <Input
+              id="street"
+              name="street"
+              type="text"
+              placeholder={t('paymentForm.streetPlaceholder')}
+              value={cardForm.street}
+              onChange={handleChange}
+              disabled={isLoading}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-3">
+          <div className="space-y-2">
+            <Label htmlFor="number" className="text-muted-foreground">
+              {t('paymentForm.addressNumber')}
+            </Label>
+            <Input
+              id="number"
+              name="number"
+              type="text"
+              placeholder={t('paymentForm.addressNumberPlaceholder')}
+              value={cardForm.number}
+              onChange={handleChange}
+              disabled={isLoading}
+            />
+          </div>
+          <div className="col-span-2 space-y-2">
+            <Label htmlFor="neighborhood" className="text-muted-foreground">
+              {t('paymentForm.neighborhood')}
+            </Label>
+            <Input
+              id="neighborhood"
+              name="neighborhood"
+              type="text"
+              placeholder={t('paymentForm.neighborhoodPlaceholder')}
+              value={cardForm.neighborhood}
+              onChange={handleChange}
+              disabled={isLoading}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-2">
+            <Label htmlFor="city" className="text-muted-foreground">
+              {t('paymentForm.city')}
+            </Label>
+            <Input
+              id="city"
+              name="city"
+              type="text"
+              placeholder={t('paymentForm.cityPlaceholder')}
+              value={cardForm.city}
+              onChange={handleChange}
+              disabled={isLoading}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="state" className="text-muted-foreground">
+              {t('paymentForm.state')}
+            </Label>
+            <select
+              id="state"
+              name="state"
+              value={cardForm.state}
+              onChange={(e) => setCardForm((prev) => ({ ...prev, state: e.target.value }))}
+              disabled={isLoading}
+              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <option value="">{t('paymentForm.statePlaceholder')}</option>
+              {BRAZILIAN_STATES.map((uf) => (
+                <option key={uf} value={uf}>{uf}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </fieldset>
 
       <fieldset className="space-y-4 animate-fade-in-up">
         <legend className="text-sm font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">

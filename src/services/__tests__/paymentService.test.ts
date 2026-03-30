@@ -30,7 +30,13 @@ describe('paymentService', () => {
       password: 'senha1234',
       tax: '123.456.789-00',
       cellphone: '11999999999',
-      card_token: 'tok_test_xyz'
+      card_token: 'tok_test_xyz',
+      zip_code: '01001000',
+      street: 'Rua das Flores',
+      number: '100',
+      neighborhood: 'Centro',
+      city: 'São Paulo',
+      state: 'SP'
     }
 
     it('sends POST /api/payments/create/{planId} with correct data', async () => {

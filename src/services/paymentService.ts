@@ -7,6 +7,12 @@ export interface CreatePaymentRequest {
   tax: string
   cellphone: string
   card_token: string
+  zip_code: string
+  street: string
+  number: string
+  neighborhood: string
+  city: string
+  state: string
 }
 
 export interface PaymentResult {

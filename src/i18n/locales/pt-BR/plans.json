@@ -72,7 +72,20 @@
     "prevStep": "Voltar para dados pessoais",
     "finishPayment": "Finalizar Pagamento",
     "cardExpiryPlaceholder": "MM/AA",
-    "tokenizationError": "Erro ao processar cartão. Verifique os dados e tente novamente."
+    "tokenizationError": "Erro ao processar cartão. Verifique os dados e tente novamente.",
+    "billingAddress": "Endereço de Cobrança",
+    "zipCode": "CEP",
+    "zipCodePlaceholder": "00000-000",
+    "street": "Rua",
+    "streetPlaceholder": "Rua das Flores",
+    "addressNumber": "Número",
+    "addressNumberPlaceholder": "100",
+    "neighborhood": "Bairro",
+    "neighborhoodPlaceholder": "Centro",
+    "city": "Cidade",
+    "cityPlaceholder": "São Paulo",
+    "state": "Estado",
+    "statePlaceholder": "Selecione"
   },
   "planSummary": {
     "description": "Resumo do seu plano",

@@ -13,6 +13,7 @@ import { CheckoutStepper } from './checkout-stepper'
 import { PersonalDataStep } from './personal-data-step'
 import type { PersonalFormData } from './personal-data-step'
 import { CardPaymentStep } from './card-payment-step'
+import type { AddressData } from './card-payment-step'
 
 interface PaymentFormProps {
   plan: Plan
@@ -70,7 +71,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
     }, 120000)
   }
 
-  const handleCardSubmit = async (cardData: CardData) => {
+  const handleCardSubmit = async (cardData: CardData, addressData: AddressData) => {
     setIsLoading(true)
     setCardError('')
 
@@ -84,6 +85,12 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
         tax: formData.cpfCnpj.replace(/\D/g, ''),
         cellphone: formData.phone.replace(/\D/g, ''),
         card_token: token.id,
+        zip_code: addressData.zipCode,
+        street: addressData.street,
+        number: addressData.number,
+        neighborhood: addressData.neighborhood,
+        city: addressData.city,
+        state: addressData.state,
       })
 
       if (result.status === 'processing') {

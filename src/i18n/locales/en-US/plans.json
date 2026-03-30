@@ -72,7 +72,20 @@
     "prevStep": "Back to personal data",
     "finishPayment": "Finish Payment",
     "cardExpiryPlaceholder": "MM/YY",
-    "tokenizationError": "Error processing card. Please check your details and try again."
+    "tokenizationError": "Error processing card. Please check your details and try again.",
+    "billingAddress": "Billing Address",
+    "zipCode": "Zip Code",
+    "zipCodePlaceholder": "00000-000",
+    "street": "Street",
+    "streetPlaceholder": "123 Main St",
+    "addressNumber": "Number",
+    "addressNumberPlaceholder": "100",
+    "neighborhood": "Neighborhood",
+    "neighborhoodPlaceholder": "Downtown",
+    "city": "City",
+    "cityPlaceholder": "São Paulo",
+    "state": "State",
+    "statePlaceholder": "Select"
   },
   "planSummary": {
     "description": "Your plan summary",
