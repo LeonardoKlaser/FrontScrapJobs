@@ -41,9 +41,10 @@ function formatExpDate(value: string): string {
 
 function parseExpDate(expDate: string): { month: number; year: number } {
   const digits = expDate.replace(/\D/g, '')
+  const rawYear = parseInt(digits.slice(2, 4), 10)
   return {
     month: parseInt(digits.slice(0, 2), 10),
-    year: parseInt(digits.slice(2, 4), 10),
+    year: rawYear < 100 ? 2000 + rawYear : rawYear,
   }
 }
 
