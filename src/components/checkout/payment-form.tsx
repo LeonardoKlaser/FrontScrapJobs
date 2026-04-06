@@ -50,17 +50,30 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
 
   const startPolling = (email: string) => {
     setPollingStatus('polling')
+    let consecutiveErrors = 0
 
     pollingRef.current = setInterval(async () => {
       try {
         const result = await checkPaymentStatus(email)
+        consecutiveErrors = 0
+
         if (result.status === 'confirmed') {
           if (pollingRef.current) clearInterval(pollingRef.current)
           if (pollingTimeoutRef.current) clearTimeout(pollingTimeoutRef.current)
+          setIsLoading(false)
           navigate(`${PATHS.paymentConfirmation}?plan=${encodeURIComponent(plan.name)}`)
         }
+        // not_found e processing: continua polling até o timeout de 2 min
+        // (webhook pode estar atrasado ou Redis pode ter evicted a key temporariamente)
       } catch {
-        // Continue polling on errors
+        consecutiveErrors++
+        if (consecutiveErrors >= 3) {
+          if (pollingRef.current) clearInterval(pollingRef.current)
+          if (pollingTimeoutRef.current) clearTimeout(pollingTimeoutRef.current)
+          setPollingStatus('timeout')
+          setCardError(tCommon('status.error'))
+          setIsLoading(false)
+        }
       }
     }, 3000)
 
@@ -95,6 +108,9 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
 
       if (result.status === 'processing') {
         startPolling(formData.email)
+      } else {
+        setCardError(tCommon('status.error'))
+        setIsLoading(false)
       }
     } catch (err) {
       let message: string

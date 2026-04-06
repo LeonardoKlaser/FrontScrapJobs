@@ -85,7 +85,11 @@
     "city": "Cidade",
     "cityPlaceholder": "São Paulo",
     "state": "Estado",
-    "statePlaceholder": "Selecione"
+    "statePlaceholder": "Selecione",
+    "fieldRequired": "Campo obrigatório",
+    "invalidCardNumber": "Número do cartão inválido",
+    "invalidExpiry": "Data de validade inválida",
+    "invalidCvv": "CVV inválido"
   },
   "planSummary": {
     "description": "Resumo do seu plano",

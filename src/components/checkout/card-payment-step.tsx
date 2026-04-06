@@ -48,7 +48,7 @@ function formatExpDate(value: string): string {
   if (digits.length >= 3) {
     return `${digits.slice(0, 2)}/${digits.slice(2)}`
   }
-  if (digits.length === 2) {
+  if (digits.length === 2 && !value.endsWith('/')) {
     return `${digits}/`
   }
   return digits
@@ -82,6 +82,7 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
     city: '',
     state: '',
   })
+  const [validationErrors, setValidationErrors] = useState<Partial<Record<keyof CardFormState, string>>>({})
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -95,10 +96,47 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
     } else {
       setCardForm((prev) => ({ ...prev, [name]: value }))
     }
+
+    if (validationErrors[name as keyof CardFormState]) {
+      setValidationErrors((prev) => ({ ...prev, [name]: '' }))
+    }
+  }
+
+  const validateForm = (): boolean => {
+    const errors: Partial<Record<keyof CardFormState, string>> = {}
+    const digits = cardForm.cardNumber.replace(/\s/g, '')
+
+    if (!cardForm.holderName.trim()) errors.holderName = t('paymentForm.fieldRequired')
+    if (digits.length < 13 || digits.length > 19) errors.cardNumber = t('paymentForm.invalidCardNumber')
+    const expDigits = cardForm.expDate.replace(/\D/g, '')
+    if (expDigits.length < 4) {
+      errors.expDate = t('paymentForm.invalidExpiry')
+    } else {
+      const expMonth = parseInt(expDigits.slice(0, 2), 10)
+      const expYear = 2000 + parseInt(expDigits.slice(2, 4), 10)
+      const now = new Date()
+      if (expMonth < 1 || expMonth > 12) {
+        errors.expDate = t('paymentForm.invalidExpiry')
+      } else if (expYear < now.getFullYear() || (expYear === now.getFullYear() && expMonth < now.getMonth() + 1)) {
+        errors.expDate = t('paymentForm.invalidExpiry')
+      }
+    }
+    if (cardForm.cvv.length < 3) errors.cvv = t('paymentForm.invalidCvv')
+    if (!cardForm.zipCode.trim()) errors.zipCode = t('paymentForm.fieldRequired')
+    if (!cardForm.street.trim()) errors.street = t('paymentForm.fieldRequired')
+    if (!cardForm.number.trim()) errors.number = t('paymentForm.fieldRequired')
+    if (!cardForm.neighborhood.trim()) errors.neighborhood = t('paymentForm.fieldRequired')
+    if (!cardForm.city.trim()) errors.city = t('paymentForm.fieldRequired')
+    if (!cardForm.state) errors.state = t('paymentForm.fieldRequired')
+
+    setValidationErrors(errors)
+    return Object.keys(errors).length === 0
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    if (!validateForm()) return
+
     const { month, year } = parseExpDate(cardForm.expDate)
     onSubmit(
       {
@@ -161,6 +199,9 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
               disabled={isLoading}
               maxLength={9}
             />
+            {validationErrors.zipCode && (
+              <p className="text-xs text-destructive">{validationErrors.zipCode}</p>
+            )}
           </div>
           <div className="col-span-2 space-y-2">
             <Label htmlFor="street" className="text-muted-foreground">
@@ -175,6 +216,9 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
               onChange={handleChange}
               disabled={isLoading}
             />
+            {validationErrors.street && (
+              <p className="text-xs text-destructive">{validationErrors.street}</p>
+            )}
           </div>
         </div>
 
@@ -192,6 +236,9 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
               onChange={handleChange}
               disabled={isLoading}
             />
+            {validationErrors.number && (
+              <p className="text-xs text-destructive">{validationErrors.number}</p>
+            )}
           </div>
           <div className="col-span-2 space-y-2">
             <Label htmlFor="neighborhood" className="text-muted-foreground">
@@ -206,6 +253,9 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
               onChange={handleChange}
               disabled={isLoading}
             />
+            {validationErrors.neighborhood && (
+              <p className="text-xs text-destructive">{validationErrors.neighborhood}</p>
+            )}
           </div>
         </div>
 
@@ -223,6 +273,9 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
               onChange={handleChange}
               disabled={isLoading}
             />
+            {validationErrors.city && (
+              <p className="text-xs text-destructive">{validationErrors.city}</p>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="state" className="text-muted-foreground">
@@ -232,7 +285,10 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
               id="state"
               name="state"
               value={cardForm.state}
-              onChange={(e) => setCardForm((prev) => ({ ...prev, state: e.target.value }))}
+              onChange={(e) => {
+                setCardForm((prev) => ({ ...prev, state: e.target.value }))
+                if (validationErrors.state) setValidationErrors((prev) => ({ ...prev, state: '' }))
+              }}
               disabled={isLoading}
               className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
             >
@@ -241,6 +297,9 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
                 <option key={uf} value={uf}>{uf}</option>
               ))}
             </select>
+            {validationErrors.state && (
+              <p className="text-xs text-destructive">{validationErrors.state}</p>
+            )}
           </div>
         </div>
       </fieldset>
@@ -259,12 +318,16 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
             id="holderName"
             name="holderName"
             type="text"
+            autoComplete="cc-name"
             placeholder={t('paymentForm.cardHolderPlaceholder')}
             value={cardForm.holderName}
             onChange={handleChange}
             disabled={isLoading}
             className="uppercase"
           />
+          {validationErrors.holderName && (
+            <p className="text-xs text-destructive">{validationErrors.holderName}</p>
+          )}
         </div>
 
         <div className="space-y-2">
@@ -276,12 +339,16 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
             name="cardNumber"
             type="text"
             inputMode="numeric"
+            autoComplete="cc-number"
             placeholder={t('paymentForm.cardNumberPlaceholder')}
             value={cardForm.cardNumber}
             onChange={handleChange}
             disabled={isLoading}
             className="font-mono"
           />
+          {validationErrors.cardNumber && (
+            <p className="text-xs text-destructive">{validationErrors.cardNumber}</p>
+          )}
         </div>
 
         <div className="grid grid-cols-2 gap-3">
@@ -294,6 +361,7 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
               name="expDate"
               type="text"
               inputMode="numeric"
+              autoComplete="cc-exp"
               placeholder={t('paymentForm.cardExpiryPlaceholder')}
               value={cardForm.expDate}
               onChange={handleChange}
@@ -301,6 +369,9 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
               className="font-mono text-center"
               maxLength={5}
             />
+            {validationErrors.expDate && (
+              <p className="text-xs text-destructive">{validationErrors.expDate}</p>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="cvv" className="text-muted-foreground">
@@ -309,8 +380,9 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
             <Input
               id="cvv"
               name="cvv"
-              type="text"
+              type="password"
               inputMode="numeric"
+              autoComplete="off"
               placeholder={t('paymentForm.cardCvvPlaceholder')}
               value={cardForm.cvv}
               onChange={handleChange}
@@ -318,6 +390,9 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
               className="font-mono text-center"
               maxLength={4}
             />
+            {validationErrors.cvv && (
+              <p className="text-xs text-destructive">{validationErrors.cvv}</p>
+            )}
           </div>
         </div>
       </fieldset>

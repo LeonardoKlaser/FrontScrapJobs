@@ -59,6 +59,12 @@ export class TokenizationError extends Error {
 
 export async function tokenizeCard(cardData: CardData): Promise<PagarmeTokenResponse> {
   const publicKey = import.meta.env.VITE_PAGARME_PUBLIC_KEY
+  if (!publicKey) {
+    throw new TokenizationError(
+      'Configuração de pagamento indisponível. Entre em contato com o suporte.'
+    )
+  }
+
   const url = `https://api.pagar.me/core/v5/tokens?appId=${publicKey}`
 
   let response: Response
@@ -81,14 +87,29 @@ export async function tokenizeCard(cardData: CardData): Promise<PagarmeTokenResp
     throw new TokenizationError('Erro de conexão. Tente novamente.')
   }
 
-  const body = await response.json()
+  let body: unknown
+  try {
+    body = await response.json()
+  } catch {
+    throw new TokenizationError(
+      'Resposta inesperada do serviço de pagamento. Tente novamente.'
+    )
+  }
 
   if (!response.ok) {
-    const message = body?.message || body?.errors?.[0]?.message || 'Dados do cartão inválidos.'
+    const err = body as { message?: string; errors?: { message?: string }[] }
+    const message = err?.message || err?.errors?.[0]?.message || 'Dados do cartão inválidos.'
     throw new TokenizationError(message)
   }
 
-  return body as PagarmeTokenResponse
+  const tokenResponse = body as PagarmeTokenResponse
+  if (!tokenResponse?.id) {
+    throw new TokenizationError(
+      'Resposta incompleta do serviço de pagamento. Tente novamente.'
+    )
+  }
+
+  return tokenResponse
 }
 
 export async function createPayment(
