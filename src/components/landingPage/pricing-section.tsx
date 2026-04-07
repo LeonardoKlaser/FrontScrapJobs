@@ -14,8 +14,11 @@ export function PricingSection() {
 
   useEffect(() => {
     if (plans && window.location.hash === "#pricing") {
-      const el = document.getElementById("pricing");
-      if (el) el.scrollIntoView({ behavior: "smooth" });
+      const timer = setTimeout(() => {
+        const el = document.getElementById("pricing");
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }, 600);
+      return () => clearTimeout(timer);
     }
   }, [plans]);
 
