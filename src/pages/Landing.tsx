@@ -1,5 +1,3 @@
-import { useEffect } from 'react'
-import { useLocation } from 'react-router'
 import { FaqSection } from '@/components/landingPage/faq-section'
 import { FeaturesSection } from '@/components/landingPage/features-section'
 import { Footer } from '@/components/landingPage/footer'
@@ -12,20 +10,6 @@ import { SocialProofSection } from '@/components/landingPage/social-proof-sectio
 import { StatsCounterSection } from '@/components/landingPage/stats-counter-section'
 
 export function Landing() {
-  const { hash } = useLocation()
-
-  useEffect(() => {
-    if (hash) {
-      const timer = setTimeout(() => {
-        const el = document.querySelector(hash)
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth' })
-        }
-      }, 100)
-      return () => clearTimeout(timer)
-    }
-  }, [hash])
-
   return (
     <div>
       <HeroSection />

@@ -1,15 +1,26 @@
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Check, Clock, ShieldCheck, Lock } from "lucide-react";
 import { usePlans } from "@/hooks/usePlans";
-import { useNavigate } from "react-router";
 import { PATHS } from "@/router/paths";
 
 export function PricingSection() {
   const { t } = useTranslation("landing");
   const { data: plans, isLoading } = usePlans();
   const navigate = useNavigate();
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (hash === "#pricing" && plans) {
+      const el = document.getElementById("pricing");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [hash, plans]);
 
   const handleChoosePlan = (planId: number) => {
     navigate(PATHS.checkout(planId.toString()));
