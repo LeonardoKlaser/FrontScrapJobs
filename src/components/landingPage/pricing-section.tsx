@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +11,13 @@ export function PricingSection() {
   const { t } = useTranslation("landing");
   const { data: plans, isLoading } = usePlans();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (plans && window.location.hash === "#pricing") {
+      const el = document.getElementById("pricing");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [plans]);
 
   const handleChoosePlan = (planId: number) => {
     navigate(PATHS.checkout(planId.toString()));
