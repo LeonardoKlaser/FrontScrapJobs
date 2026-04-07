@@ -61,7 +61,7 @@ export default function Login() {
           <p className="mt-6 text-center text-sm text-muted-foreground">
             {t("login.noAccount", "Primeira missão por aqui?")}{" "}
             <a
-              href="/"
+              href="/#pricing"
               className="font-medium text-primary hover:underline"
             >
               {t("login.choosePlan", "Escolha um plano")}
