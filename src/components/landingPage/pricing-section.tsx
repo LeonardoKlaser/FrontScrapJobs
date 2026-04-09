@@ -92,7 +92,7 @@ export function PricingSection() {
                     </ul>
 
                     <Button
-                      id={`cta-plan-${plan.name.toLowerCase().replace(/\s+/g, "-")}`}
+                      id={`cta-plan-${plan.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, "-")}`}
                       className="w-full py-3 text-lg font-medium"
                       onClick={() => handleChoosePlan(plan.id)}
                     >
