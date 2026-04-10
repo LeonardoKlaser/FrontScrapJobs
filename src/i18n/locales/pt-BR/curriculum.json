@@ -50,5 +50,20 @@
     "saveSuccess": "Currículo salvo com sucesso!",
     "createSuccess": "Currículo criado com sucesso!",
     "saveError": "Erro ao salvar currículo. Tente novamente."
+  },
+  "pdf": {
+    "importButton": "Importar PDF",
+    "importing": "Extraindo...",
+    "importSuccess": "Dados extraídos com sucesso! Revise e salve.",
+    "importFileTooLarge": "Arquivo excede o tamanho máximo de 5MB.",
+    "importInvalidType": "Apenas arquivos PDF são aceitos.",
+    "exportButton": "Exportar PDF",
+    "exportTitle": "Exportar Currículo em PDF",
+    "exportDescription": "Escolha um modelo para gerar o PDF",
+    "generating": "Gerando...",
+    "generateButton": "Gerar PDF",
+    "generateSuccess": "PDF gerado com sucesso!",
+    "downloadPdf": "Baixar PDF",
+    "linkExpiry": "Link válido por 1 hora"
   }
 }
