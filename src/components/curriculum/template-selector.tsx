@@ -24,9 +24,7 @@ export function TemplateSelector({ selectedId, onSelect }: TemplateSelectorProps
           <FileText className="h-5 w-5 mt-0.5 text-muted-foreground" />
           <div>
             <p className="font-medium">{template.name}</p>
-            <p className="text-sm text-muted-foreground">
-              {template.description}
-            </p>
+            <p className="text-sm text-muted-foreground">{template.description}</p>
           </div>
         </button>
       ))}

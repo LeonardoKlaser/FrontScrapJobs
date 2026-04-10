@@ -11,8 +11,7 @@ export function useExtractPdf() {
 export function useApplySuggestions() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (payload: ApplySuggestionsPayload) =>
-      pdfService.applySuggestions(payload),
+    mutationFn: (payload: ApplySuggestionsPayload) => pdfService.applySuggestions(payload),
     onSuccess: (_data, variables) => {
       if (variables.action === 'save' || variables.action === 'both') {
         queryClient.invalidateQueries({ queryKey: ['curriculumList'] })
@@ -23,13 +22,8 @@ export function useApplySuggestions() {
 
 export function useGeneratePdf() {
   return useMutation({
-    mutationFn: ({
-      curriculumId,
-      templateId
-    }: {
-      curriculumId: number
-      templateId: string
-    }) => pdfService.generatePdf(curriculumId, templateId)
+    mutationFn: ({ curriculumId, templateId }: { curriculumId: number; templateId: string }) =>
+      pdfService.generatePdf(curriculumId, templateId)
   })
 }
 

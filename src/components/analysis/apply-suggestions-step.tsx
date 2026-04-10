@@ -7,12 +7,7 @@ import { toast } from 'sonner'
 import type { Suggestion } from '@/services/analysisService'
 
 type ActionType = 'save' | 'download' | 'both'
-type StepType =
-  | 'choose-action'
-  | 'choose-save-mode'
-  | 'choose-template'
-  | 'processing'
-  | 'success'
+type StepType = 'choose-action' | 'choose-save-mode' | 'choose-template' | 'processing' | 'success'
 
 interface ApplySuggestionsStepProps {
   curriculumId: number
@@ -35,7 +30,7 @@ export function ApplySuggestionsStep({
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
   const [pdfUrl, setPdfUrl] = useState<string | null>(null)
 
-  const { mutate: applySuggestions, isPending } = useApplySuggestions()
+  const { mutate: applySuggestions } = useApplySuggestions()
 
   const handleActionSelect = (selectedAction: ActionType) => {
     setAction(selectedAction)
@@ -107,9 +102,7 @@ export function ApplySuggestionsStep({
     return (
       <div className="flex flex-col items-center justify-center py-8 gap-3">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <p className="text-sm text-muted-foreground">
-          Aplicando sugestões e processando...
-        </p>
+        <p className="text-sm text-muted-foreground">Aplicando sugestões e processando...</p>
       </div>
     )
   }
@@ -118,9 +111,7 @@ export function ApplySuggestionsStep({
     return (
       <div className="flex flex-col items-center gap-4 py-6">
         <p className="text-sm text-muted-foreground">
-          {action === 'both'
-            ? 'Currículo salvo e PDF gerado!'
-            : 'PDF gerado com sucesso!'}
+          {action === 'both' ? 'Currículo salvo e PDF gerado!' : 'PDF gerado com sucesso!'}
         </p>
         <a
           href={pdfUrl}
@@ -177,11 +168,7 @@ export function ApplySuggestionsStep({
     return (
       <div className="space-y-4">
         <div className="flex items-center gap-2 mb-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setStep('choose-action')}
-          >
+          <Button variant="ghost" size="sm" onClick={() => setStep('choose-action')}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <h3 className="font-medium">Como deseja salvar?</h3>
@@ -220,10 +207,7 @@ export function ApplySuggestionsStep({
           <h3 className="font-medium">Escolha o modelo do PDF</h3>
         </div>
 
-        <TemplateSelector
-          selectedId={selectedTemplate}
-          onSelect={handleTemplateSelect}
-        />
+        <TemplateSelector selectedId={selectedTemplate} onSelect={handleTemplateSelect} />
       </div>
     )
   }

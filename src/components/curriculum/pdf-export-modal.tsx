@@ -18,11 +18,7 @@ interface PdfExportModalProps {
   onClose: () => void
 }
 
-export function PdfExportModal({
-  curriculumId,
-  open,
-  onClose
-}: PdfExportModalProps) {
+export function PdfExportModal({ curriculumId, open, onClose }: PdfExportModalProps) {
   const { mutate: generatePdf, isPending } = useGeneratePdf()
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
   const [pdfUrl, setPdfUrl] = useState<string | null>(null)
@@ -60,16 +56,12 @@ export function PdfExportModal({
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>Exportar Currículo em PDF</DialogTitle>
-          <DialogDescription>
-            Escolha um modelo para gerar o PDF
-          </DialogDescription>
+          <DialogDescription>Escolha um modelo para gerar o PDF</DialogDescription>
         </DialogHeader>
 
         {pdfUrl ? (
           <div className="flex flex-col items-center gap-4 py-6">
-            <p className="text-sm text-muted-foreground">
-              PDF gerado com sucesso!
-            </p>
+            <p className="text-sm text-muted-foreground">PDF gerado com sucesso!</p>
             <a
               href={pdfUrl}
               target="_blank"
@@ -79,9 +71,7 @@ export function PdfExportModal({
               <Download className="h-4 w-4" />
               Baixar PDF
             </a>
-            <p className="text-xs text-muted-foreground">
-              Link válido por 1 hora
-            </p>
+            <p className="text-xs text-muted-foreground">Link válido por 1 hora</p>
             <Button variant="outline" onClick={handleClose}>
               Fechar
             </Button>
@@ -89,20 +79,14 @@ export function PdfExportModal({
         ) : (
           <>
             <div className="mt-4">
-              <TemplateSelector
-                selectedId={selectedTemplate}
-                onSelect={setSelectedTemplate}
-              />
+              <TemplateSelector selectedId={selectedTemplate} onSelect={setSelectedTemplate} />
             </div>
 
             <div className="flex justify-end gap-2 mt-4">
               <Button variant="outline" onClick={handleClose} disabled={isPending}>
                 Cancelar
               </Button>
-              <Button
-                onClick={handleGenerate}
-                disabled={!selectedTemplate || isPending}
-              >
+              <Button onClick={handleGenerate} disabled={!selectedTemplate || isPending}>
                 {isPending ? (
                   <Loader2 className="h-4 w-4 animate-spin mr-2" />
                 ) : (
