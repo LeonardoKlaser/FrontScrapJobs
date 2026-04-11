@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogDescription
 } from '@/components/ui/dialog'
-import { PlusCircle, FileText, Trash2 } from 'lucide-react'
+import { PlusCircle, FileText, Trash2, FileDown } from 'lucide-react'
 import type { Curriculum } from '@/models/curriculum'
 import { EmptyState } from '@/components/common/empty-state'
 import { useDeleteCurriculum } from '@/hooks/useCurriculum'
@@ -21,13 +21,15 @@ interface CurriculumListProps {
   selectedId: number | null
   onSelect: (id: number) => void
   onCreateNew: () => void
+  onExport?: (id: number) => void
 }
 
 export function CurriculumList({
   curriculums,
   selectedId,
   onSelect,
-  onCreateNew
+  onCreateNew,
+  onExport
 }: CurriculumListProps) {
   const { t } = useTranslation('curriculum')
   const [deleteId, setDeleteId] = useState<number | null>(null)
@@ -78,19 +80,32 @@ export function CurriculumList({
                   <CardHeader className="p-4">
                     <div className="flex items-start justify-between gap-2">
                       <CardTitle className="text-sm">{curriculum.title}</CardTitle>
-                      {curriculums.length > 1 && (
+                      <div className="flex shrink-0">
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-7 w-7 shrink-0 text-muted-foreground hover:text-destructive"
+                          className="h-7 w-7 text-muted-foreground hover:text-primary"
                           onClick={(e) => {
                             e.stopPropagation()
-                            setDeleteId(curriculum.id)
+                            onExport?.(curriculum.id)
                           }}
                         >
-                          <Trash2 className="h-3.5 w-3.5" />
+                          <FileDown className="h-3.5 w-3.5" />
                         </Button>
-                      )}
+                        {curriculums.length > 1 && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setDeleteId(curriculum.id)
+                            }}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        )}
+                      </div>
                     </div>
                     <CardDescription className="text-xs line-clamp-2 text-pretty">
                       {curriculum.summary || t('list.noSummary')}

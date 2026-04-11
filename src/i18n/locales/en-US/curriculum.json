@@ -50,5 +50,20 @@
     "saveSuccess": "Resume saved successfully!",
     "createSuccess": "Resume created successfully!",
     "saveError": "Failed to save resume. Please try again."
+  },
+  "pdf": {
+    "importButton": "Import PDF",
+    "importing": "Extracting...",
+    "importSuccess": "Data extracted successfully! Review and save.",
+    "importFileTooLarge": "File exceeds the maximum size of 5MB.",
+    "importInvalidType": "Only PDF files are accepted.",
+    "exportButton": "Export PDF",
+    "exportTitle": "Export Resume as PDF",
+    "exportDescription": "Choose a template to generate the PDF",
+    "generating": "Generating...",
+    "generateButton": "Generate PDF",
+    "generateSuccess": "PDF generated successfully!",
+    "downloadPdf": "Download PDF",
+    "linkExpiry": "Link valid for 1 hour"
   }
 }

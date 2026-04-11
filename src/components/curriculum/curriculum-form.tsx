@@ -27,6 +27,8 @@ import { toast } from 'sonner'
 interface CurriculumFormProps {
   curriculum?: Curriculum
   isEditing: boolean
+  initialData?: Omit<Curriculum, 'id'>
+  onSaveSuccess?: () => void
 }
 
 function createEmptyFormData(): Omit<Curriculum, 'id'> {
@@ -40,7 +42,7 @@ function createEmptyFormData(): Omit<Curriculum, 'id'> {
   }
 }
 
-export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
+export function CurriculumForm({ curriculum, isEditing, initialData, onSaveSuccess }: CurriculumFormProps) {
   const { t } = useTranslation('curriculum')
   const [formData, setFormData] = useState(createEmptyFormData)
   const {
@@ -65,10 +67,23 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
         experiences: curriculum.experiences,
         educations: curriculum.educations
       })
+    } else if (initialData) {
+      setFormData({
+        title: initialData.title || '',
+        summary: initialData.summary || '',
+        skills: initialData.skills || '',
+        languages: initialData.languages || '',
+        experiences: initialData.experiences?.length
+          ? initialData.experiences.map((e) => ({ ...e, id: crypto.randomUUID() }))
+          : [{ id: crypto.randomUUID(), company: '', title: '', description: '' }],
+        educations: initialData.educations?.length
+          ? initialData.educations.map((e) => ({ ...e, id: crypto.randomUUID() }))
+          : [{ id: crypto.randomUUID(), institution: '', degree: '', year: '' }]
+      })
     } else {
       setFormData(createEmptyFormData())
     }
-  }, [curriculum])
+  }, [curriculum, initialData])
 
   const handleSave = async () => {
     setBtnLoading()
@@ -80,6 +95,7 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
             onSuccess: () => {
               setBtnSuccess()
               toast.success(t('form.saveSuccess'))
+              onSaveSuccess?.()
             },
             onError: () => {
               setBtnError()
@@ -92,6 +108,7 @@ export function CurriculumForm({ curriculum, isEditing }: CurriculumFormProps) {
           onSuccess: () => {
             setBtnSuccess()
             toast.success(t('form.createSuccess'))
+            onSaveSuccess?.()
           },
           onError: () => {
             setBtnError()

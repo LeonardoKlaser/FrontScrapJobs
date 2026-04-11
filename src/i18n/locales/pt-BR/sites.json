@@ -65,6 +65,27 @@
     "generate": "Gerar Análise",
     "redo": "Refazer Análise",
     "curriculumUsed": "Currículo utilizado",
-    "curriculumDeleted": "Currículo removido"
+    "curriculumDeleted": "Currículo removido",
+    "suggestionsSelected": "{{count}} de {{total}} selecionadas",
+    "applySuggestions": "Aplicar Sugestões",
+    "applyQuestion": "O que deseja fazer com as sugestões?",
+    "actionSaveAndDownload": "Salvar e Baixar PDF",
+    "actionSaveAndDownloadDesc": "Aplica sugestões, salva o currículo e gera um PDF",
+    "actionSaveOnly": "Apenas Salvar",
+    "actionSaveOnlyDesc": "Aplica sugestões e salva o currículo atualizado",
+    "actionDownloadOnly": "Apenas Baixar PDF",
+    "actionDownloadOnlyDesc": "Gera um PDF com as sugestões sem salvar no currículo",
+    "chooseSaveMode": "Como deseja salvar?",
+    "saveModeNew": "Criar novo currículo",
+    "saveModeNewDesc": "Mantém o original e cria uma cópia com as sugestões",
+    "saveModeOverwrite": "Atualizar currículo atual",
+    "saveModeOverwriteDesc": "Substitui o currículo atual com as sugestões aplicadas",
+    "chooseTemplate": "Escolha o modelo do PDF",
+    "processing": "Aplicando sugestões e processando...",
+    "appliedSave": "Currículo salvo com sucesso!",
+    "appliedDownload": "PDF gerado com sucesso!",
+    "appliedBoth": "Currículo salvo e PDF gerado com sucesso!",
+    "downloadPdf": "Baixar PDF",
+    "linkExpiry": "Link válido por 1 hora"
   }
 }

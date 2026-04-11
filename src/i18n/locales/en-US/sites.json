@@ -65,6 +65,27 @@
     "redo": "Redo Analysis",
     "curriculumUsed": "Resume used",
     "curriculumDeleted": "Resume removed",
-    "atsKeywords": "ATS Keywords"
+    "atsKeywords": "ATS Keywords",
+    "suggestionsSelected": "{{count}} of {{total}} selected",
+    "applySuggestions": "Apply Suggestions",
+    "applyQuestion": "What would you like to do with the suggestions?",
+    "actionSaveAndDownload": "Save and Download PDF",
+    "actionSaveAndDownloadDesc": "Apply suggestions, save the resume, and generate a PDF",
+    "actionSaveOnly": "Save Only",
+    "actionSaveOnlyDesc": "Apply suggestions and save the updated resume",
+    "actionDownloadOnly": "Download PDF Only",
+    "actionDownloadOnlyDesc": "Generate a PDF with the suggestions without saving",
+    "chooseSaveMode": "How would you like to save?",
+    "saveModeNew": "Create new resume",
+    "saveModeNewDesc": "Keep the original and create a copy with the suggestions",
+    "saveModeOverwrite": "Update current resume",
+    "saveModeOverwriteDesc": "Replace the current resume with the applied suggestions",
+    "chooseTemplate": "Choose the PDF template",
+    "processing": "Applying suggestions and processing...",
+    "appliedSave": "Resume saved successfully!",
+    "appliedDownload": "PDF generated successfully!",
+    "appliedBoth": "Resume saved and PDF generated successfully!",
+    "downloadPdf": "Download PDF",
+    "linkExpiry": "Link valid for 1 hour"
   }
 }

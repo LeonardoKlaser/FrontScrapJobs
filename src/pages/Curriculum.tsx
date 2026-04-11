@@ -4,12 +4,17 @@ import { CurriculumList } from '@/components/curriculum/curriculum-list'
 import { CurriculumForm } from '@/components/curriculum/curriculum-form'
 import { useCurriculum } from '@/hooks/useCurriculum'
 import { PageHeader } from '@/components/common/page-header'
+import { PdfImportButton } from '@/components/curriculum/pdf-import-button'
+import { PdfExportModal } from '@/components/curriculum/pdf-export-modal'
+import type { Curriculum as CurriculumType } from '@/models/curriculum'
 
 export function Curriculum() {
   const { t } = useTranslation('curriculum')
   const { data: curriculums } = useCurriculum()
   const [selectedCurriculumId, setSelectedCurriculumId] = useState<number | null>(null)
   const [hasAutoSelected, setHasAutoSelected] = useState(false)
+  const [importedData, setImportedData] = useState<Omit<CurriculumType, 'id'> | null>(null)
+  const [exportCurriculumId, setExportCurriculumId] = useState<number | null>(null)
 
   useEffect(() => {
     if (!hasAutoSelected && curriculums?.length && selectedCurriculumId === null) {
@@ -28,9 +33,17 @@ export function Curriculum() {
     setSelectedCurriculumId(null)
   }
 
+  const handleExtracted = (data: Omit<CurriculumType, 'id'>) => {
+    setImportedData(data)
+    setSelectedCurriculumId(null)
+  }
+
   return (
     <div>
-      <PageHeader title={t('title')} description={t('description')} className="mb-10" />
+      <div className="flex items-center justify-between mb-10">
+        <PageHeader title={t('title')} description={t('description')} />
+        <PdfImportButton onExtracted={handleExtracted} />
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-6">
         <div className="animate-fade-in-up" style={{ animationDelay: '50ms' }}>
@@ -39,6 +52,7 @@ export function Curriculum() {
             selectedId={selectedCurriculumId}
             onSelect={handleSelectCurriculum}
             onCreateNew={handleCreateNew}
+            onExport={setExportCurriculumId}
           />
         </div>
 
@@ -46,9 +60,17 @@ export function Curriculum() {
           <CurriculumForm
             curriculum={selectedCurriculum}
             isEditing={selectedCurriculumId !== null}
+            initialData={selectedCurriculumId === null ? importedData : undefined}
+            onSaveSuccess={() => setImportedData(null)}
           />
         </div>
       </div>
+
+      <PdfExportModal
+        curriculumId={exportCurriculumId}
+        open={exportCurriculumId !== null}
+        onClose={() => setExportCurriculumId(null)}
+      />
     </div>
   )
 }

@@ -20,13 +20,15 @@ import {
   Mail,
   TrendingUp,
   TrendingDown,
-  RefreshCw
+  RefreshCw,
+  Plus
 } from 'lucide-react'
 import { useAnalyzeJob, useAnalysisHistory, useSendAnalysisEmail } from '@/hooks/useAnalysis'
 import { useCurriculum } from '@/hooks/useCurriculum'
 import type { ResumeAnalysis } from '@/services/analysisService'
 import { isAxiosError } from 'axios'
 import { toast } from 'sonner'
+import { ApplySuggestionsStep } from './apply-suggestions-step'
 
 interface AnalysisDialogProps {
   jobId: number | null
@@ -89,11 +91,19 @@ function AnalyzingState() {
 function AnalysisResult({
   analysis,
   jobId,
-  curriculumId
+  curriculumId,
+  selectedSuggestions,
+  onToggleSuggestion,
+  selectedKeywords,
+  onToggleKeyword
 }: {
   analysis: ResumeAnalysis
   jobId: number
   curriculumId?: number
+  selectedSuggestions?: Set<number>
+  onToggleSuggestion?: (index: number) => void
+  selectedKeywords?: Set<string>
+  onToggleKeyword?: (keyword: string) => void
 }) {
   const { t } = useTranslation('sites')
   const { data: curricula } = useCurriculum({ enabled: !!curriculumId })
@@ -123,7 +133,7 @@ function AnalysisResult({
   const ScoreIcon = getScoreIcon(score)
 
   return (
-    <div className="space-y-5 max-h-[60vh] overflow-y-auto pr-1 scrollbar-thin">
+    <div className="space-y-5">
       {/* Curriculum used */}
       {curriculumId && (
         <p className="text-xs text-muted-foreground">
@@ -195,15 +205,29 @@ function AnalysisResult({
                 {kw}
               </span>
             ))}
-            {atsKeywords.missing?.map((kw) => (
-              <span
-                key={kw}
-                className="inline-flex items-center gap-1 rounded-md bg-red-500/10 text-red-400 border border-red-500/20 px-2.5 py-1 text-xs font-medium"
-              >
-                <AlertTriangle className="h-3 w-3" />
-                {kw}
-              </span>
-            ))}
+            {atsKeywords.missing?.map((kw) => {
+              const isKwSelected = selectedKeywords?.has(kw)
+              const isClickable = !!onToggleKeyword
+              return (
+                <button
+                  key={kw}
+                  type="button"
+                  onClick={() => onToggleKeyword?.(kw)}
+                  disabled={!isClickable}
+                  title={isClickable ? (isKwSelected ? 'Clique para remover' : 'Clique para adicionar ao currículo') : undefined}
+                  className={`inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                    isKwSelected
+                      ? 'bg-primary/10 text-primary border border-primary/20'
+                      : isClickable
+                        ? 'bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 cursor-pointer'
+                        : 'bg-red-500/10 text-red-400 border border-red-500/20'
+                  }`}
+                >
+                  {isKwSelected ? <CheckCircle className="h-3 w-3" /> : isClickable ? <Plus className="h-3 w-3" /> : <AlertTriangle className="h-3 w-3" />}
+                  {kw}
+                </button>
+              )
+            })}
           </div>
         </div>
       )}
@@ -263,31 +287,63 @@ function AnalysisResult({
       {/* Suggestions */}
       {actionableResumeSuggestions?.length > 0 && (
         <div className="animate-fade-in-up" style={{ animationDelay: '350ms' }}>
-          <h4 className="font-semibold text-foreground flex items-center gap-2 mb-3 text-sm">
-            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-info/10">
-              <Lightbulb className="h-3.5 w-3.5 text-info" />
-            </div>
-            {t('analysis.suggestions')}
-          </h4>
-          <div className="grid gap-2.5">
-            {actionableResumeSuggestions.map((s) => (
-              <div
-                key={s.suggestion}
-                className="rounded-lg border border-border/50 bg-card px-3.5 py-3 border-l-2 border-l-info/40"
-              >
-                <p className="text-sm font-medium text-foreground">{s.suggestion}</p>
-                <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                  <Badge variant="secondary" className="text-xs">
-                    {s.curriculumSectionToApply}
-                  </Badge>
-                </div>
-                {s.exampleWording && (
-                  <p className="text-xs text-muted-foreground italic mt-2 pl-2 border-l border-border/50">
-                    &ldquo;{s.exampleWording}&rdquo;
-                  </p>
-                )}
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="font-semibold text-foreground flex items-center gap-2 text-sm">
+              <div className="flex h-6 w-6 items-center justify-center rounded-md bg-info/10">
+                <Lightbulb className="h-3.5 w-3.5 text-info" />
               </div>
-            ))}
+              {t('analysis.suggestions')}
+            </h4>
+            {selectedSuggestions && (
+              <span className="text-xs text-muted-foreground">
+                {selectedSuggestions.size} de {actionableResumeSuggestions.length} selecionadas
+              </span>
+            )}
+          </div>
+          <div className="grid gap-2.5">
+            {actionableResumeSuggestions.map((s, index) => {
+              const isChecked = selectedSuggestions?.has(index) ?? false
+              const isSelectable = !!onToggleSuggestion
+
+              return (
+                <div
+                  key={s.suggestion}
+                  onClick={() => onToggleSuggestion?.(index)}
+                  className={`rounded-lg border bg-card px-3.5 py-3 border-l-2 transition-colors ${
+                    isSelectable ? 'cursor-pointer' : ''
+                  } ${
+                    isChecked
+                      ? 'border-primary/50 bg-primary/5 border-l-primary'
+                      : 'border-border/50 border-l-info/40 hover:border-primary/30'
+                  }`}
+                >
+                  <div className="flex gap-3">
+                    {isSelectable && (
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={() => onToggleSuggestion?.(index)}
+                        className="mt-1 h-4 w-4 accent-primary shrink-0"
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    )}
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-foreground">{s.suggestion}</p>
+                      <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                        <Badge variant="secondary" className="text-xs">
+                          {s.curriculumSectionToApply}
+                        </Badge>
+                      </div>
+                      {s.exampleWording && (
+                        <p className="text-xs text-muted-foreground italic mt-2 pl-2 border-l border-border/50">
+                          &ldquo;{s.exampleWording}&rdquo;
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
       )}
@@ -329,6 +385,9 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
   >('loading-history')
   const [selectedCvId, setSelectedCvId] = useState<number | null>(null)
   const [analysisResult, setAnalysisResult] = useState<ResumeAnalysis | null>(null)
+  const [selectedSuggestions, setSelectedSuggestions] = useState<Set<number>>(new Set())
+  const [selectedKeywords, setSelectedKeywords] = useState<Set<string>>(new Set())
+  const [showApplyStep, setShowApplyStep] = useState(false)
 
   const { data: curricula } = useCurriculum({ enabled: open })
   const { data: historyData, isLoading: isLoadingHistory } = useAnalysisHistory(open ? jobId : null)
@@ -340,6 +399,9 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
       setStep('loading-history')
       setSelectedCvId(null)
       setAnalysisResult(null)
+      setSelectedSuggestions(new Set())
+      setSelectedKeywords(new Set())
+      setShowApplyStep(false)
       resetAnalysis()
     }
   }, [open, resetAnalysis])
@@ -411,20 +473,73 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
         )}
 
         {/* Previous analysis (history) */}
-        {step === 'history' && analysisResult && jobId !== null && (
-          <div className="space-y-4">
-            <AnalysisResult
-              analysis={analysisResult}
-              jobId={jobId}
-              curriculumId={historyData?.curriculum_id}
-            />
-            <div className="flex justify-center pt-2 border-t border-border/50">
-              <Button variant="outline" size="sm" onClick={handleRedo} className="gap-2">
-                <RefreshCw className="h-3.5 w-3.5" />
-                {t('analysis.redo')}
-              </Button>
+        {step === 'history' && analysisResult && jobId !== null && !showApplyStep && (
+          <div className="flex flex-col">
+            <div className="max-h-[60vh] overflow-y-auto pr-1 scrollbar-thin space-y-4">
+              <AnalysisResult
+                analysis={analysisResult}
+                jobId={jobId}
+                curriculumId={historyData?.curriculum_id}
+                selectedSuggestions={selectedSuggestions}
+                onToggleSuggestion={(index) => {
+                  setSelectedSuggestions((prev) => {
+                    const next = new Set(prev)
+                    if (next.has(index)) next.delete(index)
+                    else next.add(index)
+                    return next
+                  })
+                }}
+                selectedKeywords={selectedKeywords}
+                onToggleKeyword={(kw) => {
+                  setSelectedKeywords((prev) => {
+                    const next = new Set(prev)
+                    if (next.has(kw)) next.delete(kw)
+                    else next.add(kw)
+                    return next
+                  })
+                }}
+              />
+              <div className="flex justify-center pt-2 border-t border-border/50">
+                <Button variant="outline" size="sm" onClick={handleRedo} className="gap-2">
+                  <RefreshCw className="h-3.5 w-3.5" />
+                  {t('analysis.redo')}
+                </Button>
+              </div>
             </div>
+            {(selectedSuggestions.size + selectedKeywords.size) > 0 && (
+              <div className="pt-3 pb-1 border-t bg-background">
+                <Button onClick={() => setShowApplyStep(true)} className="w-full">
+                  Aplicar {selectedSuggestions.size + selectedKeywords.size} Sugestão{(selectedSuggestions.size + selectedKeywords.size) > 1 ? 'ões' : ''}
+                </Button>
+              </div>
+            )}
           </div>
+        )}
+
+        {/* Apply suggestions flow (history) */}
+        {step === 'history' && showApplyStep && analysisResult && jobId !== null && (
+          <ApplySuggestionsStep
+            curriculumId={historyData?.curriculum_id ?? 0}
+            jobId={jobId}
+            suggestions={[
+              ...Array.from(selectedSuggestions).map(
+                (i) => analysisResult.actionableResumeSuggestions[i]
+              ),
+              ...Array.from(selectedKeywords).map((kw) => ({
+                suggestion: `Adicionar palavra-chave '${kw}'`,
+                curriculumSectionToApply: 'Habilidades',
+                exampleWording: kw,
+                reasoningForThisJob: 'Palavra-chave ATS da vaga que falta no currículo'
+              }))
+            ]}
+            onComplete={() => {
+              setShowApplyStep(false)
+              setSelectedSuggestions(new Set())
+              setSelectedKeywords(new Set())
+              onClose()
+            }}
+            onBack={() => setShowApplyStep(false)}
+          />
         )}
 
         {/* Curriculum selection */}
@@ -470,11 +585,66 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
         {step === 'analyzing' && <AnalyzingState />}
 
         {/* New analysis result */}
-        {step === 'result' && analysisResult && jobId !== null && (
-          <AnalysisResult
-            analysis={analysisResult}
+        {step === 'result' && analysisResult && jobId !== null && !showApplyStep && (
+          <div className="flex flex-col">
+            <div className="max-h-[60vh] overflow-y-auto pr-1 scrollbar-thin">
+              <AnalysisResult
+                analysis={analysisResult}
+                jobId={jobId}
+                curriculumId={selectedCvId ?? undefined}
+                selectedSuggestions={selectedSuggestions}
+                onToggleSuggestion={(index) => {
+                  setSelectedSuggestions((prev) => {
+                    const next = new Set(prev)
+                    if (next.has(index)) next.delete(index)
+                    else next.add(index)
+                    return next
+                  })
+                }}
+                selectedKeywords={selectedKeywords}
+                onToggleKeyword={(kw) => {
+                  setSelectedKeywords((prev) => {
+                    const next = new Set(prev)
+                    if (next.has(kw)) next.delete(kw)
+                    else next.add(kw)
+                    return next
+                  })
+                }}
+              />
+            </div>
+            {(selectedSuggestions.size + selectedKeywords.size) > 0 && (
+              <div className="pt-3 pb-1 border-t bg-background">
+                <Button onClick={() => setShowApplyStep(true)} className="w-full">
+                  Aplicar {selectedSuggestions.size + selectedKeywords.size} Sugestão{(selectedSuggestions.size + selectedKeywords.size) > 1 ? 'ões' : ''}
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Apply suggestions flow */}
+        {step === 'result' && showApplyStep && analysisResult && jobId !== null && (
+          <ApplySuggestionsStep
+            curriculumId={selectedCvId ?? 0}
             jobId={jobId}
-            curriculumId={selectedCvId ?? undefined}
+            suggestions={[
+              ...Array.from(selectedSuggestions).map(
+                (i) => analysisResult.actionableResumeSuggestions[i]
+              ),
+              ...Array.from(selectedKeywords).map((kw) => ({
+                suggestion: `Adicionar palavra-chave '${kw}'`,
+                curriculumSectionToApply: 'Habilidades',
+                exampleWording: kw,
+                reasoningForThisJob: 'Palavra-chave ATS da vaga que falta no currículo'
+              }))
+            ]}
+            onComplete={() => {
+              setShowApplyStep(false)
+              setSelectedSuggestions(new Set())
+              setSelectedKeywords(new Set())
+              onClose()
+            }}
+            onBack={() => setShowApplyStep(false)}
           />
         )}
       </DialogContent>
