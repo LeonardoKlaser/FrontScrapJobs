@@ -47,14 +47,22 @@ export function PlanSection({ user }: PlanSectionProps) {
       toast.success(t('plan.cancelSuccess'))
       setShowCancelDialog(false)
       queryClient.invalidateQueries({ queryKey: ['user'] })
-    } catch {
-      toast.error(t('plan.cancelError'))
+    } catch (err: unknown) {
+      const status = (err as { response?: { status?: number } })?.response?.status
+      if (status === 400) {
+        toast.success(t('plan.cancelSuccess'))
+        setShowCancelDialog(false)
+        queryClient.invalidateQueries({ queryKey: ['user'] })
+      } else {
+        toast.error(t('plan.cancelError'))
+      }
     } finally {
       setIsCanceling(false)
     }
   }
 
-  const hasActiveSubscription = user?.expires_at && new Date(user.expires_at) > new Date()
+  const hasActiveSubscription =
+    user?.expires_at && new Date(user.expires_at) > new Date() && !user?.subscription_canceled
 
   const currentUsage = user?.monitored_sites_count ?? 0
   const maxUsage = user?.plan?.max_sites ?? 0

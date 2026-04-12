@@ -14,4 +14,5 @@ export interface User {
   monthly_suggestion_apply_count?: number
   monthly_pdf_generation_count?: number
   weekdays_only?: boolean
+  subscription_canceled?: boolean
 }
