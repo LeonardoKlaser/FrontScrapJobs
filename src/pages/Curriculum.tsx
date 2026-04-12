@@ -4,7 +4,6 @@ import { CurriculumList } from '@/components/curriculum/curriculum-list'
 import { CurriculumForm } from '@/components/curriculum/curriculum-form'
 import { useCurriculum } from '@/hooks/useCurriculum'
 import { PageHeader } from '@/components/common/page-header'
-import { PdfImportButton } from '@/components/curriculum/pdf-import-button'
 import { PdfExportModal } from '@/components/curriculum/pdf-export-modal'
 import type { Curriculum as CurriculumType } from '@/models/curriculum'
 
@@ -40,9 +39,8 @@ export function Curriculum() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-10">
+      <div className="mb-10">
         <PageHeader title={t('title')} description={t('description')} />
-        <PdfImportButton onExtracted={handleExtracted} />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-6">
@@ -53,6 +51,7 @@ export function Curriculum() {
             onSelect={handleSelectCurriculum}
             onCreateNew={handleCreateNew}
             onExport={setExportCurriculumId}
+            onImportExtracted={handleExtracted}
           />
         </div>
 
