@@ -34,7 +34,7 @@ interface PlanSectionProps {
 }
 
 export function PlanSection({ user }: PlanSectionProps) {
-  const { t } = useTranslation('account')
+  const { t, i18n } = useTranslation('account')
   const { t: tCommon } = useTranslation('common')
   const queryClient = useQueryClient()
   const [showCancelDialog, setShowCancelDialog] = useState(false)
@@ -217,14 +217,14 @@ export function PlanSection({ user }: PlanSectionProps) {
             <DialogTitle>{t('plan.cancelTitle')}</DialogTitle>
             <DialogDescription>
               {t('plan.cancelDescription', {
-                date: user?.expires_at ? new Date(user.expires_at).toLocaleDateString('pt-BR') : ''
+                date: user?.expires_at ? new Date(user.expires_at).toLocaleDateString(i18n.language) : ''
               })}
             </DialogDescription>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
             {t('plan.cancelContact')}{' '}
-            <a href="mailto:contato@scrapjobs.com.br" className="text-primary hover:underline font-medium">
-              contato@scrapjobs.com.br
+            <a href={`mailto:${tCommon('footer.contactEmail')}`} className="text-primary hover:underline font-medium">
+              {tCommon('footer.contactEmail')}
             </a>
           </p>
           <DialogFooter className="flex justify-end gap-3 mt-4">

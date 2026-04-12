@@ -5,6 +5,7 @@ import { PATHS } from '@/router/paths'
 
 export function Footer() {
   const { t } = useTranslation('landing')
+  const { t: tCommon } = useTranslation('common')
 
   return (
     <footer className="py-12 px-4 bg-card border-t border-border/50">
@@ -24,10 +25,10 @@ export function Footer() {
               {t('footer.privacy')}
             </Link>
             <a
-              href="mailto:contato@scrapjobs.com.br"
+              href={`mailto:${tCommon('footer.contactEmail')}`}
               className="hover:text-foreground transition-colors duration-150"
             >
-              contato@scrapjobs.com.br
+              {tCommon('footer.contactEmail')}
             </a>
           </div>
 

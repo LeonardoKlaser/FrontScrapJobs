@@ -203,11 +203,10 @@ export default function EmpresasPage() {
 
       {/* Empty state */}
       {filteredCompanies?.length === 0 && (
-        <EmptyState
-          icon={Search}
-          title={t('emptySearch', { term: searchTerm })}
-          action={searchTerm ? (
-            <div className="mt-4 w-full max-w-md mx-auto rounded-lg border border-primary/20 bg-primary/5 p-5 space-y-3">
+        <>
+          <EmptyState icon={Search} title={t('emptySearch', { term: searchTerm })} />
+          {searchTerm && (
+            <div className="w-full max-w-md mx-auto rounded-lg border border-primary/20 bg-primary/5 p-5 space-y-3">
               <div className="flex items-center gap-2 justify-center">
                 <Radar className="h-4 w-4 text-primary" />
                 <p className="text-sm font-medium text-foreground">{t('emptySearchRequest.title')}</p>
@@ -215,8 +214,8 @@ export default function EmpresasPage() {
               <p className="text-xs text-muted-foreground text-center">{t('emptySearchRequest.description')}</p>
               <RequestSiteForm />
             </div>
-          ) : undefined}
-        />
+          )}
+        </>
       )}
 
       <RegistrationModal
