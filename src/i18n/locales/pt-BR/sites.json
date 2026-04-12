@@ -11,10 +11,15 @@
   "filterSubscribed": "Inscritas",
   "filterAvailable": "Disponíveis",
   "emptySearch": "Nenhuma empresa encontrada para \"{{term}}\"",
+  "requestBanner": {
+    "text": "Não encontrou sua empresa?",
+    "cta": "Solicite o monitoramento"
+  },
+  "emptySearchRequest": {
+    "title": "Solicite o monitoramento",
+    "description": "Cole o link do portal de carreiras e nós analisamos a inclusão."
+  },
   "requestSite": {
-    "title": "Expanda seu Radar",
-    "description": "Não encontrou uma empresa? Envie o link do portal de carreiras.",
-    "label": "Link do portal de carreiras",
     "placeholder": "https://exemplo.com/carreiras",
     "sending": "Enviando...",
     "send": "Enviar",

@@ -11,10 +11,15 @@
   "filterSubscribed": "Subscribed",
   "filterAvailable": "Available",
   "emptySearch": "No company found for \"{{term}}\"",
+  "requestBanner": {
+    "text": "Didn't find your company?",
+    "cta": "Request monitoring"
+  },
+  "emptySearchRequest": {
+    "title": "Request monitoring",
+    "description": "Paste the careers portal link and we'll review its inclusion."
+  },
   "requestSite": {
-    "title": "Expand Your Radar",
-    "description": "Can't find a company? Send the career portal link.",
-    "label": "Career portal link",
     "placeholder": "https://example.com/careers",
     "sending": "Sending...",
     "send": "Send",

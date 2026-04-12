@@ -1,14 +1,11 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Building2, CheckCircle, Radar, Search, Send, X } from 'lucide-react'
+import { Building2, CheckCircle, Radar, Search, X } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { RegistrationModal } from '@/components/companyPopup'
 import { useSiteCareer } from '@/hooks/useSiteCareer'
-import { useRequestSite } from '@/hooks/useRequestSite'
 import type { SiteCareer } from '@/models/siteCareer'
 import {
   useRegisterUserSite,
@@ -18,12 +15,12 @@ import {
 import { useUser } from '@/hooks/useUser'
 import { FilterPills } from '@/components/common/filter-pills'
 import { EmptyState } from '@/components/common/empty-state'
-import { toast } from 'sonner'
+import { RequestSiteBanner } from '@/components/sites/request-site-banner'
+import { RequestSiteForm } from '@/components/sites/request-site-form'
 
 export default function EmpresasPage() {
   const { t } = useTranslation('sites')
   const [searchTerm, setSearchTerm] = useState('')
-  const [requestedUrl, setRequestedUrl] = useState('')
   const [selectedCompany, setSelectedCompany] = useState<SiteCareer>()
   const [isPopupOpen, setPopupOpen] = useState(false)
   const { data } = useSiteCareer()
@@ -37,7 +34,6 @@ export default function EmpresasPage() {
       hasAutoSelected.current = true
     }
   }, [data])
-  const { mutate: requestSite, isPending } = useRequestSite()
   const { mutate: registerUserToSite, isPending: isRegisteringUser } = useRegisterUserSite()
   const { mutate: unregisterUser } = useUnregisterUserSite()
   const { mutate: updateFilters, isPending: isUpdatingFilters } = useUpdateUserSiteFilters()
@@ -69,21 +65,6 @@ export default function EmpresasPage() {
   const handleCompanyClick = (company: SiteCareer) => {
     setSelectedCompany(company)
     setPopupOpen(true)
-  }
-
-  const handleRequestSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (requestedUrl) {
-      requestSite(requestedUrl, {
-        onSuccess: () => {
-          toast.success(t('requestSite.success'))
-          setRequestedUrl('')
-        },
-        onError: (err) => {
-          toast.error(err?.message || t('requestSite.error'))
-        }
-      })
-    }
   }
 
   const handleRegister = (targetWords: string[]) => {
@@ -154,6 +135,11 @@ export default function EmpresasPage() {
         </div>
       </div>
 
+      {/* Request banner */}
+      <div className="animate-fade-in-up" style={{ animationDelay: '75ms' }}>
+        <RequestSiteBanner />
+      </div>
+
       {/* Search + Filters */}
       <div
         className="animate-fade-in-up max-w-md mx-auto space-y-3"
@@ -217,42 +203,21 @@ export default function EmpresasPage() {
 
       {/* Empty state */}
       {filteredCompanies?.length === 0 && (
-        <EmptyState icon={Search} title={t('emptySearch', { term: searchTerm })} />
+        <EmptyState
+          icon={Search}
+          title={t('emptySearch', { term: searchTerm })}
+          action={searchTerm ? (
+            <div className="mt-4 w-full max-w-md mx-auto rounded-lg border border-primary/20 bg-primary/5 p-5 space-y-3">
+              <div className="flex items-center gap-2 justify-center">
+                <Radar className="h-4 w-4 text-primary" />
+                <p className="text-sm font-medium text-foreground">{t('emptySearchRequest.title')}</p>
+              </div>
+              <p className="text-xs text-muted-foreground text-center">{t('emptySearchRequest.description')}</p>
+              <RequestSiteForm />
+            </div>
+          ) : undefined}
+        />
       )}
-
-      {/* Request section */}
-      <Card className="animate-fade-in-up max-w-2xl mx-auto" style={{ animationDelay: '200ms' }}>
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-2">
-            <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10">
-              <Radar className="size-5 text-primary" />
-            </div>
-          </div>
-          <CardTitle className="text-xl tracking-tight">{t('requestSite.title')}</CardTitle>
-          <CardDescription className="text-sm">{t('requestSite.description')}</CardDescription>
-        </CardHeader>
-        <form onSubmit={handleRequestSubmit} className="space-y-4 px-6 pb-6">
-          <div className="flex flex-col sm:flex-row items-end gap-2">
-            <div className="w-full space-y-1.5">
-              <Label htmlFor="siteUrl" className="text-muted-foreground text-sm">
-                {t('requestSite.label')}
-              </Label>
-              <Input
-                id="siteUrl"
-                type="url"
-                placeholder={t('requestSite.placeholder')}
-                value={requestedUrl}
-                onChange={(e) => setRequestedUrl(e.target.value)}
-                required
-              />
-            </div>
-            <Button type="submit" variant="glow" disabled={isPending}>
-              {isPending ? t('requestSite.sending') : t('requestSite.send')}
-              <Send className="h-4 w-4" />
-            </Button>
-          </div>
-        </form>
-      </Card>
 
       <RegistrationModal
         key={selectedCompany?.site_id}

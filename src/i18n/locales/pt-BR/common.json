@@ -56,5 +56,11 @@
   "status": {
     "success": "Sucesso!",
     "error": "Erro"
+  },
+  "footer": {
+    "terms": "Termos de Serviço",
+    "privacy": "Política de Privacidade",
+    "contact": "Precisa de ajuda?",
+    "contactEmail": "contato@scrapjobs.com.br"
   }
 }

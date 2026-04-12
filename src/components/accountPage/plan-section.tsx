@@ -221,6 +221,12 @@ export function PlanSection({ user }: PlanSectionProps) {
               })}
             </DialogDescription>
           </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            {t('plan.cancelContact')}{' '}
+            <a href="mailto:contato@scrapjobs.com.br" className="text-primary hover:underline font-medium">
+              contato@scrapjobs.com.br
+            </a>
+          </p>
           <DialogFooter className="flex justify-end gap-3 mt-4">
             <Button variant="outline" onClick={() => setShowCancelDialog(false)}>
               {tCommon('actions.back')}

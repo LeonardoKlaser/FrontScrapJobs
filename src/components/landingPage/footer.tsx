@@ -23,6 +23,12 @@ export function Footer() {
             >
               {t('footer.privacy')}
             </Link>
+            <a
+              href="mailto:contato@scrapjobs.com.br"
+              className="hover:text-foreground transition-colors duration-150"
+            >
+              contato@scrapjobs.com.br
+            </a>
           </div>
 
           <p className="text-sm text-muted-foreground">

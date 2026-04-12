@@ -70,6 +70,7 @@
     "cancelDescription": "Tem certeza que deseja cancelar? Você manterá acesso até {{date}}.",
     "confirmCancel": "Confirmar Cancelamento",
     "cancelSuccess": "Assinatura cancelada com sucesso",
-    "cancelError": "Erro ao cancelar assinatura"
+    "cancelError": "Erro ao cancelar assinatura",
+    "cancelContact": "Está com algum problema? Fale com a gente antes:"
   }
 }

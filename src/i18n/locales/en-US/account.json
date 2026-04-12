@@ -70,6 +70,7 @@
     "cancelDescription": "Are you sure? You will keep access until {{date}}.",
     "confirmCancel": "Confirm Cancellation",
     "cancelSuccess": "Subscription cancelled successfully",
-    "cancelError": "Failed to cancel subscription"
+    "cancelError": "Failed to cancel subscription",
+    "cancelContact": "Having a problem? Talk to us first:"
   }
 }
