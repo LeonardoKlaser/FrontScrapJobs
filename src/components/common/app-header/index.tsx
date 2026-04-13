@@ -27,7 +27,7 @@ export function AppHeader() {
     { title: t('nav.curriculum'), href: PATHS.app.curriculum },
     { title: t('nav.companies'), href: PATHS.app.listSites },
     { title: t('nav.applications'), href: PATHS.app.applications },
-    { title: t('nav.myAccount'), href: PATHS.app.accountPage }
+    { title: t('nav.myAccount'), href: PATHS.app.account }
   ]
 
   const adminItems = [

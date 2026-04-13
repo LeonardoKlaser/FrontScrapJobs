@@ -110,7 +110,7 @@ export const createRouter = (queryClient: QueryClient) =>
           )
         },
         {
-          path: PATHS.app.accountPage,
+          path: PATHS.app.account,
           element: <AccountPage />
         },
         {

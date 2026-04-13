@@ -46,7 +46,7 @@ export function KanbanColumn({ status, items, onCardClick }: Props) {
             {t('kanban.emptyColumn')}
           </p>
         ) : (
-          items.map((app) => <KanbanCard key={app.id} app={app} onClick={() => onCardClick(app)} />)
+          items.map((app) => <KanbanCard key={app.id} app={app} onCardClick={onCardClick} />)
         )}
       </div>
     </div>

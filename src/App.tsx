@@ -6,6 +6,7 @@ import { createRouter } from './router/routes'
 import { Toaster } from 'sonner'
 import { ErrorBoundary } from '@/components/common/error-boundary'
 import { LoadingSection } from '@/components/common/loading-section'
+import { TooltipProvider } from '@/components/tooltip'
 
 function ThemedToaster() {
   const { theme } = useTheme()
@@ -41,12 +42,14 @@ export function App({ queryClient }: AppProps) {
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <ErrorBoundary>
-        <Suspense fallback={<LoadingSection variant="full" label="Carregando..." />}>
-          <RouterProvider router={router} />
-        </Suspense>
-      </ErrorBoundary>
-      <ThemedToaster />
+      <TooltipProvider>
+        <ErrorBoundary>
+          <Suspense fallback={<LoadingSection variant="full" label="Carregando..." />}>
+            <RouterProvider router={router} />
+          </Suspense>
+        </ErrorBoundary>
+        <ThemedToaster />
+      </TooltipProvider>
     </ThemeProvider>
   )
 }
