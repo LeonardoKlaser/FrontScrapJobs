@@ -43,10 +43,10 @@ export function InterviewRoundDialog({ open, onConfirm, onCancel }: Props) {
             autoFocus
           />
           <div className="flex gap-2 justify-end">
-            <Button type="button" variant="ghost" onClick={onCancel}>
+            <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
               {t('common:actions.cancel', { defaultValue: 'Cancelar' })}
             </Button>
-            <Button type="submit" variant="glow" disabled={!value || parseInt(value, 10) < 1}>
+            <Button type="submit" variant="glow" size="sm" disabled={!value || parseInt(value, 10) < 1}>
               {t('common:actions.confirm', { defaultValue: 'Confirmar' })}
             </Button>
           </div>

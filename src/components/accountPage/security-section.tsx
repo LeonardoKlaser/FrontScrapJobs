@@ -255,11 +255,12 @@ export function SecuritySection() {
           </div>
           {deleteError && <p className="text-sm text-destructive">{deleteError}</p>}
           <div className="flex justify-end gap-2 mt-4">
-            <Button variant="secondary" onClick={() => setShowDeleteDialog(false)}>
+            <Button variant="secondary" size="sm" onClick={() => setShowDeleteDialog(false)}>
               {t('security.cancel', 'Cancelar')}
             </Button>
             <Button
               variant="destructive"
+              size="sm"
               disabled={!deletePassword || deleteLoading}
               onClick={handleDeleteAccount}
             >

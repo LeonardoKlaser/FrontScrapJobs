@@ -236,10 +236,10 @@ export function PlanSection({ user }: PlanSectionProps) {
             </a>
           </p>
           <DialogFooter className="flex justify-end gap-3 mt-4">
-            <Button variant="secondary" onClick={() => setShowCancelDialog(false)}>
+            <Button variant="secondary" size="sm" onClick={() => setShowCancelDialog(false)}>
               {tCommon('actions.back')}
             </Button>
-            <Button variant="destructive" onClick={handleCancelSubscription} disabled={isCanceling}>
+            <Button variant="destructive" size="sm" onClick={handleCancelSubscription} disabled={isCanceling}>
               {isCanceling ? <Spinner className="h-4 w-4" /> : t('plan.confirmCancel')}
             </Button>
           </DialogFooter>

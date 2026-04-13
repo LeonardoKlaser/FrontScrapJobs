@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Download, Loader2 } from 'lucide-react'
+import { Download, Loader2, CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -60,21 +60,25 @@ export function PdfExportModal({ curriculumId, open, onClose }: PdfExportModalPr
         </DialogHeader>
 
         {pdfUrl ? (
-          <div className="flex flex-col items-center gap-4 py-6">
-            <p className="text-sm text-muted-foreground">PDF gerado com sucesso!</p>
-            <a
-              href={pdfUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-            >
-              <Download className="h-4 w-4" />
-              Baixar PDF
-            </a>
-            <p className="text-xs text-muted-foreground">Link válido por 1 hora</p>
-            <Button variant="outline" onClick={handleClose}>
-              Fechar
-            </Button>
+          <div className="flex flex-col items-center gap-6 py-8">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+              <CheckCircle className="h-7 w-7 text-primary" />
+            </div>
+            <div className="text-center space-y-1">
+              <p className="font-medium text-foreground">PDF gerado com sucesso!</p>
+              <p className="text-xs text-muted-foreground">Link válido por 1 hora</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <Button variant="outline" size="sm" onClick={handleClose}>
+                Fechar
+              </Button>
+              <Button size="sm" className="gap-2" asChild>
+                <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
+                  <Download className="h-4 w-4" />
+                  Baixar PDF
+                </a>
+              </Button>
+            </div>
           </div>
         ) : (
           <>
@@ -83,10 +87,10 @@ export function PdfExportModal({ curriculumId, open, onClose }: PdfExportModalPr
             </div>
 
             <div className="flex justify-end gap-2 mt-4">
-              <Button variant="outline" onClick={handleClose} disabled={isPending}>
+              <Button variant="outline" size="sm" onClick={handleClose} disabled={isPending}>
                 Cancelar
               </Button>
-              <Button onClick={handleGenerate} disabled={!selectedTemplate || isPending}>
+              <Button size="sm" onClick={handleGenerate} disabled={!selectedTemplate || isPending}>
                 {isPending ? (
                   <Loader2 className="h-4 w-4 animate-spin mr-2" />
                 ) : (

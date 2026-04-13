@@ -40,7 +40,7 @@ export function RequestSiteForm({ className }: RequestSiteFormProps) {
           value={url}
           onChange={(e) => setUrl(e.target.value)}
         />
-        <Button type="submit" variant="glow" disabled={isPending}>
+        <Button type="submit" variant="glow" size="sm" disabled={isPending}>
           {isPending ? t('requestSite.sending') : t('requestSite.send')}
           <Send className="h-4 w-4" />
         </Button>
