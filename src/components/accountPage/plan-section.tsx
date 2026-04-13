@@ -50,7 +50,7 @@ export function PlanSection({ user }: PlanSectionProps) {
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } })?.response?.status
       if (status === 400) {
-        toast.success(t('plan.cancelSuccess'))
+        toast.info(t('plan.alreadyCanceled'))
         setShowCancelDialog(false)
         queryClient.invalidateQueries({ queryKey: ['user'] })
       } else {

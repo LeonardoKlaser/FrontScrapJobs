@@ -68,8 +68,8 @@ export default function PaymentConfirmationPage() {
             style={{ animationDelay: '500ms' }}
           >
             {t('confirmation.needHelp')}{' '}
-            <a href="mailto:support@scrapjobs.com" className="text-primary hover:underline">
-              support@scrapjobs.com
+            <a href={`mailto:${t('footer.contactEmail', { ns: 'common' })}`} className="text-primary hover:underline">
+              {t('footer.contactEmail', { ns: 'common' })}
             </a>
           </p>
         </div>

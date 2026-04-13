@@ -35,6 +35,7 @@ api.interceptors.response.use(
       if (!isPublic) {
         isRedirecting = true
         window.location.href = `/login?from=${encodeURIComponent(path)}`
+        setTimeout(() => { isRedirecting = false }, 10000)
       }
     }
     if (
@@ -44,6 +45,7 @@ api.interceptors.response.use(
     ) {
       isRedirecting = true
       window.location.href = '/app/renew'
+      setTimeout(() => { isRedirecting = false }, 3000)
     }
     return Promise.reject(error)
   }

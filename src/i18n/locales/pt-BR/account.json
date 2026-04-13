@@ -71,6 +71,7 @@
     "confirmCancel": "Confirmar Cancelamento",
     "cancelSuccess": "Assinatura cancelada com sucesso",
     "cancelError": "Erro ao cancelar assinatura",
+    "alreadyCanceled": "Sua assinatura já está cancelada ou não foi encontrada.",
     "cancelContact": "Está com algum problema? Fale com a gente antes:"
   }
 }

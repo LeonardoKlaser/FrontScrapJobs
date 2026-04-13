@@ -71,6 +71,7 @@
     "confirmCancel": "Confirm Cancellation",
     "cancelSuccess": "Subscription cancelled successfully",
     "cancelError": "Failed to cancel subscription",
+    "alreadyCanceled": "Your subscription is already canceled or was not found.",
     "cancelContact": "Having a problem? Talk to us first:"
   }
 }
