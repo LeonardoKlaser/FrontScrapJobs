@@ -666,7 +666,7 @@ export function Home() {
 
             {/* Desktop: table layout */}
             <div className="hidden sm:block overflow-x-auto rounded-lg border border-border/50">
-              <Table className="table-fixed text-sm">
+              <Table className="table-fixed text-sm min-w-[750px]">
                 <TableHeader className="bg-muted/40">
                   <TableRow>
                     <TableHead className="font-medium w-[35%]">
