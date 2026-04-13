@@ -711,7 +711,11 @@ export function Home() {
                         />
                       </button>
                     </TableHead>
-                    <TableHead className="text-right" />
+                    <TableHead className="whitespace-nowrap">
+                      {t("latestJobs.link")}
+                    </TableHead>
+                    <TableHead />
+                    <TableHead />
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -744,51 +748,53 @@ export function Home() {
                       <TableCell className="whitespace-nowrap text-muted-foreground">
                         {job.location}
                       </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1.5 justify-end whitespace-nowrap">
-                          <a
-                            href={safeHref(job.job_link)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-primary hover:underline underline-offset-4"
-                          >
-                            {t("latestJobs.viewJob")}
-                            <ExternalLink className="h-3 w-3" />
-                          </a>
-                          {job.application_id && job.application_status ? (
-                            <ApplicationStatusDropdown
-                              currentStatus={job.application_status}
-                              interviewRound={job.interview_round}
-                              onStatusChange={(status, round) =>
-                                handleStatusChange(
-                                  job.application_id!,
-                                  status,
-                                  round,
-                                )
-                              }
-                            />
+                      <TableCell className="whitespace-nowrap">
+                        <a
+                          href={safeHref(job.job_link)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-primary hover:underline underline-offset-4"
+                        >
+                          {t("latestJobs.viewJob")}
+                          <ExternalLink className="h-3 w-3" />
+                        </a>
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        {job.application_id && job.application_status ? (
+                          <ApplicationStatusDropdown
+                            currentStatus={job.application_status}
+                            interviewRound={job.interview_round}
+                            onStatusChange={(status, round) =>
+                              handleStatusChange(
+                                job.application_id!,
+                                status,
+                                round,
+                              )
+                            }
+                          />
+                        ) : (
+                          <ApplyButton jobId={job.id} />
+                        )}
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="gap-1.5 opacity-70 group-hover/row:opacity-100 transition-opacity text-xs"
+                          onClick={() => setSelectedJobId(job.id)}
+                        >
+                          {job.has_analysis ? (
+                            <>
+                              <Eye className="h-3.5 w-3.5" />
+                              {t("latestJobs.viewAnalysis")}
+                            </>
                           ) : (
-                            <ApplyButton jobId={job.id} />
+                            <>
+                              <Bot className="h-3.5 w-3.5" />
+                              {t("latestJobs.analyzeAI")}
+                            </>
                           )}
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="gap-1.5 opacity-70 group-hover/row:opacity-100 transition-opacity text-xs"
-                            onClick={() => setSelectedJobId(job.id)}
-                          >
-                            {job.has_analysis ? (
-                              <>
-                                <Eye className="h-3.5 w-3.5" />
-                                {t("latestJobs.viewAnalysis")}
-                              </>
-                            ) : (
-                              <>
-                                <Bot className="h-3.5 w-3.5" />
-                                {t("latestJobs.analyzeAI")}
-                              </>
-                            )}
-                          </Button>
-                        </div>
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
