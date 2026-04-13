@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Save, Download, SaveAll, Loader2, ArrowLeft } from 'lucide-react'
+import { Save, Download, SaveAll, Loader2, ArrowLeft, CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { TemplateSelector } from '@/components/curriculum/template-selector'
 import { useApplySuggestions } from '@/hooks/usePdf'
@@ -109,23 +109,27 @@ export function ApplySuggestionsStep({
 
   if (step === 'success' && pdfUrl) {
     return (
-      <div className="flex flex-col items-center gap-4 py-6">
-        <p className="text-sm text-muted-foreground">
-          {action === 'both' ? 'Currículo salvo e PDF gerado!' : 'PDF gerado com sucesso!'}
-        </p>
-        <a
-          href={pdfUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-        >
-          <Download className="h-4 w-4" />
-          Baixar PDF
-        </a>
-        <p className="text-xs text-muted-foreground">Link válido por 1 hora</p>
-        <Button variant="outline" size="sm" onClick={onComplete}>
-          Fechar
-        </Button>
+      <div className="flex flex-col items-center gap-6 py-8">
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+          <CheckCircle className="h-7 w-7 text-primary" />
+        </div>
+        <div className="text-center space-y-1">
+          <p className="font-medium text-foreground">
+            {action === 'both' ? 'Currículo salvo e PDF gerado!' : 'PDF gerado com sucesso!'}
+          </p>
+          <p className="text-xs text-muted-foreground">Link válido por 1 hora</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Button variant="outline" size="sm" onClick={onComplete}>
+            Fechar
+          </Button>
+          <Button size="sm" className="gap-2" asChild>
+            <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
+              <Download className="h-4 w-4" />
+              Baixar PDF
+            </a>
+          </Button>
+        </div>
       </div>
     )
   }
