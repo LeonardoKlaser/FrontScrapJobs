@@ -666,10 +666,10 @@ export function Home() {
 
             {/* Desktop: table layout */}
             <div className="hidden sm:block overflow-x-auto rounded-lg border border-border/50">
-              <Table className="table-fixed text-sm min-w-[750px]">
+              <Table className="table-fixed text-sm min-w-[900px]">
                 <TableHeader className="bg-muted/40">
                   <TableRow>
-                    <TableHead className="font-medium w-[35%]">
+                    <TableHead className="font-medium w-[30%]">
                       <button
                         type="button"
                         className="inline-flex items-center select-none"
@@ -683,7 +683,7 @@ export function Home() {
                         />
                       </button>
                     </TableHead>
-                    <TableHead className="font-medium w-[20%]">
+                    <TableHead className="font-medium w-[18%]">
                       <button
                         type="button"
                         className="inline-flex items-center select-none"
@@ -711,10 +711,10 @@ export function Home() {
                         />
                       </button>
                     </TableHead>
-                    <TableHead className="font-medium w-[15%]">
+                    <TableHead className="font-medium w-[12%]">
                       {t("latestJobs.link")}
                     </TableHead>
-                    <TableHead className="w-[18%]" />
+                    <TableHead className="w-[28%]" />
                   </TableRow>
                 </TableHeader>
                 <TableBody>
