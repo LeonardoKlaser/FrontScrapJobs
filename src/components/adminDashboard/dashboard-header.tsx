@@ -1,11 +1,4 @@
 import { Badge } from '@/components/ui/badge'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select'
 import { Shield } from 'lucide-react'
 
 export function DashboardHeader() {
@@ -25,16 +18,6 @@ export function DashboardHeader() {
           Visão geral da plataforma e métricas de operação
         </p>
       </div>
-      <Select defaultValue="7days">
-        <SelectTrigger className="w-40">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="24h">Últimas 24h</SelectItem>
-          <SelectItem value="7days">Últimos 7 dias</SelectItem>
-          <SelectItem value="month">Este Mês</SelectItem>
-        </SelectContent>
-      </Select>
     </div>
   )
 }
