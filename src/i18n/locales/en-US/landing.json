@@ -67,6 +67,7 @@
     "promiseDescription": "ScrapJobs automates your entire job search, monitoring your favorite companies 24/7 and sending smart alerts with AI analysis. Focus your energy on what really matters: preparing for interviews."
   },
   "faq": {
+    "title": "Frequently Asked Questions",
     "security": {
       "question": "Is my resume data secure?",
       "answer": "Yes, we use end-to-end encryption and follow security best practices. Your data is never shared with third parties and you have full control over your information."

@@ -32,16 +32,15 @@ export function HeroSection() {
 
             {/* CTA */}
             <div className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
-              <a href="#pricing">
-                <Button
-                  variant="glow"
-                  size="lg"
-                  className="w-full sm:w-auto px-8 py-4 text-lg font-medium rounded-lg hover:scale-105 transition-transform duration-200 animate-pulse-glow"
-                >
-                  {t('hero.cta')}
-                  <ArrowRight className="w-5 h-5 ml-1" />
-                </Button>
-              </a>
+              <Button
+                variant="glow"
+                size="lg"
+                className="w-full sm:w-auto px-8 py-4 text-lg font-medium rounded-lg hover:scale-105 transition-transform duration-200 animate-pulse-glow"
+                onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                {t('hero.cta')}
+                <ArrowRight className="w-5 h-5 ml-1" />
+              </Button>
 
               {/* Micro-copy */}
               <p className="flex items-center justify-center md:justify-start gap-2 text-sm text-zinc-500 mt-4">

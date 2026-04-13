@@ -22,6 +22,7 @@ export function SectionWrapper({
   return (
     <section id={id} className="flex gap-[1px]">
       <div
+        aria-hidden="true"
         className={cn(
           'hidden lg:block w-[72px] shrink-0',
           sidebarBase,
@@ -32,6 +33,7 @@ export function SectionWrapper({
         {children}
       </div>
       <div
+        aria-hidden="true"
         className={cn(
           'hidden lg:block w-[72px] shrink-0',
           sidebarBase,

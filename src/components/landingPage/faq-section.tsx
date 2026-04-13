@@ -18,8 +18,8 @@ export function FaqSection() {
         <div className="container mx-auto max-w-4xl">
           {/* Section Header */}
           <span className="text-sm font-medium tracking-[2px] uppercase text-emerald-500">{t('labels.faq')}</span>
-          <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-zinc-900 leading-tight tracking-tight text-balance mt-3 mb-2">
-            {t('faq.ctaTitle')}
+          <h2 className="font-display text-3xl lg:text-4xl font-semibold text-zinc-900 leading-tight tracking-tight text-balance mt-3 mb-2">
+            {t('faq.title')}
           </h2>
 
           <Accordion type="single" collapsible className="grid md:grid-cols-2 gap-x-6 gap-y-0 mt-8 text-left">

@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { Clock, BarChart3, Mail, Infinity as InfinityIcon } from 'lucide-react'
 import { SectionWrapper } from './section-wrapper'
+import emailAnalise3 from '@/assets/ScrapJobs_email_analise_3.png'
+import emailAnalise from '@/assets/ScrapJobs_email_analise.png'
 
 export function FeaturesSection() {
   const { t } = useTranslation('landing')
@@ -10,21 +12,25 @@ export function FeaturesSection() {
       icon: Clock,
       titleKey: 'features.scraping.title',
       descriptionKey: 'features.scraping.description',
+      image: undefined,
     },
     {
       icon: BarChart3,
       titleKey: 'features.ai.title',
       descriptionKey: 'features.ai.description',
+      image: emailAnalise3,
     },
     {
       icon: Mail,
       titleKey: 'features.alerts.title',
       descriptionKey: 'features.alerts.description',
+      image: emailAnalise,
     },
     {
       icon: InfinityIcon,
       titleKey: 'features.monitoring.title',
       descriptionKey: 'features.monitoring.description',
+      image: undefined,
     },
   ]
 
@@ -44,15 +50,19 @@ export function FeaturesSection() {
 
         {/* Feature cards grid */}
         <div className="grid md:grid-cols-2 gap-6 mt-12 text-left">
-          {features.map((feature) => (
+          {features.map((feature, index) => (
             <div
               key={feature.titleKey}
-              className="bg-zinc-50 rounded-xl overflow-hidden hover-lift transition-all border border-transparent hover:border-emerald-200"
+              className="bg-zinc-50 rounded-xl overflow-hidden hover-lift transition-all border border-transparent hover:border-emerald-200 animate-fade-in-up"
+              style={{ animationDelay: `${index * 150}ms` }}
             >
-              {/* Placeholder image area */}
-              <div className="w-full h-40 bg-zinc-100 flex items-center justify-center">
-                <feature.icon className="w-8 h-8 text-zinc-400" />
-              </div>
+              {feature.image ? (
+                <img src={feature.image} alt={t(feature.titleKey)} loading="lazy" className="w-full h-40 object-cover" />
+              ) : (
+                <div className="w-full h-40 bg-zinc-100 flex items-center justify-center">
+                  <feature.icon className="w-8 h-8 text-zinc-400" />
+                </div>
+              )}
 
               {/* Content */}
               <div className="p-6 space-y-3">

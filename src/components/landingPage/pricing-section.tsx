@@ -8,7 +8,7 @@ import { PATHS } from "@/router/paths";
 import { SectionWrapper } from "./section-wrapper";
 
 export function PricingSection() {
-  const { t } = useTranslation("landing");
+  const { t, i18n } = useTranslation("landing");
   const { data: plans, isLoading } = usePlans();
   const navigate = useNavigate();
 
@@ -46,7 +46,7 @@ export function PricingSection() {
           {/* Section Header */}
           <div className="mb-16">
             <span className="text-sm font-medium tracking-[2px] uppercase text-emerald-500">{t('labels.pricing')}</span>
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-zinc-900 mb-6 mt-3 tracking-tight text-balance">
+            <h2 className="font-display text-3xl lg:text-4xl font-semibold text-zinc-900 mb-6 mt-3 tracking-tight text-balance">
               {t("pricing.title")}
             </h2>
             <p className="text-base text-zinc-500 mt-3">{t('pricing.subtitle')}</p>
@@ -80,7 +80,7 @@ export function PricingSection() {
                       </h3>
                       <div className="mt-4">
                         <span className="font-display text-[44px] font-bold text-zinc-900">
-                          R$ {displayPrice}
+                          {new Intl.NumberFormat(i18n.language === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: i18n.language === 'pt-BR' ? 'BRL' : 'USD' }).format(plan.price)}
                         </span>
                         <span className="text-sm text-zinc-500">
                           {t("pricing.perMonth")}

@@ -45,12 +45,10 @@ function useCountUp(target: number, duration = 2000) {
   return { count, ref }
 }
 
-function formatNumber(num: number): string {
-  return num.toLocaleString('pt-BR')
-}
-
 export function StatsCounterSection() {
-  const { t } = useTranslation('landing')
+  const { t, i18n } = useTranslation('landing')
+  const locale = i18n.language === 'pt-BR' ? 'pt-BR' : 'en-US'
+  const formatNumber = (num: number) => num.toLocaleString(locale)
   const { data: stats } = usePublicStats()
 
   const sites = useCountUp(stats?.monitored_sites ?? 0)

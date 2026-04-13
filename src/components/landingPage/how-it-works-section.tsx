@@ -28,7 +28,10 @@ export function HowItWorksSection() {
       <div className="py-16 px-6">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-zinc-900 mb-6 tracking-tight text-balance">
+            <span className="text-sm font-medium tracking-[2px] uppercase text-emerald-500">
+              {t('labels.howItWorks')}
+            </span>
+            <h2 className="font-display text-3xl lg:text-4xl font-semibold text-zinc-900 mb-6 mt-3 tracking-tight text-balance">
               {t('howItWorks.title')}
             </h2>
           </div>

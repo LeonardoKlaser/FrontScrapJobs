@@ -63,7 +63,7 @@ export function LandingNavbar() {
         {/* Mobile hamburger */}
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <button className="lg:hidden p-2 text-zinc-600 hover:text-zinc-900">
+            <button className="lg:hidden p-2 text-zinc-600 hover:text-zinc-900" aria-label="Open menu">
               <Menu className="w-5 h-5" />
             </button>
           </SheetTrigger>

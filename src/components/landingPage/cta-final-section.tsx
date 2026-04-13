@@ -20,16 +20,15 @@ export function CtaFinalSection() {
           {t('ctaFinal.subtitle')}
         </p>
 
-        <a href="#pricing">
-          <Button
-            variant="glow"
-            size="lg"
-            className="px-10 py-4 text-base font-semibold rounded-lg animate-pulse-glow mt-4"
-          >
-            {t('ctaFinal.cta')}
-            <ArrowRight className="w-5 h-5 ml-1" />
-          </Button>
-        </a>
+        <Button
+          variant="glow"
+          size="lg"
+          className="px-10 py-4 text-base font-semibold rounded-lg animate-pulse-glow mt-4"
+          onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
+        >
+          {t('ctaFinal.cta')}
+          <ArrowRight className="w-5 h-5 ml-1" />
+        </Button>
       </div>
     </SectionWrapper>
   )

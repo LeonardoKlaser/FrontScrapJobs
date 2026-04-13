@@ -1,5 +1,3 @@
-'use client'
-
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Check } from 'lucide-react'
@@ -10,9 +8,13 @@ import { usePlans } from '@/hooks/usePlans'
 export function SavingsCalculatorSection() {
   const { t, i18n } = useTranslation('landing')
   const { data: plans, isLoading } = usePlans()
+  const locale = i18n.language === 'pt-BR' ? 'pt-BR' : 'en-US'
 
-  const [rawSalary, setRawSalary] = useState(1412)
-  const [displayValue, setDisplayValue] = useState('1.412')
+  const defaultSalary = locale === 'pt-BR' ? 1412 : 3000
+  const [rawSalary, setRawSalary] = useState(defaultSalary)
+  const [displayValue, setDisplayValue] = useState(
+    defaultSalary.toLocaleString(locale)
+  )
 
   const handleSalaryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const digits = e.target.value.replace(/\D/g, '')
@@ -23,7 +25,7 @@ export function SavingsCalculatorSection() {
     }
     const numericValue = Number(digits)
     setRawSalary(numericValue)
-    setDisplayValue(numericValue.toLocaleString('pt-BR'))
+    setDisplayValue(numericValue.toLocaleString(locale))
   }
 
   const formatCurrency = (value: number) => {
@@ -171,19 +173,21 @@ export function SavingsCalculatorSection() {
               <div className="border-t border-zinc-200 my-3" />
 
               {/* ROI badge */}
-              <div className="flex justify-center pt-1">
-                {isLoading ? (
-                  <div className="h-8 w-40 rounded-full bg-zinc-200 animate-shimmer" />
-                ) : (
-                  <span
-                    className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 rounded-full px-3 py-1 text-sm font-semibold"
-                    style={{ transition: 'all 300ms ease-out' }}
-                  >
-                    <Check className="w-4 h-4" />
-                    {t('calculator.roi', { value: roi })}
-                  </span>
-                )}
-              </div>
+              {roi > 0 && (
+                <div className="flex justify-center pt-1">
+                  {isLoading ? (
+                    <div className="h-8 w-40 rounded-full bg-zinc-200 animate-shimmer" />
+                  ) : (
+                    <span
+                      className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 rounded-full px-3 py-1 text-sm font-semibold"
+                      style={{ transition: 'all 300ms ease-out' }}
+                    >
+                      <Check className="w-4 h-4" />
+                      {t('calculator.roi', { value: roi })}
+                    </span>
+                  )}
+                </div>
+              )}
             </dl>
           </div>
         </div>

@@ -67,6 +67,7 @@
     "promiseDescription": "A ScrapJobs automatiza toda sua busca de emprego, monitorando suas empresas favoritas 24/7 e enviando alertas inteligentes com análise de IA. Concentre sua energia no que realmente importa: preparar-se para as entrevistas."
   },
   "faq": {
+    "title": "Perguntas Frequentes",
     "security": {
       "question": "Meus dados de currículo estão seguros?",
       "answer": "Sim, usamos criptografia de ponta a ponta e seguimos as melhores práticas de segurança. Seus dados nunca são compartilhados com terceiros e você tem controle total sobre suas informações."
