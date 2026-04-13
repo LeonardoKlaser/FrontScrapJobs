@@ -1,12 +1,11 @@
 import { useTranslation } from 'react-i18next'
-import { Button } from '@/components/ui/button'
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/accordion'
-import { ArrowRight } from 'lucide-react'
+import { SectionWrapper } from './section-wrapper'
 
 export function FaqSection() {
   const { t } = useTranslation('landing')
@@ -14,48 +13,33 @@ export function FaqSection() {
   const faqKeys = ['security', 'ai', 'cancel', 'limits'] as const
 
   return (
-    <section className="py-20 sm:py-24 px-4 bg-card/30">
-      <div className="container mx-auto">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 max-w-6xl mx-auto">
-          <div className="space-y-6 text-center lg:text-left animate-fade-in-up">
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-foreground leading-tight tracking-tight text-balance">
-              {t('faq.ctaTitle')}
-            </h2>
-            <p className="text-lg text-muted-foreground leading-relaxed text-pretty">
-              {t('faq.ctaDescription')}
-            </p>
-            <a href="#pricing">
-              <Button
-                variant="glow"
-                size="lg"
-                className="px-8 py-4 text-lg font-medium animate-pulse-glow"
-              >
-                {t('faq.ctaButton')}
-                <ArrowRight className="w-5 h-5 ml-1" />
-              </Button>
-            </a>
-          </div>
+    <SectionWrapper id="faq">
+      <div className="py-16 px-6 text-center">
+        <div className="container mx-auto max-w-4xl">
+          {/* Section Header */}
+          <span className="text-sm font-medium tracking-[2px] uppercase text-emerald-500">{t('labels.faq')}</span>
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-zinc-900 leading-tight tracking-tight text-balance mt-3 mb-2">
+            {t('faq.ctaTitle')}
+          </h2>
 
-          <div className="animate-fade-in-up" style={{ animationDelay: '150ms' }}>
-            <Accordion type="single" collapsible className="space-y-4">
-              {faqKeys.map((key, index) => (
-                <AccordionItem
-                  key={key}
-                  value={`item-${index}`}
-                  className="bg-card border border-border/50 rounded-lg px-4 sm:px-6 hover:border-primary/20 transition-colors duration-200"
-                >
-                  <AccordionTrigger className="text-left font-medium text-foreground hover:no-underline">
-                    {t(`faq.${key}.question`)}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground leading-relaxed">
-                    {t(`faq.${key}.answer`)}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </div>
+          <Accordion type="single" collapsible className="grid md:grid-cols-2 gap-x-6 gap-y-0 mt-8 text-left">
+            {faqKeys.map((key, index) => (
+              <AccordionItem
+                key={key}
+                value={`item-${index}`}
+                className="border-b border-zinc-200"
+              >
+                <AccordionTrigger className="text-base font-medium text-zinc-900 py-4 hover:bg-zinc-50 px-2 rounded hover:no-underline">
+                  {t(`faq.${key}.question`)}
+                </AccordionTrigger>
+                <AccordionContent className="text-[15px] text-zinc-500 leading-relaxed pb-4 px-2">
+                  {t(`faq.${key}.answer`)}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
       </div>
-    </section>
+    </SectionWrapper>
   )
 }

@@ -10,8 +10,24 @@
     "microcopy": "Liberação imediata • Cancele a qualquer momento",
     "dashboardAlt": "Dashboard do ScrapJobs mostrando vagas monitoradas e alertas de IA"
   },
+  "navbar": {
+    "features": "Funcionalidades",
+    "howItWorks": "Como funciona",
+    "pricing": "Preços",
+    "faq": "FAQ",
+    "cta": "Começar grátis"
+  },
+  "labels": {
+    "features": "FUNCIONALIDADES",
+    "howItWorks": "COMO FUNCIONA",
+    "pricing": "PLANOS",
+    "faq": "FAQ",
+    "productVisualization": "PRODUTO",
+    "calculator": "ECONOMIA"
+  },
   "features": {
     "title": "Uma Vantagem Injusta para Sua Carreira",
+    "subtitle": "Ferramentas poderosas para automatizar sua busca de emprego",
     "scraping": {
       "title": "Scraping de Hora em Hora",
       "description": "Nunca mais perca uma vaga. Nosso sistema verifica seus alvos constantemente."
@@ -90,8 +106,30 @@
   "socialProof": {
     "subtitle": "Monitorando oportunidades das maiores empresas, como:"
   },
+  "calculator": {
+    "title": "Quanto vale o seu",
+    "titleHighlight": "tempo?",
+    "description": "ScrapJobs economiza até 50 horas de busca massante por novas vagas de trabalho",
+    "salaryLabel": "Seu salário mensal",
+    "hourlyRate": "Seu valor/hora",
+    "hoursSaved": "Horas economizadas/mês",
+    "yourSavings": "Você economiza",
+    "planCost": "ScrapJobs custa",
+    "roi": "{{value}}x o investimento",
+    "perMonth": "/mês",
+    "currencySymbol": "R$",
+    "hoursPerMonth": "220",
+    "hoursUnit": "50h"
+  },
+  "ctaFinal": {
+    "title": "Pronto para encontrar sua",
+    "titleHighlight": "próxima vaga?",
+    "subtitle": "Automatize sua busca e ganhe tempo para o que realmente importa: as entrevistas.",
+    "cta": "Começar grátis"
+  },
   "pricing": {
     "title": "Preço Simples e Transparente",
+    "subtitle": "Simples e transparente. Cancele quando quiser.",
     "loading": "Carregando planos...",
     "monthly": "Mensal",
     "popular": "Mais Popular",

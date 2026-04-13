@@ -340,4 +340,26 @@
   :not(.dark) .hover-lift:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
+
+  .bg-stripes {
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgba(16, 185, 129, 0.06) 0px,
+      rgba(16, 185, 129, 0.06) 1px,
+      transparent 1px,
+      transparent 14px
+    );
+    background-color: #ffffff;
+  }
+
+  .bg-stripes-dark {
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.04) 0px,
+      rgba(255, 255, 255, 0.04) 1px,
+      transparent 1px,
+      transparent 14px
+    );
+    background-color: #0a0a0b;
+  }
 }

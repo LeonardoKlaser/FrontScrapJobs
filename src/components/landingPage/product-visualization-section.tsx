@@ -1,34 +1,62 @@
 import { useTranslation } from 'react-i18next'
+import { Check } from 'lucide-react'
 import emailAnaliseImg from '@/assets/ScrapJobs_email_analise.png'
+import { SectionWrapper } from './section-wrapper'
 
 export function ProductVisualizationSection() {
   const { t } = useTranslation('landing')
 
   return (
-    <section className="py-20 sm:py-24 px-4 bg-card/30">
-      <div className="container mx-auto">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center max-w-6xl mx-auto">
-          {/* Text Content */}
-          <div className="space-y-6 text-center lg:text-left animate-fade-in-up">
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-foreground leading-tight tracking-tight text-balance">
-              {t('productVisualization.title')}
+    <SectionWrapper className="py-16 px-6">
+      <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+        {/* Text Content */}
+        <div className="space-y-6">
+          <div>
+            <span className="text-sm font-medium tracking-[2px] uppercase text-emerald-500">
+              {t('labels.productVisualization')}
+            </span>
+            <h2 className="font-display text-2xl lg:text-4xl font-semibold text-zinc-900 mt-3">
+              See Exactly What You'll{' '}
+              <span className="text-gradient-primary">Receive</span>
             </h2>
-            <p className="text-lg text-muted-foreground leading-relaxed text-pretty">
+            <p className="text-base text-zinc-500 mt-4">
               {t('productVisualization.description')}
             </p>
           </div>
 
-          {/* Real Email Analysis Screenshot */}
-          <div className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
-            <img
-              src={emailAnaliseImg}
-              alt={t('productVisualization.emailAlt')}
-              loading="lazy"
-              className="max-w-full rounded-2xl border border-white/10 shadow-2xl shadow-emerald-500/20 overflow-hidden"
-            />
-          </div>
+          {/* Bullet points */}
+          <ul className="space-y-3">
+            <li className="flex items-start gap-3">
+              <Check className="w-4 h-4 text-emerald-500 shrink-0 mt-1" />
+              <span className="text-base text-zinc-500">
+                {t('productVisualization.bullet1')}
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <Check className="w-4 h-4 text-emerald-500 shrink-0 mt-1" />
+              <span className="text-base text-zinc-500">
+                {t('productVisualization.bullet2')}
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <Check className="w-4 h-4 text-emerald-500 shrink-0 mt-1" />
+              <span className="text-base text-zinc-500">
+                {t('productVisualization.bullet3')}
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        {/* Image */}
+        <div>
+          <img
+            src={emailAnaliseImg}
+            alt={t('productVisualization.emailAlt')}
+            loading="lazy"
+            className="max-w-full rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] border border-zinc-200/50"
+          />
         </div>
       </div>
-    </section>
+    </SectionWrapper>
   )
 }

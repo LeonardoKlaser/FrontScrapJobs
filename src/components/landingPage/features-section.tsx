@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Clock, BarChart3, Mail, Infinity as InfinityIcon } from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
+import { SectionWrapper } from './section-wrapper'
 
 export function FeaturesSection() {
   const { t } = useTranslation('landing')
@@ -10,59 +10,68 @@ export function FeaturesSection() {
       icon: Clock,
       titleKey: 'features.scraping.title',
       descriptionKey: 'features.scraping.description',
-      highlight: false
     },
     {
       icon: BarChart3,
       titleKey: 'features.ai.title',
       descriptionKey: 'features.ai.description',
-      highlight: true
     },
     {
       icon: Mail,
       titleKey: 'features.alerts.title',
       descriptionKey: 'features.alerts.description',
-      highlight: false
     },
     {
       icon: InfinityIcon,
       titleKey: 'features.monitoring.title',
       descriptionKey: 'features.monitoring.description',
-      highlight: false
-    }
+    },
   ]
 
   return (
-    <section className="py-20 sm:py-24 px-4">
-      <div className="container mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-foreground mb-6 tracking-tight text-balance">
-            {t('features.title')}
-          </h2>
-        </div>
+    <SectionWrapper id="features" className="py-16 px-6 text-center">
+      {/* Section header */}
+      <div className="max-w-5xl mx-auto">
+        <span className="text-sm font-medium tracking-[2px] uppercase text-emerald-500">
+          {t('labels.features')}
+        </span>
+        <h2 className="font-display text-3xl lg:text-4xl font-semibold text-zinc-900 mt-3">
+          An Unfair <span className="text-gradient-primary">Advantage</span> for Your Career
+        </h2>
+        <p className="text-base text-zinc-500 max-w-[600px] mx-auto mt-3">
+          {t('features.subtitle')}
+        </p>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {features.map((feature, index) => (
-            <Card
+        {/* Feature cards grid */}
+        <div className="grid md:grid-cols-2 gap-6 mt-12 text-left">
+          {features.map((feature) => (
+            <div
               key={feature.titleKey}
-              className={`bg-card border-border/50 hover:border-primary/30 transition-all duration-300 animate-fade-in-up hover-lift ${
-                feature.highlight ? 'border-primary/50 glow-border' : ''
-              }`}
-              style={{ animationDelay: `${index * 120}ms` }}
+              className="bg-zinc-50 rounded-xl overflow-hidden hover-lift transition-all border border-transparent hover:border-emerald-200"
             >
-              <CardContent className="p-5 sm:p-8 space-y-4">
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                  <feature.icon className="w-6 h-6 text-primary" />
+              {/* Placeholder image area */}
+              <div className="w-full h-40 bg-zinc-100 flex items-center justify-center">
+                <feature.icon className="w-8 h-8 text-zinc-400" />
+              </div>
+
+              {/* Content */}
+              <div className="p-6 space-y-3">
+                <div className="flex items-center gap-3">
+                  <span className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                    <feature.icon className="w-4 h-4 text-emerald-600" />
+                  </span>
+                  <h3 className="font-display text-lg font-semibold text-zinc-900">
+                    {t(feature.titleKey)}
+                  </h3>
                 </div>
-                <h3 className="text-xl font-bold text-foreground">{t(feature.titleKey)}</h3>
-                <p className="text-muted-foreground leading-relaxed text-pretty">
+                <p className="text-[15px] text-zinc-500">
                   {t(feature.descriptionKey)}
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
       </div>
-    </section>
+    </SectionWrapper>
   )
 }

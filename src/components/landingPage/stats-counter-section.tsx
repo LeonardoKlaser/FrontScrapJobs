@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Globe, Briefcase } from 'lucide-react'
 import { usePublicStats } from '@/hooks/usePublicStats'
+import { SectionWrapper } from './section-wrapper'
 
 function useCountUp(target: number, duration = 2000) {
   const [count, setCount] = useState(0)
@@ -58,39 +59,33 @@ export function StatsCounterSection() {
   if (!stats) return null
 
   return (
-    <section className="py-12 px-4">
-      <div className="container mx-auto max-w-3xl">
-        <div className="grid grid-cols-2 gap-6">
+    <SectionWrapper variant="dark">
+      <div className="py-20 px-4">
+        <div className="container mx-auto flex flex-col sm:flex-row items-center justify-around gap-10">
           <div
             ref={sites.ref}
-            className="flex flex-col items-center gap-2 rounded-xl border border-border/50 bg-card p-6 animate-fade-in-up"
+            className="flex flex-col items-center gap-3 animate-fade-in-up"
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-              <Globe className="h-5 w-5 text-primary" />
-            </div>
-            <span className="text-3xl sm:text-4xl font-bold text-foreground tabular-nums">
+            <Globe className="h-8 w-8 text-emerald-400" />
+            <span className="font-display text-5xl font-semibold text-white tabular-nums">
               {formatNumber(sites.count)}
             </span>
-            <span className="text-sm text-muted-foreground">{t('stats.sitesAnalyzed')}</span>
+            <span className="text-base text-white/60">{t('stats.sitesAnalyzed')}</span>
           </div>
 
           <div
             ref={jobs.ref}
-            className="flex flex-col items-center gap-2 rounded-xl border border-border/50 bg-card p-6 animate-fade-in-up"
+            className="flex flex-col items-center gap-3 animate-fade-in-up"
             style={{ animationDelay: '150ms' }}
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-              <Briefcase className="h-5 w-5 text-primary" />
-            </div>
-            <span className="text-3xl sm:text-4xl font-bold text-foreground tabular-nums">
+            <Briefcase className="h-8 w-8 text-emerald-400" />
+            <span className="font-display text-5xl font-semibold text-white tabular-nums">
               {formatNumber(jobs.count)}
             </span>
-            <span className="text-sm text-muted-foreground">{t('stats.jobsCollected')}</span>
+            <span className="text-base text-white/60">{t('stats.jobsCollected')}</span>
           </div>
         </div>
-
-        <p className="text-center text-xs text-muted-foreground mt-4">{t('stats.trustLine')}</p>
       </div>
-    </section>
+    </SectionWrapper>
   )
 }

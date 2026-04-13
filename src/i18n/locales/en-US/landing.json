@@ -10,8 +10,24 @@
     "microcopy": "Instant access • Cancel anytime",
     "dashboardAlt": "ScrapJobs dashboard showing monitored jobs and AI alerts"
   },
+  "navbar": {
+    "features": "Features",
+    "howItWorks": "How it works",
+    "pricing": "Pricing",
+    "faq": "FAQ",
+    "cta": "Get started free"
+  },
+  "labels": {
+    "features": "FEATURES",
+    "howItWorks": "HOW IT WORKS",
+    "pricing": "PRICING",
+    "faq": "FAQ",
+    "productVisualization": "PRODUCT",
+    "calculator": "SAVINGS"
+  },
   "features": {
     "title": "An Unfair Advantage for Your Career",
+    "subtitle": "Powerful tools to automate your job search",
     "scraping": {
       "title": "Hourly Scraping",
       "description": "Never miss a job posting again. Our system checks your targets constantly."
@@ -90,8 +106,30 @@
   "socialProof": {
     "subtitle": "Monitoring opportunities from the biggest companies, like:"
   },
+  "calculator": {
+    "title": "How much is your",
+    "titleHighlight": "time worth?",
+    "description": "ScrapJobs saves up to 50 hours of tedious job searching per month",
+    "salaryLabel": "Your monthly salary",
+    "hourlyRate": "Your hourly rate",
+    "hoursSaved": "Hours saved/month",
+    "yourSavings": "You save",
+    "planCost": "ScrapJobs costs",
+    "roi": "{{value}}x your investment",
+    "perMonth": "/mo",
+    "currencySymbol": "$",
+    "hoursPerMonth": "160",
+    "hoursUnit": "50h"
+  },
+  "ctaFinal": {
+    "title": "Ready to find your",
+    "titleHighlight": "next job?",
+    "subtitle": "Automate your search and free up time for what really matters: the interviews.",
+    "cta": "Get started free"
+  },
   "pricing": {
     "title": "Simple and Transparent Pricing",
+    "subtitle": "Simple and transparent. Cancel anytime.",
     "loading": "Loading plans...",
     "monthly": "Monthly",
     "popular": "Popular",
