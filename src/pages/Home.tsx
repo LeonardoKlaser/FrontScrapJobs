@@ -666,10 +666,10 @@ export function Home() {
 
             {/* Desktop: table layout */}
             <div className="hidden sm:block overflow-x-auto rounded-lg border border-border/50">
-              <Table className="table-fixed text-sm min-w-[900px]">
+              <Table className="text-sm">
                 <TableHeader className="bg-muted/40">
                   <TableRow>
-                    <TableHead className="font-medium w-[30%]">
+                    <TableHead className="font-medium">
                       <button
                         type="button"
                         className="inline-flex items-center select-none"
@@ -683,7 +683,7 @@ export function Home() {
                         />
                       </button>
                     </TableHead>
-                    <TableHead className="font-medium w-[18%]">
+                    <TableHead className="font-medium">
                       <button
                         type="button"
                         className="inline-flex items-center select-none"
@@ -697,7 +697,7 @@ export function Home() {
                         />
                       </button>
                     </TableHead>
-                    <TableHead className="font-medium w-[12%]">
+                    <TableHead className="font-medium">
                       <button
                         type="button"
                         className="inline-flex items-center select-none"
@@ -711,10 +711,7 @@ export function Home() {
                         />
                       </button>
                     </TableHead>
-                    <TableHead className="font-medium w-[12%]">
-                      {t("latestJobs.link")}
-                    </TableHead>
-                    <TableHead className="w-[28%]" />
+                    <TableHead className="text-right" />
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -723,10 +720,10 @@ export function Home() {
                       key={job.id}
                       className="group/row hover:bg-muted/30"
                     >
-                      <TableCell className="max-w-0 whitespace-nowrap">
+                      <TableCell className="whitespace-nowrap">
                         <span className="flex items-center gap-2">
                           <span
-                            className="truncate font-medium text-foreground"
+                            className="font-medium text-foreground"
                             title={job.title}
                           >
                             {job.title}
@@ -741,35 +738,23 @@ export function Home() {
                           )}
                         </span>
                       </TableCell>
-                      <TableCell className="max-w-0 whitespace-nowrap">
-                        <span
-                          className="block truncate text-muted-foreground"
-                          title={job.company}
-                        >
-                          {job.company}
-                        </span>
+                      <TableCell className="whitespace-nowrap text-muted-foreground">
+                        {job.company}
                       </TableCell>
-                      <TableCell className="max-w-0 whitespace-nowrap">
-                        <span
-                          className="block truncate text-muted-foreground"
-                          title={job.location}
-                        >
-                          {job.location}
-                        </span>
+                      <TableCell className="whitespace-nowrap text-muted-foreground">
+                        {job.location}
                       </TableCell>
                       <TableCell>
-                        <a
-                          href={safeHref(job.job_link)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-primary hover:underline underline-offset-4"
-                        >
-                          {t("latestJobs.viewJob")}
-                          <ExternalLink className="h-3 w-3" />
-                        </a>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1.5 justify-end">
+                        <div className="flex items-center gap-1.5 justify-end whitespace-nowrap">
+                          <a
+                            href={safeHref(job.job_link)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-primary hover:underline underline-offset-4"
+                          >
+                            {t("latestJobs.viewJob")}
+                            <ExternalLink className="h-3 w-3" />
+                          </a>
                           {job.application_id && job.application_status ? (
                             <ApplicationStatusDropdown
                               currentStatus={job.application_status}
