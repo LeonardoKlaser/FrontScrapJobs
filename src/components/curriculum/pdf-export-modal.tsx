@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Download, Loader2, CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -19,6 +20,7 @@ interface PdfExportModalProps {
 }
 
 export function PdfExportModal({ curriculumId, open, onClose }: PdfExportModalProps) {
+  const { t } = useTranslation('curriculum')
   const { mutate: generatePdf, isPending } = useGeneratePdf()
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
   const [pdfUrl, setPdfUrl] = useState<string | null>(null)
@@ -31,7 +33,7 @@ export function PdfExportModal({ curriculumId, open, onClose }: PdfExportModalPr
       {
         onSuccess: (data) => {
           setPdfUrl(data.pdf_url)
-          toast.success('PDF gerado com sucesso!')
+          toast.success(t('pdf.generateSuccess'))
         },
         onError: (error) => {
           toast.error(error.message)
@@ -55,8 +57,8 @@ export function PdfExportModal({ curriculumId, open, onClose }: PdfExportModalPr
     >
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Exportar Currículo em PDF</DialogTitle>
-          <DialogDescription>Escolha um modelo para gerar o PDF</DialogDescription>
+          <DialogTitle>{t('pdf.exportTitle')}</DialogTitle>
+          <DialogDescription>{t('pdf.exportDescription')}</DialogDescription>
         </DialogHeader>
 
         {pdfUrl ? (
@@ -65,13 +67,13 @@ export function PdfExportModal({ curriculumId, open, onClose }: PdfExportModalPr
               <CheckCircle className="h-7 w-7 text-primary" />
             </div>
             <div className="text-center space-y-1">
-              <p className="font-medium text-foreground">PDF gerado com sucesso!</p>
-              <p className="text-xs text-muted-foreground">Link válido por 1 hora</p>
+              <p className="font-medium text-foreground">{t('pdf.generateSuccess')}</p>
+              <p className="text-xs text-muted-foreground">{t('pdf.linkExpiry')}</p>
             </div>
             <Button className="gap-2" asChild>
               <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
                 <Download className="h-4 w-4" />
-                Baixar PDF
+                {t('pdf.downloadPdf')}
               </a>
             </Button>
           </div>
@@ -83,7 +85,7 @@ export function PdfExportModal({ curriculumId, open, onClose }: PdfExportModalPr
 
             <div className="flex justify-end gap-2 mt-4">
               <Button variant="outline" size="sm" onClick={handleClose} disabled={isPending}>
-                Cancelar
+                {t('actions.cancel', { ns: 'common' })}
               </Button>
               <Button size="sm" onClick={handleGenerate} disabled={!selectedTemplate || isPending}>
                 {isPending ? (
@@ -91,7 +93,7 @@ export function PdfExportModal({ curriculumId, open, onClose }: PdfExportModalPr
                 ) : (
                   <Download className="h-4 w-4 mr-2" />
                 )}
-                {isPending ? 'Gerando...' : 'Gerar PDF'}
+                {isPending ? t('pdf.generating') : t('pdf.generateButton')}
               </Button>
             </div>
           </>

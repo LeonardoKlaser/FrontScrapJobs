@@ -10,7 +10,7 @@ export default function PaymentConfirmationPage() {
   const [searchParams] = useSearchParams()
   const location = useLocation()
 
-  const planName = searchParams.get('plan') || 'seu plano'
+  const planName = searchParams.get('plan') || t('confirmation.fallbackPlan')
   const isPublicRoute = !location.pathname.startsWith('/app')
 
   return (

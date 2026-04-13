@@ -115,7 +115,7 @@ export function RegistrationModal({
               </div>
               <div className="space-y-1.5">
                 <Label className="text-muted-foreground text-sm">
-                  {t('popup.keywordsEdit', 'Palavras-chave para alertas')}
+                  {t('popup.keywordsEdit')}
                 </Label>
                 {editKeywords.length > 0 && (
                   <div className="flex flex-wrap gap-1.5">
@@ -153,7 +153,7 @@ export function RegistrationModal({
                     disabled={!keywordInput.trim() || isUpdatingFilters}
                     onClick={addKeyword}
                   >
-                    {t('popup.addKeyword', 'Adicionar')}
+                    {t('popup.addKeyword')}
                   </Button>
                 </div>
               </div>
@@ -167,10 +167,10 @@ export function RegistrationModal({
                   {isUpdatingFilters ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      {t('popup.saving', 'Salvando...')}
+                      {t('popup.saving')}
                     </>
                   ) : (
-                    t('popup.saveFilters', 'Salvar alterações')
+                    t('popup.saveFilters')
                   )}
                 </Button>
                 <Button

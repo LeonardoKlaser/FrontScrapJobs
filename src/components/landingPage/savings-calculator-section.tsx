@@ -28,15 +28,16 @@ export function SavingsCalculatorSection() {
     setDisplayValue(numericValue.toLocaleString(locale))
   }
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat(
-      i18n.language === 'pt-BR' ? 'pt-BR' : 'en-US',
-      {
+  const currencyFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat(locale, {
         style: 'currency',
-        currency: 'BRL',
-      }
-    ).format(value)
-  }
+        currency: locale === 'pt-BR' ? 'BRL' : 'USD',
+      }),
+    [locale]
+  )
+
+  const formatCurrency = (value: number) => currencyFormatter.format(value)
 
   const { valorHora, economia, custoPlano, roi } = useMemo(() => {
     const hoursPerMonth = Number(t('calculator.hoursPerMonth'))

@@ -103,7 +103,8 @@
     "emailSent": "Um e-mail de confirmação foi enviado para sua caixa de entrada.",
     "goToDashboard": "Ir para o Dashboard",
     "goToLogin": "Fazer Login e Acessar",
-    "needHelp": "Precisa de ajuda? Entre em contato com nosso suporte em"
+    "needHelp": "Precisa de ajuda? Entre em contato com nosso suporte em",
+    "fallbackPlan": "seu plano"
   },
   "renew": {
     "loading": "Carregando planos...",
@@ -112,6 +113,9 @@
     "sites": "{{count}} empresas monitoradas",
     "analyses": "{{count}} análises de IA/mês",
     "unlimitedAnalyses": "Análises de IA ilimitadas",
-    "subscribe": "Assinar Plano"
+    "subscribe": "Assinar Plano",
+    "free": "Grátis",
+    "currencySymbol": "R$",
+    "perMonth": "/mês"
   }
 }

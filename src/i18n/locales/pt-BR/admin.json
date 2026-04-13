@@ -93,6 +93,19 @@
       "viewLink": "Ver"
     }
   },
+  "emailConfig": {
+    "loading": "Carregando configuração de email...",
+    "title": "Provedores de Email",
+    "save": "Salvar",
+    "primary": "Primário",
+    "disabled": "Desativado",
+    "saveSuccess": "Configuração salva com sucesso.",
+    "saveError": "Erro ao salvar configuração."
+  },
+  "dashboardHeader": {
+    "title": "Painel Administrativo",
+    "subtitle": "Visão geral da plataforma e métricas de operação"
+  },
   "charts": {
     "monthlyRevenue": "Receita Mensal",
     "last6Months": "Últimos 6 meses",

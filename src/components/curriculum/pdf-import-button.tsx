@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Upload, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useExtractPdf } from '@/hooks/usePdf'
@@ -12,6 +13,7 @@ interface PdfImportButtonProps {
 const MAX_FILE_SIZE = 5 * 1024 * 1024
 
 export function PdfImportButton({ onExtracted }: PdfImportButtonProps) {
+  const { t } = useTranslation('curriculum')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { mutate: extractPdf, isPending } = useExtractPdf()
 
@@ -20,17 +22,17 @@ export function PdfImportButton({ onExtracted }: PdfImportButtonProps) {
     if (!file) return
 
     if (file.type !== 'application/pdf') {
-      toast.error('Apenas arquivos PDF são aceitos.')
+      toast.error(t('pdf.importInvalidType'))
       return
     }
     if (file.size > MAX_FILE_SIZE) {
-      toast.error('Arquivo excede o tamanho máximo de 5MB.')
+      toast.error(t('pdf.importFileTooLarge'))
       return
     }
 
     extractPdf(file, {
       onSuccess: (data) => {
-        toast.success('Dados extraídos com sucesso! Revise e salve.')
+        toast.success(t('pdf.importSuccess'))
         onExtracted(data)
       },
       onError: (error) => {
@@ -61,7 +63,7 @@ export function PdfImportButton({ onExtracted }: PdfImportButtonProps) {
         ) : (
           <Upload className="h-4 w-4 mr-2" />
         )}
-        {isPending ? 'Extraindo...' : 'Importar PDF'}
+        {isPending ? t('pdf.importing') : t('pdf.importButton')}
       </Button>
     </>
   )

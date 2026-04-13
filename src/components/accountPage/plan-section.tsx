@@ -132,7 +132,7 @@ export function PlanSection({ user }: PlanSectionProps) {
             </div>
             <div className="rounded-lg border border-border/50 bg-muted/30 p-4">
               <p className="text-xs font-medium text-muted-foreground">
-                {t('plan.pdfExtractions', 'Extrações de PDF')}
+                {t('plan.pdfExtractions')}
               </p>
               <p className="mt-1 font-display text-2xl font-bold text-foreground">
                 {extractionUsed}
@@ -145,7 +145,7 @@ export function PlanSection({ user }: PlanSectionProps) {
             </div>
             <div className="rounded-lg border border-border/50 bg-muted/30 p-4">
               <p className="text-xs font-medium text-muted-foreground">
-                {t('plan.suggestionApplies', 'Aplicações de Sugestões')}
+                {t('plan.suggestionApplies')}
               </p>
               <p className="mt-1 font-display text-2xl font-bold text-foreground">
                 {suggestionUsed}
@@ -158,7 +158,7 @@ export function PlanSection({ user }: PlanSectionProps) {
             </div>
             <div className="rounded-lg border border-border/50 bg-muted/30 p-4">
               <p className="text-xs font-medium text-muted-foreground">
-                {t('plan.pdfGenerations', 'Gerações de PDF')}
+                {t('plan.pdfGenerations')}
               </p>
               <p className="mt-1 font-display text-2xl font-bold text-foreground">
                 {pdfGenUsed}
@@ -170,8 +170,8 @@ export function PlanSection({ user }: PlanSectionProps) {
 
           {user?.expires_at && (
             <p className="text-xs text-muted-foreground mt-2">
-              {t('plan.expiresAt', 'Expira em')}:{' '}
-              {new Date(user.expires_at).toLocaleDateString('pt-BR')}
+              {t('plan.expiresAt')}:{' '}
+              {new Date(user.expires_at).toLocaleDateString(i18n.language)}
             </p>
           )}
 

@@ -4,6 +4,7 @@ import { ThemeProvider, useTheme } from './components/theme-provider'
 import type { QueryClient } from '@tanstack/react-query'
 import { createRouter } from './router/routes'
 import { Toaster } from 'sonner'
+import i18n from '@/i18n'
 import { ErrorBoundary } from '@/components/common/error-boundary'
 import { LoadingSection } from '@/components/common/loading-section'
 import { TooltipProvider } from '@/components/tooltip'
@@ -44,7 +45,7 @@ export function App({ queryClient }: AppProps) {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <TooltipProvider>
         <ErrorBoundary>
-          <Suspense fallback={<LoadingSection variant="full" label="Carregando..." />}>
+          <Suspense fallback={<LoadingSection variant="full" label={i18n.t('loading')} />}>
             <RouterProvider router={router} />
           </Suspense>
         </ErrorBoundary>

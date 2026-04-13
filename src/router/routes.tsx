@@ -6,8 +6,10 @@ import { PublicLayout } from '@/layouts/PublicLayout'
 import { authLoader } from './loaders/authLoader'
 import { guestLoader } from './loaders/guestLoader'
 import { PATHS } from './paths'
+import i18n from '@/i18n'
 
 import type { QueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { useUser } from '@/hooks/useUser'
 import { LoadingSection } from '@/components/common/loading-section'
 
@@ -33,8 +35,9 @@ const CurriculumPage = lazy(() =>
 )
 
 function AdminGuard({ children }: { children: React.ReactNode }) {
+  const { t } = useTranslation('common')
   const user = useUser()
-  if (user.isLoading) return <LoadingSection variant="full" label="Verificando permissões..." />
+  if (user.isLoading) return <LoadingSection variant="full" label={t('loadingPermissions')} />
   if (user.isError || !user.data?.is_admin) return <Navigate to={PATHS.app.home} replace />
   return <>{children}</>
 }
@@ -84,7 +87,7 @@ export const createRouter = (queryClient: QueryClient) =>
           element: (
             <AdminGuard>
               <Suspense
-                fallback={<LoadingSection variant="section" label="Carregando painel..." />}
+                fallback={<LoadingSection variant="section" label={i18n.t('loadingPanel')} />}
               >
                 <AdminDashboard />
               </Suspense>
@@ -103,7 +106,7 @@ export const createRouter = (queryClient: QueryClient) =>
           path: PATHS.app.applications,
           element: (
             <Suspense
-              fallback={<LoadingSection variant="section" label="Carregando candidaturas..." />}
+              fallback={<LoadingSection variant="section" label={i18n.t('loadingApplications')} />}
             >
               <Applications />
             </Suspense>

@@ -36,9 +36,11 @@ export default function RenewSubscription() {
               <CardTitle className="text-lg">{plan.name}</CardTitle>
               <div className="flex items-baseline gap-1 mt-1">
                 <span className="font-display text-2xl font-bold text-foreground">
-                  {plan.price === 0 ? 'Grátis' : `R$${plan.price.toFixed(2).replace('.', ',')}`}
+                  {plan.price === 0
+                    ? t('renew.free')
+                    : `${t('renew.currencySymbol')}${plan.price.toFixed(2).replace('.', ',')}`}
                 </span>
-                {plan.price > 0 && <span className="text-xs text-muted-foreground">/mês</span>}
+                {plan.price > 0 && <span className="text-xs text-muted-foreground">{t('renew.perMonth')}</span>}
               </div>
             </CardHeader>
             <CardContent className="flex flex-1 flex-col gap-4">
