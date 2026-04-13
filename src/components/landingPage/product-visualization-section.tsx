@@ -16,8 +16,7 @@ export function ProductVisualizationSection() {
               {t('labels.productVisualization')}
             </span>
             <h2 className="font-display text-2xl lg:text-4xl font-semibold text-zinc-900 mt-3">
-              See Exactly What You'll{' '}
-              <span className="text-gradient-primary">Receive</span>
+              {t('productVisualization.title')}
             </h2>
             <p className="text-base text-zinc-500 mt-4">
               {t('productVisualization.description')}

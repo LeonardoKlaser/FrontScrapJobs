@@ -36,7 +36,7 @@ export function FeaturesSection() {
           {t('labels.features')}
         </span>
         <h2 className="font-display text-3xl lg:text-4xl font-semibold text-zinc-900 mt-3">
-          An Unfair <span className="text-gradient-primary">Advantage</span> for Your Career
+          {t('features.title')}
         </h2>
         <p className="text-base text-zinc-500 max-w-[600px] mx-auto mt-3">
           {t('features.subtitle')}
