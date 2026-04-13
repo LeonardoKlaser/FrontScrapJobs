@@ -9,11 +9,11 @@ export default function AdminDashboard() {
   const { data, isLoading } = useAdminDashboard()
 
   return (
-    <div className="space-y-8">
-      <div className="animate-fade-in-up" style={{ animationDelay: '50ms' }}>
+    <div className="space-y-10">
+      <div className="animate-fade-in-up">
         <DashboardHeader />
       </div>
-      <div className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+      <div className="animate-fade-in-up" style={{ animationDelay: '60ms' }}>
         <KPICards
           totalRevenue={data?.total_revenue ?? 0}
           activeUsers={data?.active_users ?? 0}
@@ -22,13 +22,13 @@ export default function AdminDashboard() {
           isLoading={isLoading}
         />
       </div>
-      <div className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+      <div className="animate-fade-in-up" style={{ animationDelay: '120ms' }}>
         <ChartsSection />
       </div>
-      <div className="animate-fade-in-up" style={{ animationDelay: '250ms' }}>
+      <div className="animate-fade-in-up" style={{ animationDelay: '180ms' }}>
         <EmailConfigSection />
       </div>
-      <div className="animate-fade-in-up" style={{ animationDelay: '350ms' }}>
+      <div className="animate-fade-in-up" style={{ animationDelay: '240ms' }}>
         <ActivityLogs errors={data?.recent_errors ?? []} isLoading={isLoading} />
       </div>
     </div>

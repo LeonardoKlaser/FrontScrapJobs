@@ -69,10 +69,10 @@ export const WithAction: Story = {
 export const HoverLift: Story = {
   render: () => (
     <div className="flex gap-4">
-      <Card className="hover-lift w-64 cursor-pointer">
+      <Card className="w-64 cursor-pointer">
         <CardHeader>
           <CardTitle>Hover aqui</CardTitle>
-          <CardDescription>Card com efeito hover-lift</CardDescription>
+          <CardDescription>Card com efeito hover-lift nativo</CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
@@ -80,10 +80,10 @@ export const HoverLift: Story = {
           </p>
         </CardContent>
       </Card>
-      <Card className="hover-lift w-64 cursor-pointer">
+      <Card className="w-64 cursor-pointer">
         <CardHeader>
           <CardTitle>Outro card</CardTitle>
-          <CardDescription>Tambem com hover-lift</CardDescription>
+          <CardDescription>Hover-lift integrado ao Card</CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">A animacao usa translateY e sombra.</p>

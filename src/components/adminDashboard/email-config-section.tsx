@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Card } from '@/components/ui/card'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -55,31 +55,33 @@ export function EmailConfigSection() {
 
   if (isLoading) {
     return (
-      <Card className="p-6">
-        <div className="flex items-center gap-2 text-muted-foreground">
+      <Card>
+        <CardContent className="flex items-center gap-2 text-muted-foreground">
           <Loader2 className="size-4 animate-spin" />
           <span>Carregando configuração de email...</span>
-        </div>
+        </CardContent>
       </Card>
     )
   }
 
   return (
-    <Card className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <Mail className="size-5 text-primary" />
-          <h3 className="text-lg font-semibold font-display">Provedores de Email</h3>
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Mail className="size-5 text-primary" />
+            <CardTitle className="text-lg">Provedores de Email</CardTitle>
+          </div>
+          {isDirty && (
+            <Button size="sm" onClick={handleSave} disabled={updateMutation.isPending}>
+              {updateMutation.isPending ? <Loader2 className="size-4 animate-spin mr-2" /> : null}
+              Salvar
+            </Button>
+          )}
         </div>
-        {isDirty && (
-          <Button size="sm" onClick={handleSave} disabled={updateMutation.isPending}>
-            {updateMutation.isPending ? <Loader2 className="size-4 animate-spin mr-2" /> : null}
-            Salvar
-          </Button>
-        )}
-      </div>
+      </CardHeader>
 
-      <div className="space-y-3">
+      <CardContent className="space-y-3">
         {localConfigs.map((config, index) => (
           <div
             key={config.provider_name}
@@ -131,14 +133,14 @@ export function EmailConfigSection() {
             />
           </div>
         ))}
-      </div>
 
-      {updateMutation.isSuccess && (
-        <p className="text-sm text-primary mt-4">Configuração salva com sucesso.</p>
-      )}
-      {updateMutation.isError && (
-        <p className="text-sm text-destructive mt-4">Erro ao salvar configuração.</p>
-      )}
+        {updateMutation.isSuccess && (
+          <p className="text-sm text-primary mt-4">Configuração salva com sucesso.</p>
+        )}
+        {updateMutation.isError && (
+          <p className="text-sm text-destructive mt-4">Erro ao salvar configuração.</p>
+        )}
+      </CardContent>
     </Card>
   )
 }

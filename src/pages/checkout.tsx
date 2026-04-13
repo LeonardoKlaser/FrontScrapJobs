@@ -8,6 +8,7 @@ import { PATHS } from '@/router/paths'
 import { Spinner } from '@/components/ui/spinner'
 import { ArrowLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { PageHeader } from '@/components/common/page-header'
 
 export default function CheckoutPage() {
   const { t } = useTranslation('plans')
@@ -69,12 +70,7 @@ export default function CheckoutPage() {
           {t('paymentForm.backToHome')}
         </Link>
 
-        <div className="animate-fade-in-up mb-6">
-          <h1 className="text-gradient-primary text-3xl font-bold tracking-tight sm:text-4xl">
-            {t('checkout.title')}
-          </h1>
-          <p className="mt-2 text-muted-foreground">{t('checkout.description')}</p>
-        </div>
+        <PageHeader title={t('checkout.title')} description={t('checkout.description')} className="mb-6" />
 
         <div className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-3">
           <div className="animate-fade-in-up lg:col-span-1" style={{ animationDelay: '100ms' }}>

@@ -55,7 +55,8 @@ export default function PaymentConfirmationPage() {
             <Button
               variant="glow"
               onClick={() => navigate(isPublicRoute ? PATHS.login : PATHS.app.home)}
-              className="h-11 w-full text-base"
+              size="lg"
+              className="w-full"
             >
               {t(isPublicRoute ? 'confirmation.goToLogin' : 'confirmation.goToDashboard')}
               <ArrowRight className="ml-2 h-4 w-4" />

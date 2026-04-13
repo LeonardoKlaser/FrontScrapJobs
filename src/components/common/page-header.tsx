@@ -22,7 +22,7 @@ export function PageHeader({
         <div className="space-y-1">
           <h1
             className={cn(
-              'text-2xl md:text-3xl font-bold tracking-tight',
+              'font-display text-2xl md:text-3xl font-bold tracking-tight',
               gradient ? 'text-gradient-primary' : 'text-foreground'
             )}
           >

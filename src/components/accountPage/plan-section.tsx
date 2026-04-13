@@ -236,7 +236,7 @@ export function PlanSection({ user }: PlanSectionProps) {
             </a>
           </p>
           <DialogFooter className="flex justify-end gap-3 mt-4">
-            <Button variant="outline" onClick={() => setShowCancelDialog(false)}>
+            <Button variant="secondary" onClick={() => setShowCancelDialog(false)}>
               {tCommon('actions.back')}
             </Button>
             <Button variant="destructive" onClick={handleCancelSubscription} disabled={isCanceling}>

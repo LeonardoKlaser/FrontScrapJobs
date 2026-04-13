@@ -26,6 +26,7 @@ import { KanbanColumn } from '@/components/applications/kanban-column'
 import { KanbanCardPreview } from '@/components/applications/kanban-card'
 import { ApplicationDrawer } from '@/components/applications/application-drawer'
 import { InterviewRoundDialog } from '@/components/applications/interview-round-dialog'
+import { PageHeader } from '@/components/common/page-header'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -191,11 +192,7 @@ export default function Applications() {
   if (apps.length === 0) {
     return (
       <div className="space-y-10">
-        <div className="animate-fade-in-up text-center">
-          <h1 className="text-gradient-primary text-3xl font-bold tracking-tight sm:text-4xl">
-            {t('kanban.title')}
-          </h1>
-        </div>
+        <PageHeader title={t('kanban.title')} />
         <div className="text-center py-20 space-y-2">
           <p className="text-muted-foreground">{t('kanban.emptyState')}</p>
           <p className="text-sm text-muted-foreground">{t('kanban.emptyStateHint')}</p>
@@ -205,12 +202,8 @@ export default function Applications() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="animate-fade-in-up text-center">
-        <h1 className="text-gradient-primary text-3xl font-bold tracking-tight sm:text-4xl">
-          {t('kanban.title')}
-        </h1>
-      </div>
+    <div className="space-y-10">
+      <PageHeader title={t('kanban.title')} />
 
       <DndContext
         sensors={sensors}

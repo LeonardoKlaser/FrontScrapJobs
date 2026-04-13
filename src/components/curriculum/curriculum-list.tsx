@@ -131,7 +131,7 @@ export function CurriculumList({
             <DialogDescription>{t('list.deleteDescription')}</DialogDescription>
           </DialogHeader>
           <div className="flex justify-end gap-2 pt-4">
-            <Button variant="outline" size="sm" onClick={() => setDeleteId(null)}>
+            <Button variant="secondary" size="sm" onClick={() => setDeleteId(null)}>
               {t('actions.cancel', { ns: 'common' })}
             </Button>
             <Button

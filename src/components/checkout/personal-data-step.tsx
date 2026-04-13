@@ -367,7 +367,8 @@ export function PersonalDataStep({ formData, setFormData, isLoading, onNext }: P
             errors.email === t('paymentForm.emailExists') ||
             errors.cpfCnpj === t('paymentForm.cpfExists')
           }
-          className="h-11 w-full text-base"
+          size="lg"
+          className="w-full"
         >
           {t('paymentForm.nextStep')}
           <ArrowRight className="ml-2 h-4 w-4" />

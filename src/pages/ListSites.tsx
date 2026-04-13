@@ -17,6 +17,7 @@ import { FilterPills } from '@/components/common/filter-pills'
 import { EmptyState } from '@/components/common/empty-state'
 import { RequestSiteBanner } from '@/components/sites/request-site-banner'
 import { RequestSiteForm } from '@/components/sites/request-site-form'
+import { PageHeader } from '@/components/common/page-header'
 
 export default function EmpresasPage() {
   const { t } = useTranslation('sites')
@@ -106,15 +107,7 @@ export default function EmpresasPage() {
 
   return (
     <div className="space-y-10">
-      {/* Header */}
-      <div className="animate-fade-in-up text-center">
-        <h1 className="text-gradient-primary text-3xl font-bold tracking-tight sm:text-4xl">
-          {t('title')}
-        </h1>
-        <p className="mt-2 text-muted-foreground text-pretty max-w-2xl mx-auto">
-          {t('description')}
-        </p>
-      </div>
+      <PageHeader title={t('title')} description={t('description')} />
 
       {/* Stats row */}
       <div

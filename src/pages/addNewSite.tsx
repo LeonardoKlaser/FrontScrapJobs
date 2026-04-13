@@ -152,7 +152,7 @@ export default function AdicionarSitePage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       <PageHeader title={t('addSite.title')} description={t('addSite.description')} />
 
       <form onSubmit={handleSubmit} className="space-y-6">

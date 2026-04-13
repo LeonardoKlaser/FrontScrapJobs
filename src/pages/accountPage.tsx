@@ -22,7 +22,7 @@ export default function AccountPage() {
   ]
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       <PageHeader title={t('title')} description={t('description')} gradient={false} />
 
       <nav

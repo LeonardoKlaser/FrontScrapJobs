@@ -1,4 +1,4 @@
-import { Card } from '@/components/ui/card'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/common/skeleton'
 import { EmptyState } from '@/components/common/empty-state'
@@ -25,31 +25,31 @@ export function ActivityLogs({ errors, isLoading }: ActivityLogsProps) {
   const { t } = useTranslation('admin')
 
   return (
-    <Card className="p-5 animate-fade-in-up">
-      <div className="flex items-center justify-between mb-5">
-        <div>
-          <h2 className="text-base font-semibold tracking-tight text-foreground">
-            {t('activityLogs.title')}
-          </h2>
-          <p className="text-xs text-muted-foreground mt-0.5">{t('activityLogs.subtitle')}</p>
+    <Card className="animate-fade-in-up">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="text-base">{t('activityLogs.title')}</CardTitle>
+            <CardDescription className="mt-0.5">{t('activityLogs.subtitle')}</CardDescription>
+          </div>
+          {!isLoading && (
+            <Badge variant={errors.length > 0 ? 'destructive' : 'default'}>
+              {errors.length > 0 ? (
+                <>
+                  <AlertTriangle className="size-3" />
+                  {errors.length} {t('activityLogs.errorCount', { count: errors.length })}
+                </>
+              ) : (
+                <>
+                  <CheckCircle2 className="size-3" />
+                  {t('activityLogs.allGood')}
+                </>
+              )}
+            </Badge>
+          )}
         </div>
-        {!isLoading && (
-          <Badge variant={errors.length > 0 ? 'destructive' : 'default'}>
-            {errors.length > 0 ? (
-              <>
-                <AlertTriangle className="size-3" />
-                {errors.length} {t('activityLogs.errorCount', { count: errors.length })}
-              </>
-            ) : (
-              <>
-                <CheckCircle2 className="size-3" />
-                {t('activityLogs.allGood')}
-              </>
-            )}
-          </Badge>
-        )}
-      </div>
-      <div className="overflow-x-auto scrollbar-thin">
+      </CardHeader>
+      <CardContent className="overflow-x-auto scrollbar-thin">
         <table className="w-full min-w-[500px]">
           <thead>
             <tr className="border-b border-border/50">
@@ -109,7 +109,7 @@ export function ActivityLogs({ errors, isLoading }: ActivityLogsProps) {
             )}
           </tbody>
         </table>
-      </div>
+      </CardContent>
     </Card>
   )
 }

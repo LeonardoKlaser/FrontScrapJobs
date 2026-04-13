@@ -90,7 +90,7 @@ export default function ForgotPassword() {
                 </div>
               </div>
 
-              <Button type="submit" variant="glow" disabled={loading} className="h-10">
+              <Button type="submit" variant="glow" size="lg" disabled={loading}>
                 {loading ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (

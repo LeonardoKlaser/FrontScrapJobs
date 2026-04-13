@@ -24,7 +24,7 @@ import {
   Eye,
   ClipboardCheck,
 } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -83,22 +83,24 @@ function StatsCard({
 }) {
   return (
     <Card
-      className="animate-fade-in-up hover-lift group relative flex flex-col gap-3 p-5 overflow-hidden hover:border-primary/20"
+      className="animate-fade-in-up group relative overflow-hidden hover:border-primary/20"
       style={{ animationDelay: `${delay}ms` }}
     >
-      <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full -mr-4 -mt-4 transition-all duration-300 group-hover:bg-primary/10" />
-      <div className="flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-          <Icon className="h-4.5 w-4.5 text-primary" />
+      <CardContent className="flex flex-col gap-3">
+        <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full -mr-4 -mt-4 transition-all duration-300 group-hover:bg-primary/10" />
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+            <Icon className="h-4.5 w-4.5 text-primary" />
+          </div>
+          <p className="text-sm text-muted-foreground">{title}</p>
         </div>
-        <p className="text-sm text-muted-foreground">{title}</p>
-      </div>
-      <p className="font-display text-3xl font-bold tracking-tight text-foreground">
-        {value}
-      </p>
-      {description && (
-        <p className="text-xs text-muted-foreground">{description}</p>
-      )}
+        <p className="font-display text-3xl font-bold tracking-tight text-foreground">
+          {value}
+        </p>
+        {description && (
+          <p className="text-xs text-muted-foreground">{description}</p>
+        )}
+      </CardContent>
     </Card>
   );
 }
@@ -133,7 +135,7 @@ function ApplyButton({ jobId }: { jobId: number }) {
     <Button
       size="sm"
       variant="outline"
-      className="gap-1.5 text-xs h-7"
+      className="gap-1.5 text-xs"
       onClick={() =>
         createApplication.mutate(jobId, {
           onSuccess: () => toast.success(t("toast.createSuccess")),
@@ -342,7 +344,7 @@ export function Home() {
 
   if (isDashboardLoading) {
     return (
-      <div className="flex flex-col gap-10">
+      <div className="space-y-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 3 }).map((_, i) => (
             <SkeletonCard key={i} />
@@ -394,18 +396,18 @@ export function Home() {
   const monitoredUrls = data?.user_monitored_urls || [];
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="space-y-10">
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {stats.map((s, i) => (
-          <StatsCard key={s.title} {...s} delay={i * 80} />
+          <StatsCard key={s.title} {...s} delay={i * 60} />
         ))}
       </div>
 
       {/* Jobs section */}
       <div
         className="flex flex-col gap-5 animate-fade-in-up"
-        style={{ animationDelay: "240ms" }}
+        style={{ animationDelay: "180ms" }}
       >
         {/* Line 1: Title + Matched Only toggle */}
         <SectionHeader title={t("latestJobs.title")} icon={Sparkles}>
@@ -589,7 +591,8 @@ export function Home() {
             {/* Mobile: card layout */}
             <div className="flex flex-col gap-3 sm:hidden">
               {paginatedJobs.map((job) => (
-                <Card key={job.id} className="p-4 space-y-2.5">
+                <Card key={job.id}>
+                  <CardContent className="space-y-2.5">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
                       <p className="font-medium text-foreground text-sm leading-snug line-clamp-2">
@@ -640,7 +643,7 @@ export function Home() {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="gap-1.5 ml-auto text-xs h-7"
+                      className="gap-1.5 ml-auto text-xs"
                       onClick={() => setSelectedJobId(job.id)}
                     >
                       {job.has_analysis ? (
@@ -656,6 +659,7 @@ export function Home() {
                       )}
                     </Button>
                   </div>
+                  </CardContent>
                 </Card>
               ))}
             </div>
@@ -784,7 +788,7 @@ export function Home() {
                           <Button
                             size="sm"
                             variant="outline"
-                            className="gap-1.5 opacity-70 group-hover/row:opacity-100 transition-opacity text-xs h-7"
+                            className="gap-1.5 opacity-70 group-hover/row:opacity-100 transition-opacity text-xs"
                             onClick={() => setSelectedJobId(job.id)}
                           >
                             {job.has_analysis ? (
@@ -852,7 +856,7 @@ export function Home() {
       {/* Monitored Companies */}
       <div
         className="flex flex-col gap-5 animate-fade-in-up"
-        style={{ animationDelay: "320ms" }}
+        style={{ animationDelay: "240ms" }}
       >
         <SectionHeader title={t("monitoredUrls.title")} icon={Link2}>
           <Button
@@ -887,8 +891,8 @@ export function Home() {
               {monitoredUrls.map((url) => (
                 <Card
                   key={url.site_id}
-                  className="p-3 flex items-center justify-between"
                 >
+                  <CardContent className="flex items-center justify-between">
                   <p className="text-sm font-medium text-foreground">
                     {url.site_name}
                   </p>
@@ -901,6 +905,7 @@ export function Home() {
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
+                  </CardContent>
                 </Card>
               ))}
             </div>

@@ -61,7 +61,7 @@ export function PricingSection() {
                 return (
                   <div
                     key={plan.id}
-                    className={`flex flex-col bg-white border rounded-2xl p-8 transition-all duration-300 animate-fade-in-up hover-lift ${
+                    className={`flex flex-col bg-white border rounded-2xl p-8 transition-all duration-150 animate-fade-in-up hover-lift ${
                       isPopular
                         ? "border-emerald-500 shadow-[0_0_30px_rgba(16,185,129,0.1)] relative"
                         : "border-zinc-200 relative"
@@ -110,7 +110,9 @@ export function PricingSection() {
                       <div>
                         <Button
                           id={`cta-plan-${plan.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, "-")}`}
-                          className="w-full py-3 text-lg font-medium bg-emerald-500 hover:bg-emerald-600 text-white"
+                          variant="glow"
+                          size="lg"
+                          className="w-full"
                           onClick={() => handleChoosePlan(plan.id)}
                         >
                           {t("pricing.cta")}

@@ -1,5 +1,5 @@
 import type React from 'react'
-import { Card } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/common/skeleton'
 import {
   TrendingUp,
@@ -28,22 +28,24 @@ function TrendIcon({ trend }: { trend: 'positive' | 'negative' | 'neutral' }) {
 
 function KPICard({ title, value, subtitle, icon, trend = 'neutral' }: KPICardProps) {
   return (
-    <Card className="p-5 hover:border-primary/30 transition-colors duration-150 group hover-lift">
-      <div className="flex items-start justify-between mb-3">
-        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-          {title}
-        </p>
-        <div className="text-muted-foreground group-hover:text-primary transition-colors duration-150">
-          {icon}
+    <Card className="hover:border-primary/30 group">
+      <CardContent>
+        <div className="flex items-start justify-between mb-3">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            {title}
+          </p>
+          <div className="text-muted-foreground group-hover:text-primary transition-colors duration-150">
+            {icon}
+          </div>
         </div>
-      </div>
-      <p className="text-2xl md:text-3xl font-bold font-display tracking-tight text-foreground">
-        {value === '—' ? <Skeleton className="h-8 w-20 inline-block" /> : value}
-      </p>
-      <div className="flex items-center gap-1.5 mt-2">
-        <TrendIcon trend={trend} />
-        <p className="text-xs text-muted-foreground">{subtitle}</p>
-      </div>
+        <p className="text-2xl md:text-3xl font-bold font-display tracking-tight text-foreground">
+          {value === '—' ? <Skeleton className="h-8 w-20 inline-block" /> : value}
+        </p>
+        <div className="flex items-center gap-1.5 mt-2">
+          <TrendIcon trend={trend} />
+          <p className="text-xs text-muted-foreground">{subtitle}</p>
+        </div>
+      </CardContent>
     </Card>
   )
 }

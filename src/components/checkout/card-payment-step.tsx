@@ -403,7 +403,8 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
           type="submit"
           variant="glow"
           disabled={isLoading}
-          className="h-11 w-full text-base"
+          size="lg"
+          className="w-full"
         >
           {isLoading ? (
             <>

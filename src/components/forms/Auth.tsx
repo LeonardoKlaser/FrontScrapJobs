@@ -83,7 +83,8 @@ export function AuthForm() {
         type="submit"
         variant="glow"
         disabled={loading}
-        className="mt-1 h-12 text-base font-semibold"
+        size="lg"
+        className="mt-1 font-semibold"
       >
         {loading ? (
           <Loader2Icon className="h-4 w-4 animate-spin" />
