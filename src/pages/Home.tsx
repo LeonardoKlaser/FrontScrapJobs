@@ -406,8 +406,7 @@ export function Home() {
 
       {/* Jobs section */}
       <div
-        className="flex flex-col gap-5 animate-fade-in-up"
-        style={{ animationDelay: "180ms" }}
+        className="flex flex-col gap-5 animate-fade-in-up [animation-delay:180ms]"
       >
         {/* Line 1: Title + Matched Only toggle */}
         <SectionHeader title={t("latestJobs.title")} icon={Sparkles}>
@@ -846,8 +845,7 @@ export function Home() {
 
       {/* Monitored Companies */}
       <div
-        className="flex flex-col gap-5 animate-fade-in-up"
-        style={{ animationDelay: "240ms" }}
+        className="flex flex-col gap-5 animate-fade-in-up [animation-delay:240ms]"
       >
         <SectionHeader title={t("monitoredUrls.title")} icon={Link2}>
           <Button

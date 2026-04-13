@@ -1,5 +1,5 @@
 import type React from 'react'
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -44,7 +44,15 @@ export function PersonalDataStep({ formData, setFormData, isLoading, onNext }: P
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [errors, setErrors] = useState<FormErrors>({})
+  const [emailExistsOnServer, setEmailExistsOnServer] = useState(false)
+  const [cpfExistsOnServer, setCpfExistsOnServer] = useState(false)
   const debounceTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({})
+
+  useEffect(() => {
+    return () => {
+      Object.values(debounceTimers.current).forEach(clearTimeout)
+    }
+  }, [])
 
   const validateFieldOnServer = useCallback(
     async (field: 'email' | 'cpfCnpj', value: string) => {
@@ -57,6 +65,13 @@ export function PersonalDataStep({ formData, setFormData, isLoading, onNext }: P
       try {
         const res = await api.post('/api/users/validate-checkout', { email, tax })
         const data = res.data as { email_exists: boolean; tax_exists: boolean }
+
+        if (field === 'email') {
+          setEmailExistsOnServer(data.email_exists)
+        }
+        if (field === 'cpfCnpj') {
+          setCpfExistsOnServer(data.tax_exists)
+        }
 
         setErrors((prev) => {
           const next = { ...prev }
@@ -116,6 +131,8 @@ export function PersonalDataStep({ formData, setFormData, isLoading, onNext }: P
     }
 
     setFormData((prev) => ({ ...prev, [name]: formattedValue }))
+    if (name === 'email') setEmailExistsOnServer(false)
+    if (name === 'cpfCnpj') setCpfExistsOnServer(false)
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }))
     }
@@ -171,10 +188,7 @@ export function PersonalDataStep({ formData, setFormData, isLoading, onNext }: P
   }
 
   const handleNext = () => {
-    if (
-      errors.email === t('paymentForm.emailExists') ||
-      errors.cpfCnpj === t('paymentForm.cpfExists')
-    ) {
+    if (emailExistsOnServer || cpfExistsOnServer) {
       return
     }
     if (validateForm()) {
@@ -307,8 +321,7 @@ export function PersonalDataStep({ formData, setFormData, isLoading, onNext }: P
 
       {/* Additional Data Section */}
       <fieldset
-        className="space-y-4 border-t border-border/50 pt-8 animate-fade-in-up"
-        style={{ animationDelay: '100ms' }}
+        className="space-y-4 border-t border-border/50 pt-8 animate-fade-in-up [animation-delay:100ms]"
       >
         <legend className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
           {t('paymentForm.additionalData')}
@@ -364,8 +377,8 @@ export function PersonalDataStep({ formData, setFormData, isLoading, onNext }: P
           onClick={handleNext}
           disabled={
             isLoading ||
-            errors.email === t('paymentForm.emailExists') ||
-            errors.cpfCnpj === t('paymentForm.cpfExists')
+            emailExistsOnServer ||
+            cpfExistsOnServer
           }
           size="lg"
           className="w-full"

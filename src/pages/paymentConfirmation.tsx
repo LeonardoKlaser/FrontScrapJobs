@@ -28,22 +28,19 @@ export default function PaymentConfirmationPage() {
 
         <div className="space-y-6 text-center">
           <h1
-            className="animate-fade-in-up text-gradient-primary text-3xl font-bold tracking-tight sm:text-4xl"
-            style={{ animationDelay: '100ms' }}
+            className="animate-fade-in-up text-gradient-primary text-3xl font-bold tracking-tight sm:text-4xl [animation-delay:100ms]"
           >
             {t('confirmation.title')}
           </h1>
 
           <p
-            className="animate-fade-in-up text-lg leading-relaxed text-muted-foreground"
-            style={{ animationDelay: '200ms' }}
+            className="animate-fade-in-up text-lg leading-relaxed text-muted-foreground [animation-delay:200ms]"
           >
             {t('confirmation.message', { planName })}
           </p>
 
           <div
-            className="animate-fade-in-up rounded-lg border border-border/50 bg-card p-4"
-            style={{ animationDelay: '300ms' }}
+            className="animate-fade-in-up rounded-lg border border-border/50 bg-card p-4 [animation-delay:300ms]"
           >
             <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
               <Mail className="h-4 w-4 text-primary" />
@@ -51,7 +48,7 @@ export default function PaymentConfirmationPage() {
             </div>
           </div>
 
-          <div className="animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+          <div className="animate-fade-in-up [animation-delay:400ms]">
             <Button
               variant="glow"
               onClick={() => navigate(isPublicRoute ? PATHS.login : PATHS.app.home)}
@@ -64,8 +61,7 @@ export default function PaymentConfirmationPage() {
           </div>
 
           <p
-            className="animate-fade-in-up text-xs text-muted-foreground"
-            style={{ animationDelay: '500ms' }}
+            className="animate-fade-in-up text-xs text-muted-foreground [animation-delay:500ms]"
           >
             {t('confirmation.needHelp')}{' '}
             <a href={`mailto:${t('footer.contactEmail', { ns: 'common' })}`} className="text-primary hover:underline">

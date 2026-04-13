@@ -55,7 +55,6 @@ export function PricingSection() {
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {sortedPlans.map((plan, index) => {
-                const displayPrice = plan.price.toFixed(2);
                 const isPopular = index === midIndex;
 
                 return (
@@ -80,7 +79,7 @@ export function PricingSection() {
                       </h3>
                       <div className="mt-4">
                         <span className="font-display text-[44px] font-bold text-zinc-900">
-                          {new Intl.NumberFormat(i18n.language === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: i18n.language === 'pt-BR' ? 'BRL' : 'USD' }).format(plan.price)}
+                          {new Intl.NumberFormat(i18n.language === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: 'BRL' }).format(plan.price)}
                         </span>
                         <span className="text-sm text-zinc-500">
                           {t("pricing.perMonth")}
@@ -132,8 +131,7 @@ export function PricingSection() {
 
             {/* LGPD/GDPR Badge */}
             <div
-              className="mt-12 flex flex-col items-center gap-2 animate-fade-in-up"
-              style={{ animationDelay: "400ms" }}
+              className="mt-12 flex flex-col items-center gap-2 animate-fade-in-up [animation-delay:400ms]"
             >
               <div className="flex items-center gap-4 rounded-xl border border-zinc-200 bg-white px-6 py-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10">

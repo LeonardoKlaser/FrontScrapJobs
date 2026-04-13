@@ -190,7 +190,7 @@ function AnalysisResult({
 
       {/* ATS Keywords */}
       {(atsKeywords?.matched?.length > 0 || atsKeywords?.missing?.length > 0) && (
-        <div className="animate-fade-in-up" style={{ animationDelay: '50ms' }}>
+        <div className="animate-fade-in-up [animation-delay:50ms]">
           <h4 className="font-semibold text-foreground flex items-center gap-2 mb-3 text-sm">
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/10">
               <Target className="h-3.5 w-3.5 text-primary" />
@@ -236,7 +236,7 @@ function AnalysisResult({
 
       {/* Strengths */}
       {strengthsForThisJob?.length > 0 && (
-        <div className="animate-fade-in-up" style={{ animationDelay: '150ms' }}>
+        <div className="animate-fade-in-up [animation-delay:150ms]">
           <h4 className="font-semibold text-foreground flex items-center gap-2 mb-3 text-sm">
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/10">
               <CheckCircle className="h-3.5 w-3.5 text-primary" />
@@ -262,7 +262,7 @@ function AnalysisResult({
 
       {/* Gaps */}
       {gapsAndImprovementAreas?.length > 0 && (
-        <div className="animate-fade-in-up" style={{ animationDelay: '250ms' }}>
+        <div className="animate-fade-in-up [animation-delay:250ms]">
           <h4 className="font-semibold text-foreground flex items-center gap-2 mb-3 text-sm">
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-warning/10">
               <AlertTriangle className="h-3.5 w-3.5 text-warning" />
@@ -288,7 +288,7 @@ function AnalysisResult({
 
       {/* Suggestions */}
       {actionableResumeSuggestions?.length > 0 && (
-        <div className="animate-fade-in-up" style={{ animationDelay: '350ms' }}>
+        <div className="animate-fade-in-up [animation-delay:350ms]">
           <div className="flex items-center justify-between mb-3">
             <h4 className="font-semibold text-foreground flex items-center gap-2 text-sm">
               <div className="flex h-6 w-6 items-center justify-center rounded-md bg-info/10">
@@ -352,7 +352,7 @@ function AnalysisResult({
 
       {/* Final Considerations */}
       {finalConsiderations && (
-        <div className="animate-fade-in-up" style={{ animationDelay: '450ms' }}>
+        <div className="animate-fade-in-up [animation-delay:450ms]">
           <h4 className="font-semibold text-foreground flex items-center gap-2 mb-3 text-sm">
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/10">
               <Target className="h-3.5 w-3.5 text-primary" />

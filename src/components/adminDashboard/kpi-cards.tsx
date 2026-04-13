@@ -74,7 +74,7 @@ export function KPICards({
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div className="animate-fade-in-up" style={{ animationDelay: '0ms' }}>
+      <div className="animate-fade-in-up [animation-delay:0ms]">
         <KPICard
           title={t('kpi.revenue')}
           value={placeholder ?? formatCurrency(totalRevenue)}
@@ -83,7 +83,7 @@ export function KPICards({
           trend="positive"
         />
       </div>
-      <div className="animate-fade-in-up" style={{ animationDelay: '60ms' }}>
+      <div className="animate-fade-in-up [animation-delay:60ms]">
         <KPICard
           title={t('kpi.activeUsers')}
           value={placeholder ?? String(activeUsers)}
@@ -92,7 +92,7 @@ export function KPICards({
           trend="positive"
         />
       </div>
-      <div className="animate-fade-in-up" style={{ animationDelay: '120ms' }}>
+      <div className="animate-fade-in-up [animation-delay:120ms]">
         <KPICard
           title={t('kpi.monitoredSites')}
           value={placeholder ?? String(monitoredSites)}
@@ -101,7 +101,7 @@ export function KPICards({
           trend="neutral"
         />
       </div>
-      <div className="animate-fade-in-up" style={{ animationDelay: '180ms' }}>
+      <div className="animate-fade-in-up [animation-delay:180ms]">
         <KPICard
           title={t('kpi.errors24h')}
           value={placeholder ?? String(scrapingErrors)}

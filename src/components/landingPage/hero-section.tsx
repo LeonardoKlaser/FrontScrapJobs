@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, ShieldCheck } from 'lucide-react'
 import { SectionWrapper } from './section-wrapper'
@@ -14,8 +15,7 @@ export function HeroSection() {
           <div className="space-y-8 text-center md:text-left">
             {/* Headline */}
             <h1
-              className="text-3xl min-[400px]:text-4xl lg:text-[56px] font-semibold leading-tight tracking-tight animate-fade-in-up text-balance text-zinc-900"
-              style={{ animationDelay: '0ms' }}
+              className="text-3xl min-[400px]:text-4xl lg:text-[56px] font-semibold leading-tight tracking-tight animate-fade-in-up text-balance text-zinc-900 [animation-delay:0ms]"
             >
               {t('hero.heading1')}
               <br />
@@ -24,14 +24,13 @@ export function HeroSection() {
 
             {/* Subheadline */}
             <p
-              className="text-lg text-zinc-500 leading-relaxed animate-fade-in-up text-pretty max-w-[480px] mx-auto md:mx-0"
-              style={{ animationDelay: '100ms' }}
+              className="text-lg text-zinc-500 leading-relaxed animate-fade-in-up text-pretty max-w-[480px] mx-auto md:mx-0 [animation-delay:100ms]"
             >
               {t('hero.subheading')}
             </p>
 
             {/* CTA */}
-            <div className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+            <div className="animate-fade-in-up [animation-delay:200ms]">
               <Button
                 variant="glow"
                 size="lg"
@@ -50,17 +49,16 @@ export function HeroSection() {
 
               <p className="text-sm text-zinc-500 mt-3 text-center md:text-left">
                 {t('hero.loginPrompt')}{' '}
-                <a href="/login" className="text-primary hover:underline font-medium">
+                <Link to="/login" className="text-primary hover:underline font-medium">
                   {t('hero.loginLink')}
-                </a>
+                </Link>
               </p>
             </div>
           </div>
 
           {/* Right column — Dashboard Image */}
           <div
-            className="mt-12 md:mt-0 animate-fade-in-up max-w-sm sm:max-w-full mx-auto"
-            style={{ animationDelay: '300ms' }}
+            className="mt-12 md:mt-0 animate-fade-in-up max-w-sm sm:max-w-full mx-auto [animation-delay:300ms]"
           >
             <img
               src={dashboardImg}

@@ -73,8 +73,7 @@ export function StatsCounterSection() {
 
           <div
             ref={jobs.ref}
-            className="flex flex-col items-center gap-3 animate-fade-in-up"
-            style={{ animationDelay: '150ms' }}
+            className="flex flex-col items-center gap-3 animate-fade-in-up [animation-delay:150ms]"
           >
             <Briefcase className="h-8 w-8 text-emerald-400" />
             <span className="font-display text-5xl font-semibold text-white tabular-nums">

@@ -33,7 +33,7 @@ export function SavingsCalculatorSection() {
       i18n.language === 'pt-BR' ? 'pt-BR' : 'en-US',
       {
         style: 'currency',
-        currency: i18n.language === 'pt-BR' ? 'BRL' : 'USD',
+        currency: 'BRL',
       }
     ).format(value)
   }
