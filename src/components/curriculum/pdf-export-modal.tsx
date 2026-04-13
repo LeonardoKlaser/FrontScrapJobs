@@ -68,17 +68,12 @@ export function PdfExportModal({ curriculumId, open, onClose }: PdfExportModalPr
               <p className="font-medium text-foreground">PDF gerado com sucesso!</p>
               <p className="text-xs text-muted-foreground">Link válido por 1 hora</p>
             </div>
-            <div className="flex items-center gap-3">
-              <Button variant="outline" size="sm" onClick={handleClose}>
-                Fechar
-              </Button>
-              <Button size="sm" className="gap-2" asChild>
-                <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
-                  <Download className="h-4 w-4" />
-                  Baixar PDF
-                </a>
-              </Button>
-            </div>
+            <Button className="gap-2" asChild>
+              <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
+                <Download className="h-4 w-4" />
+                Baixar PDF
+              </a>
+            </Button>
           </div>
         ) : (
           <>
