@@ -61,7 +61,7 @@ export function PricingSection() {
                 return (
                   <div
                     key={plan.id}
-                    className={`bg-white border rounded-2xl p-8 transition-all duration-300 animate-fade-in-up hover-lift ${
+                    className={`flex flex-col bg-white border rounded-2xl p-8 transition-all duration-300 animate-fade-in-up hover-lift ${
                       isPopular
                         ? "border-emerald-500 shadow-[0_0_30px_rgba(16,185,129,0.1)] relative"
                         : "border-zinc-200 relative"
@@ -92,8 +92,8 @@ export function PricingSection() {
                       </p>
                     </div>
 
-                    <div className="space-y-6">
-                      <ul className="space-y-3">
+                    <div className="flex flex-col flex-1 space-y-6">
+                      <ul className="space-y-3 flex-1">
                         {plan.features.map((feature, featureIndex) => (
                           <li
                             key={featureIndex}
@@ -107,19 +107,21 @@ export function PricingSection() {
                         ))}
                       </ul>
 
-                      <Button
-                        id={`cta-plan-${plan.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, "-")}`}
-                        className="w-full py-3 text-lg font-medium bg-emerald-500 hover:bg-emerald-600 text-white"
-                        onClick={() => handleChoosePlan(plan.id)}
-                      >
-                        {t("pricing.cta")}
-                      </Button>
+                      <div>
+                        <Button
+                          id={`cta-plan-${plan.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, "-")}`}
+                          className="w-full py-3 text-lg font-medium bg-emerald-500 hover:bg-emerald-600 text-white"
+                          onClick={() => handleChoosePlan(plan.id)}
+                        >
+                          {t("pricing.cta")}
+                        </Button>
 
-                      {/* Risk-Free Guarantee */}
-                      <p className="flex items-center justify-center gap-1.5 text-xs text-zinc-500 text-center pt-2 border-t border-zinc-200">
-                        <ShieldCheck className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                        {t("pricing.guarantee")}
-                      </p>
+                        {/* Risk-Free Guarantee */}
+                        <p className="flex items-center justify-center gap-1.5 text-xs text-zinc-500 text-center pt-2 mt-6 border-t border-zinc-200">
+                          <ShieldCheck className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                          {t("pricing.guarantee")}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 );
