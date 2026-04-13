@@ -364,7 +364,7 @@ function AnalysisResult({
       )}
 
       {/* Actions */}
-      <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-border/50">
+      <div className="flex flex-wrap items-center gap-3 pt-6">
         <Button
           size="sm"
           variant={emailSent ? 'outline' : 'glow'}
@@ -509,7 +509,7 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
                 }}
               />
             </div>
-            <div className="pt-3 pb-1 border-t bg-background">
+            <div className="pt-6 pb-1 bg-background">
               <Button
                 onClick={() => setShowApplyStep(true)}
                 className="w-full"
@@ -620,7 +620,7 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
                 }}
               />
             </div>
-            <div className="pt-3 pb-1 border-t bg-background">
+            <div className="pt-6 pb-1 bg-background">
               <Button
                 onClick={() => setShowApplyStep(true)}
                 className="w-full"
