@@ -1,6 +1,6 @@
 {
   "hero": {
-    "brand": "scrapJobs",
+    "brand": "ScrapJobs",
     "heading1": "Pare de Procurar.",
     "heading2": "Comece a Ser Entrevistado.",
     "subheading": "Automatize sua busca de emprego nas melhores empresas e receba insights de IA para seu currículo se destacar.",
@@ -64,7 +64,7 @@
     "heading": "A busca de emprego não deveria ser um segundo emprego.",
     "description": "Você passa horas navegando entre dezenas de sites de emprego, abrindo abas infinitas, adaptando currículos para cada vaga e ainda assim perde oportunidades que surgem quando você não está olhando. É frustrante, demorado e ineficiente.",
     "promiseHeading": "Recupere seu tempo. Candidate-se com inteligência.",
-    "promiseDescription": "A scrapJobs automatiza toda sua busca de emprego, monitorando suas empresas favoritas 24/7 e enviando alertas inteligentes com análise de IA. Concentre sua energia no que realmente importa: preparar-se para as entrevistas."
+    "promiseDescription": "A ScrapJobs automatiza toda sua busca de emprego, monitorando suas empresas favoritas 24/7 e enviando alertas inteligentes com análise de IA. Concentre sua energia no que realmente importa: preparar-se para as entrevistas."
   },
   "faq": {
     "security": {
@@ -101,7 +101,7 @@
   "footer": {
     "terms": "Termos de Serviço",
     "privacy": "Política de Privacidade",
-    "copyright": "© {{year}} scrapJobs. Todos os direitos reservados."
+    "copyright": "© {{year}} ScrapJobs. Todos os direitos reservados."
   },
   "socialProof": {
     "subtitle": "Monitorando oportunidades das maiores empresas, como:"
