@@ -1,123 +1,127 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import MockAdapter from 'axios-mock-adapter'
+import { api } from '@/services/api'
 
 describe('api', () => {
+  let mock: MockAdapter
   const originalLocation = window.location
 
   beforeEach(() => {
-    vi.resetModules()
+    vi.useFakeTimers()
+    mock = new MockAdapter(api)
+    Object.defineProperty(window, 'location', {
+      value: { pathname: '/app/home', href: '' },
+      writable: true,
+      configurable: true
+    })
   })
 
   afterEach(() => {
+    mock.restore()
+    // Flush pending isRedirecting timeouts before switching to real timers
+    vi.advanceTimersByTime(15_000)
+    vi.useRealTimers()
     Object.defineProperty(window, 'location', {
       value: originalLocation,
-      writable: true
+      writable: true,
+      configurable: true
     })
+    vi.restoreAllMocks()
   })
 
-  it('creates axios instance with default baseURL', async () => {
-    const { api } = await import('@/services/api')
+  it('creates axios instance with default baseURL', () => {
     expect(api.defaults.baseURL).toBe('http://localhost:8080')
   })
 
-  it('sets withCredentials to true', async () => {
-    const { api } = await import('@/services/api')
+  it('sets withCredentials to true', () => {
     expect(api.defaults.withCredentials).toBe(true)
   })
 
-  it('registers a response interceptor', async () => {
-    const { api } = await import('@/services/api')
-    // Axios exposes the count of registered interceptors
-    // If at least one interceptor is registered, handlers array is non-empty
-    expect(api.interceptors.response).toBeDefined()
-  })
-
   it('redirects to login on 401 for protected pages', async () => {
-    const { api } = await import('@/services/api')
+    mock.onGet('/api/test').reply(401)
 
-    Object.defineProperty(window, 'location', {
-      value: { pathname: '/app/home', href: '' },
-      writable: true
-    })
-
-    // Simulate a 401 response going through the interceptor chain
-    try {
-      await api.get('/api/test')
-    } catch {
-      // Network error expected in test environment (no real server)
-    }
-
-    // Test the interceptor logic directly by calling it
-    const error = { response: { status: 401 } }
-    try {
-      // Use the response interceptor's error handler via Promise rejection
-      await Promise.reject(error).catch((err) => {
-        if (err.response?.status === 401) {
-          const isLoginPage = window.location.pathname === '/login'
-          const isPublicPage = window.location.pathname === '/'
-          if (!isLoginPage && !isPublicPage) {
-            window.location.href = `/login?from=${encodeURIComponent(window.location.pathname)}`
-          }
-        }
-        return Promise.reject(err)
-      })
-    } catch {
-      // expected
-    }
+    await expect(api.get('/api/test')).rejects.toThrow()
 
     expect(window.location.href).toBe('/login?from=%2Fapp%2Fhome')
   })
 
   it('does not redirect on 401 when on login page', async () => {
-    await import('@/services/api')
+    window.location.pathname = '/login'
+    mock.onGet('/api/test').reply(401)
 
-    Object.defineProperty(window, 'location', {
-      value: { pathname: '/login', href: '' },
-      writable: true
-    })
-
-    const error = { response: { status: 401 } }
-    try {
-      await Promise.reject(error).catch((err) => {
-        if (err.response?.status === 401) {
-          const isLoginPage = window.location.pathname === '/login'
-          const isPublicPage = window.location.pathname === '/'
-          if (!isLoginPage && !isPublicPage) {
-            window.location.href = `/login?from=${encodeURIComponent(window.location.pathname)}`
-          }
-        }
-        return Promise.reject(err)
-      })
-    } catch {
-      // expected
-    }
+    await expect(api.get('/api/test')).rejects.toThrow()
 
     expect(window.location.href).toBe('')
   })
 
   it('does not redirect on 401 when on landing page', async () => {
-    await import('@/services/api')
+    window.location.pathname = '/'
+    mock.onGet('/api/test').reply(401)
 
-    Object.defineProperty(window, 'location', {
-      value: { pathname: '/', href: '' },
-      writable: true
-    })
-
-    const error = { response: { status: 401 } }
-    try {
-      await Promise.reject(error).catch((err) => {
-        if (err.response?.status === 401) {
-          const isLoginPage = window.location.pathname === '/login'
-          const isPublicPage = window.location.pathname === '/'
-          if (!isLoginPage && !isPublicPage) {
-            window.location.href = `/login?from=${encodeURIComponent(window.location.pathname)}`
-          }
-        }
-        return Promise.reject(err)
-      })
-    } catch {
-      // expected
-    }
+    await expect(api.get('/api/test')).rejects.toThrow()
 
     expect(window.location.href).toBe('')
+  })
+
+  it('does not redirect on 401 for /api/me endpoint', async () => {
+    mock.onGet('/api/me').reply(401)
+
+    await expect(api.get('/api/me')).rejects.toThrow()
+
+    expect(window.location.href).toBe('')
+  })
+
+  it('does not redirect on 401 for public paths', async () => {
+    const publicPaths = ['/forgot-password', '/reset-password', '/terms', '/privacy']
+    for (const path of publicPaths) {
+      window.location.pathname = path
+      window.location.href = ''
+      mock.onGet('/api/test').reply(401)
+
+      await expect(api.get('/api/test')).rejects.toThrow()
+
+      expect(window.location.href).toBe('')
+      mock.reset()
+    }
+  })
+
+  it('redirects to /app/renew on 403 subscription_expired', async () => {
+    mock.onGet('/api/test').reply(403, { error: 'subscription_expired' })
+
+    await expect(api.get('/api/test')).rejects.toThrow()
+
+    expect(window.location.href).toBe('/app/renew')
+  })
+
+  it('does not redirect to /app/renew if already on that page', async () => {
+    window.location.pathname = '/app/renew'
+    mock.onGet('/api/test').reply(403, { error: 'subscription_expired' })
+
+    await expect(api.get('/api/test')).rejects.toThrow()
+
+    expect(window.location.href).toBe('')
+  })
+
+  it('resets isRedirecting after timeout (C10 fix)', async () => {
+    mock.onGet('/api/first').reply(401)
+    mock.onGet('/api/second').reply(401)
+
+    // First 401 triggers redirect
+    await expect(api.get('/api/first')).rejects.toThrow()
+    expect(window.location.href).toBe('/login?from=%2Fapp%2Fhome')
+
+    // Reset href to detect if second request triggers a new redirect
+    window.location.href = ''
+
+    // Second 401 while isRedirecting=true should NOT redirect
+    await expect(api.get('/api/second')).rejects.toThrow()
+    expect(window.location.href).toBe('')
+
+    // After timeout, isRedirecting resets -- next 401 should redirect again
+    vi.advanceTimersByTime(10_000)
+    window.location.href = ''
+
+    await expect(api.get('/api/first')).rejects.toThrow()
+    expect(window.location.href).toBe('/login?from=%2Fapp%2Fhome')
   })
 })
