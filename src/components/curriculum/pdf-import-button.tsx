@@ -52,9 +52,9 @@ export function PdfImportButton({ onExtracted }: PdfImportButtonProps) {
       />
       <Button
         variant="outline"
-        size="sm"
         onClick={() => fileInputRef.current?.click()}
         disabled={isPending}
+        className="w-full"
       >
         {isPending ? (
           <Loader2 className="h-4 w-4 animate-spin mr-2" />

@@ -95,7 +95,8 @@ function AnalysisResult({
   selectedSuggestions,
   onToggleSuggestion,
   selectedKeywords,
-  onToggleKeyword
+  onToggleKeyword,
+  onRedo
 }: {
   analysis: ResumeAnalysis
   jobId: number
@@ -104,6 +105,7 @@ function AnalysisResult({
   onToggleSuggestion?: (index: number) => void
   selectedKeywords?: Set<string>
   onToggleKeyword?: (keyword: string) => void
+  onRedo?: () => void
 }) {
   const { t } = useTranslation('sites')
   const { data: curricula } = useCurriculum({ enabled: !!curriculumId })
@@ -361,7 +363,7 @@ function AnalysisResult({
         </div>
       )}
 
-      {/* Send Email */}
+      {/* Actions */}
       <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-border/50">
         <Button
           size="sm"
@@ -373,6 +375,12 @@ function AnalysisResult({
           {isSending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
           {emailSent ? t('analysis.emailSent') : t('analysis.sendEmail')}
         </Button>
+        {onRedo && (
+          <Button variant="outline" size="sm" onClick={onRedo} className="gap-2">
+            <RefreshCw className="h-3.5 w-3.5" />
+            {t('analysis.redo')}
+          </Button>
+        )}
       </div>
     </div>
   )
@@ -480,6 +488,7 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
                 analysis={analysisResult}
                 jobId={jobId}
                 curriculumId={historyData?.curriculum_id}
+                onRedo={handleRedo}
                 selectedSuggestions={selectedSuggestions}
                 onToggleSuggestion={(index) => {
                   setSelectedSuggestions((prev) => {
@@ -499,20 +508,18 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
                   })
                 }}
               />
-              <div className="flex justify-center pt-2 border-t border-border/50">
-                <Button variant="outline" size="sm" onClick={handleRedo} className="gap-2">
-                  <RefreshCw className="h-3.5 w-3.5" />
-                  {t('analysis.redo')}
-                </Button>
-              </div>
             </div>
-            {(selectedSuggestions.size + selectedKeywords.size) > 0 && (
-              <div className="pt-3 pb-1 border-t bg-background">
-                <Button onClick={() => setShowApplyStep(true)} className="w-full">
-                  Aplicar {selectedSuggestions.size + selectedKeywords.size} Sugestão{(selectedSuggestions.size + selectedKeywords.size) > 1 ? 'ões' : ''}
-                </Button>
-              </div>
-            )}
+            <div className="pt-3 pb-1 border-t bg-background">
+              <Button
+                onClick={() => setShowApplyStep(true)}
+                className="w-full"
+                disabled={(selectedSuggestions.size + selectedKeywords.size) === 0}
+              >
+                {(selectedSuggestions.size + selectedKeywords.size) > 0
+                  ? `Aplicar ${selectedSuggestions.size + selectedKeywords.size} ${(selectedSuggestions.size + selectedKeywords.size) > 1 ? 'Sugestões' : 'Sugestão'}`
+                  : t('analysis.selectSuggestionsHint', 'Selecione sugestões para aplicar')}
+              </Button>
+            </div>
           </div>
         )}
 
@@ -592,6 +599,7 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
                 analysis={analysisResult}
                 jobId={jobId}
                 curriculumId={selectedCvId ?? undefined}
+                onRedo={handleRedo}
                 selectedSuggestions={selectedSuggestions}
                 onToggleSuggestion={(index) => {
                   setSelectedSuggestions((prev) => {
@@ -612,13 +620,17 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
                 }}
               />
             </div>
-            {(selectedSuggestions.size + selectedKeywords.size) > 0 && (
-              <div className="pt-3 pb-1 border-t bg-background">
-                <Button onClick={() => setShowApplyStep(true)} className="w-full">
-                  Aplicar {selectedSuggestions.size + selectedKeywords.size} Sugestão{(selectedSuggestions.size + selectedKeywords.size) > 1 ? 'ões' : ''}
-                </Button>
-              </div>
-            )}
+            <div className="pt-3 pb-1 border-t bg-background">
+              <Button
+                onClick={() => setShowApplyStep(true)}
+                className="w-full"
+                disabled={(selectedSuggestions.size + selectedKeywords.size) === 0}
+              >
+                {(selectedSuggestions.size + selectedKeywords.size) > 0
+                  ? `Aplicar ${selectedSuggestions.size + selectedKeywords.size} ${(selectedSuggestions.size + selectedKeywords.size) > 1 ? 'Sugestões' : 'Sugestão'}`
+                  : t('analysis.selectSuggestionsHint', 'Selecione sugestões para aplicar')}
+              </Button>
+            </div>
           </div>
         )}
 

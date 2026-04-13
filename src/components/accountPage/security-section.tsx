@@ -182,16 +182,16 @@ export function SecuritySection() {
               </div>
             </div>
           </CardContent>
-          <CardFooter className="pt-2">
+          <CardFooter className="pt-6">
             <Button
               variant={buttonState === 'success' ? 'outline' : 'glow'}
               type="submit"
               disabled={isDisabled}
-              className={`px-4 py-2 ${
+              className={
                 buttonState === 'success'
                   ? 'animate-success-flash border-primary/50 text-primary'
                   : ''
-              }`}
+              }
             >
               {buttonState === 'loading' ? (
                 <>

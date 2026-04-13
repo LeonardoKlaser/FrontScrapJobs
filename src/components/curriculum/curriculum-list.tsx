@@ -42,8 +42,8 @@ export function CurriculumList({
 
   return (
     <div className="space-y-3 lg:sticky lg:top-8">
-      <div className="flex gap-2">
-        <Button onClick={onCreateNew} variant="outline" className="flex-1 gap-2">
+      <div className="flex flex-col gap-2">
+        <Button onClick={onCreateNew} variant="outline" className="w-full gap-2">
           <PlusCircle className="h-4 w-4" />
           {t('list.newButton')}
         </Button>
