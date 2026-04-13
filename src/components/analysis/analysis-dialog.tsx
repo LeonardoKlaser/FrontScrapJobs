@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Dialog,
@@ -386,6 +386,61 @@ function AnalysisResult({
   )
 }
 
+interface AnalysisResultPanelProps {
+  analysis: ResumeAnalysis
+  jobId: number
+  curriculumId: number | undefined
+  selectedSuggestions: Set<number>
+  selectedKeywords: Set<string>
+  onToggleSuggestion: (index: number) => void
+  onToggleKeyword: (kw: string) => void
+  onRedo: () => void
+  onApply: () => void
+}
+
+function AnalysisResultPanel({
+  analysis,
+  jobId,
+  curriculumId,
+  selectedSuggestions,
+  selectedKeywords,
+  onToggleSuggestion,
+  onToggleKeyword,
+  onRedo,
+  onApply
+}: AnalysisResultPanelProps) {
+  const { t } = useTranslation('sites')
+  const totalSelected = selectedSuggestions.size + selectedKeywords.size
+
+  return (
+    <div className="flex flex-col">
+      <div className="max-h-[60vh] overflow-y-auto pr-1 scrollbar-thin space-y-4">
+        <AnalysisResult
+          analysis={analysis}
+          jobId={jobId}
+          curriculumId={curriculumId}
+          onRedo={onRedo}
+          selectedSuggestions={selectedSuggestions}
+          onToggleSuggestion={onToggleSuggestion}
+          selectedKeywords={selectedKeywords}
+          onToggleKeyword={onToggleKeyword}
+        />
+      </div>
+      <div className="pt-6 pb-1 bg-background">
+        <Button
+          onClick={onApply}
+          className="w-full"
+          disabled={totalSelected === 0}
+        >
+          {totalSelected > 0
+            ? `Aplicar ${totalSelected} ${totalSelected > 1 ? 'Sugestões' : 'Sugestão'}`
+            : t('analysis.selectSuggestionsHint', 'Selecione sugestões para aplicar')}
+        </Button>
+      </div>
+    </div>
+  )
+}
+
 export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
   const { t } = useTranslation('sites')
   const [step, setStep] = useState<
@@ -457,6 +512,39 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
     resetAnalysis()
   }
 
+  const handleToggleSuggestion = useCallback((index: number) => {
+    setSelectedSuggestions((prev) => {
+      const next = new Set(prev)
+      if (next.has(index)) next.delete(index)
+      else next.add(index)
+      return next
+    })
+  }, [])
+
+  const handleToggleKeyword = useCallback((kw: string) => {
+    setSelectedKeywords((prev) => {
+      const next = new Set(prev)
+      if (next.has(kw)) next.delete(kw)
+      else next.add(kw)
+      return next
+    })
+  }, [])
+
+  const handleApply = useCallback(() => {
+    setShowApplyStep(true)
+  }, [])
+
+  const handleApplyComplete = useCallback(() => {
+    setShowApplyStep(false)
+    setSelectedSuggestions(new Set())
+    setSelectedKeywords(new Set())
+    onClose()
+  }, [onClose])
+
+  const handleApplyBack = useCallback(() => {
+    setShowApplyStep(false)
+  }, [])
+
   const getErrorMessage = () => {
     if (isAxiosError(error) && error.response?.data?.error) {
       return error.response.data.error
@@ -482,45 +570,17 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
 
         {/* Previous analysis (history) */}
         {step === 'history' && analysisResult && jobId !== null && !showApplyStep && (
-          <div className="flex flex-col">
-            <div className="max-h-[60vh] overflow-y-auto pr-1 scrollbar-thin space-y-4">
-              <AnalysisResult
-                analysis={analysisResult}
-                jobId={jobId}
-                curriculumId={historyData?.curriculum_id}
-                onRedo={handleRedo}
-                selectedSuggestions={selectedSuggestions}
-                onToggleSuggestion={(index) => {
-                  setSelectedSuggestions((prev) => {
-                    const next = new Set(prev)
-                    if (next.has(index)) next.delete(index)
-                    else next.add(index)
-                    return next
-                  })
-                }}
-                selectedKeywords={selectedKeywords}
-                onToggleKeyword={(kw) => {
-                  setSelectedKeywords((prev) => {
-                    const next = new Set(prev)
-                    if (next.has(kw)) next.delete(kw)
-                    else next.add(kw)
-                    return next
-                  })
-                }}
-              />
-            </div>
-            <div className="pt-6 pb-1 bg-background">
-              <Button
-                onClick={() => setShowApplyStep(true)}
-                className="w-full"
-                disabled={(selectedSuggestions.size + selectedKeywords.size) === 0}
-              >
-                {(selectedSuggestions.size + selectedKeywords.size) > 0
-                  ? `Aplicar ${selectedSuggestions.size + selectedKeywords.size} ${(selectedSuggestions.size + selectedKeywords.size) > 1 ? 'Sugestões' : 'Sugestão'}`
-                  : t('analysis.selectSuggestionsHint', 'Selecione sugestões para aplicar')}
-              </Button>
-            </div>
-          </div>
+          <AnalysisResultPanel
+            analysis={analysisResult}
+            jobId={jobId}
+            curriculumId={historyData?.curriculum_id}
+            selectedSuggestions={selectedSuggestions}
+            selectedKeywords={selectedKeywords}
+            onToggleSuggestion={handleToggleSuggestion}
+            onToggleKeyword={handleToggleKeyword}
+            onRedo={handleRedo}
+            onApply={handleApply}
+          />
         )}
 
         {/* Apply suggestions flow (history) */}
@@ -539,13 +599,8 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
                 reasoningForThisJob: 'Palavra-chave ATS da vaga que falta no currículo'
               }))
             ]}
-            onComplete={() => {
-              setShowApplyStep(false)
-              setSelectedSuggestions(new Set())
-              setSelectedKeywords(new Set())
-              onClose()
-            }}
-            onBack={() => setShowApplyStep(false)}
+            onComplete={handleApplyComplete}
+            onBack={handleApplyBack}
           />
         )}
 
@@ -593,45 +648,17 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
 
         {/* New analysis result */}
         {step === 'result' && analysisResult && jobId !== null && !showApplyStep && (
-          <div className="flex flex-col">
-            <div className="max-h-[60vh] overflow-y-auto pr-1 scrollbar-thin">
-              <AnalysisResult
-                analysis={analysisResult}
-                jobId={jobId}
-                curriculumId={selectedCvId ?? undefined}
-                onRedo={handleRedo}
-                selectedSuggestions={selectedSuggestions}
-                onToggleSuggestion={(index) => {
-                  setSelectedSuggestions((prev) => {
-                    const next = new Set(prev)
-                    if (next.has(index)) next.delete(index)
-                    else next.add(index)
-                    return next
-                  })
-                }}
-                selectedKeywords={selectedKeywords}
-                onToggleKeyword={(kw) => {
-                  setSelectedKeywords((prev) => {
-                    const next = new Set(prev)
-                    if (next.has(kw)) next.delete(kw)
-                    else next.add(kw)
-                    return next
-                  })
-                }}
-              />
-            </div>
-            <div className="pt-6 pb-1 bg-background">
-              <Button
-                onClick={() => setShowApplyStep(true)}
-                className="w-full"
-                disabled={(selectedSuggestions.size + selectedKeywords.size) === 0}
-              >
-                {(selectedSuggestions.size + selectedKeywords.size) > 0
-                  ? `Aplicar ${selectedSuggestions.size + selectedKeywords.size} ${(selectedSuggestions.size + selectedKeywords.size) > 1 ? 'Sugestões' : 'Sugestão'}`
-                  : t('analysis.selectSuggestionsHint', 'Selecione sugestões para aplicar')}
-              </Button>
-            </div>
-          </div>
+          <AnalysisResultPanel
+            analysis={analysisResult}
+            jobId={jobId}
+            curriculumId={selectedCvId ?? undefined}
+            selectedSuggestions={selectedSuggestions}
+            selectedKeywords={selectedKeywords}
+            onToggleSuggestion={handleToggleSuggestion}
+            onToggleKeyword={handleToggleKeyword}
+            onRedo={handleRedo}
+            onApply={handleApply}
+          />
         )}
 
         {/* Apply suggestions flow */}
@@ -650,13 +677,8 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
                 reasoningForThisJob: 'Palavra-chave ATS da vaga que falta no currículo'
               }))
             ]}
-            onComplete={() => {
-              setShowApplyStep(false)
-              setSelectedSuggestions(new Set())
-              setSelectedKeywords(new Set())
-              onClose()
-            }}
-            onBack={() => setShowApplyStep(false)}
+            onComplete={handleApplyComplete}
+            onBack={handleApplyBack}
           />
         )}
       </DialogContent>
