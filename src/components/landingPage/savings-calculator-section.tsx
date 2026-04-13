@@ -32,7 +32,7 @@ export function SavingsCalculatorSection() {
     () =>
       new Intl.NumberFormat(locale, {
         style: 'currency',
-        currency: locale === 'pt-BR' ? 'BRL' : 'USD',
+        currency: 'BRL',
       }),
     [locale]
   )

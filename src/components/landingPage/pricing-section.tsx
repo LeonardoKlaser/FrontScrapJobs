@@ -79,7 +79,7 @@ export function PricingSection() {
                       </h3>
                       <div className="mt-4">
                         <span className="font-display text-[44px] font-bold text-zinc-900">
-                          {new Intl.NumberFormat(i18n.language === 'pt-BR' ? 'pt-BR' : 'en-US', { style: 'currency', currency: 'BRL' }).format(plan.price)}
+                          {new Intl.NumberFormat(i18n.language, { style: 'currency', currency: 'BRL' }).format(plan.price)}
                         </span>
                         <span className="text-sm text-zinc-500">
                           {t("pricing.perMonth")}
