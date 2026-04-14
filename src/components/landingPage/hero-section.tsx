@@ -9,7 +9,7 @@ export function HeroSection() {
   return (
     <SectionWrapper className="pt-8 lg:pt-12 pb-8 lg:pb-12 px-6 sm:px-8 overflow-hidden bg-white">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center lg:items-start">
           {/* Left column — Text */}
           <div className="lg:w-[420px] lg:shrink-0 space-y-8 text-center lg:text-left max-w-xl lg:max-w-none lg:pt-16">
             {/* Headline */}
@@ -72,7 +72,7 @@ export function HeroSection() {
                 />
               </div>
 
-              {/* Phone mockup — 75% of dashboard height, anchored bottom-left */}
+              {/* Phone mockup — anchored bottom-left */}
               <div className="absolute top-[50%] lg:top-[32%] -left-[120px] sm:-left-[160px] lg:-left-[243px] z-20 h-[65%] lg:h-[58%] animate-pop-in [animation-delay:600ms]">
                 <div className="animate-float h-full">
                   <img
