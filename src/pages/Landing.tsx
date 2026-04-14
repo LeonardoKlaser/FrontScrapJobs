@@ -27,12 +27,12 @@ export function Landing() {
     <div className="bg-emerald-100/30">
       <LandingNavbar />
       <HeroSection />
-      <SocialProofSection />
-      <StatsCounterSection />
       <ProblemPromiseSection />
       <HowItWorksSection />
       <FeaturesSection />
       <ProductVisualizationSection />
+      <SocialProofSection />
+      <StatsCounterSection />
       <SavingsCalculatorSection />
       <PricingSection />
       <FaqSection />

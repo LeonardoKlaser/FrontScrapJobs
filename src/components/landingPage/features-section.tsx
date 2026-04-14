@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Clock, BarChart3, Mail, Infinity as InfinityIcon } from 'lucide-react'
+import { Clock, BarChart3, Mail, KanbanSquare } from 'lucide-react'
 import { SectionWrapper } from './section-wrapper'
 import emailAnalise3 from '@/assets/ScrapJobs_email_analise_3.png'
 import emailAnalise from '@/assets/ScrapJobs_email_analise.png'
@@ -15,19 +15,19 @@ export function FeaturesSection() {
       image: undefined
     },
     {
-      icon: BarChart3,
-      titleKey: 'features.ai.title',
-      descriptionKey: 'features.ai.description',
-      image: emailAnalise3
-    },
-    {
       icon: Mail,
       titleKey: 'features.alerts.title',
       descriptionKey: 'features.alerts.description',
       image: emailAnalise
     },
     {
-      icon: InfinityIcon,
+      icon: BarChart3,
+      titleKey: 'features.ai.title',
+      descriptionKey: 'features.ai.description',
+      image: emailAnalise3
+    },
+    {
+      icon: KanbanSquare,
       titleKey: 'features.monitoring.title',
       descriptionKey: 'features.monitoring.description',
       image: undefined

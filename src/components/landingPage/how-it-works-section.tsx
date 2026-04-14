@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Target, Filter, Brain } from 'lucide-react'
+import { Target, Filter, Sparkles } from 'lucide-react'
 import { SectionWrapper } from './section-wrapper'
 
 export function HowItWorksSection() {
@@ -17,7 +17,7 @@ export function HowItWorksSection() {
       descriptionKey: 'howItWorks.step2.description'
     },
     {
-      icon: Brain,
+      icon: Sparkles,
       titleKey: 'howItWorks.step3.title',
       descriptionKey: 'howItWorks.step3.description'
     }

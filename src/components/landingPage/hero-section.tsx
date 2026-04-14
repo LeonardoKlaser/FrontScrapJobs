@@ -7,11 +7,11 @@ import { SectionWrapper } from './section-wrapper'
 export function HeroSection() {
   const { t } = useTranslation('landing')
   return (
-    <SectionWrapper className="pt-8 lg:pt-12 pb-20 lg:pb-32 px-6 sm:px-8 overflow-hidden bg-white">
+    <SectionWrapper className="pt-8 lg:pt-12 pb-8 lg:pb-12 px-6 sm:px-8 overflow-hidden bg-white">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
           {/* Left column — Text */}
-          <div className="lg:w-[420px] lg:shrink-0 space-y-8 text-center lg:text-left max-w-xl lg:max-w-none">
+          <div className="lg:w-[420px] lg:shrink-0 space-y-8 text-center lg:text-left max-w-xl lg:max-w-none lg:pt-16">
             {/* Headline */}
             <h1 className="text-3xl min-[400px]:text-4xl lg:text-[56px] font-semibold leading-tight tracking-tight animate-fade-in-up text-balance text-zinc-900 [animation-delay:0ms]">
               {t('hero.heading1')}
@@ -55,7 +55,7 @@ export function HeroSection() {
 
           {/* Right column — Mockup Composition */}
           <div className="flex-1 min-w-0 w-full lg:w-auto mt-8 lg:mt-0">
-            <div className="relative mx-auto max-w-[560px] lg:max-w-none lg:mr-[-180px] pt-8 lg:pt-16 pb-16 lg:pb-20">
+            <div className="relative mx-auto max-w-[560px] lg:max-w-none lg:mr-[-180px] pt-8 lg:pt-16 pb-4 lg:pb-4">
               {/* Glow effect — large blurred emerald orb */}
               <div
                 aria-hidden="true"

@@ -3,7 +3,7 @@
     "brand": "ScrapJobs",
     "heading1": "Pare de Procurar.",
     "heading2": "Comece a Ser Entrevistado.",
-    "subheading": "Automatize sua busca de emprego nas melhores empresas e receba insights de IA para seu currículo se destacar.",
+    "subheading": "Você perde horas acessando sites de carreira um por um — e ainda perde vagas. O ScrapJobs monitora automaticamente e usa IA para adaptar seu currículo a cada oportunidade.",
     "cta": "Começar a Automatizar",
     "loginPrompt": "Já tem uma conta?",
     "loginLink": "Fazer login",
@@ -29,20 +29,20 @@
     "title": "Uma Vantagem Injusta para Sua Carreira",
     "subtitle": "Ferramentas poderosas para automatizar sua busca de emprego",
     "scraping": {
-      "title": "Scraping de Hora em Hora",
-      "description": "Nunca mais perca uma vaga. Nosso sistema verifica seus alvos constantemente."
-    },
-    "ai": {
-      "title": "Análise de Currículo com IA",
-      "description": "Receba um relatório detalhado sobre o match da vaga e dicas para otimizar seu currículo."
+      "title": "Vagas Novas Antes de Todo Mundo",
+      "description": "Monitoramos as páginas de carreira das suas empresas-alvo 6x por dia. Scraping inteligente com 3 estratégias diferentes — nenhuma vaga escapa."
     },
     "alerts": {
-      "title": "Alertas Diretos na sua Caixa de Entrada",
-      "description": "As melhores oportunidades, entregues de forma limpa e organizada para você."
+      "title": "Alertas que Filtram o Ruído",
+      "description": "Defina palavras-chave do seu perfil. Só receba vagas que fazem sentido para você, direto no email — sem spam."
+    },
+    "ai": {
+      "title": "IA que Reescreve Seu Currículo",
+      "description": "Score de compatibilidade, keywords ATS faltando e sugestões com texto pronto para colar. Não é conselho genérico — é o seu currículo adaptado para cada vaga."
     },
     "monitoring": {
-      "title": "Monitoramento Ilimitado",
-      "description": "Acompanhe todas as empresas da sua lista de desejos, sem restrições."
+      "title": "Acompanhe Suas Candidaturas",
+      "description": "Kanban visual para organizar todo o processo: da candidatura à oferta. Saiba exatamente onde cada oportunidade está."
     }
   },
   "howItWorks": {
@@ -56,8 +56,8 @@
       "description": "Especifique os cargos e palavras-chave que correspondem ao seu perfil."
     },
     "step3": {
-      "title": "3. Receba Alertas Inteligentes",
-      "description": "Receba notificações por e-mail com uma análise completa de compatibilidade."
+      "title": "3. Receba e Otimize",
+      "description": "Vagas novas chegam no seu email. Clique para ver a análise de IA e aplique as sugestões direto no seu currículo."
     }
   },
   "problem": {

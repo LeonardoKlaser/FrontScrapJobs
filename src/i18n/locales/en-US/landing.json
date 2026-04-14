@@ -3,7 +3,7 @@
     "brand": "ScrapJobs",
     "heading1": "Stop Searching.",
     "heading2": "Start Getting Interviewed.",
-    "subheading": "Automate your job search at top companies and get AI insights to make your resume stand out.",
+    "subheading": "You waste hours checking career sites one by one — and still miss openings. ScrapJobs monitors them automatically and uses AI to tailor your resume to each opportunity.",
     "cta": "Start Automating",
     "loginPrompt": "Already have an account?",
     "loginLink": "Sign in",
@@ -29,20 +29,20 @@
     "title": "An Unfair Advantage for Your Career",
     "subtitle": "Powerful tools to automate your job search",
     "scraping": {
-      "title": "Hourly Scraping",
-      "description": "Never miss a job posting again. Our system checks your targets constantly."
-    },
-    "ai": {
-      "title": "AI Resume Analysis",
-      "description": "Get a detailed report on job match and tips to optimize your resume."
+      "title": "New Jobs Before Everyone Else",
+      "description": "We monitor career pages of your target companies 6x per day. Smart scraping with 3 different strategies — no job slips through."
     },
     "alerts": {
-      "title": "Alerts Straight to Your Inbox",
-      "description": "The best opportunities, delivered cleanly and organized for you."
+      "title": "Alerts That Cut the Noise",
+      "description": "Set keywords that match your profile. Only get jobs that make sense for you, straight to your inbox — no spam."
+    },
+    "ai": {
+      "title": "AI That Rewrites Your Resume",
+      "description": "Compatibility score, missing ATS keywords, and suggestions with ready-to-paste text. Not generic advice — your resume tailored for each job."
     },
     "monitoring": {
-      "title": "Unlimited Monitoring",
-      "description": "Track all companies on your wish list, without restrictions."
+      "title": "Track Your Applications",
+      "description": "Visual Kanban to organize the entire process: from application to offer. Know exactly where each opportunity stands."
     }
   },
   "howItWorks": {
@@ -56,8 +56,8 @@
       "description": "Specify the roles and keywords that match your profile."
     },
     "step3": {
-      "title": "3. Receive Smart Alerts",
-      "description": "Get email notifications with a complete compatibility analysis."
+      "title": "3. Receive & Optimize",
+      "description": "New jobs land in your inbox. Click to see the AI analysis and apply suggestions directly to your resume."
     }
   },
   "problem": {
