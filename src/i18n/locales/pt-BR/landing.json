@@ -89,13 +89,13 @@
     "ctaButton": "Começar a Automatizar"
   },
   "productVisualization": {
-    "title": "Veja Exatamente o Que Você Receberá",
-    "description": "Receba notificações ricas com detalhes completos das vagas encontradas nas empresas que você monitora.",
+    "title": "Análise de IA Direto no Seu Email",
+    "description": "Receba uma análise detalhada de compatibilidade entre seu currículo e cada vaga, com score, pontos fortes e sugestões de melhoria.",
     "emailSubtitle": "Nova oportunidade encontrada!",
     "jobDescription": "Descrição da Vaga:",
-    "bullet1": "Requisitos: 5+ anos de experiência com React, TypeScript e Node.js",
-    "bullet2": "Responsabilidades: Liderar squad de frontend, code reviews, arquitetura",
-    "bullet3": "Benefícios: Remoto, PLR, plano de saúde, stock options",
+    "bullet1": "Score de compatibilidade: saiba em segundos se a vaga é pra você",
+    "bullet2": "Pontos fortes e gaps: entenda exatamente onde você se encaixa",
+    "bullet3": "Sugestões para o currículo: ajuste seu CV para cada vaga automaticamente",
     "applyNow": "Ver Vaga Completa",
     "emailAlt": "Email de análise do ScrapJobs com score de compatibilidade 85/100"
   },

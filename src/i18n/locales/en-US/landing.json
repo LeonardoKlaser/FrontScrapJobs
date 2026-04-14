@@ -89,13 +89,13 @@
     "ctaButton": "Start Automating"
   },
   "productVisualization": {
-    "title": "See Exactly What You'll Receive",
-    "description": "Get rich notifications with full details of jobs found at the companies you monitor.",
+    "title": "AI Analysis Straight to Your Inbox",
+    "description": "Get a detailed compatibility analysis between your resume and each job, with score, strengths, and improvement suggestions.",
     "emailSubtitle": "New opportunity found!",
     "jobDescription": "Job Description:",
-    "bullet1": "Requirements: 5+ years experience with React, TypeScript and Node.js",
-    "bullet2": "Responsibilities: Lead frontend squad, code reviews, architecture",
-    "bullet3": "Benefits: Remote, profit sharing, health plan, stock options",
+    "bullet1": "Compatibility score: know in seconds if the job is right for you",
+    "bullet2": "Strengths and gaps: understand exactly where you fit",
+    "bullet3": "Resume suggestions: tailor your CV for each job automatically",
     "applyNow": "View Full Job",
     "emailAlt": "ScrapJobs analysis email with 85/100 compatibility score"
   },
