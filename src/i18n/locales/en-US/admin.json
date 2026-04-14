@@ -59,7 +59,9 @@
       "jobDescription": "Job Description Selector",
       "jobDescriptionTooltip": "Selector for the description on the detail page",
       "requisitionId": "Requisition ID Selector",
-      "requisitionIdTooltip": "Selector for the unique job ID"
+      "requisitionIdTooltip": "Selector for the unique job ID",
+      "requisitionIdAttribute": "Requisition ID Attribute",
+      "requisitionIdAttributeTooltip": "HTML attribute to extract the ID from (e.g. data-code). If empty, extracts visible text"
     },
     "apiConfig": {
       "title": "API Configuration",

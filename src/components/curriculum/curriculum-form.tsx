@@ -31,23 +31,40 @@ interface CurriculumFormProps {
   onSaveSuccess?: () => void
 }
 
+function normalizeDescription(desc: string | string[] | undefined): string[] {
+  if (!desc) return ['']
+  if (typeof desc === 'string') return desc ? [desc] : ['']
+  return desc.length > 0 ? desc : ['']
+}
+
+function normalizeEducation(edu: Education & { year?: string }): Education {
+  if (edu.startDate || edu.endDate) return edu
+  if (edu.year) {
+    const parts = edu.year.split(' - ')
+    return {
+      ...edu,
+      startDate: parts[0]?.trim() || '',
+      endDate: parts[1]?.trim() || ''
+    }
+  }
+  return { ...edu, startDate: '', endDate: '' }
+}
+
 function createEmptyFormData(): Omit<Curriculum, 'id'> {
   return {
     title: '',
     summary: '',
     skills: '',
     languages: '',
-    experiences: [{ id: crypto.randomUUID(), company: '', title: '', description: '' }],
-    educations: [{ id: crypto.randomUUID(), institution: '', degree: '', year: '' }]
+    experiences: [{ id: crypto.randomUUID(), company: '', title: '', startDate: '', endDate: '', description: [''] }],
+    educations: [{ id: crypto.randomUUID(), institution: '', degree: '', startDate: '', endDate: '' }]
   }
 }
 
-export function CurriculumForm({
-  curriculum,
-  isEditing,
-  initialData,
-  onSaveSuccess
-}: CurriculumFormProps) {
+
+const SUMMARY_MAX_LENGTH = 1200
+
+export function CurriculumForm({ curriculum, isEditing, initialData, onSaveSuccess }: CurriculumFormProps) {
   const { t } = useTranslation('curriculum')
   const [formData, setFormData] = useState(createEmptyFormData)
   const {
@@ -69,8 +86,17 @@ export function CurriculumForm({
         summary: curriculum.summary,
         skills: curriculum.skills,
         languages: curriculum.languages,
-        experiences: curriculum.experiences,
-        educations: curriculum.educations
+        experiences: curriculum.experiences.map((e) => ({
+          ...e,
+          id: e.id || crypto.randomUUID(),
+          startDate: e.startDate || '',
+          endDate: e.endDate || '',
+          description: normalizeDescription(e.description)
+        })),
+        educations: curriculum.educations.map((e) => ({
+          ...normalizeEducation(e),
+          id: e.id || crypto.randomUUID()
+        }))
       })
     } else if (initialData) {
       setFormData({
@@ -79,11 +105,20 @@ export function CurriculumForm({
         skills: initialData.skills || '',
         languages: initialData.languages || '',
         experiences: initialData.experiences?.length
-          ? initialData.experiences.map((e) => ({ ...e, id: crypto.randomUUID() }))
-          : [{ id: crypto.randomUUID(), company: '', title: '', description: '' }],
+          ? initialData.experiences.map((e) => ({
+              ...e,
+              id: crypto.randomUUID(),
+              startDate: e.startDate || '',
+              endDate: e.endDate || '',
+              description: normalizeDescription(e.description)
+            }))
+          : [{ id: crypto.randomUUID(), company: '', title: '', startDate: '', endDate: '', description: [''] }],
         educations: initialData.educations?.length
-          ? initialData.educations.map((e) => ({ ...e, id: crypto.randomUUID() }))
-          : [{ id: crypto.randomUUID(), institution: '', degree: '', year: '' }]
+          ? initialData.educations.map((e) => ({
+              ...normalizeEducation(e),
+              id: crypto.randomUUID()
+            }))
+          : [{ id: crypto.randomUUID(), institution: '', degree: '', startDate: '', endDate: '' }]
       })
     } else {
       setFormData(createEmptyFormData())
@@ -133,7 +168,7 @@ export function CurriculumForm({
       ...formData,
       experiences: [
         ...formData.experiences,
-        { id: crypto.randomUUID(), company: '', title: '', description: '' }
+        { id: crypto.randomUUID(), company: '', title: '', startDate: '', endDate: '', description: [''] }
       ]
     })
   }
@@ -145,7 +180,7 @@ export function CurriculumForm({
     })
   }
 
-  const updateExperience = (id: string | undefined, field: keyof Experience, value: string) => {
+  const updateExperience = (id: string | undefined, field: keyof Omit<Experience, 'description'>, value: string) => {
     setFormData({
       ...formData,
       experiences: formData.experiences.map((exp) =>
@@ -154,12 +189,43 @@ export function CurriculumForm({
     })
   }
 
+  const updateBulletPoint = (expId: string | undefined, index: number, value: string) => {
+    setFormData({
+      ...formData,
+      experiences: formData.experiences.map((exp) => {
+        if (exp.id !== expId) return exp
+        const newDesc = [...exp.description]
+        newDesc[index] = value
+        return { ...exp, description: newDesc }
+      })
+    })
+  }
+
+  const addBulletPoint = (expId: string | undefined) => {
+    setFormData({
+      ...formData,
+      experiences: formData.experiences.map((exp) =>
+        exp.id === expId ? { ...exp, description: [...exp.description, ''] } : exp
+      )
+    })
+  }
+
+  const removeBulletPoint = (expId: string | undefined, index: number) => {
+    setFormData({
+      ...formData,
+      experiences: formData.experiences.map((exp) => {
+        if (exp.id !== expId || exp.description.length <= 1) return exp
+        return { ...exp, description: exp.description.filter((_, i) => i !== index) }
+      })
+    })
+  }
+
   const addEducation = () => {
     setFormData({
       ...formData,
       educations: [
         ...formData.educations,
-        { id: crypto.randomUUID(), institution: '', degree: '', year: '' }
+        { id: crypto.randomUUID(), institution: '', degree: '', startDate: '', endDate: '' }
       ]
     })
   }
@@ -294,9 +360,13 @@ export function CurriculumForm({
             id="summary"
             placeholder={t('form.summaryPlaceholder')}
             className="min-h-[120px] resize-y"
+            maxLength={SUMMARY_MAX_LENGTH}
             value={formData.summary}
             onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
           />
+          <p className={`text-xs text-right ${formData.summary.length > 1100 ? 'text-destructive' : 'text-muted-foreground'}`}>
+            {t('form.summaryCounter', { count: formData.summary.length, max: SUMMARY_MAX_LENGTH })}
+          </p>
         </div>
 
         {/* Habilidades */}
@@ -421,22 +491,76 @@ export function CurriculumForm({
                     </div>
                   </div>
 
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor={`exp-startDate-${experience.id}`}
+                        className="text-muted-foreground text-xs"
+                      >
+                        {t('form.experience.startDateLabel')}
+                      </Label>
+                      <Input
+                        id={`exp-startDate-${experience.id}`}
+                        placeholder={t('form.experience.startDatePlaceholder')}
+                        value={experience.startDate}
+                        onChange={(e) => updateExperience(experience.id, 'startDate', e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor={`exp-endDate-${experience.id}`}
+                        className="text-muted-foreground text-xs"
+                      >
+                        {t('form.experience.endDateLabel')}
+                      </Label>
+                      <Input
+                        id={`exp-endDate-${experience.id}`}
+                        placeholder={t('form.experience.endDatePlaceholder')}
+                        value={experience.endDate}
+                        onChange={(e) => updateExperience(experience.id, 'endDate', e.target.value)}
+                      />
+                    </div>
+                  </div>
+
                   <div className="space-y-2">
-                    <Label
-                      htmlFor={`description-${experience.id}`}
-                      className="text-muted-foreground text-xs"
-                    >
+                    <Label className="text-muted-foreground text-xs">
                       {t('form.experience.descriptionLabel')}
                     </Label>
-                    <Textarea
-                      id={`description-${experience.id}`}
-                      placeholder={t('form.experience.descriptionPlaceholder')}
-                      className="min-h-[80px] resize-y"
-                      value={experience.description}
-                      onChange={(e) =>
-                        updateExperience(experience.id, 'description', e.target.value)
-                      }
-                    />
+                    <div className="space-y-2">
+                      {experience.description.map((bullet, bulletIndex) => (
+                        <div key={bulletIndex} className="flex gap-2 items-start">
+                          <span className="text-muted-foreground text-xs mt-2.5 select-none">&#8226;</span>
+                          <Input
+                            placeholder={t('form.experience.bulletPlaceholder')}
+                            value={bullet}
+                            onChange={(e) => updateBulletPoint(experience.id, bulletIndex, e.target.value)}
+                            className="flex-1"
+                          />
+                          {experience.description.length > 1 && (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-muted-foreground hover:text-destructive shrink-0"
+                              onClick={() => removeBulletPoint(experience.id, bulletIndex)}
+                              aria-label={t('form.experience.removeBullet')}
+                            >
+                              <X className="h-3.5 w-3.5" />
+                            </Button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="text-xs text-muted-foreground"
+                      onClick={() => addBulletPoint(experience.id)}
+                    >
+                      <PlusCircle className="mr-1 h-3 w-3" />
+                      {t('form.experience.addBullet')}
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -475,7 +599,7 @@ export function CurriculumForm({
                     )}
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label
                         htmlFor={`institution-${education.id}`}
@@ -506,18 +630,35 @@ export function CurriculumForm({
                         onChange={(e) => updateEducation(education.id, 'degree', e.target.value)}
                       />
                     </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label
-                        htmlFor={`year-${education.id}`}
+                        htmlFor={`edu-startDate-${education.id}`}
                         className="text-muted-foreground text-xs"
                       >
-                        {t('form.education.yearLabel')}
+                        {t('form.education.startDateLabel')}
                       </Label>
                       <Input
-                        id={`year-${education.id}`}
-                        placeholder={t('form.education.yearPlaceholder')}
-                        value={education.year}
-                        onChange={(e) => updateEducation(education.id, 'year', e.target.value)}
+                        id={`edu-startDate-${education.id}`}
+                        placeholder={t('form.education.startDatePlaceholder')}
+                        value={education.startDate}
+                        onChange={(e) => updateEducation(education.id, 'startDate', e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor={`edu-endDate-${education.id}`}
+                        className="text-muted-foreground text-xs"
+                      >
+                        {t('form.education.endDateLabel')}
+                      </Label>
+                      <Input
+                        id={`edu-endDate-${education.id}`}
+                        placeholder={t('form.education.endDatePlaceholder')}
+                        value={education.endDate}
+                        onChange={(e) => updateEducation(education.id, 'endDate', e.target.value)}
                       />
                     </div>
                   </div>
