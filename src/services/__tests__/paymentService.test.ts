@@ -1,10 +1,6 @@
 import { vi } from 'vitest'
 import { api } from '@/services/api'
-import {
-  createPayment,
-  checkPaymentStatus,
-  cancelSubscription
-} from '@/services/paymentService'
+import { createPayment, checkPaymentStatus, cancelSubscription } from '@/services/paymentService'
 import type { CreatePaymentRequest } from '@/services/paymentService'
 
 vi.mock('@/services/api', () => ({
@@ -101,7 +97,9 @@ describe('paymentService', () => {
 
   describe('cancelSubscription', () => {
     it('sends DELETE /api/subscription/cancel', async () => {
-      vi.mocked(api.delete).mockResolvedValue({ data: { message: 'Assinatura cancelada com sucesso' } })
+      vi.mocked(api.delete).mockResolvedValue({
+        data: { message: 'Assinatura cancelada com sucesso' }
+      })
 
       const result = await cancelSubscription()
 

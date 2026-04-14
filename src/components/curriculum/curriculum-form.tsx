@@ -61,6 +61,7 @@ function createEmptyFormData(): Omit<Curriculum, 'id'> {
   }
 }
 
+
 const SUMMARY_MAX_LENGTH = 1200
 
 export function CurriculumForm({ curriculum, isEditing, initialData, onSaveSuccess }: CurriculumFormProps) {

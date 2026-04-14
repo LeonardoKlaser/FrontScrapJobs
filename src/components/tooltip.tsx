@@ -31,14 +31,12 @@ interface TooltipProps {
 
 export function Tooltip({ children, content }: TooltipProps) {
   return (
-    <TooltipProvider>
-      <TooltipRoot>
-        <TooltipTrigger asChild>{children}</TooltipTrigger>
-        <TooltipContent>
-          <p>{content}</p>
-        </TooltipContent>
-      </TooltipRoot>
-    </TooltipProvider>
+    <TooltipRoot>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipContent>
+        <p>{content}</p>
+      </TooltipContent>
+    </TooltipRoot>
   )
 }
 

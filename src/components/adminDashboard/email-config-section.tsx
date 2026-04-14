@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
@@ -8,6 +9,7 @@ import { useEmailConfig, useUpdateEmailConfig } from '@/hooks/useAdminDashboard'
 import type { EmailProviderConfig } from '@/services/adminDashboardService'
 
 export function EmailConfigSection() {
+  const { t } = useTranslation('admin')
   const { data: configs, isLoading } = useEmailConfig()
   const updateMutation = useUpdateEmailConfig()
   const [localConfigs, setLocalConfigs] = useState<EmailProviderConfig[]>([])
@@ -58,7 +60,7 @@ export function EmailConfigSection() {
       <Card>
         <CardContent className="flex items-center gap-2 text-muted-foreground">
           <Loader2 className="size-4 animate-spin" />
-          <span>Carregando configuração de email...</span>
+          <span>{t('emailConfig.loading')}</span>
         </CardContent>
       </Card>
     )
@@ -70,12 +72,12 @@ export function EmailConfigSection() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Mail className="size-5 text-primary" />
-            <CardTitle className="text-lg">Provedores de Email</CardTitle>
+            <CardTitle className="text-lg">{t('emailConfig.title')}</CardTitle>
           </div>
           {isDirty && (
             <Button size="sm" onClick={handleSave} disabled={updateMutation.isPending}>
               {updateMutation.isPending ? <Loader2 className="size-4 animate-spin mr-2" /> : null}
-              Salvar
+              {t('emailConfig.save')}
             </Button>
           )}
         </div>
@@ -110,7 +112,7 @@ export function EmailConfigSection() {
                   <span className="font-medium capitalize">{config.provider_name}</span>
                   {index === 0 && config.is_active && (
                     <Badge variant="default" className="text-xs">
-                      Primário
+                      {t('emailConfig.primary')}
                     </Badge>
                   )}
                   {index > 0 && config.is_active && (
@@ -120,7 +122,7 @@ export function EmailConfigSection() {
                   )}
                   {!config.is_active && (
                     <Badge variant="outline" className="text-xs text-muted-foreground">
-                      Desativado
+                      {t('emailConfig.disabled')}
                     </Badge>
                   )}
                 </div>
@@ -135,10 +137,10 @@ export function EmailConfigSection() {
         ))}
 
         {updateMutation.isSuccess && (
-          <p className="text-sm text-primary mt-4">Configuração salva com sucesso.</p>
+          <p className="text-sm text-primary mt-4">{t('emailConfig.saveSuccess')}</p>
         )}
         {updateMutation.isError && (
-          <p className="text-sm text-destructive mt-4">Erro ao salvar configuração.</p>
+          <p className="text-sm text-destructive mt-4">{t('emailConfig.saveError')}</p>
         )}
       </CardContent>
     </Card>

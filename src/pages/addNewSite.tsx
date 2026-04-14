@@ -166,7 +166,7 @@ export default function AdicionarSitePage() {
         )}
 
         {/* Basic Info */}
-        <div className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+        <div className="animate-fade-in-up [animation-delay:100ms]">
           <Card>
             <CardHeader>
               <div className="flex items-center gap-2">
@@ -230,7 +230,7 @@ export default function AdicionarSitePage() {
         </div>
 
         {/* Collection Strategy */}
-        <div className="animate-fade-in-up" style={{ animationDelay: '150ms' }}>
+        <div className="animate-fade-in-up [animation-delay:150ms]">
           <Card>
             <CardHeader>
               <CardTitle className="text-base tracking-tight">
@@ -604,7 +604,7 @@ export default function AdicionarSitePage() {
         )}
 
         {/* Logo Upload */}
-        <div className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+        <div className="animate-fade-in-up [animation-delay:200ms]">
           <Card>
             <CardHeader>
               <CardTitle className="text-base tracking-tight">{t('addSite.logo.title')}</CardTitle>
@@ -638,10 +638,7 @@ export default function AdicionarSitePage() {
         </div>
 
         {/* Submit */}
-        <div
-          className="flex flex-col sm:flex-row sm:justify-end gap-3 animate-fade-in-up"
-          style={{ animationDelay: '250ms' }}
-        >
+        <div className="flex flex-col sm:flex-row sm:justify-end gap-3 animate-fade-in-up [animation-delay:250ms]">
           <Button
             type="button"
             variant="outline"

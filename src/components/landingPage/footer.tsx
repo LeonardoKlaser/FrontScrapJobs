@@ -17,7 +17,10 @@ export function Footer() {
             <Logo size={24} showText textClassName="text-lg" />
 
             <div className="flex items-center space-x-6">
-              <Link to={PATHS.terms} className="text-sm text-zinc-500 hover:text-emerald-500 transition-colors">
+              <Link
+                to={PATHS.terms}
+                className="text-sm text-zinc-500 hover:text-emerald-500 transition-colors"
+              >
                 {t('footer.terms')}
               </Link>
               <Link

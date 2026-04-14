@@ -31,7 +31,7 @@ describe('ErrorBoundary', () => {
         <ThrowingComponent shouldThrow={true} />
       </ErrorBoundary>
     )
-    expect(screen.getByText('Algo deu errado')).toBeInTheDocument()
+    expect(screen.getByText('error.title')).toBeInTheDocument()
     expect(screen.getByText('Test error')).toBeInTheDocument()
   })
 
@@ -50,13 +50,13 @@ describe('ErrorBoundary', () => {
         <ThrowingComponent shouldThrow={true} />
       </ErrorBoundary>
     )
-    expect(screen.getByText('Algo deu errado')).toBeInTheDocument()
+    expect(screen.getByText('error.title')).toBeInTheDocument()
 
-    fireEvent.click(screen.getByText('Tentar novamente'))
+    fireEvent.click(screen.getByText('error.retry'))
 
     // After retry, boundary resets — but component still throws
     // So it will show fallback again. This is expected behavior.
-    expect(screen.getByText('Algo deu errado')).toBeInTheDocument()
+    expect(screen.getByText('error.title')).toBeInTheDocument()
   })
 
   it('shows retry and home buttons', () => {
@@ -65,7 +65,7 @@ describe('ErrorBoundary', () => {
         <ThrowingComponent shouldThrow={true} />
       </ErrorBoundary>
     )
-    expect(screen.getByText('Tentar novamente')).toBeInTheDocument()
-    expect(screen.getByText('Página inicial')).toBeInTheDocument()
+    expect(screen.getByText('error.retry')).toBeInTheDocument()
+    expect(screen.getByText('error.backHome')).toBeInTheDocument()
   })
 })

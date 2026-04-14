@@ -27,8 +27,7 @@ export default function AccountPage() {
 
       <nav
         role="tablist"
-        className="animate-fade-in-up flex gap-1 border-b border-border/50 overflow-x-auto scrollbar-thin"
-        style={{ animationDelay: '60ms' }}
+        className="animate-fade-in-up flex gap-1 border-b border-border/50 overflow-x-auto scrollbar-thin [animation-delay:60ms]"
       >
         {menuItems.map((item) => {
           const Icon = item.icon

@@ -10,7 +10,7 @@ const NAV_LINKS = [
   { key: 'features', href: '#features' },
   { key: 'howItWorks', href: '#howItWorks' },
   { key: 'pricing', href: '#pricing' },
-  { key: 'faq', href: '#faq' },
+  { key: 'faq', href: '#faq' }
 ] as const
 
 export function LandingNavbar() {
@@ -30,7 +30,7 @@ export function LandingNavbar() {
         style={{
           background: 'rgba(255, 255, 255, 0.75)',
           backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)'
         }}
       >
         {/* Logo */}
@@ -63,7 +63,10 @@ export function LandingNavbar() {
         {/* Mobile hamburger */}
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <button className="lg:hidden p-2 text-zinc-600 hover:text-zinc-900" aria-label="Open menu">
+            <button
+              className="lg:hidden p-2 text-zinc-600 hover:text-zinc-900"
+              aria-label="Open menu"
+            >
               <Menu className="w-5 h-5" />
             </button>
           </SheetTrigger>

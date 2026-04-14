@@ -8,9 +8,7 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    ...(process.env.ANALYZE
-      ? [visualizer({ filename: 'dist/stats.html', gzipSize: true })]
-      : [])
+    ...(process.env.ANALYZE ? [visualizer({ filename: 'dist/stats.html', gzipSize: true })] : [])
   ],
   resolve: {
     alias: {

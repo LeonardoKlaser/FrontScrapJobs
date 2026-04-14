@@ -1,5 +1,5 @@
 import type React from 'react'
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -11,7 +11,7 @@ import {
   LockIcon,
   PhoneIcon,
   FileTextIcon,
-  ArrowRight,
+  ArrowRight
 } from 'lucide-react'
 import { api } from '@/services/api'
 import { useTranslation } from 'react-i18next'
@@ -38,13 +38,26 @@ interface PersonalDataStepProps {
   onNext: () => void
 }
 
-export function PersonalDataStep({ formData, setFormData, isLoading, onNext }: PersonalDataStepProps) {
+export function PersonalDataStep({
+  formData,
+  setFormData,
+  isLoading,
+  onNext
+}: PersonalDataStepProps) {
   const { t } = useTranslation('plans')
   const { t: tAuth } = useTranslation('auth')
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [errors, setErrors] = useState<FormErrors>({})
+  const [emailExistsOnServer, setEmailExistsOnServer] = useState(false)
+  const [cpfExistsOnServer, setCpfExistsOnServer] = useState(false)
   const debounceTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({})
+
+  useEffect(() => {
+    return () => {
+      Object.values(debounceTimers.current).forEach(clearTimeout)
+    }
+  }, [])
 
   const validateFieldOnServer = useCallback(
     async (field: 'email' | 'cpfCnpj', value: string) => {
@@ -57,6 +70,13 @@ export function PersonalDataStep({ formData, setFormData, isLoading, onNext }: P
       try {
         const res = await api.post('/api/users/validate-checkout', { email, tax })
         const data = res.data as { email_exists: boolean; tax_exists: boolean }
+
+        if (field === 'email') {
+          setEmailExistsOnServer(data.email_exists)
+        }
+        if (field === 'cpfCnpj') {
+          setCpfExistsOnServer(data.tax_exists)
+        }
 
         setErrors((prev) => {
           const next = { ...prev }
@@ -116,6 +136,8 @@ export function PersonalDataStep({ formData, setFormData, isLoading, onNext }: P
     }
 
     setFormData((prev) => ({ ...prev, [name]: formattedValue }))
+    if (name === 'email') setEmailExistsOnServer(false)
+    if (name === 'cpfCnpj') setCpfExistsOnServer(false)
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }))
     }
@@ -171,10 +193,7 @@ export function PersonalDataStep({ formData, setFormData, isLoading, onNext }: P
   }
 
   const handleNext = () => {
-    if (
-      errors.email === t('paymentForm.emailExists') ||
-      errors.cpfCnpj === t('paymentForm.cpfExists')
-    ) {
+    if (emailExistsOnServer || cpfExistsOnServer) {
       return
     }
     if (validateForm()) {
@@ -262,7 +281,9 @@ export function PersonalDataStep({ formData, setFormData, isLoading, onNext }: P
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              aria-label={showPassword ? t('paymentForm.hidePassword') : t('paymentForm.showPassword')}
+              aria-label={
+                showPassword ? t('paymentForm.hidePassword') : t('paymentForm.showPassword')
+              }
               className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -306,10 +327,7 @@ export function PersonalDataStep({ formData, setFormData, isLoading, onNext }: P
       </fieldset>
 
       {/* Additional Data Section */}
-      <fieldset
-        className="space-y-4 border-t border-border/50 pt-8 animate-fade-in-up"
-        style={{ animationDelay: '100ms' }}
-      >
+      <fieldset className="space-y-4 border-t border-border/50 pt-8 animate-fade-in-up [animation-delay:100ms]">
         <legend className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
           {t('paymentForm.additionalData')}
         </legend>
@@ -362,11 +380,7 @@ export function PersonalDataStep({ formData, setFormData, isLoading, onNext }: P
           type="button"
           variant="glow"
           onClick={handleNext}
-          disabled={
-            isLoading ||
-            errors.email === t('paymentForm.emailExists') ||
-            errors.cpfCnpj === t('paymentForm.cpfExists')
-          }
+          disabled={isLoading || emailExistsOnServer || cpfExistsOnServer}
           size="lg"
           className="w-full"
         >

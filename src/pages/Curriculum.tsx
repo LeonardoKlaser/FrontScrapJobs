@@ -44,7 +44,7 @@ export function Curriculum() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-6">
-        <div className="animate-fade-in-up" style={{ animationDelay: '50ms' }}>
+        <div className="animate-fade-in-up [animation-delay:50ms]">
           <CurriculumList
             curriculums={curriculums}
             selectedId={selectedCurriculumId}
@@ -55,11 +55,11 @@ export function Curriculum() {
           />
         </div>
 
-        <div className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+        <div className="animate-fade-in-up [animation-delay:100ms]">
           <CurriculumForm
             curriculum={selectedCurriculum}
             isEditing={selectedCurriculumId !== null}
-            initialData={selectedCurriculumId === null ? importedData : undefined}
+            initialData={selectedCurriculumId === null ? (importedData ?? undefined) : undefined}
             onSaveSuccess={() => setImportedData(null)}
           />
         </div>

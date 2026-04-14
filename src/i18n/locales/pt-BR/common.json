@@ -29,6 +29,9 @@
     "homePage": "Página inicial"
   },
   "loading": "Carregando...",
+  "loadingPermissions": "Verificando permissões...",
+  "loadingPanel": "Carregando painel...",
+  "loadingApplications": "Carregando candidaturas...",
   "language": {
     "label": "Idioma",
     "pt": "Português",

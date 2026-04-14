@@ -29,6 +29,9 @@
     "homePage": "Home page"
   },
   "loading": "Loading...",
+  "loadingPermissions": "Checking permissions...",
+  "loadingPanel": "Loading dashboard...",
+  "loadingApplications": "Loading applications...",
   "language": {
     "label": "Language",
     "pt": "Português",

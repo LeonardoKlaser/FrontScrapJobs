@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Building2, Loader2, X } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
@@ -50,6 +50,14 @@ export function RegistrationModal({
     }
   }, [isOpen, currentTargetWords])
 
+  const addKeyword = useCallback(() => {
+    const newWord = keywordInput.trim()
+    if (newWord && !editKeywords.includes(newWord)) {
+      setEditKeywords((prev) => [...prev, newWord])
+      setKeywordInput('')
+    }
+  }, [keywordInput, editKeywords])
+
   const isRegisterButtonDisabled =
     hasNoSlots || isLoading || (!keywords.trim() && !isAlreadyRegistered)
 
@@ -79,7 +87,10 @@ export function RegistrationModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-[95vw] sm:max-w-[460px] p-0 gap-0 overflow-hidden">
+      <DialogContent
+        aria-describedby={undefined}
+        className="max-w-[95vw] sm:max-w-[460px] p-0 gap-0 overflow-hidden"
+      >
         {/* Company header */}
         <div className="flex flex-col items-center gap-3 px-6 pt-6 pb-4">
           <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-muted/50 p-2">
@@ -106,9 +117,7 @@ export function RegistrationModal({
                 </p>
               </div>
               <div className="space-y-1.5">
-                <Label className="text-muted-foreground text-sm">
-                  {t('popup.keywordsEdit', 'Palavras-chave para alertas')}
-                </Label>
+                <Label className="text-muted-foreground text-sm">{t('popup.keywordsEdit')}</Label>
                 {editKeywords.length > 0 && (
                   <div className="flex flex-wrap gap-1.5">
                     {editKeywords.map((tag) => (
@@ -133,11 +142,7 @@ export function RegistrationModal({
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         e.preventDefault()
-                        const newWord = keywordInput.trim()
-                        if (newWord && !editKeywords.includes(newWord)) {
-                          setEditKeywords((prev) => [...prev, newWord])
-                          setKeywordInput('')
-                        }
+                        addKeyword()
                       }
                     }}
                     disabled={isUpdatingFilters}
@@ -147,15 +152,9 @@ export function RegistrationModal({
                     variant="outline"
                     size="sm"
                     disabled={!keywordInput.trim() || isUpdatingFilters}
-                    onClick={() => {
-                      const newWord = keywordInput.trim()
-                      if (newWord && !editKeywords.includes(newWord)) {
-                        setEditKeywords((prev) => [...prev, newWord])
-                        setKeywordInput('')
-                      }
-                    }}
+                    onClick={addKeyword}
                   >
-                    {t('popup.addKeyword', 'Adicionar')}
+                    {t('popup.addKeyword')}
                   </Button>
                 </div>
               </div>
@@ -169,10 +168,10 @@ export function RegistrationModal({
                   {isUpdatingFilters ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      {t('popup.saving', 'Salvando...')}
+                      {t('popup.saving')}
                     </>
                   ) : (
-                    t('popup.saveFilters', 'Salvar alterações')
+                    t('popup.saveFilters')
                   )}
                 </Button>
                 <Button

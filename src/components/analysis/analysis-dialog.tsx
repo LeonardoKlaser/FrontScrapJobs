@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Dialog,
@@ -190,7 +190,7 @@ function AnalysisResult({
 
       {/* ATS Keywords */}
       {(atsKeywords?.matched?.length > 0 || atsKeywords?.missing?.length > 0) && (
-        <div className="animate-fade-in-up" style={{ animationDelay: '50ms' }}>
+        <div className="animate-fade-in-up [animation-delay:50ms]">
           <h4 className="font-semibold text-foreground flex items-center gap-2 mb-3 text-sm">
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/10">
               <Target className="h-3.5 w-3.5 text-primary" />
@@ -216,7 +216,13 @@ function AnalysisResult({
                   type="button"
                   onClick={() => onToggleKeyword?.(kw)}
                   disabled={!isClickable}
-                  title={isClickable ? (isKwSelected ? 'Clique para remover' : 'Clique para adicionar ao currículo') : undefined}
+                  title={
+                    isClickable
+                      ? isKwSelected
+                        ? 'Clique para remover'
+                        : 'Clique para adicionar ao currículo'
+                      : undefined
+                  }
                   className={`inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
                     isKwSelected
                       ? 'bg-primary/10 text-primary border border-primary/20'
@@ -225,7 +231,13 @@ function AnalysisResult({
                         : 'bg-red-500/10 text-red-400 border border-red-500/20'
                   }`}
                 >
-                  {isKwSelected ? <CheckCircle className="h-3 w-3" /> : isClickable ? <Plus className="h-3 w-3" /> : <AlertTriangle className="h-3 w-3" />}
+                  {isKwSelected ? (
+                    <CheckCircle className="h-3 w-3" />
+                  ) : isClickable ? (
+                    <Plus className="h-3 w-3" />
+                  ) : (
+                    <AlertTriangle className="h-3 w-3" />
+                  )}
                   {kw}
                 </button>
               )
@@ -236,7 +248,7 @@ function AnalysisResult({
 
       {/* Strengths */}
       {strengthsForThisJob?.length > 0 && (
-        <div className="animate-fade-in-up" style={{ animationDelay: '150ms' }}>
+        <div className="animate-fade-in-up [animation-delay:150ms]">
           <h4 className="font-semibold text-foreground flex items-center gap-2 mb-3 text-sm">
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/10">
               <CheckCircle className="h-3.5 w-3.5 text-primary" />
@@ -262,7 +274,7 @@ function AnalysisResult({
 
       {/* Gaps */}
       {gapsAndImprovementAreas?.length > 0 && (
-        <div className="animate-fade-in-up" style={{ animationDelay: '250ms' }}>
+        <div className="animate-fade-in-up [animation-delay:250ms]">
           <h4 className="font-semibold text-foreground flex items-center gap-2 mb-3 text-sm">
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-warning/10">
               <AlertTriangle className="h-3.5 w-3.5 text-warning" />
@@ -288,7 +300,7 @@ function AnalysisResult({
 
       {/* Suggestions */}
       {actionableResumeSuggestions?.length > 0 && (
-        <div className="animate-fade-in-up" style={{ animationDelay: '350ms' }}>
+        <div className="animate-fade-in-up [animation-delay:350ms]">
           <div className="flex items-center justify-between mb-3">
             <h4 className="font-semibold text-foreground flex items-center gap-2 text-sm">
               <div className="flex h-6 w-6 items-center justify-center rounded-md bg-info/10">
@@ -352,7 +364,7 @@ function AnalysisResult({
 
       {/* Final Considerations */}
       {finalConsiderations && (
-        <div className="animate-fade-in-up" style={{ animationDelay: '450ms' }}>
+        <div className="animate-fade-in-up [animation-delay:450ms]">
           <h4 className="font-semibold text-foreground flex items-center gap-2 mb-3 text-sm">
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/10">
               <Target className="h-3.5 w-3.5 text-primary" />
@@ -381,6 +393,57 @@ function AnalysisResult({
             {t('analysis.redo')}
           </Button>
         )}
+      </div>
+    </div>
+  )
+}
+
+interface AnalysisResultPanelProps {
+  analysis: ResumeAnalysis
+  jobId: number
+  curriculumId: number | undefined
+  selectedSuggestions: Set<number>
+  selectedKeywords: Set<string>
+  onToggleSuggestion: (index: number) => void
+  onToggleKeyword: (kw: string) => void
+  onRedo: () => void
+  onApply: () => void
+}
+
+function AnalysisResultPanel({
+  analysis,
+  jobId,
+  curriculumId,
+  selectedSuggestions,
+  selectedKeywords,
+  onToggleSuggestion,
+  onToggleKeyword,
+  onRedo,
+  onApply
+}: AnalysisResultPanelProps) {
+  const { t } = useTranslation('sites')
+  const totalSelected = selectedSuggestions.size + selectedKeywords.size
+
+  return (
+    <div className="flex flex-col">
+      <div className="max-h-[60vh] overflow-y-auto pr-1 scrollbar-thin space-y-4">
+        <AnalysisResult
+          analysis={analysis}
+          jobId={jobId}
+          curriculumId={curriculumId}
+          onRedo={onRedo}
+          selectedSuggestions={selectedSuggestions}
+          onToggleSuggestion={onToggleSuggestion}
+          selectedKeywords={selectedKeywords}
+          onToggleKeyword={onToggleKeyword}
+        />
+      </div>
+      <div className="pt-6 pb-1 bg-background">
+        <Button onClick={onApply} className="w-full" disabled={totalSelected === 0}>
+          {totalSelected > 0
+            ? `Aplicar ${totalSelected} ${totalSelected > 1 ? 'Sugestões' : 'Sugestão'}`
+            : t('analysis.selectSuggestionsHint', 'Selecione sugestões para aplicar')}
+        </Button>
       </div>
     </div>
   )
@@ -457,6 +520,39 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
     resetAnalysis()
   }
 
+  const handleToggleSuggestion = useCallback((index: number) => {
+    setSelectedSuggestions((prev) => {
+      const next = new Set(prev)
+      if (next.has(index)) next.delete(index)
+      else next.add(index)
+      return next
+    })
+  }, [])
+
+  const handleToggleKeyword = useCallback((kw: string) => {
+    setSelectedKeywords((prev) => {
+      const next = new Set(prev)
+      if (next.has(kw)) next.delete(kw)
+      else next.add(kw)
+      return next
+    })
+  }, [])
+
+  const handleApply = useCallback(() => {
+    setShowApplyStep(true)
+  }, [])
+
+  const handleApplyComplete = useCallback(() => {
+    setShowApplyStep(false)
+    setSelectedSuggestions(new Set())
+    setSelectedKeywords(new Set())
+    onClose()
+  }, [onClose])
+
+  const handleApplyBack = useCallback(() => {
+    setShowApplyStep(false)
+  }, [])
+
   const getErrorMessage = () => {
     if (isAxiosError(error) && error.response?.data?.error) {
       return error.response.data.error
@@ -482,45 +578,17 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
 
         {/* Previous analysis (history) */}
         {step === 'history' && analysisResult && jobId !== null && !showApplyStep && (
-          <div className="flex flex-col">
-            <div className="max-h-[60vh] overflow-y-auto pr-1 scrollbar-thin space-y-4">
-              <AnalysisResult
-                analysis={analysisResult}
-                jobId={jobId}
-                curriculumId={historyData?.curriculum_id}
-                onRedo={handleRedo}
-                selectedSuggestions={selectedSuggestions}
-                onToggleSuggestion={(index) => {
-                  setSelectedSuggestions((prev) => {
-                    const next = new Set(prev)
-                    if (next.has(index)) next.delete(index)
-                    else next.add(index)
-                    return next
-                  })
-                }}
-                selectedKeywords={selectedKeywords}
-                onToggleKeyword={(kw) => {
-                  setSelectedKeywords((prev) => {
-                    const next = new Set(prev)
-                    if (next.has(kw)) next.delete(kw)
-                    else next.add(kw)
-                    return next
-                  })
-                }}
-              />
-            </div>
-            <div className="pt-6 pb-1 bg-background">
-              <Button
-                onClick={() => setShowApplyStep(true)}
-                className="w-full"
-                disabled={(selectedSuggestions.size + selectedKeywords.size) === 0}
-              >
-                {(selectedSuggestions.size + selectedKeywords.size) > 0
-                  ? `Aplicar ${selectedSuggestions.size + selectedKeywords.size} ${(selectedSuggestions.size + selectedKeywords.size) > 1 ? 'Sugestões' : 'Sugestão'}`
-                  : t('analysis.selectSuggestionsHint', 'Selecione sugestões para aplicar')}
-              </Button>
-            </div>
-          </div>
+          <AnalysisResultPanel
+            analysis={analysisResult}
+            jobId={jobId}
+            curriculumId={historyData?.curriculum_id}
+            selectedSuggestions={selectedSuggestions}
+            selectedKeywords={selectedKeywords}
+            onToggleSuggestion={handleToggleSuggestion}
+            onToggleKeyword={handleToggleKeyword}
+            onRedo={handleRedo}
+            onApply={handleApply}
+          />
         )}
 
         {/* Apply suggestions flow (history) */}
@@ -539,13 +607,8 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
                 reasoningForThisJob: 'Palavra-chave ATS da vaga que falta no currículo'
               }))
             ]}
-            onComplete={() => {
-              setShowApplyStep(false)
-              setSelectedSuggestions(new Set())
-              setSelectedKeywords(new Set())
-              onClose()
-            }}
-            onBack={() => setShowApplyStep(false)}
+            onComplete={handleApplyComplete}
+            onBack={handleApplyBack}
           />
         )}
 
@@ -593,45 +656,17 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
 
         {/* New analysis result */}
         {step === 'result' && analysisResult && jobId !== null && !showApplyStep && (
-          <div className="flex flex-col">
-            <div className="max-h-[60vh] overflow-y-auto pr-1 scrollbar-thin">
-              <AnalysisResult
-                analysis={analysisResult}
-                jobId={jobId}
-                curriculumId={selectedCvId ?? undefined}
-                onRedo={handleRedo}
-                selectedSuggestions={selectedSuggestions}
-                onToggleSuggestion={(index) => {
-                  setSelectedSuggestions((prev) => {
-                    const next = new Set(prev)
-                    if (next.has(index)) next.delete(index)
-                    else next.add(index)
-                    return next
-                  })
-                }}
-                selectedKeywords={selectedKeywords}
-                onToggleKeyword={(kw) => {
-                  setSelectedKeywords((prev) => {
-                    const next = new Set(prev)
-                    if (next.has(kw)) next.delete(kw)
-                    else next.add(kw)
-                    return next
-                  })
-                }}
-              />
-            </div>
-            <div className="pt-6 pb-1 bg-background">
-              <Button
-                onClick={() => setShowApplyStep(true)}
-                className="w-full"
-                disabled={(selectedSuggestions.size + selectedKeywords.size) === 0}
-              >
-                {(selectedSuggestions.size + selectedKeywords.size) > 0
-                  ? `Aplicar ${selectedSuggestions.size + selectedKeywords.size} ${(selectedSuggestions.size + selectedKeywords.size) > 1 ? 'Sugestões' : 'Sugestão'}`
-                  : t('analysis.selectSuggestionsHint', 'Selecione sugestões para aplicar')}
-              </Button>
-            </div>
-          </div>
+          <AnalysisResultPanel
+            analysis={analysisResult}
+            jobId={jobId}
+            curriculumId={selectedCvId ?? undefined}
+            selectedSuggestions={selectedSuggestions}
+            selectedKeywords={selectedKeywords}
+            onToggleSuggestion={handleToggleSuggestion}
+            onToggleKeyword={handleToggleKeyword}
+            onRedo={handleRedo}
+            onApply={handleApply}
+          />
         )}
 
         {/* Apply suggestions flow */}
@@ -650,13 +685,8 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
                 reasoningForThisJob: 'Palavra-chave ATS da vaga que falta no currículo'
               }))
             ]}
-            onComplete={() => {
-              setShowApplyStep(false)
-              setSelectedSuggestions(new Set())
-              setSelectedKeywords(new Set())
-              onClose()
-            }}
-            onBack={() => setShowApplyStep(false)}
+            onComplete={handleApplyComplete}
+            onBack={handleApplyBack}
           />
         )}
       </DialogContent>

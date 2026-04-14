@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Save, Download, SaveAll, Loader2, ArrowLeft, CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { TemplateSelector } from '@/components/curriculum/template-selector'
@@ -29,6 +30,7 @@ export function ApplySuggestionsStep({
   const [saveMode, setSaveMode] = useState<'new' | 'overwrite' | null>(null)
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
   const [pdfUrl, setPdfUrl] = useState<string | null>(null)
+  const { t } = useTranslation('sites')
 
   const { mutate: applySuggestions } = useApplySuggestions()
 
@@ -79,9 +81,9 @@ export function ApplySuggestionsStep({
             setPdfUrl(data.pdf_url)
           }
           const messages: Record<ActionType, string> = {
-            save: 'Currículo salvo com sucesso!',
-            download: 'PDF gerado com sucesso!',
-            both: 'Currículo salvo e PDF gerado com sucesso!'
+            save: t('analysis.appliedSave'),
+            download: t('analysis.appliedDownload'),
+            both: t('analysis.appliedBoth')
           }
           toast.success(messages[finalAction])
           if (data.pdf_url) {
@@ -102,7 +104,7 @@ export function ApplySuggestionsStep({
     return (
       <div className="flex flex-col items-center justify-center py-8 gap-3">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <p className="text-sm text-muted-foreground">Aplicando sugestões e processando...</p>
+        <p className="text-sm text-muted-foreground">{t('analysis.processing')}</p>
       </div>
     )
   }
@@ -115,14 +117,14 @@ export function ApplySuggestionsStep({
         </div>
         <div className="text-center space-y-1">
           <p className="font-medium text-foreground">
-            {action === 'both' ? 'Currículo salvo e PDF gerado!' : 'PDF gerado com sucesso!'}
+            {action === 'both' ? t('analysis.appliedBoth') : t('analysis.appliedDownload')}
           </p>
-          <p className="text-xs text-muted-foreground">Link válido por 1 hora</p>
+          <p className="text-xs text-muted-foreground">{t('analysis.linkExpiry')}</p>
         </div>
         <Button className="gap-2" asChild>
           <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
             <Download className="h-4 w-4" />
-            Baixar PDF
+            {t('analysis.downloadPdf')}
           </a>
         </Button>
       </div>
@@ -136,26 +138,26 @@ export function ApplySuggestionsStep({
           <Button variant="ghost" size="sm" onClick={onBack}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <h3 className="font-medium">O que deseja fazer com as sugestões?</h3>
+          <h3 className="font-medium">{t('analysis.applyQuestion')}</h3>
         </div>
 
         <div className="grid gap-3">
           <ActionCard
             icon={<SaveAll className="h-5 w-5" />}
-            title="Salvar e Baixar PDF"
-            description="Aplica sugestões, salva o currículo e gera um PDF"
+            title={t('analysis.actionSaveAndDownload')}
+            description={t('analysis.actionSaveAndDownloadDesc')}
             onClick={() => handleActionSelect('both')}
           />
           <ActionCard
             icon={<Save className="h-5 w-5" />}
-            title="Apenas Salvar"
-            description="Aplica sugestões e salva o currículo atualizado"
+            title={t('analysis.actionSaveOnly')}
+            description={t('analysis.actionSaveOnlyDesc')}
             onClick={() => handleActionSelect('save')}
           />
           <ActionCard
             icon={<Download className="h-5 w-5" />}
-            title="Apenas Baixar PDF"
-            description="Gera um PDF com as sugestões sem salvar no currículo"
+            title={t('analysis.actionDownloadOnly')}
+            description={t('analysis.actionDownloadOnlyDesc')}
             onClick={() => handleActionSelect('download')}
           />
         </div>
@@ -170,18 +172,18 @@ export function ApplySuggestionsStep({
           <Button variant="ghost" size="sm" onClick={() => setStep('choose-action')}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <h3 className="font-medium">Como deseja salvar?</h3>
+          <h3 className="font-medium">{t('analysis.chooseSaveMode')}</h3>
         </div>
 
         <div className="grid gap-3">
           <ActionCard
-            title="Criar novo currículo"
-            description="Mantém o original e cria uma cópia com as sugestões"
+            title={t('analysis.saveModeNew')}
+            description={t('analysis.saveModeNewDesc')}
             onClick={() => handleSaveModeSelect('new')}
           />
           <ActionCard
-            title="Atualizar currículo atual"
-            description="Substitui o currículo atual com as sugestões aplicadas"
+            title={t('analysis.saveModeOverwrite')}
+            description={t('analysis.saveModeOverwriteDesc')}
             onClick={() => handleSaveModeSelect('overwrite')}
           />
         </div>
@@ -203,7 +205,7 @@ export function ApplySuggestionsStep({
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <h3 className="font-medium">Escolha o modelo do PDF</h3>
+          <h3 className="font-medium">{t('analysis.chooseTemplate')}</h3>
         </div>
 
         <TemplateSelector selectedId={selectedTemplate} onSelect={handleTemplateSelect} />

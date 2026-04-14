@@ -71,7 +71,10 @@ describe('siteCareerService', () => {
 
       const sentFormData = vi.mocked(api.post).mock.calls[0][1] as FormData
       expect(sentFormData.get('logo')).toBeTruthy()
-      expect(sentFormData.get('siteData')).toBe(JSON.stringify(mockFormData))
+      const expectedCleanedData = Object.fromEntries(
+        Object.entries(mockFormData).map(([key, value]) => [key, value === '' ? null : value])
+      )
+      expect(sentFormData.get('siteData')).toBe(JSON.stringify(expectedCleanedData))
     })
   })
 

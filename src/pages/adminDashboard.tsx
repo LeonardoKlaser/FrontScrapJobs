@@ -1,6 +1,5 @@
 import { DashboardHeader } from '@/components/adminDashboard/dashboard-header'
 import { KPICards } from '@/components/adminDashboard/kpi-cards'
-import { ChartsSection } from '@/components/adminDashboard/charts-section'
 import { EmailConfigSection } from '@/components/adminDashboard/email-config-section'
 import { ActivityLogs } from '@/components/adminDashboard/activity-logs'
 import { useAdminDashboard } from '@/hooks/useAdminDashboard'
@@ -13,7 +12,7 @@ export default function AdminDashboard() {
       <div className="animate-fade-in-up">
         <DashboardHeader />
       </div>
-      <div className="animate-fade-in-up" style={{ animationDelay: '60ms' }}>
+      <div className="animate-fade-in-up [animation-delay:60ms]">
         <KPICards
           totalRevenue={data?.total_revenue ?? 0}
           activeUsers={data?.active_users ?? 0}
@@ -22,13 +21,10 @@ export default function AdminDashboard() {
           isLoading={isLoading}
         />
       </div>
-      <div className="animate-fade-in-up" style={{ animationDelay: '120ms' }}>
-        <ChartsSection />
-      </div>
-      <div className="animate-fade-in-up" style={{ animationDelay: '180ms' }}>
+      <div className="animate-fade-in-up [animation-delay:120ms]">
         <EmailConfigSection />
       </div>
-      <div className="animate-fade-in-up" style={{ animationDelay: '240ms' }}>
+      <div className="animate-fade-in-up [animation-delay:180ms]">
         <ActivityLogs errors={data?.recent_errors ?? []} isLoading={isLoading} />
       </div>
     </div>

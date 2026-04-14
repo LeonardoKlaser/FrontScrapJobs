@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import React, { useRef, useCallback } from 'react'
 import { useDraggable } from '@dnd-kit/core'
 import { useTranslation } from 'react-i18next'
 
@@ -6,10 +6,10 @@ import type { JobApplicationWithJob } from '@/models/application'
 
 interface Props {
   app: JobApplicationWithJob
-  onClick?: () => void
+  onCardClick: (app: JobApplicationWithJob) => void
 }
 
-export function KanbanCard({ app, onClick }: Props) {
+export const KanbanCard = React.memo(function KanbanCard({ app, onCardClick }: Props) {
   const dragStartPos = useRef<{ x: number; y: number } | null>(null)
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: app.id
@@ -26,16 +26,19 @@ export function KanbanCard({ app, onClick }: Props) {
     listeners?.onPointerDown?.(e as any)
   }
 
-  const handleClick = (e: React.MouseEvent) => {
-    if (!dragStartPos.current) {
-      onClick?.()
-      return
-    }
-    const dx = Math.abs(e.clientX - dragStartPos.current.x)
-    const dy = Math.abs(e.clientY - dragStartPos.current.y)
-    if (dx < 5 && dy < 5) onClick?.()
-    dragStartPos.current = null
-  }
+  const handleClick = useCallback(
+    (e: React.MouseEvent) => {
+      if (!dragStartPos.current) {
+        onCardClick(app)
+        return
+      }
+      const dx = Math.abs(e.clientX - dragStartPos.current.x)
+      const dy = Math.abs(e.clientY - dragStartPos.current.y)
+      if (dx < 5 && dy < 5) onCardClick(app)
+      dragStartPos.current = null
+    },
+    [onCardClick, app]
+  )
 
   return (
     <div
@@ -52,7 +55,7 @@ export function KanbanCard({ app, onClick }: Props) {
       <KanbanCardContent app={app} />
     </div>
   )
-}
+})
 
 /** Lightweight preview for DragOverlay (no drag hooks) */
 export function KanbanCardPreview({ app }: { app: JobApplicationWithJob }) {

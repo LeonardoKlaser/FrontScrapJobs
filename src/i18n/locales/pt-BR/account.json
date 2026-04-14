@@ -53,14 +53,7 @@
     "pdfGenerations": "Gerações de PDF / mês",
     "unlimited": "Ilimitado",
     "benefits": "Benefícios incluídos",
-    "manage": "Gerenciar Assinatura",
-    "upgrade": "Fazer Upgrade",
     "expiresAt": "Expira em",
-    "manageTitle": "Gerenciar Plano",
-    "currentPlan": "Plano atual",
-    "renew": "Renovar",
-    "subscribe": "Assinar",
-    "free": "Grátis",
     "weekdaysOnlyLabel": "Apenas dias úteis",
     "weekdaysOnlyDescription": "Receber notificações somente de segunda a sexta",
     "preferencesUpdated": "Preferências atualizadas!",
@@ -71,6 +64,7 @@
     "confirmCancel": "Confirmar Cancelamento",
     "cancelSuccess": "Assinatura cancelada com sucesso",
     "cancelError": "Erro ao cancelar assinatura",
+    "alreadyCanceled": "Sua assinatura já está cancelada ou não foi encontrada.",
     "cancelContact": "Está com algum problema? Fale com a gente antes:"
   }
 }

@@ -18,9 +18,7 @@ export function ProductVisualizationSection() {
             <h2 className="font-display text-2xl lg:text-4xl font-semibold text-zinc-900 mt-3">
               {t('productVisualization.title')}
             </h2>
-            <p className="text-base text-zinc-500 mt-4">
-              {t('productVisualization.description')}
-            </p>
+            <p className="text-base text-zinc-500 mt-4">{t('productVisualization.description')}</p>
           </div>
 
           {/* Bullet points */}
@@ -28,9 +26,7 @@ export function ProductVisualizationSection() {
             {(['bullet1', 'bullet2', 'bullet3'] as const).map((key) => (
               <li key={key} className="flex items-start gap-3">
                 <Check className="w-4 h-4 text-emerald-500 shrink-0 mt-1" />
-                <span className="text-base text-zinc-500">
-                  {t(`productVisualization.${key}`)}
-                </span>
+                <span className="text-base text-zinc-500">{t(`productVisualization.${key}`)}</span>
               </li>
             ))}
           </ul>

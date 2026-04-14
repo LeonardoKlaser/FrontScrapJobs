@@ -70,13 +70,17 @@ export default function CheckoutPage() {
           {t('paymentForm.backToHome')}
         </Link>
 
-        <PageHeader title={t('checkout.title')} description={t('checkout.description')} className="mb-6" />
+        <PageHeader
+          title={t('checkout.title')}
+          description={t('checkout.description')}
+          className="mb-6"
+        />
 
         <div className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-3">
-          <div className="animate-fade-in-up lg:col-span-1" style={{ animationDelay: '100ms' }}>
+          <div className="animate-fade-in-up lg:col-span-1 [animation-delay:100ms]">
             <PlanSummary plan={plan} />
           </div>
-          <div className="animate-fade-in-up lg:col-span-2" style={{ animationDelay: '200ms' }}>
+          <div className="animate-fade-in-up lg:col-span-2 [animation-delay:200ms]">
             <PaymentForm plan={plan} isLoading={isSubmitting} setIsLoading={setIsSubmitting} />
           </div>
         </div>

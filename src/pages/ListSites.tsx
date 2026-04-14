@@ -2,7 +2,6 @@ import { useState, useMemo, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Building2, CheckCircle, Radar, Search, X } from 'lucide-react'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { RegistrationModal } from '@/components/companyPopup'
 import { useSiteCareer } from '@/hooks/useSiteCareer'
@@ -110,10 +109,7 @@ export default function EmpresasPage() {
       <PageHeader title={t('title')} description={t('description')} />
 
       {/* Stats row */}
-      <div
-        className="animate-fade-in-up grid grid-cols-3 gap-3 sm:gap-4 max-w-lg mx-auto"
-        style={{ animationDelay: '50ms' }}
-      >
+      <div className="animate-fade-in-up grid grid-cols-3 gap-3 sm:gap-4 max-w-lg mx-auto [animation-delay:50ms]">
         <div className="text-center">
           <p className="text-2xl font-display font-bold text-foreground">{totalCount}</p>
           <p className="text-xs text-muted-foreground">{t('stats.companies')}</p>
@@ -129,15 +125,12 @@ export default function EmpresasPage() {
       </div>
 
       {/* Request banner */}
-      <div className="animate-fade-in-up" style={{ animationDelay: '75ms' }}>
+      <div className="animate-fade-in-up [animation-delay:75ms]">
         <RequestSiteBanner />
       </div>
 
       {/* Search + Filters */}
-      <div
-        className="animate-fade-in-up max-w-md mx-auto space-y-3"
-        style={{ animationDelay: '100ms' }}
-      >
+      <div className="animate-fade-in-up max-w-md mx-auto space-y-3 [animation-delay:100ms]">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
@@ -202,9 +195,13 @@ export default function EmpresasPage() {
             <div className="w-full max-w-md mx-auto rounded-lg border border-primary/20 bg-primary/5 p-5 space-y-3">
               <div className="flex items-center gap-2 justify-center">
                 <Radar className="h-4 w-4 text-primary" />
-                <p className="text-sm font-medium text-foreground">{t('emptySearchRequest.title')}</p>
+                <p className="text-sm font-medium text-foreground">
+                  {t('emptySearchRequest.title')}
+                </p>
               </div>
-              <p className="text-xs text-muted-foreground text-center">{t('emptySearchRequest.description')}</p>
+              <p className="text-xs text-muted-foreground text-center">
+                {t('emptySearchRequest.description')}
+              </p>
               <RequestSiteForm />
             </div>
           )}

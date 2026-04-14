@@ -50,7 +50,7 @@ export function PlanSection({ user }: PlanSectionProps) {
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } })?.response?.status
       if (status === 400) {
-        toast.success(t('plan.cancelSuccess'))
+        toast.info(t('plan.alreadyCanceled'))
         setShowCancelDialog(false)
         queryClient.invalidateQueries({ queryKey: ['user'] })
       } else {
@@ -132,7 +132,7 @@ export function PlanSection({ user }: PlanSectionProps) {
             </div>
             <div className="rounded-lg border border-border/50 bg-muted/30 p-4">
               <p className="text-xs font-medium text-muted-foreground">
-                {t('plan.pdfExtractions', 'Extrações de PDF')}
+                {t('plan.pdfExtractions')}
               </p>
               <p className="mt-1 font-display text-2xl font-bold text-foreground">
                 {extractionUsed}
@@ -145,7 +145,7 @@ export function PlanSection({ user }: PlanSectionProps) {
             </div>
             <div className="rounded-lg border border-border/50 bg-muted/30 p-4">
               <p className="text-xs font-medium text-muted-foreground">
-                {t('plan.suggestionApplies', 'Aplicações de Sugestões')}
+                {t('plan.suggestionApplies')}
               </p>
               <p className="mt-1 font-display text-2xl font-bold text-foreground">
                 {suggestionUsed}
@@ -158,7 +158,7 @@ export function PlanSection({ user }: PlanSectionProps) {
             </div>
             <div className="rounded-lg border border-border/50 bg-muted/30 p-4">
               <p className="text-xs font-medium text-muted-foreground">
-                {t('plan.pdfGenerations', 'Gerações de PDF')}
+                {t('plan.pdfGenerations')}
               </p>
               <p className="mt-1 font-display text-2xl font-bold text-foreground">
                 {pdfGenUsed}
@@ -170,8 +170,7 @@ export function PlanSection({ user }: PlanSectionProps) {
 
           {user?.expires_at && (
             <p className="text-xs text-muted-foreground mt-2">
-              {t('plan.expiresAt', 'Expira em')}:{' '}
-              {new Date(user.expires_at).toLocaleDateString('pt-BR')}
+              {t('plan.expiresAt')}: {new Date(user.expires_at).toLocaleDateString(i18n.language)}
             </p>
           )}
 
@@ -225,13 +224,18 @@ export function PlanSection({ user }: PlanSectionProps) {
             <DialogTitle>{t('plan.cancelTitle')}</DialogTitle>
             <DialogDescription>
               {t('plan.cancelDescription', {
-                date: user?.expires_at ? new Date(user.expires_at).toLocaleDateString(i18n.language) : ''
+                date: user?.expires_at
+                  ? new Date(user.expires_at).toLocaleDateString(i18n.language)
+                  : ''
               })}
             </DialogDescription>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
             {t('plan.cancelContact')}{' '}
-            <a href={`mailto:${tCommon('footer.contactEmail')}`} className="text-primary hover:underline font-medium">
+            <a
+              href={`mailto:${tCommon('footer.contactEmail')}`}
+              className="text-primary hover:underline font-medium"
+            >
               {tCommon('footer.contactEmail')}
             </a>
           </p>
@@ -239,7 +243,12 @@ export function PlanSection({ user }: PlanSectionProps) {
             <Button variant="secondary" size="sm" onClick={() => setShowCancelDialog(false)}>
               {tCommon('actions.back')}
             </Button>
-            <Button variant="destructive" size="sm" onClick={handleCancelSubscription} disabled={isCanceling}>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleCancelSubscription}
+              disabled={isCanceling}
+            >
               {isCanceling ? <Spinner className="h-4 w-4" /> : t('plan.confirmCancel')}
             </Button>
           </DialogFooter>

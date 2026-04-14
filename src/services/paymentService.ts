@@ -79,9 +79,9 @@ export async function tokenizeCard(cardData: CardData): Promise<PagarmeTokenResp
           holder_name: cardData.holderName,
           exp_month: cardData.expMonth,
           exp_year: cardData.expYear,
-          cvv: cardData.cvv,
-        },
-      }),
+          cvv: cardData.cvv
+        }
+      })
     })
   } catch {
     throw new TokenizationError('Erro de conexão. Tente novamente.')
@@ -91,9 +91,7 @@ export async function tokenizeCard(cardData: CardData): Promise<PagarmeTokenResp
   try {
     body = await response.json()
   } catch {
-    throw new TokenizationError(
-      'Resposta inesperada do serviço de pagamento. Tente novamente.'
-    )
+    throw new TokenizationError('Resposta inesperada do serviço de pagamento. Tente novamente.')
   }
 
   if (!response.ok) {
@@ -104,9 +102,7 @@ export async function tokenizeCard(cardData: CardData): Promise<PagarmeTokenResp
 
   const tokenResponse = body as PagarmeTokenResponse
   if (!tokenResponse?.id) {
-    throw new TokenizationError(
-      'Resposta incompleta do serviço de pagamento. Tente novamente.'
-    )
+    throw new TokenizationError('Resposta incompleta do serviço de pagamento. Tente novamente.')
   }
 
   return tokenResponse

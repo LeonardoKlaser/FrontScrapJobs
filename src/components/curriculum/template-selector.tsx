@@ -64,9 +64,11 @@ export function TemplateSelector({ selectedId, onSelect }: TemplateSelectorProps
               )}
             </div>
 
-            <p className={`text-xs font-medium transition-colors ${
-              isSelected ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'
-            }`}>
+            <p
+              className={`text-xs font-medium transition-colors ${
+                isSelected ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'
+              }`}
+            >
               {template.name}
             </p>
           </button>

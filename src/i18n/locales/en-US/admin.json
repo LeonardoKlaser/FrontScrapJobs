@@ -95,6 +95,19 @@
       "viewLink": "View"
     }
   },
+  "emailConfig": {
+    "loading": "Loading email configuration...",
+    "title": "Email Providers",
+    "save": "Save",
+    "primary": "Primary",
+    "disabled": "Disabled",
+    "saveSuccess": "Configuration saved successfully.",
+    "saveError": "Error saving configuration."
+  },
+  "dashboardHeader": {
+    "title": "Admin Dashboard",
+    "subtitle": "Platform overview and operation metrics"
+  },
   "charts": {
     "monthlyRevenue": "Monthly Revenue",
     "last6Months": "Last 6 months",

@@ -4,8 +4,10 @@ import { ThemeProvider, useTheme } from './components/theme-provider'
 import type { QueryClient } from '@tanstack/react-query'
 import { createRouter } from './router/routes'
 import { Toaster } from 'sonner'
+import i18n from '@/i18n'
 import { ErrorBoundary } from '@/components/common/error-boundary'
 import { LoadingSection } from '@/components/common/loading-section'
+import { TooltipProvider } from '@/components/tooltip'
 
 function ThemedToaster() {
   const { theme } = useTheme()
@@ -41,12 +43,14 @@ export function App({ queryClient }: AppProps) {
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <ErrorBoundary>
-        <Suspense fallback={<LoadingSection variant="full" label="Carregando..." />}>
-          <RouterProvider router={router} />
-        </Suspense>
-      </ErrorBoundary>
-      <ThemedToaster />
+      <TooltipProvider>
+        <ErrorBoundary>
+          <Suspense fallback={<LoadingSection variant="full" label={i18n.t('loading')} />}>
+            <RouterProvider router={router} />
+          </Suspense>
+        </ErrorBoundary>
+        <ThemedToaster />
+      </TooltipProvider>
     </ThemeProvider>
   )
 }

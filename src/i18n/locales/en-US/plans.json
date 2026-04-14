@@ -93,7 +93,7 @@
   },
   "planSummary": {
     "description": "Your plan summary",
-    "monthlyPayment": "Monthly one-time payment",
+    "monthlyPayment": "Monthly payment",
     "included": "What's included:",
     "planName": "{{name}} Plan"
   },
@@ -103,7 +103,8 @@
     "emailSent": "A confirmation email has been sent to your inbox.",
     "goToDashboard": "Go to Dashboard",
     "goToLogin": "Sign In and Access",
-    "needHelp": "Need help? Contact our support at"
+    "needHelp": "Need help? Contact our support at",
+    "fallbackPlan": "your plan"
   },
   "renew": {
     "loading": "Loading plans...",
@@ -112,6 +113,9 @@
     "sites": "{{count}} monitored companies",
     "analyses": "{{count}} AI analyses/month",
     "unlimitedAnalyses": "Unlimited AI analyses",
-    "subscribe": "Subscribe"
+    "subscribe": "Subscribe",
+    "free": "Free",
+    "currencySymbol": "$",
+    "perMonth": "/mo"
   }
 }
