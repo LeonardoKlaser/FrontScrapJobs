@@ -72,7 +72,9 @@
       "headers": "Headers in JSON format",
       "payload": "Request Body (Payload Template)",
       "jsonMapping": "JSON Data Mapping",
-      "jsonMappingTooltip": "Defines the path to extract each data field from the API JSON response"
+      "jsonMappingTooltip": "Defines the path to extract each data field from the API JSON response",
+      "paginationDelay": "Pagination Delay (ms)",
+      "paginationDelayTooltip": "Milliseconds to wait between paginated requests to avoid rate limiting (429). E.g. 1500 = 1.5s"
     },
     "logo": {
       "title": "Company Logo",

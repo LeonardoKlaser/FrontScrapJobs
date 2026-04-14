@@ -61,6 +61,7 @@ export default function AdicionarSitePage() {
     json_data_mappings: ''
   })
   const [logoFile, setLogoFile] = useState<File | null>(null)
+  const [paginationDelayMs, setPaginationDelayMs] = useState('')
   const { mutate: addSite } = useAddSiteConfig()
   const {
     mutate: testScrape,
@@ -86,13 +87,31 @@ export default function AdicionarSitePage() {
     }
   }
 
+  const buildFormDataWithDelay = (): SiteConfigFormData => {
+    if (formData.scraping_type !== 'API' || !paginationDelayMs || !formData.json_data_mappings.trim()) {
+      return formData
+    }
+    try {
+      const mappings = JSON.parse(formData.json_data_mappings)
+      const delay = Number.parseInt(paginationDelayMs, 10)
+      if (delay > 0) {
+        mappings.pagination_delay_ms = delay
+      } else {
+        delete mappings.pagination_delay_ms
+      }
+      return { ...formData, json_data_mappings: JSON.stringify(mappings) }
+    } catch {
+      return formData
+    }
+  }
+
   const handleTestScrape = () => {
     if (!formData.base_url) {
       toast.error('URL base é obrigatória para testar')
       return
     }
     resetSandbox()
-    testScrape(formData, {
+    testScrape(buildFormDataWithDelay(), {
       onSuccess: (result) => {
         if (result.success) {
           toast.success(`${result.data?.length || 0} vaga(s) encontrada(s)`)
@@ -118,7 +137,7 @@ export default function AdicionarSitePage() {
     }
     setLoading()
     addSite(
-      { formData, logoFile },
+      { formData: buildFormDataWithDelay(), logoFile },
       {
         onSuccess: () => {
           setSuccess()
@@ -144,6 +163,7 @@ export default function AdicionarSitePage() {
             json_data_mappings: ''
           })
           setLogoFile(null)
+          setPaginationDelayMs('')
         },
         onError: (err) => {
           setBtnError()
@@ -596,6 +616,24 @@ export default function AdicionarSitePage() {
                     value={formData.json_data_mappings}
                     onChange={(e) => handleInputChange('json_data_mappings', e.target.value)}
                     rows={4}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="pagination_delay_ms">{t('addSite.apiConfig.paginationDelay')}</Label>
+                    <Tooltip content={t('addSite.apiConfig.paginationDelayTooltip')}>
+                      <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                    </Tooltip>
+                  </div>
+                  <Input
+                    id="pagination_delay_ms"
+                    type="number"
+                    min="0"
+                    step="100"
+                    placeholder="0"
+                    value={paginationDelayMs}
+                    onChange={(e) => setPaginationDelayMs(e.target.value)}
                   />
                 </div>
               </CardContent>
