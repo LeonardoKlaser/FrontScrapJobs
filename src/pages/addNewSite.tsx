@@ -617,9 +617,7 @@ export default function AdicionarSitePage() {
         </div>
 
         {/* Submit */}
-        <div
-          className="flex flex-col sm:flex-row sm:justify-end gap-3 animate-fade-in-up [animation-delay:250ms]"
-        >
+        <div className="flex flex-col sm:flex-row sm:justify-end gap-3 animate-fade-in-up [animation-delay:250ms]">
           <Button
             type="button"
             variant="outline"

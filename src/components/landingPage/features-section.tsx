@@ -12,26 +12,26 @@ export function FeaturesSection() {
       icon: Clock,
       titleKey: 'features.scraping.title',
       descriptionKey: 'features.scraping.description',
-      image: undefined,
+      image: undefined
     },
     {
       icon: BarChart3,
       titleKey: 'features.ai.title',
       descriptionKey: 'features.ai.description',
-      image: emailAnalise3,
+      image: emailAnalise3
     },
     {
       icon: Mail,
       titleKey: 'features.alerts.title',
       descriptionKey: 'features.alerts.description',
-      image: emailAnalise,
+      image: emailAnalise
     },
     {
       icon: InfinityIcon,
       titleKey: 'features.monitoring.title',
       descriptionKey: 'features.monitoring.description',
-      image: undefined,
-    },
+      image: undefined
+    }
   ]
 
   return (
@@ -57,7 +57,12 @@ export function FeaturesSection() {
               style={{ animationDelay: `${index * 150}ms` }}
             >
               {feature.image ? (
-                <img src={feature.image} alt={t(feature.titleKey)} loading="lazy" className="w-full h-40 object-cover" />
+                <img
+                  src={feature.image}
+                  alt={t(feature.titleKey)}
+                  loading="lazy"
+                  className="w-full h-40 object-cover"
+                />
               ) : (
                 <div className="w-full h-40 bg-zinc-100 flex items-center justify-center">
                   <feature.icon className="w-8 h-8 text-zinc-400" />
@@ -74,9 +79,7 @@ export function FeaturesSection() {
                     {t(feature.titleKey)}
                   </h3>
                 </div>
-                <p className="text-[15px] text-zinc-500">
-                  {t(feature.descriptionKey)}
-                </p>
+                <p className="text-[15px] text-zinc-500">{t(feature.descriptionKey)}</p>
               </div>
             </div>
           ))}

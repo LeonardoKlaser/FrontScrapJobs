@@ -70,7 +70,11 @@ export default function CheckoutPage() {
           {t('paymentForm.backToHome')}
         </Link>
 
-        <PageHeader title={t('checkout.title')} description={t('checkout.description')} className="mb-6" />
+        <PageHeader
+          title={t('checkout.title')}
+          description={t('checkout.description')}
+          className="mb-6"
+        />
 
         <div className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-3">
           <div className="animate-fade-in-up lg:col-span-1 [animation-delay:100ms]">

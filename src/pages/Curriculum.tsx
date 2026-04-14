@@ -59,7 +59,7 @@ export function Curriculum() {
           <CurriculumForm
             curriculum={selectedCurriculum}
             isEditing={selectedCurriculumId !== null}
-            initialData={selectedCurriculumId === null ? importedData ?? undefined : undefined}
+            initialData={selectedCurriculumId === null ? (importedData ?? undefined) : undefined}
             onSaveSuccess={() => setImportedData(null)}
           />
         </div>

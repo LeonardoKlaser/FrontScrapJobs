@@ -14,18 +14,14 @@ export function HeroSection() {
           {/* Left column — Text */}
           <div className="space-y-8 text-center md:text-left">
             {/* Headline */}
-            <h1
-              className="text-3xl min-[400px]:text-4xl lg:text-[56px] font-semibold leading-tight tracking-tight animate-fade-in-up text-balance text-zinc-900 [animation-delay:0ms]"
-            >
+            <h1 className="text-3xl min-[400px]:text-4xl lg:text-[56px] font-semibold leading-tight tracking-tight animate-fade-in-up text-balance text-zinc-900 [animation-delay:0ms]">
               {t('hero.heading1')}
               <br />
               <span className="text-gradient-primary">{t('hero.heading2')}</span>
             </h1>
 
             {/* Subheadline */}
-            <p
-              className="text-lg text-zinc-500 leading-relaxed animate-fade-in-up text-pretty max-w-[480px] mx-auto md:mx-0 [animation-delay:100ms]"
-            >
+            <p className="text-lg text-zinc-500 leading-relaxed animate-fade-in-up text-pretty max-w-[480px] mx-auto md:mx-0 [animation-delay:100ms]">
               {t('hero.subheading')}
             </p>
 
@@ -35,7 +31,9 @@ export function HeroSection() {
                 variant="glow"
                 size="lg"
                 className="w-full sm:w-auto px-8 py-4 text-lg font-medium rounded-lg animate-pulse-glow"
-                onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() =>
+                  document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
+                }
               >
                 {t('hero.cta')}
                 <ArrowRight className="w-5 h-5 ml-1" />
@@ -57,9 +55,7 @@ export function HeroSection() {
           </div>
 
           {/* Right column — Dashboard Image */}
-          <div
-            className="mt-12 md:mt-0 animate-fade-in-up max-w-sm sm:max-w-full mx-auto [animation-delay:300ms]"
-          >
+          <div className="mt-12 md:mt-0 animate-fade-in-up max-w-sm sm:max-w-full mx-auto [animation-delay:300ms]">
             <img
               src={dashboardImg}
               alt={t('hero.dashboardAlt')}

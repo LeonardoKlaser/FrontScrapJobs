@@ -170,8 +170,7 @@ export function PlanSection({ user }: PlanSectionProps) {
 
           {user?.expires_at && (
             <p className="text-xs text-muted-foreground mt-2">
-              {t('plan.expiresAt')}:{' '}
-              {new Date(user.expires_at).toLocaleDateString(i18n.language)}
+              {t('plan.expiresAt')}: {new Date(user.expires_at).toLocaleDateString(i18n.language)}
             </p>
           )}
 
@@ -225,13 +224,18 @@ export function PlanSection({ user }: PlanSectionProps) {
             <DialogTitle>{t('plan.cancelTitle')}</DialogTitle>
             <DialogDescription>
               {t('plan.cancelDescription', {
-                date: user?.expires_at ? new Date(user.expires_at).toLocaleDateString(i18n.language) : ''
+                date: user?.expires_at
+                  ? new Date(user.expires_at).toLocaleDateString(i18n.language)
+                  : ''
               })}
             </DialogDescription>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
             {t('plan.cancelContact')}{' '}
-            <a href={`mailto:${tCommon('footer.contactEmail')}`} className="text-primary hover:underline font-medium">
+            <a
+              href={`mailto:${tCommon('footer.contactEmail')}`}
+              className="text-primary hover:underline font-medium"
+            >
               {tCommon('footer.contactEmail')}
             </a>
           </p>
@@ -239,7 +243,12 @@ export function PlanSection({ user }: PlanSectionProps) {
             <Button variant="secondary" size="sm" onClick={() => setShowCancelDialog(false)}>
               {tCommon('actions.back')}
             </Button>
-            <Button variant="destructive" size="sm" onClick={handleCancelSubscription} disabled={isCanceling}>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleCancelSubscription}
+              disabled={isCanceling}
+            >
               {isCanceling ? <Spinner className="h-4 w-4" /> : t('plan.confirmCancel')}
             </Button>
           </DialogFooter>

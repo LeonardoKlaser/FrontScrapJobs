@@ -40,7 +40,9 @@ export default function RenewSubscription() {
                     ? t('renew.free')
                     : `${t('renew.currencySymbol')}${plan.price.toFixed(2).replace('.', ',')}`}
                 </span>
-                {plan.price > 0 && <span className="text-xs text-muted-foreground">{t('renew.perMonth')}</span>}
+                {plan.price > 0 && (
+                  <span className="text-xs text-muted-foreground">{t('renew.perMonth')}</span>
+                )}
               </div>
             </CardHeader>
             <CardContent className="flex flex-1 flex-col gap-4">

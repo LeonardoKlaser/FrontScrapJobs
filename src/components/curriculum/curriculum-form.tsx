@@ -42,7 +42,12 @@ function createEmptyFormData(): Omit<Curriculum, 'id'> {
   }
 }
 
-export function CurriculumForm({ curriculum, isEditing, initialData, onSaveSuccess }: CurriculumFormProps) {
+export function CurriculumForm({
+  curriculum,
+  isEditing,
+  initialData,
+  onSaveSuccess
+}: CurriculumFormProps) {
   const { t } = useTranslation('curriculum')
   const [formData, setFormData] = useState(createEmptyFormData)
   const {

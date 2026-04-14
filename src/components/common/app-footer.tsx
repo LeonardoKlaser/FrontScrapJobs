@@ -10,10 +10,7 @@ export function AppFooter() {
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
-            <Link
-              to={PATHS.terms}
-              className="hover:text-foreground transition-colors duration-150"
-            >
+            <Link to={PATHS.terms} className="hover:text-foreground transition-colors duration-150">
               {t('footer.terms')}
             </Link>
             <Link

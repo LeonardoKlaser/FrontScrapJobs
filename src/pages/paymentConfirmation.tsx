@@ -27,21 +27,15 @@ export default function PaymentConfirmationPage() {
         </div>
 
         <div className="space-y-6 text-center">
-          <h1
-            className="animate-fade-in-up text-gradient-primary text-3xl font-bold tracking-tight sm:text-4xl [animation-delay:100ms]"
-          >
+          <h1 className="animate-fade-in-up text-gradient-primary text-3xl font-bold tracking-tight sm:text-4xl [animation-delay:100ms]">
             {t('confirmation.title')}
           </h1>
 
-          <p
-            className="animate-fade-in-up text-lg leading-relaxed text-muted-foreground [animation-delay:200ms]"
-          >
+          <p className="animate-fade-in-up text-lg leading-relaxed text-muted-foreground [animation-delay:200ms]">
             {t('confirmation.message', { planName })}
           </p>
 
-          <div
-            className="animate-fade-in-up rounded-lg border border-border/50 bg-card p-4 [animation-delay:300ms]"
-          >
+          <div className="animate-fade-in-up rounded-lg border border-border/50 bg-card p-4 [animation-delay:300ms]">
             <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
               <Mail className="h-4 w-4 text-primary" />
               <span>{t('confirmation.emailSent')}</span>
@@ -60,11 +54,12 @@ export default function PaymentConfirmationPage() {
             </Button>
           </div>
 
-          <p
-            className="animate-fade-in-up text-xs text-muted-foreground [animation-delay:500ms]"
-          >
+          <p className="animate-fade-in-up text-xs text-muted-foreground [animation-delay:500ms]">
             {t('confirmation.needHelp')}{' '}
-            <a href={`mailto:${t('footer.contactEmail', { ns: 'common' })}`} className="text-primary hover:underline">
+            <a
+              href={`mailto:${t('footer.contactEmail', { ns: 'common' })}`}
+              className="text-primary hover:underline"
+            >
               {t('footer.contactEmail', { ns: 'common' })}
             </a>
           </p>

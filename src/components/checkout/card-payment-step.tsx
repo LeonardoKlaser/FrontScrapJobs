@@ -59,13 +59,38 @@ function parseExpDate(expDate: string): { month: number; year: number } {
   const rawYear = parseInt(digits.slice(2, 4), 10)
   return {
     month: parseInt(digits.slice(0, 2), 10),
-    year: rawYear < 100 ? 2000 + rawYear : rawYear,
+    year: rawYear < 100 ? 2000 + rawYear : rawYear
   }
 }
 
 const BRAZILIAN_STATES = [
-  'AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG',
-  'PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO',
+  'AC',
+  'AL',
+  'AP',
+  'AM',
+  'BA',
+  'CE',
+  'DF',
+  'ES',
+  'GO',
+  'MA',
+  'MT',
+  'MS',
+  'MG',
+  'PA',
+  'PB',
+  'PR',
+  'PE',
+  'PI',
+  'RJ',
+  'RN',
+  'RS',
+  'RO',
+  'RR',
+  'SC',
+  'SP',
+  'SE',
+  'TO'
 ]
 
 export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaymentStepProps) {
@@ -80,9 +105,11 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
     number: '',
     neighborhood: '',
     city: '',
-    state: '',
+    state: ''
   })
-  const [validationErrors, setValidationErrors] = useState<Partial<Record<keyof CardFormState, string>>>({})
+  const [validationErrors, setValidationErrors] = useState<
+    Partial<Record<keyof CardFormState, string>>
+  >({})
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -107,7 +134,8 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
     const digits = cardForm.cardNumber.replace(/\s/g, '')
 
     if (!cardForm.holderName.trim()) errors.holderName = t('paymentForm.fieldRequired')
-    if (digits.length < 13 || digits.length > 19) errors.cardNumber = t('paymentForm.invalidCardNumber')
+    if (digits.length < 13 || digits.length > 19)
+      errors.cardNumber = t('paymentForm.invalidCardNumber')
     const expDigits = cardForm.expDate.replace(/\D/g, '')
     if (expDigits.length < 4) {
       errors.expDate = t('paymentForm.invalidExpiry')
@@ -117,7 +145,10 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
       const now = new Date()
       if (expMonth < 1 || expMonth > 12) {
         errors.expDate = t('paymentForm.invalidExpiry')
-      } else if (expYear < now.getFullYear() || (expYear === now.getFullYear() && expMonth < now.getMonth() + 1)) {
+      } else if (
+        expYear < now.getFullYear() ||
+        (expYear === now.getFullYear() && expMonth < now.getMonth() + 1)
+      ) {
         errors.expDate = t('paymentForm.invalidExpiry')
       }
     }
@@ -144,7 +175,7 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
         cardNumber: cardForm.cardNumber.replace(/\s/g, ''),
         expMonth: month,
         expYear: year,
-        cvv: cardForm.cvv,
+        cvv: cardForm.cvv
       },
       {
         zipCode: cardForm.zipCode.replace(/\D/g, ''),
@@ -152,7 +183,7 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
         number: cardForm.number,
         neighborhood: cardForm.neighborhood,
         city: cardForm.city,
-        state: cardForm.state,
+        state: cardForm.state
       }
     )
   }
@@ -294,7 +325,9 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
             >
               <option value="">{t('paymentForm.statePlaceholder')}</option>
               {BRAZILIAN_STATES.map((uf) => (
-                <option key={uf} value={uf}>{uf}</option>
+                <option key={uf} value={uf}>
+                  {uf}
+                </option>
               ))}
             </select>
             {validationErrors.state && (
@@ -399,13 +432,7 @@ export function CardPaymentStep({ isLoading, error, onSubmit, onBack }: CardPaym
 
       {/* Submit Button */}
       <div className="space-y-4 border-t border-border/50 pt-8">
-        <Button
-          type="submit"
-          variant="glow"
-          disabled={isLoading}
-          size="lg"
-          className="w-full"
-        >
+        <Button type="submit" variant="glow" disabled={isLoading} size="lg" className="w-full">
           {isLoading ? (
             <>
               <Spinner className="mr-2 h-4 w-4" />

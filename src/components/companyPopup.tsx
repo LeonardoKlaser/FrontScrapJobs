@@ -87,7 +87,10 @@ export function RegistrationModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent aria-describedby={undefined} className="max-w-[95vw] sm:max-w-[460px] p-0 gap-0 overflow-hidden">
+      <DialogContent
+        aria-describedby={undefined}
+        className="max-w-[95vw] sm:max-w-[460px] p-0 gap-0 overflow-hidden"
+      >
         {/* Company header */}
         <div className="flex flex-col items-center gap-3 px-6 pt-6 pb-4">
           <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-muted/50 p-2">
@@ -114,9 +117,7 @@ export function RegistrationModal({
                 </p>
               </div>
               <div className="space-y-1.5">
-                <Label className="text-muted-foreground text-sm">
-                  {t('popup.keywordsEdit')}
-                </Label>
+                <Label className="text-muted-foreground text-sm">{t('popup.keywordsEdit')}</Label>
                 {editKeywords.length > 0 && (
                   <div className="flex flex-wrap gap-1.5">
                     {editKeywords.map((tag) => (

@@ -2,7 +2,17 @@
 // Renders abstract shapes (colored bars, circles, rectangles) at full A4 scale,
 // then the parent scales them down with CSS transform.
 
-function TextBar({ width, height = 8, color = '#d1d5db', mt = 0 }: { width: string; height?: number; color?: string; mt?: number }) {
+function TextBar({
+  width,
+  height = 8,
+  color = '#d1d5db',
+  mt = 0
+}: {
+  width: string
+  height?: number
+  color?: string
+  mt?: number
+}) {
   return <div style={{ width, height, background: color, borderRadius: 4, marginTop: mt }} />
 }
 
@@ -14,11 +24,21 @@ export function ModernoPreview() {
   const muted = '#e2e5ec'
 
   return (
-    <div style={{ width: 794, height: 1123, background: '#fff', padding: '40px 48px 48px', fontFamily: 'sans-serif' }}>
+    <div
+      style={{
+        width: 794,
+        height: 1123,
+        background: '#fff',
+        padding: '40px 48px 48px',
+        fontFamily: 'sans-serif'
+      }}
+    >
       {/* Header */}
       <div style={{ marginBottom: 28 }}>
         <div style={{ width: 260, height: 22, background: ink, borderRadius: 4 }} />
-        <div style={{ width: 140, height: 12, background: accent, borderRadius: 4, marginTop: 8 }} />
+        <div
+          style={{ width: 140, height: 12, background: accent, borderRadius: 4, marginTop: 8 }}
+        />
         <div style={{ display: 'flex', gap: 12, marginTop: 10 }}>
           <div style={{ width: 6, height: 6, borderRadius: '50%', background: accent }} />
           <div style={{ width: 100, height: 8, background: muted, borderRadius: 4 }} />
@@ -36,7 +56,16 @@ export function ModernoPreview() {
         <SectionModerno label={130} accent={accent} accentMid={accentMid} />
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 4 }}>
           {[72, 88, 60, 96, 68, 80].map((w, i) => (
-            <div key={i} style={{ width: w, height: 22, background: accentLight, border: `1px solid ${accentMid}`, borderRadius: 20 }} />
+            <div
+              key={i}
+              style={{
+                width: w,
+                height: 22,
+                background: accentLight,
+                border: `1px solid ${accentMid}`,
+                borderRadius: 20
+              }}
+            />
           ))}
         </div>
       </div>
@@ -72,7 +101,16 @@ export function ModernoPreview() {
         <SectionModerno label={100} accent={accent} accentMid={accentMid} />
         <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
           {[70, 80].map((w, i) => (
-            <div key={i} style={{ width: w, height: 22, background: '#f5f0ff', border: '1px solid #e8e0f7', borderRadius: 20 }} />
+            <div
+              key={i}
+              style={{
+                width: w,
+                height: 22,
+                background: '#f5f0ff',
+                border: '1px solid #e8e0f7',
+                borderRadius: 20
+              }}
+            />
           ))}
         </div>
       </div>
@@ -80,11 +118,28 @@ export function ModernoPreview() {
   )
 }
 
-function SectionModerno({ label, accent, accentMid }: { label: number; accent: string; accentMid: string }) {
+function SectionModerno({
+  label,
+  accent,
+  accentMid
+}: {
+  label: number
+  accent: string
+  accentMid: string
+}) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
-      <div style={{ width: label, height: 10, background: accent, borderRadius: 4, flexShrink: 0 }} />
-      <div style={{ flex: 1, height: 1.5, background: `linear-gradient(to right, ${accentMid}, transparent)`, borderRadius: 1 }} />
+      <div
+        style={{ width: label, height: 10, background: accent, borderRadius: 4, flexShrink: 0 }}
+      />
+      <div
+        style={{
+          flex: 1,
+          height: 1.5,
+          background: `linear-gradient(to right, ${accentMid}, transparent)`,
+          borderRadius: 1
+        }}
+      />
     </div>
   )
 }
@@ -98,12 +153,46 @@ export function ClassicoPreview() {
   return (
     <div style={{ width: 794, height: 1123, background: '#fff', fontFamily: 'Georgia, serif' }}>
       {/* Navy header */}
-      <div style={{ background: navy, padding: '36px 48px 30px', textAlign: 'center', position: 'relative' }}>
-        <div style={{ width: 280, height: 22, background: '#fff', borderRadius: 4, margin: '0 auto' }} />
-        <div style={{ width: 160, height: 10, background: gold, borderRadius: 4, margin: '8px auto 0' }} />
-        <div style={{ width: 120, height: 8, background: 'rgba(255,255,255,0.4)', borderRadius: 4, margin: '10px auto 0' }} />
+      <div
+        style={{
+          background: navy,
+          padding: '36px 48px 30px',
+          textAlign: 'center',
+          position: 'relative'
+        }}
+      >
+        <div
+          style={{ width: 280, height: 22, background: '#fff', borderRadius: 4, margin: '0 auto' }}
+        />
+        <div
+          style={{
+            width: 160,
+            height: 10,
+            background: gold,
+            borderRadius: 4,
+            margin: '8px auto 0'
+          }}
+        />
+        <div
+          style={{
+            width: 120,
+            height: 8,
+            background: 'rgba(255,255,255,0.4)',
+            borderRadius: 4,
+            margin: '10px auto 0'
+          }}
+        />
         {/* Gold bottom line */}
-        <div style={{ position: 'absolute', bottom: 0, left: 48, right: 48, height: 3, background: gold }} />
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 48,
+            right: 48,
+            height: 3,
+            background: gold
+          }}
+        />
       </div>
 
       {/* Content */}
@@ -120,7 +209,16 @@ export function ClassicoPreview() {
           {[0, 1].map((i) => (
             <div key={i} style={{ marginBottom: 18 }}>
               <div style={{ width: 180, height: 12, background: ink, borderRadius: 4 }} />
-              <div style={{ width: 130, height: 10, background: navy, borderRadius: 4, marginTop: 4, opacity: 0.6 }} />
+              <div
+                style={{
+                  width: 130,
+                  height: 10,
+                  background: navy,
+                  borderRadius: 4,
+                  marginTop: 4,
+                  opacity: 0.6
+                }}
+              />
               <TextBar width="90%" mt={6} />
               <TextBar width="82%" mt={5} />
             </div>
@@ -157,7 +255,9 @@ export function ClassicoPreview() {
 function SectionClassico({ label, navy }: { label: number; navy: string }) {
   return (
     <div style={{ marginBottom: 14 }}>
-      <div style={{ width: label, height: 14, background: navy, borderRadius: 4, marginBottom: 6 }} />
+      <div
+        style={{ width: label, height: 14, background: navy, borderRadius: 4, marginBottom: 6 }}
+      />
       <div style={{ height: 2, background: navy }} />
     </div>
   )
@@ -172,30 +272,88 @@ export function CriativoPreview() {
   const accent = '#0c8c78'
 
   return (
-    <div style={{ width: 794, height: 1123, background: '#fff', display: 'flex', fontFamily: 'sans-serif' }}>
+    <div
+      style={{
+        width: 794,
+        height: 1123,
+        background: '#fff',
+        display: 'flex',
+        fontFamily: 'sans-serif'
+      }}
+    >
       {/* Sidebar */}
-      <div style={{ width: '35%', minHeight: '100%', background: `linear-gradient(170deg, ${sidebarFrom} 0%, ${sidebarTo} 100%)`, padding: '40px 28px', position: 'relative', overflow: 'hidden' }}>
+      <div
+        style={{
+          width: '35%',
+          minHeight: '100%',
+          background: `linear-gradient(170deg, ${sidebarFrom} 0%, ${sidebarTo} 100%)`,
+          padding: '40px 28px',
+          position: 'relative',
+          overflow: 'hidden'
+        }}
+      >
         {/* Decorative circle */}
-        <div style={{ position: 'absolute', top: -60, right: -60, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.04)' }} />
+        <div
+          style={{
+            position: 'absolute',
+            top: -60,
+            right: -60,
+            width: 180,
+            height: 180,
+            borderRadius: '50%',
+            background: 'rgba(255,255,255,0.04)'
+          }}
+        />
 
         {/* Avatar */}
-        <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'rgba(255,255,255,0.12)', border: `2px solid ${sidebarAccent}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 24 }}>
+        <div
+          style={{
+            width: 80,
+            height: 80,
+            borderRadius: '50%',
+            background: 'rgba(255,255,255,0.12)',
+            border: `2px solid ${sidebarAccent}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: 24
+          }}
+        >
           <div style={{ width: 32, height: 18, background: sidebarAccent, borderRadius: 4 }} />
         </div>
 
         {/* Contact section */}
         <SidebarSectionCriativo accent={sidebarAccent} divider={sidebarDivider} labelWidth={80} />
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-          <div style={{ width: 28, height: 28, borderRadius: 6, background: 'rgba(255,255,255,0.1)' }} />
-          <div style={{ width: 100, height: 8, background: 'rgba(255,255,255,0.5)', borderRadius: 4 }} />
+          <div
+            style={{ width: 28, height: 28, borderRadius: 6, background: 'rgba(255,255,255,0.1)' }}
+          />
+          <div
+            style={{ width: 100, height: 8, background: 'rgba(255,255,255,0.5)', borderRadius: 4 }}
+          />
         </div>
 
         {/* Skills section */}
         <SidebarSectionCriativo accent={sidebarAccent} divider={sidebarDivider} labelWidth={110} />
         {[0, 1, 2, 3, 4].map((i) => (
           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 7 }}>
-            <div style={{ width: 5, height: 5, borderRadius: '50%', background: sidebarAccent, flexShrink: 0 }} />
-            <div style={{ width: 80 + (i % 3) * 15, height: 8, background: 'rgba(255,255,255,0.45)', borderRadius: 4 }} />
+            <div
+              style={{
+                width: 5,
+                height: 5,
+                borderRadius: '50%',
+                background: sidebarAccent,
+                flexShrink: 0
+              }}
+            />
+            <div
+              style={{
+                width: 80 + (i % 3) * 15,
+                height: 8,
+                background: 'rgba(255,255,255,0.45)',
+                borderRadius: 4
+              }}
+            />
           </div>
         ))}
 
@@ -203,7 +361,16 @@ export function CriativoPreview() {
         <div style={{ marginTop: 16 }}>
           <SidebarSectionCriativo accent={sidebarAccent} divider={sidebarDivider} labelWidth={90} />
           {[0, 1].map((i) => (
-            <div key={i} style={{ width: 70 + i * 20, height: 9, background: 'rgba(255,255,255,0.45)', borderRadius: 4, marginBottom: 8 }} />
+            <div
+              key={i}
+              style={{
+                width: 70 + i * 20,
+                height: 9,
+                background: 'rgba(255,255,255,0.45)',
+                borderRadius: 4,
+                marginBottom: 8
+              }}
+            />
           ))}
         </div>
       </div>
@@ -212,8 +379,12 @@ export function CriativoPreview() {
       <div style={{ width: '65%', padding: '40px 40px 48px' }}>
         {/* Name */}
         <div style={{ width: 240, height: 22, background: ink, borderRadius: 4 }} />
-        <div style={{ width: 140, height: 11, background: accent, borderRadius: 4, marginTop: 6 }} />
-        <div style={{ width: 48, height: 3, background: accent, borderRadius: 2, margin: '20px 0' }} />
+        <div
+          style={{ width: 140, height: 11, background: accent, borderRadius: 4, marginTop: 6 }}
+        />
+        <div
+          style={{ width: 48, height: 3, background: accent, borderRadius: 2, margin: '20px 0' }}
+        />
 
         {/* Summary */}
         <MainSectionCriativo accent={accent} labelWidth={190} />
@@ -227,7 +398,15 @@ export function CriativoPreview() {
           {[0, 1].map((i) => (
             <div key={i} style={{ marginBottom: 18 }}>
               <div style={{ width: 170, height: 12, background: ink, borderRadius: 4 }} />
-              <div style={{ width: 120, height: 10, background: accent, borderRadius: 4, marginTop: 3 }} />
+              <div
+                style={{
+                  width: 120,
+                  height: 10,
+                  background: accent,
+                  borderRadius: 4,
+                  marginTop: 3
+                }}
+              />
               <TextBar width="90%" mt={5} />
               <TextBar width="80%" mt={4} />
               <TextBar width="55%" mt={4} />
@@ -249,10 +428,26 @@ export function CriativoPreview() {
   )
 }
 
-function SidebarSectionCriativo({ accent, divider, labelWidth }: { accent: string; divider: string; labelWidth: number }) {
+function SidebarSectionCriativo({
+  accent,
+  divider,
+  labelWidth
+}: {
+  accent: string
+  divider: string
+  labelWidth: number
+}) {
   return (
     <div style={{ marginBottom: 12 }}>
-      <div style={{ width: labelWidth, height: 8, background: accent, borderRadius: 4, marginBottom: 6 }} />
+      <div
+        style={{
+          width: labelWidth,
+          height: 8,
+          background: accent,
+          borderRadius: 4,
+          marginBottom: 6
+        }}
+      />
       <div style={{ height: 1, background: divider }} />
     </div>
   )

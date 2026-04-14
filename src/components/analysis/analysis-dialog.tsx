@@ -216,7 +216,13 @@ function AnalysisResult({
                   type="button"
                   onClick={() => onToggleKeyword?.(kw)}
                   disabled={!isClickable}
-                  title={isClickable ? (isKwSelected ? 'Clique para remover' : 'Clique para adicionar ao currículo') : undefined}
+                  title={
+                    isClickable
+                      ? isKwSelected
+                        ? 'Clique para remover'
+                        : 'Clique para adicionar ao currículo'
+                      : undefined
+                  }
                   className={`inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
                     isKwSelected
                       ? 'bg-primary/10 text-primary border border-primary/20'
@@ -225,7 +231,13 @@ function AnalysisResult({
                         : 'bg-red-500/10 text-red-400 border border-red-500/20'
                   }`}
                 >
-                  {isKwSelected ? <CheckCircle className="h-3 w-3" /> : isClickable ? <Plus className="h-3 w-3" /> : <AlertTriangle className="h-3 w-3" />}
+                  {isKwSelected ? (
+                    <CheckCircle className="h-3 w-3" />
+                  ) : isClickable ? (
+                    <Plus className="h-3 w-3" />
+                  ) : (
+                    <AlertTriangle className="h-3 w-3" />
+                  )}
                   {kw}
                 </button>
               )
@@ -427,11 +439,7 @@ function AnalysisResultPanel({
         />
       </div>
       <div className="pt-6 pb-1 bg-background">
-        <Button
-          onClick={onApply}
-          className="w-full"
-          disabled={totalSelected === 0}
-        >
+        <Button onClick={onApply} className="w-full" disabled={totalSelected === 0}>
           {totalSelected > 0
             ? `Aplicar ${totalSelected} ${totalSelected > 1 ? 'Sugestões' : 'Sugestão'}`
             : t('analysis.selectSuggestionsHint', 'Selecione sugestões para aplicar')}

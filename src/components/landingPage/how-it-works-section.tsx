@@ -9,18 +9,18 @@ export function HowItWorksSection() {
     {
       icon: Target,
       titleKey: 'howItWorks.step1.title',
-      descriptionKey: 'howItWorks.step1.description',
+      descriptionKey: 'howItWorks.step1.description'
     },
     {
       icon: Filter,
       titleKey: 'howItWorks.step2.title',
-      descriptionKey: 'howItWorks.step2.description',
+      descriptionKey: 'howItWorks.step2.description'
     },
     {
       icon: Brain,
       titleKey: 'howItWorks.step3.title',
-      descriptionKey: 'howItWorks.step3.description',
-    },
+      descriptionKey: 'howItWorks.step3.description'
+    }
   ]
 
   return (

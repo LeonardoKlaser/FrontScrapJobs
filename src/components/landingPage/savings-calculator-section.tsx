@@ -12,9 +12,7 @@ export function SavingsCalculatorSection() {
 
   const defaultSalary = locale === 'pt-BR' ? 1412 : 3000
   const [rawSalary, setRawSalary] = useState(defaultSalary)
-  const [displayValue, setDisplayValue] = useState(
-    defaultSalary.toLocaleString(locale)
-  )
+  const [displayValue, setDisplayValue] = useState(defaultSalary.toLocaleString(locale))
 
   const handleSalaryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const digits = e.target.value.replace(/\D/g, '')
@@ -32,7 +30,7 @@ export function SavingsCalculatorSection() {
     () =>
       new Intl.NumberFormat(locale, {
         style: 'currency',
-        currency: 'BRL',
+        currency: 'BRL'
       }),
     [locale]
   )
@@ -43,10 +41,7 @@ export function SavingsCalculatorSection() {
     const hoursPerMonth = Number(t('calculator.hoursPerMonth'))
     const valorHora = rawSalary / hoursPerMonth
     const economia = valorHora * 50
-    const custoPlano =
-      plans && plans.length > 0
-        ? Math.min(...plans.map((p) => p.price))
-        : 19.9
+    const custoPlano = plans && plans.length > 0 ? Math.min(...plans.map((p) => p.price)) : 19.9
     const roi = custoPlano > 0 ? Math.floor(economia / custoPlano) : 0
 
     return { valorHora, economia, custoPlano, roi }
@@ -64,14 +59,10 @@ export function SavingsCalculatorSection() {
 
             <h2 className="font-display text-2xl lg:text-4xl font-semibold text-zinc-900 mt-3">
               {t('calculator.title')}{' '}
-              <span className="text-gradient-primary">
-                {t('calculator.titleHighlight')}
-              </span>
+              <span className="text-gradient-primary">{t('calculator.titleHighlight')}</span>
             </h2>
 
-            <p className="text-base text-zinc-500 mt-4">
-              {t('calculator.description')}
-            </p>
+            <p className="text-base text-zinc-500 mt-4">{t('calculator.description')}</p>
           </div>
 
           {/* Right column — calculator card */}
@@ -97,9 +88,7 @@ export function SavingsCalculatorSection() {
             <dl className="space-y-3 mt-6">
               {/* Hourly rate */}
               <div className="flex justify-between items-center">
-                <dt className="text-[15px] text-zinc-500">
-                  {t('calculator.hourlyRate')}
-                </dt>
+                <dt className="text-[15px] text-zinc-500">{t('calculator.hourlyRate')}</dt>
                 <dd
                   className="text-[15px] font-semibold text-zinc-900"
                   style={{ transition: 'all 300ms ease-out' }}
@@ -114,9 +103,7 @@ export function SavingsCalculatorSection() {
 
               {/* Hours saved */}
               <div className="flex justify-between items-center">
-                <dt className="text-[15px] text-zinc-500">
-                  {t('calculator.hoursSaved')}
-                </dt>
+                <dt className="text-[15px] text-zinc-500">{t('calculator.hoursSaved')}</dt>
                 <dd
                   className="text-[15px] font-semibold text-zinc-900"
                   style={{ transition: 'all 300ms ease-out' }}
@@ -129,9 +116,7 @@ export function SavingsCalculatorSection() {
 
               {/* Savings */}
               <div className="flex justify-between items-center">
-                <dt className="text-[15px] text-zinc-500">
-                  {t('calculator.yourSavings')}
-                </dt>
+                <dt className="text-[15px] text-zinc-500">{t('calculator.yourSavings')}</dt>
                 <dd
                   className="text-[15px] font-bold text-emerald-500"
                   style={{ transition: 'all 300ms ease-out' }}
@@ -151,9 +136,7 @@ export function SavingsCalculatorSection() {
 
               {/* Plan cost */}
               <div className="flex justify-between items-center">
-                <dt className="text-[15px] text-zinc-500">
-                  {t('calculator.planCost')}
-                </dt>
+                <dt className="text-[15px] text-zinc-500">{t('calculator.planCost')}</dt>
                 <dd
                   className="text-[15px] font-semibold text-zinc-900"
                   style={{ transition: 'all 300ms ease-out' }}

@@ -11,7 +11,7 @@ import {
   LockIcon,
   PhoneIcon,
   FileTextIcon,
-  ArrowRight,
+  ArrowRight
 } from 'lucide-react'
 import { api } from '@/services/api'
 import { useTranslation } from 'react-i18next'
@@ -38,7 +38,12 @@ interface PersonalDataStepProps {
   onNext: () => void
 }
 
-export function PersonalDataStep({ formData, setFormData, isLoading, onNext }: PersonalDataStepProps) {
+export function PersonalDataStep({
+  formData,
+  setFormData,
+  isLoading,
+  onNext
+}: PersonalDataStepProps) {
   const { t } = useTranslation('plans')
   const { t: tAuth } = useTranslation('auth')
   const [showPassword, setShowPassword] = useState(false)
@@ -276,7 +281,9 @@ export function PersonalDataStep({ formData, setFormData, isLoading, onNext }: P
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              aria-label={showPassword ? t('paymentForm.hidePassword') : t('paymentForm.showPassword')}
+              aria-label={
+                showPassword ? t('paymentForm.hidePassword') : t('paymentForm.showPassword')
+              }
               className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -320,9 +327,7 @@ export function PersonalDataStep({ formData, setFormData, isLoading, onNext }: P
       </fieldset>
 
       {/* Additional Data Section */}
-      <fieldset
-        className="space-y-4 border-t border-border/50 pt-8 animate-fade-in-up [animation-delay:100ms]"
-      >
+      <fieldset className="space-y-4 border-t border-border/50 pt-8 animate-fade-in-up [animation-delay:100ms]">
         <legend className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
           {t('paymentForm.additionalData')}
         </legend>
@@ -375,11 +380,7 @@ export function PersonalDataStep({ formData, setFormData, isLoading, onNext }: P
           type="button"
           variant="glow"
           onClick={handleNext}
-          disabled={
-            isLoading ||
-            emailExistsOnServer ||
-            cpfExistsOnServer
-          }
+          disabled={isLoading || emailExistsOnServer || cpfExistsOnServer}
           size="lg"
           className="w-full"
         >

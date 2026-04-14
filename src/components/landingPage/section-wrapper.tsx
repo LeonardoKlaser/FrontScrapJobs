@@ -13,7 +13,7 @@ export function SectionWrapper({
   className,
   sidebarClassName,
   variant = 'light',
-  id,
+  id
 }: SectionWrapperProps) {
   const isDark = variant === 'dark'
   const sidebarBase = isDark ? 'bg-stripes-dark' : 'bg-stripes'
@@ -23,22 +23,12 @@ export function SectionWrapper({
     <section id={id} className="flex gap-[1px]">
       <div
         aria-hidden="true"
-        className={cn(
-          'hidden lg:block w-[72px] shrink-0',
-          sidebarBase,
-          sidebarClassName
-        )}
+        className={cn('hidden lg:block w-[72px] shrink-0', sidebarBase, sidebarClassName)}
       />
-      <div className={cn('flex-1 min-w-0', contentBg, className)}>
-        {children}
-      </div>
+      <div className={cn('flex-1 min-w-0', contentBg, className)}>{children}</div>
       <div
         aria-hidden="true"
-        className={cn(
-          'hidden lg:block w-[72px] shrink-0',
-          sidebarBase,
-          sidebarClassName
-        )}
+        className={cn('hidden lg:block w-[72px] shrink-0', sidebarBase, sidebarClassName)}
       />
     </section>
   )

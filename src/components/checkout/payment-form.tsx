@@ -4,7 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Spinner } from '@/components/ui/spinner'
 import { AlertCircle } from 'lucide-react'
 import type { Plan } from '@/models/plan'
-import { createPayment, checkPaymentStatus, tokenizeCard, TokenizationError } from '@/services/paymentService'
+import {
+  createPayment,
+  checkPaymentStatus,
+  tokenizeCard,
+  TokenizationError
+} from '@/services/paymentService'
 import type { CardData } from '@/services/paymentService'
 import axios from 'axios'
 import { useTranslation } from 'react-i18next'
@@ -35,7 +40,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
     password: '',
     confirmPassword: '',
     cpfCnpj: '',
-    phone: '',
+    phone: ''
   })
 
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -103,7 +108,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
         number: addressData.number,
         neighborhood: addressData.neighborhood,
         city: addressData.city,
-        state: addressData.state,
+        state: addressData.state
       })
 
       if (result.status === 'processing') {
