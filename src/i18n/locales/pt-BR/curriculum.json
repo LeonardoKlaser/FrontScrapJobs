@@ -20,6 +20,7 @@
     "namePlaceholder": "Ex: Currículo para Vaga Front-end",
     "summaryLabel": "Resumo Profissional",
     "summaryPlaceholder": "Descreva sua experiência e objetivos profissionais...",
+    "summaryCounter": "{{count}}/{{max}} caracteres",
     "skillsLabel": "Habilidades",
     "skillsPlaceholder": "Digite uma habilidade e pressione Enter ou vírgula",
     "languagesLabel": "Idiomas",
@@ -32,8 +33,15 @@
       "companyPlaceholder": "Nome da empresa",
       "roleLabel": "Cargo",
       "rolePlaceholder": "Seu cargo",
+      "startDateLabel": "Data de Início",
+      "startDatePlaceholder": "Ex: Jan 2020",
+      "endDateLabel": "Data de Término",
+      "endDatePlaceholder": "Ex: Dez 2022 ou Atual",
       "descriptionLabel": "Descrição",
-      "descriptionPlaceholder": "Descreva suas responsabilidades e conquistas..."
+      "descriptionPlaceholder": "Descreva suas responsabilidades e conquistas...",
+      "addBullet": "Adicionar tópico",
+      "removeBullet": "Remover tópico",
+      "bulletPlaceholder": "Descreva uma responsabilidade ou conquista..."
     },
     "education": {
       "title": "Formação Acadêmica",
@@ -43,8 +51,10 @@
       "institutionPlaceholder": "Nome da instituição",
       "degreeLabel": "Curso/Grau",
       "degreePlaceholder": "Ex: Bacharelado em CC",
-      "yearLabel": "Ano de Conclusão",
-      "yearPlaceholder": "Ex: 2020"
+      "startDateLabel": "Data de Início",
+      "startDatePlaceholder": "Ex: 2018",
+      "endDateLabel": "Data de Término",
+      "endDatePlaceholder": "Ex: 2022"
     },
     "saveButton": "Salvar Currículo",
     "saveSuccess": "Currículo salvo com sucesso!",

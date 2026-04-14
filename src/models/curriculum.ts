@@ -2,14 +2,17 @@ export interface Experience {
   id?: string
   company: string
   title: string
-  description: string
+  startDate: string
+  endDate: string
+  description: string[]
 }
 
 export interface Education {
   id?: string
   institution: string
   degree: string
-  year: string
+  startDate: string
+  endDate: string
 }
 
 export interface Curriculum {

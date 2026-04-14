@@ -17,6 +17,7 @@ export interface SiteConfigFormData {
   next_page_selector: string
   job_description_selector: string
   job_requisition_id_selector: string
+  job_requisition_id_attribute: string
   // API Configuration
   api_endpoint_template: string
   api_method: string

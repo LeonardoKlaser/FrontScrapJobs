@@ -59,7 +59,9 @@
       "jobDescription": "Seletor da Descrição da Vaga",
       "jobDescriptionTooltip": "Seletor para a descrição na página de detalhes",
       "requisitionId": "Seletor do ID de Requisição",
-      "requisitionIdTooltip": "Seletor para o ID único da vaga"
+      "requisitionIdTooltip": "Seletor para o ID único da vaga",
+      "requisitionIdAttribute": "Atributo do ID de Requisição",
+      "requisitionIdAttributeTooltip": "Atributo HTML de onde extrair o ID (ex: data-code). Se vazio, extrai o texto visível"
     },
     "apiConfig": {
       "title": "Configuração de API",

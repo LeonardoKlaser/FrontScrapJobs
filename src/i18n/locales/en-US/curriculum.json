@@ -20,6 +20,7 @@
     "namePlaceholder": "e.g.: Resume for Frontend Position",
     "summaryLabel": "Professional Summary",
     "summaryPlaceholder": "Describe your experience and professional goals...",
+    "summaryCounter": "{{count}}/{{max}} characters",
     "skillsLabel": "Skills",
     "skillsPlaceholder": "Type a skill and press Enter or comma",
     "languagesLabel": "Languages",
@@ -32,8 +33,15 @@
       "companyPlaceholder": "Company name",
       "roleLabel": "Role",
       "rolePlaceholder": "Your role",
+      "startDateLabel": "Start Date",
+      "startDatePlaceholder": "e.g.: Jan 2020",
+      "endDateLabel": "End Date",
+      "endDatePlaceholder": "e.g.: Dec 2022 or Present",
       "descriptionLabel": "Description",
-      "descriptionPlaceholder": "Describe your responsibilities and achievements..."
+      "descriptionPlaceholder": "Describe your responsibilities and achievements...",
+      "addBullet": "Add bullet point",
+      "removeBullet": "Remove bullet point",
+      "bulletPlaceholder": "Describe a responsibility or achievement..."
     },
     "education": {
       "title": "Education",
@@ -43,8 +51,10 @@
       "institutionPlaceholder": "Institution name",
       "degreeLabel": "Degree",
       "degreePlaceholder": "e.g.: BS in Computer Science",
-      "yearLabel": "Graduation Year",
-      "yearPlaceholder": "e.g.: 2020"
+      "startDateLabel": "Start Date",
+      "startDatePlaceholder": "e.g.: 2018",
+      "endDateLabel": "End Date",
+      "endDatePlaceholder": "e.g.: 2022"
     },
     "saveButton": "Save Resume",
     "saveSuccess": "Resume saved successfully!",

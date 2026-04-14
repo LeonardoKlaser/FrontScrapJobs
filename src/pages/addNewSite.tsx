@@ -53,6 +53,7 @@ export default function AdicionarSitePage() {
     next_page_selector: '',
     job_description_selector: '',
     job_requisition_id_selector: '',
+    job_requisition_id_attribute: '',
     api_endpoint_template: '',
     api_method: 'GET',
     api_headers_json: '',
@@ -135,6 +136,7 @@ export default function AdicionarSitePage() {
             next_page_selector: '',
             job_description_selector: '',
             job_requisition_id_selector: '',
+            job_requisition_id_attribute: '',
             api_endpoint_template: '',
             api_method: 'GET',
             api_headers_json: '',
@@ -484,6 +486,25 @@ export default function AdicionarSitePage() {
                       value={formData.job_requisition_id_selector}
                       onChange={(e) =>
                         handleInputChange('job_requisition_id_selector', e.target.value)
+                      }
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Label htmlFor="job_requisition_id_attribute">
+                        {t('addSite.cssConfig.requisitionIdAttribute')}
+                      </Label>
+                      <Tooltip content={t('addSite.cssConfig.requisitionIdAttributeTooltip')}>
+                        <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                      </Tooltip>
+                    </div>
+                    <Input
+                      id="job_requisition_id_attribute"
+                      placeholder="data-job-id"
+                      value={formData.job_requisition_id_attribute}
+                      onChange={(e) =>
+                        handleInputChange('job_requisition_id_attribute', e.target.value)
                       }
                     />
                   </div>
