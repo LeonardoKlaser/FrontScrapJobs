@@ -1,12 +1,13 @@
+import { useTranslation } from 'react-i18next'
 import { usePublicSiteLogos } from '@/hooks/usePublicStats'
 import { SectionWrapper } from './section-wrapper'
 
 export function SocialProofSection() {
+  const { t } = useTranslation('landing')
   const { data: logos } = usePublicSiteLogos()
 
   if (!logos || logos.length === 0) return null
 
-  // Duplicate logos enough times to fill viewport smoothly
   const duplicated =
     logos.length < 3 ? [...logos, ...logos, ...logos, ...logos] : [...logos, ...logos]
 
@@ -14,6 +15,17 @@ export function SocialProofSection() {
     <SectionWrapper>
       <div className="py-16 sm:py-20">
         <div className="container mx-auto px-4">
+          {/* New title + subtitle */}
+          <div className="text-center mb-10">
+            <h2 className="font-display text-2xl lg:text-3xl font-bold text-zinc-900">
+              {t('socialProofNew.title')}
+            </h2>
+            <p className="text-sm text-zinc-500 mt-2">
+              {t('socialProofNew.subtitle')}
+            </p>
+          </div>
+
+          {/* Existing carousel */}
           <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
             <div
               className="flex w-max animate-logo-scroll hover:[animation-play-state:paused] will-change-transform"
