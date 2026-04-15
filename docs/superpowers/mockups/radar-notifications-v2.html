@@ -1,0 +1,108 @@
+<h2>Radar Notifications — Versão B Refinada</h2>
+<p class="subtitle">Cards do B sem timeline, com botão "Analisar com IA" e estado de análise feita. Veja como ficou.</p>
+
+<div style="max-width:420px; margin:2rem auto;">
+  <div style="padding:1.5rem; background:linear-gradient(160deg, #ecfdf5 0%, #f0fdf4 50%, #ffffff 100%); border:1px solid #a7f3d0; border-radius:16px; box-shadow:0 8px 32px rgba(16,185,129,0.08);">
+
+    <!-- Card 1 - New job, not yet analyzed -->
+    <div style="background:white; border:1px solid #a7f3d0; border-radius:12px; padding:1rem; margin-bottom:0.6rem; box-shadow:0 2px 8px rgba(16,185,129,0.06); opacity:0; animation: cardIn 0.4s 0.15s ease forwards;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
+        <span style="font-size:0.55rem; color:#10b981; font-weight:600;">há 1 min · careers.nubank.com</span>
+        <span style="background:#10b981; color:white; font-size:0.5rem; font-weight:700; padding:2px 8px; border-radius:999px; animation: pulse 2s infinite;">NOVO</span>
+      </div>
+      <span style="font-size:0.82rem; font-weight:700; color:#18181b; display:block; margin-bottom:0.25rem;">Senior Frontend Developer</span>
+      <div style="display:flex; align-items:center; gap:0.35rem; margin-bottom:0.6rem;">
+        <span style="font-size:0.65rem; font-weight:600; color:#18181b;">Nubank</span>
+        <span style="font-size:0.55rem; color:#a1a1aa;">• São Paulo, SP • Remoto</span>
+      </div>
+      <div style="display:flex; gap:0.3rem; margin-bottom:0.75rem; flex-wrap:wrap;">
+        <span style="background:#ecfdf5; color:#065f46; font-size:0.5rem; padding:2px 6px; border-radius:6px; border:1px solid #a7f3d0;">React</span>
+        <span style="background:#ecfdf5; color:#065f46; font-size:0.5rem; padding:2px 6px; border-radius:6px; border:1px solid #a7f3d0;">TypeScript</span>
+        <span style="background:#ecfdf5; color:#065f46; font-size:0.5rem; padding:2px 6px; border-radius:6px; border:1px solid #a7f3d0;">Node.js</span>
+      </div>
+      <!-- Analisar com IA button -->
+      <button style="width:100%; padding:0.5rem; border-radius:10px; border:1px solid #a7f3d0; background:linear-gradient(135deg, #ecfdf5, #f0fdf4); color:#065f46; font-size:0.7rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.4rem; transition:all 0.2s;">
+        <svg width="14" height="14" fill="none" stroke="#10b981" stroke-width="2" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+        Analisar com IA
+      </button>
+    </div>
+
+    <!-- Card 2 - Already analyzed, shows match -->
+    <div style="background:white; border:1px solid #e4e4e7; border-radius:12px; padding:1rem; margin-bottom:0.6rem; opacity:0; animation: cardIn 0.4s 0.35s ease forwards;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
+        <span style="font-size:0.55rem; color:#71717a; font-weight:500;">há 12 min · carreiras.ifood.com.br</span>
+        <span style="background:#ecfdf5; color:#065f46; font-size:0.5rem; font-weight:600; padding:2px 8px; border-radius:999px; border:1px solid #a7f3d0; display:flex; align-items:center; gap:3px;">
+          <svg width="8" height="8" fill="none" stroke="#10b981" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+          98% match
+        </span>
+      </div>
+      <span style="font-size:0.82rem; font-weight:700; color:#18181b; display:block; margin-bottom:0.25rem;">Product Designer Pleno</span>
+      <div style="display:flex; align-items:center; gap:0.35rem; margin-bottom:0.6rem;">
+        <span style="font-size:0.65rem; font-weight:600; color:#18181b;">iFood</span>
+        <span style="font-size:0.55rem; color:#a1a1aa;">• Campinas, SP • Híbrido</span>
+      </div>
+      <!-- Match bar + Ver análise -->
+      <div style="display:flex; align-items:center; gap:0.5rem;">
+        <div style="flex:1; height:4px; background:#e4e4e7; border-radius:4px; overflow:hidden;">
+          <div style="width:98%; height:100%; background:linear-gradient(90deg,#10b981,#06b6d4); border-radius:4px; animation: growBar 1s 0.6s ease forwards; transform-origin:left; transform:scaleX(0);"></div>
+        </div>
+        <a href="#" style="font-size:0.6rem; color:#10b981; font-weight:600; text-decoration:none; white-space:nowrap; display:flex; align-items:center; gap:2px;">
+          Ver análise
+          <svg width="10" height="10" fill="none" stroke="#10b981" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Card 3 - Faded / older -->
+    <div style="background:#fafafa; border:1px solid #f4f4f5; border-radius:12px; padding:1rem; opacity:0; animation: cardIn 0.4s 0.55s ease forwards;">
+      <div style="opacity:0.5;">
+        <span style="font-size:0.55rem; color:#a1a1aa; font-weight:500; display:block; margin-bottom:0.5rem;">há 38 min · carreiras.mercadolivre.com</span>
+        <span style="font-size:0.82rem; font-weight:700; color:#71717a; display:block; margin-bottom:0.25rem;">Data Engineer Senior</span>
+        <div style="display:flex; align-items:center; gap:0.35rem;">
+          <span style="font-size:0.65rem; font-weight:600; color:#71717a;">Mercado Livre</span>
+          <span style="font-size:0.55rem; color:#a1a1aa;">• São Paulo, SP</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Source badge -->
+    <div style="display:flex; align-items:center; gap:0.4rem; margin-top:0.75rem; padding:0.5rem 0.75rem; background:white; border:1px solid #d1fae5; border-radius:8px; opacity:0; animation: cardIn 0.4s 0.7s ease forwards;">
+      <svg width="12" height="12" fill="none" stroke="#10b981" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span style="font-size:0.6rem; color:#065f46; font-weight:600;">Direto do site oficial da empresa — sem intermediários</span>
+    </div>
+  </div>
+</div>
+
+<hr style="margin:2rem 0; border-color:#e4e4e7;"/>
+
+<div class="options">
+  <div class="option" data-choice="approve" onclick="toggleSelect(this)">
+    <div class="letter">✓</div>
+    <div class="content">
+      <h3>Aprovar este design</h3>
+      <p>Seguir com este layout de cards para o RadarNotifications</p>
+    </div>
+  </div>
+  <div class="option" data-choice="adjust" onclick="toggleSelect(this)">
+    <div class="letter">✎</div>
+    <div class="content">
+      <h3>Ajustar mais</h3>
+      <p>Quero fazer mais alterações antes de aprovar</p>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes growBar {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+</style>
