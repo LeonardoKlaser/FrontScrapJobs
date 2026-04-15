@@ -149,5 +149,74 @@
     "sitesAnalyzed": "Sites monitorados",
     "jobsCollected": "Vagas coletadas",
     "trustLine": "Dados reais da nossa plataforma, atualizados em tempo real"
+  },
+  "problemSection": {
+    "overline": "A realidade que ninguém fala",
+    "headline1": "Você envia.",
+    "headline2": "A Gupy rejeita.",
+    "headline3": "Repita 47 vezes.",
+    "subtext": "75% dos currículos são eliminados por robôs antes de um humano sequer os ver. Você não é ruim —",
+    "subtextBold": "o sistema é que está quebrado.",
+    "stat1Value": "4.7h",
+    "stat1Label": "perdidas por semana em busca manual",
+    "stat2Value": "75%",
+    "stat2Label": "dos CVs eliminados pelo ATS",
+    "stat3Value": "3h",
+    "stat3Label": "é o tempo médio para uma vaga boa lotar",
+    "transition": "E se você chegasse primeiro?"
+  },
+  "valueFeatures": {
+    "radar": {
+      "overline": "Monitoramento Direto",
+      "headline": "Vagas direto da fonte.",
+      "headlineGradient": "Antes de chegar na Gupy.",
+      "body1": "Enquanto todo mundo briga por vagas recicladas no LinkedIn, o ScrapJobs monitora diretamente o site de carreiras das empresas que você escolheu. Sem intermediários. Sem filtros de terceiros.",
+      "body2": "A vaga apareceu no site da Nubank às 9h.",
+      "body2Bold": "Às 9h01 você já sabia.",
+      "body2End": "Quem depende da Gupy só vai ver amanhã.",
+      "sourceBadge": "Direto do site oficial da empresa — sem intermediários"
+    },
+    "ats": {
+      "overline": "Análise com IA",
+      "headline": "Descubra por que você",
+      "headlineGradient": "está sendo rejeitado.",
+      "body1": "Faça upload do seu currículo atual. Em segundos, a IA cruza o seu perfil com a vaga e entrega um diagnóstico completo: score ATS, keywords que faltam e gaps que estão a sabotar as suas candidaturas.",
+      "body2": "Chega de adivinhar.",
+      "body2Bold": "Agora você sabe exatamente o que corrigir.",
+      "scoreLabel": "Compatibilidade ATS",
+      "keywordsLabel": "Keywords encontradas",
+      "gapsLabel": "Gaps identificados"
+    },
+    "pdf": {
+      "overline": "Geração Inteligente",
+      "headline": "Um currículo perfeito",
+      "headlineGradient": "para cada vaga. Sem esforço.",
+      "body1": "A IA pega nos gaps, sugere as palavras-chave certas e reconstrói as suas frases para passar no filtro ATS. Você escolhe o que aplicar e baixa o PDF — pronto para enviar.",
+      "body2": "Sem reescrever nada do zero.",
+      "body2Bold": "Um clique entre você e a candidatura perfeita.",
+      "fileName": "CV_Otimizado_Nubank.pdf",
+      "fileReady": "Pronto para download",
+      "suggestionsLabel": "Sugestões aplicadas",
+      "suggestion1": "Adicionado \"GraphQL\" na experiência",
+      "suggestion2": "Reescrito \"Resumo Profissional\"",
+      "suggestion3": "Adicionado métricas de impacto",
+      "downloadButton": "↓ Baixar CV Otimizado"
+    }
+  },
+  "howItWorksNew": {
+    "overline": "Como funciona",
+    "headline": "Do zero à candidatura perfeita.",
+    "headlineGradient": "Em menos de 1 minuto.",
+    "step1Title": "Importe seu CV",
+    "step1Description": "Upload do PDF atual. Preenchimento automático dos dados.",
+    "step2Title": "A IA analisa a vaga",
+    "step2Description": "Score ATS, keywords e gaps identificados em segundos.",
+    "step3Title": "Exporte e aplique",
+    "step3Description": "Baixe o CV otimizado e candidate-se antes de todos.",
+    "cta": "Começar agora →"
+  },
+  "socialProofNew": {
+    "title": "Monitoramos as empresas que você ama.",
+    "subtitle": "Adicionamos novas empresas toda semana. Não encontrou a sua? Nos diga."
   }
 }

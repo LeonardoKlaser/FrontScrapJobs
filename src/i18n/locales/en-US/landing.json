@@ -149,5 +149,74 @@
     "sitesAnalyzed": "Monitored sites",
     "jobsCollected": "Jobs collected",
     "trustLine": "Real data from our platform, updated in real time"
+  },
+  "problemSection": {
+    "overline": "The reality no one talks about",
+    "headline1": "You send.",
+    "headline2": "Gupy rejects.",
+    "headline3": "Repeat 47 times.",
+    "subtext": "75% of resumes are eliminated by bots before a human even sees them. You're not bad —",
+    "subtextBold": "the system is broken.",
+    "stat1Value": "4.7h",
+    "stat1Label": "wasted per week on manual searching",
+    "stat2Value": "75%",
+    "stat2Label": "of CVs eliminated by ATS",
+    "stat3Value": "3h",
+    "stat3Label": "average time for a good job to fill up",
+    "transition": "What if you got there first?"
+  },
+  "valueFeatures": {
+    "radar": {
+      "overline": "Direct Monitoring",
+      "headline": "Jobs straight from the source.",
+      "headlineGradient": "Before they hit Gupy.",
+      "body1": "While everyone fights over recycled listings on LinkedIn, ScrapJobs monitors the career sites of the companies you chose directly. No middlemen. No third-party filters.",
+      "body2": "The job appeared on Nubank's site at 9am.",
+      "body2Bold": "At 9:01am you already knew.",
+      "body2End": "Those relying on Gupy won't see it until tomorrow.",
+      "sourceBadge": "Straight from the official company site — no middlemen"
+    },
+    "ats": {
+      "overline": "AI Analysis",
+      "headline": "Find out why you're",
+      "headlineGradient": "being rejected.",
+      "body1": "Upload your current resume. In seconds, our AI cross-references your profile with the job and delivers a complete diagnosis: ATS score, missing keywords, and gaps that are sabotaging your applications.",
+      "body2": "Stop guessing.",
+      "body2Bold": "Now you know exactly what to fix.",
+      "scoreLabel": "ATS Compatibility",
+      "keywordsLabel": "Keywords found",
+      "gapsLabel": "Gaps identified"
+    },
+    "pdf": {
+      "overline": "Smart Generation",
+      "headline": "A perfect resume",
+      "headlineGradient": "for every job. Effortlessly.",
+      "body1": "The AI takes the gaps, suggests the right keywords, and rebuilds your sentences to pass the ATS filter. You choose what to apply and download the PDF — ready to send.",
+      "body2": "No rewriting from scratch.",
+      "body2Bold": "One click between you and the perfect application.",
+      "fileName": "CV_Optimized_Nubank.pdf",
+      "fileReady": "Ready for download",
+      "suggestionsLabel": "Suggestions applied",
+      "suggestion1": "Added \"GraphQL\" to experience",
+      "suggestion2": "Rewritten \"Professional Summary\"",
+      "suggestion3": "Added impact metrics",
+      "downloadButton": "↓ Download Optimized CV"
+    }
+  },
+  "howItWorksNew": {
+    "overline": "How it works",
+    "headline": "From zero to perfect application.",
+    "headlineGradient": "In less than 1 minute.",
+    "step1Title": "Import your CV",
+    "step1Description": "Upload your current PDF. Auto-fill your data.",
+    "step2Title": "AI analyzes the job",
+    "step2Description": "ATS score, keywords and gaps identified in seconds.",
+    "step3Title": "Export and apply",
+    "step3Description": "Download the optimized CV and apply before everyone else.",
+    "cta": "Get started now →"
+  },
+  "socialProofNew": {
+    "title": "We monitor the companies you love.",
+    "subtitle": "We add new companies every week. Didn't find yours? Tell us."
   }
 }
