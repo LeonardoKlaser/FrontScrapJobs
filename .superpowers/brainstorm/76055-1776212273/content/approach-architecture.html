@@ -1,0 +1,70 @@
+<h2>Arquitetura da Landing Page — 3 Abordagens</h2>
+<p class="subtitle">Escolha a narrativa visual que melhor comunica o valor do ScrapJobs</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Narrative Scroll (Recomendado)</h3>
+      <p><strong>Inspiração:</strong> Vercel, Linear</p>
+      <p>Cada secção ocupa ~80-100vh, criando uma "história" enquanto o utilizador faz scroll. Transições suaves entre secções com Framer Motion <code>whileInView</code>.</p>
+      <br/>
+      <p><strong>Fluxo:</strong></p>
+      <ol style="margin-left:1.5rem; margin-top:0.5rem; line-height: 1.8">
+        <li>🔥 <strong>A Dor</strong> — Full-screen, fundo escuro, tipografia gigante, texto provocativo que ocupa o ecrã inteiro</li>
+        <li>🎯 <strong>Killer Features (Zig-Zag)</strong> — 3 blocos alternados (texto esquerda/UI direita, depois inverte). Cada bloco tem parallax leve no UI snippet</li>
+        <li>⚡ <strong>Fluxo 1 Minuto</strong> — 3 steps horizontais com linha conectora animada, números grandes</li>
+        <li>🏢 <strong>Social Proof</strong> — Carrossel existente com novo título "Monitoramos as empresas que você ama"</li>
+      </ol>
+      <br/>
+      <div class="pros-cons">
+        <div class="pros"><h4>Prós</h4><ul><li>Máximo impacto emocional — história contínua</li><li>Scroll-triggered animations criam "wow factor"</li><li>Padrão premium SaaS (Vercel, Stripe)</li></ul></div>
+        <div class="cons"><h4>Contras</h4><ul><li>Mais pesado em animações (mitigado com Framer Motion lazy)</li><li>Pode ser longo em mobile</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Bento Grid Compacto</h3>
+      <p><strong>Inspiração:</strong> Apple, Raycast</p>
+      <p>Após a secção da Dor (full-width), as features são apresentadas num Bento Grid (2x2 ou 3-col assimétrico). Cada célula é um "UI snippet" clicável.</p>
+      <br/>
+      <p><strong>Fluxo:</strong></p>
+      <ol style="margin-left:1.5rem; margin-top:0.5rem; line-height: 1.8">
+        <li>🔥 <strong>A Dor</strong> — Igual à Abordagem A</li>
+        <li>🎯 <strong>Features como Bento Grid</strong> — Grid assimétrico: célula grande para "O Radar" (scraping), duas menores para "ATS" e "PDF". Cada célula tem o UI snippet interativo dentro</li>
+        <li>⚡ <strong>Fluxo 1 Minuto</strong> — Integrado dentro do grid como uma row horizontal abaixo</li>
+        <li>🏢 <strong>Social Proof</strong> — Logo strip abaixo do grid</li>
+      </ol>
+      <br/>
+      <div class="pros-cons">
+        <div class="pros"><h4>Prós</h4><ul><li>Extremamente escaneável — tudo visível de uma vez</li><li>Visual muito moderno (Apple WWDC style)</li><li>Menos scroll = mais rápido para converter</li></ul></div>
+        <div class="cons"><h4>Contras</h4><ul><li>Menos espaço para copy persuasivo por feature</li><li>Zig-zag com texto longo não funciona em grid</li><li>Difícil acomodar 3 blocos de texto detalhado</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Híbrido (Dor + Zig-Zag + Bento Steps)</h3>
+      <p><strong>Inspiração:</strong> Stripe, Automarticles</p>
+      <p>Combina o melhor das duas: Dor full-screen, Features em zig-zag clássico (com mais espaço para copy), e o Fluxo 1 Minuto como mini Bento de 3 cards.</p>
+      <br/>
+      <p><strong>Fluxo:</strong></p>
+      <ol style="margin-left:1.5rem; margin-top:0.5rem; line-height: 1.8">
+        <li>🔥 <strong>A Dor</strong> — Full-screen escuro, tipografia impactante</li>
+        <li>🎯 <strong>Killer Features (Zig-Zag puro)</strong> — 3 rows alternadas. Texto extenso de um lado, UI snippet premium do outro. Separadas por espaço generoso</li>
+        <li>⚡ <strong>Fluxo 1 Minuto (Bento 3-col)</strong> — 3 cards lado a lado com ícone, número e descrição curta. Visual de "receita rápida"</li>
+        <li>🏢 <strong>Social Proof</strong> — Carrossel com título atualizado</li>
+      </ol>
+      <br/>
+      <div class="pros-cons">
+        <div class="pros"><h4>Prós</h4><ul><li>Zig-zag dá espaço máximo ao copy agressivo</li><li>Steps em bento = escaneável e rápido</li><li>Mais alinhado com o briefing (Automarticles)</li></ul></div>
+        <div class="cons"><h4>Contras</h4><ul><li>Página mais longa que o Bento puro</li><li>Precisa de breakpoints mobile bem trabalhados</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
