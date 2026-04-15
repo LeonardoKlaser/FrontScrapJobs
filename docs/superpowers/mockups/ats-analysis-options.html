@@ -1,0 +1,256 @@
+<h2>UI Snippet 2 — ATS Analysis Card</h2>
+<p class="subtitle">3 designs mais fiéis à tela real de análise ATS do app. Todos com animações. Clique para selecionar.</p>
+
+<div class="cards">
+
+  <!-- OPTION A: Dashboard-style analysis panel -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)" style="padding:0; overflow:hidden; border:none;">
+    <div class="card-image" style="padding:1.5rem; background:linear-gradient(160deg, #ecfdf5 0%, #f0fdf4 50%, #ffffff 100%); border:1px solid #a7f3d0; border-radius:16px;">
+
+      <!-- Header with job context -->
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid #d1fae5; opacity:0; animation: fadeUp 0.4s 0.1s ease forwards;">
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <div style="width:28px; height:28px; border-radius:8px; background:linear-gradient(135deg,#10b981,#06b6d4); display:flex; align-items:center; justify-content:center;">
+            <svg width="14" height="14" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div>
+            <span style="font-size:0.7rem; font-weight:700; color:#18181b; display:block;">Análise ATS</span>
+            <span style="font-size:0.55rem; color:#71717a;">Senior Frontend · Nubank</span>
+          </div>
+        </div>
+        <span style="background:#ecfdf5; color:#065f46; font-size:0.55rem; font-weight:600; padding:3px 8px; border-radius:8px; border:1px solid #a7f3d0;">Compatível</span>
+      </div>
+
+      <!-- Big score with ring -->
+      <div style="display:flex; align-items:center; gap:1.25rem; margin-bottom:1.25rem; opacity:0; animation: fadeUp 0.4s 0.2s ease forwards;">
+        <!-- Circular progress -->
+        <div style="position:relative; width:72px; height:72px; flex-shrink:0;">
+          <svg width="72" height="72" viewBox="0 0 72 72" style="transform:rotate(-90deg);">
+            <circle cx="36" cy="36" r="30" fill="none" stroke="#e4e4e7" stroke-width="6"/>
+            <circle cx="36" cy="36" r="30" fill="none" stroke="url(#scoreGrad)" stroke-width="6" stroke-linecap="round" stroke-dasharray="188.5" stroke-dashoffset="188.5" style="animation: ringFill 1.5s 0.5s ease forwards;"/>
+            <defs><linearGradient id="scoreGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs>
+          </svg>
+          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column;">
+            <span style="font-family:Sora,sans-serif; font-size:1.4rem; font-weight:800; color:#18181b; line-height:1;">92</span>
+            <span style="font-size:0.5rem; color:#10b981; font-weight:600;">/ 100</span>
+          </div>
+        </div>
+        <!-- Score breakdown mini bars -->
+        <div style="flex:1; display:flex; flex-direction:column; gap:0.5rem;">
+          <div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+              <span style="font-size:0.55rem; color:#71717a;">Keywords</span>
+              <span style="font-size:0.55rem; font-weight:700; color:#10b981;">85%</span>
+            </div>
+            <div style="height:3px; background:#e4e4e7; border-radius:3px; overflow:hidden;">
+              <div style="width:85%; height:100%; background:#10b981; border-radius:3px; animation: growBar 1s 0.6s ease forwards; transform-origin:left; transform:scaleX(0);"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+              <span style="font-size:0.55rem; color:#71717a;">Experiência</span>
+              <span style="font-size:0.55rem; font-weight:700; color:#10b981;">95%</span>
+            </div>
+            <div style="height:3px; background:#e4e4e7; border-radius:3px; overflow:hidden;">
+              <div style="width:95%; height:100%; background:#06b6d4; border-radius:3px; animation: growBar 1s 0.7s ease forwards; transform-origin:left; transform:scaleX(0);"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+              <span style="font-size:0.55rem; color:#71717a;">Formatação</span>
+              <span style="font-size:0.55rem; font-weight:700; color:#10b981;">96%</span>
+            </div>
+            <div style="height:3px; background:#e4e4e7; border-radius:3px; overflow:hidden;">
+              <div style="width:96%; height:100%; background:#10b981; border-radius:3px; animation: growBar 1s 0.8s ease forwards; transform-origin:left; transform:scaleX(0);"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Keywords found -->
+      <div style="margin-bottom:0.85rem; opacity:0; animation: fadeUp 0.4s 0.4s ease forwards;">
+        <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.4rem;">
+          <svg width="12" height="12" fill="none" stroke="#10b981" stroke-width="2" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+          <span style="font-size:0.6rem; font-weight:700; color:#18181b;">Keywords encontradas</span>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:0.3rem;">
+          <span style="background:#d1fae5; color:#065f46; font-size:0.55rem; padding:3px 8px; border-radius:6px; font-weight:500;">React</span>
+          <span style="background:#d1fae5; color:#065f46; font-size:0.55rem; padding:3px 8px; border-radius:6px; font-weight:500;">TypeScript</span>
+          <span style="background:#d1fae5; color:#065f46; font-size:0.55rem; padding:3px 8px; border-radius:6px; font-weight:500;">CI/CD</span>
+          <span style="background:#d1fae5; color:#065f46; font-size:0.55rem; padding:3px 8px; border-radius:6px; font-weight:500;">Agile</span>
+        </div>
+      </div>
+
+      <!-- Gaps -->
+      <div style="opacity:0; animation: fadeUp 0.4s 0.5s ease forwards;">
+        <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.4rem;">
+          <svg width="12" height="12" fill="none" stroke="#f59e0b" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+          <span style="font-size:0.6rem; font-weight:700; color:#18181b;">Gaps identificados</span>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:0.3rem;">
+          <span style="background:#fef3c7; color:#92400e; font-size:0.55rem; padding:3px 8px; border-radius:6px; font-weight:500; border:1px dashed #fbbf24;">GraphQL</span>
+          <span style="background:#fef3c7; color:#92400e; font-size:0.55rem; padding:3px 8px; border-radius:6px; font-weight:500; border:1px dashed #fbbf24;">AWS</span>
+        </div>
+      </div>
+
+    </div>
+    <div class="card-body">
+      <h3>A — Dashboard com Score Ring + Breakdown</h3>
+      <p>Ring SVG animado com score 92/100. Breakdown em 3 sub-barras (Keywords, Experiência, Formatação). Header mostra o contexto da vaga. Mais parecido com um painel real de análise.</p>
+    </div>
+  </div>
+
+  <!-- OPTION B: Compact report card -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)" style="padding:0; overflow:hidden; border:none;">
+    <div class="card-image" style="padding:1.5rem; background:linear-gradient(160deg, #ecfdf5 0%, #f0fdf4 50%, #ffffff 100%); border:1px solid #a7f3d0; border-radius:16px;">
+
+      <!-- Score banner -->
+      <div style="background:white; border:1px solid #a7f3d0; border-radius:12px; padding:1rem; margin-bottom:0.75rem; opacity:0; animation: fadeUp 0.4s 0.15s ease forwards;">
+        <div style="display:flex; align-items:center; gap:1rem;">
+          <!-- Score circle -->
+          <div style="position:relative; width:56px; height:56px; flex-shrink:0;">
+            <svg width="56" height="56" viewBox="0 0 56 56" style="transform:rotate(-90deg);">
+              <circle cx="28" cy="28" r="23" fill="none" stroke="#e4e4e7" stroke-width="5"/>
+              <circle cx="28" cy="28" r="23" fill="none" stroke="url(#scoreGrad2)" stroke-width="5" stroke-linecap="round" stroke-dasharray="144.5" stroke-dashoffset="144.5" style="animation: ringFill2 1.5s 0.4s ease forwards;"/>
+              <defs><linearGradient id="scoreGrad2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs>
+            </svg>
+            <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
+              <span style="font-family:Sora,sans-serif; font-size:1.1rem; font-weight:800; color:#18181b;">92<span style="font-size:0.55rem; color:#10b981;">%</span></span>
+            </div>
+          </div>
+          <div style="flex:1;">
+            <span style="font-size:0.6rem; color:#71717a; text-transform:uppercase; letter-spacing:0.08em; display:block; margin-bottom:2px;">Compatibilidade ATS</span>
+            <span style="font-size:0.85rem; font-weight:700; color:#18181b; display:block; margin-bottom:0.4rem;">Excelente</span>
+            <!-- Full progress bar -->
+            <div style="height:5px; background:#e4e4e7; border-radius:5px; overflow:hidden;">
+              <div style="width:92%; height:100%; background:linear-gradient(90deg,#10b981,#06b6d4); border-radius:5px; animation: growBar 1.2s 0.5s ease forwards; transform-origin:left; transform:scaleX(0);"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two columns: Keywords + Gaps -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+        <!-- Keywords -->
+        <div style="background:white; border:1px solid #d1fae5; border-radius:12px; padding:0.75rem; opacity:0; animation: fadeUp 0.4s 0.3s ease forwards;">
+          <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.5rem;">
+            <svg width="12" height="12" fill="none" stroke="#10b981" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+            <span style="font-size:0.55rem; font-weight:700; color:#065f46;">Encontradas</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:0.25rem;">
+            <span style="background:#ecfdf5; color:#065f46; font-size:0.55rem; padding:3px 6px; border-radius:6px; font-weight:500; text-align:center;">React</span>
+            <span style="background:#ecfdf5; color:#065f46; font-size:0.55rem; padding:3px 6px; border-radius:6px; font-weight:500; text-align:center;">TypeScript</span>
+            <span style="background:#ecfdf5; color:#065f46; font-size:0.55rem; padding:3px 6px; border-radius:6px; font-weight:500; text-align:center;">CI/CD</span>
+            <span style="background:#ecfdf5; color:#065f46; font-size:0.55rem; padding:3px 6px; border-radius:6px; font-weight:500; text-align:center;">Agile</span>
+          </div>
+        </div>
+        <!-- Gaps -->
+        <div style="background:white; border:1px solid #fde68a; border-radius:12px; padding:0.75rem; opacity:0; animation: fadeUp 0.4s 0.4s ease forwards;">
+          <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.5rem;">
+            <svg width="12" height="12" fill="none" stroke="#f59e0b" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+            <span style="font-size:0.55rem; font-weight:700; color:#92400e;">Gaps</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:0.25rem;">
+            <span style="background:#fef3c7; color:#92400e; font-size:0.55rem; padding:3px 6px; border-radius:6px; font-weight:500; border:1px dashed #fbbf24; text-align:center;">GraphQL</span>
+            <span style="background:#fef3c7; color:#92400e; font-size:0.55rem; padding:3px 6px; border-radius:6px; font-weight:500; border:1px dashed #fbbf24; text-align:center;">AWS</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="card-body">
+      <h3>B — Report Card Compacto</h3>
+      <p>Score ring menor + label "Excelente" + barra grande. Keywords e Gaps lado a lado em 2 colunas. Visual clean, tipo report card. Compacto e escaneável.</p>
+    </div>
+  </div>
+
+  <!-- OPTION C: Detailed analysis with sections -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)" style="padding:0; overflow:hidden; border:none;">
+    <div class="card-image" style="padding:1.5rem; background:linear-gradient(160deg, #ecfdf5 0%, #f0fdf4 50%, #ffffff 100%); border:1px solid #a7f3d0; border-radius:16px;">
+
+      <!-- Score top bar -->
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:0.85rem 1rem; background:white; border:1px solid #a7f3d0; border-radius:12px; margin-bottom:0.75rem; opacity:0; animation: fadeUp 0.4s 0.15s ease forwards;">
+        <div>
+          <span style="font-size:0.55rem; color:#71717a; text-transform:uppercase; letter-spacing:0.08em;">Compatibilidade ATS</span>
+          <div style="display:flex; align-items:baseline; gap:0.2rem; margin-top:2px;">
+            <span style="font-family:Sora,sans-serif; font-size:1.5rem; font-weight:800; background:linear-gradient(135deg,#10b981,#06b6d4); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">92</span>
+            <span style="font-size:0.7rem; color:#10b981; font-weight:600;">%</span>
+          </div>
+        </div>
+        <div style="display:flex; gap:0.25rem;">
+          <div style="width:4px; height:28px; background:#10b981; border-radius:4px;"></div>
+          <div style="width:4px; height:28px; background:#10b981; border-radius:4px;"></div>
+          <div style="width:4px; height:28px; background:#10b981; border-radius:4px;"></div>
+          <div style="width:4px; height:28px; background:#10b981; border-radius:4px;"></div>
+          <div style="width:4px; height:28px; background:#e4e4e7; border-radius:4px;"></div>
+        </div>
+      </div>
+
+      <!-- Keywords as check list -->
+      <div style="background:white; border:1px solid #d1fae5; border-radius:12px; padding:0.75rem; margin-bottom:0.5rem; opacity:0; animation: fadeUp 0.4s 0.3s ease forwards;">
+        <span style="font-size:0.6rem; font-weight:700; color:#065f46; display:flex; align-items:center; gap:0.3rem; margin-bottom:0.5rem;">
+          <svg width="12" height="12" fill="none" stroke="#10b981" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+          4 Keywords encontradas
+        </span>
+        <div style="display:flex; flex-direction:column; gap:0.3rem;">
+          <div style="display:flex; align-items:center; gap:0.4rem; padding:0.35rem 0.5rem; background:#f0fdf4; border-radius:8px;">
+            <svg width="10" height="10" fill="none" stroke="#10b981" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+            <span style="font-size:0.6rem; color:#18181b; font-weight:500;">React</span>
+            <span style="font-size:0.5rem; color:#10b981; margin-left:auto;">encontrado em Experiência</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.4rem; padding:0.35rem 0.5rem; background:#f0fdf4; border-radius:8px;">
+            <svg width="10" height="10" fill="none" stroke="#10b981" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+            <span style="font-size:0.6rem; color:#18181b; font-weight:500;">TypeScript</span>
+            <span style="font-size:0.5rem; color:#10b981; margin-left:auto;">encontrado em Skills</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.4rem; padding:0.35rem 0.5rem; background:#f0fdf4; border-radius:8px;">
+            <svg width="10" height="10" fill="none" stroke="#10b981" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+            <span style="font-size:0.6rem; color:#18181b; font-weight:500;">CI/CD</span>
+            <span style="font-size:0.5rem; color:#10b981; margin-left:auto;">encontrado em Experiência</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gaps with suggestions -->
+      <div style="background:white; border:1px solid #fde68a; border-radius:12px; padding:0.75rem; opacity:0; animation: fadeUp 0.4s 0.45s ease forwards;">
+        <span style="font-size:0.6rem; font-weight:700; color:#92400e; display:flex; align-items:center; gap:0.3rem; margin-bottom:0.5rem;">
+          <svg width="12" height="12" fill="none" stroke="#f59e0b" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+          2 Gaps identificados
+        </span>
+        <div style="display:flex; flex-direction:column; gap:0.3rem;">
+          <div style="display:flex; align-items:center; gap:0.4rem; padding:0.35rem 0.5rem; background:#fffbeb; border-radius:8px; border:1px dashed #fde68a;">
+            <span style="font-size:0.6rem; color:#92400e; font-weight:500;">GraphQL</span>
+            <span style="font-size:0.5rem; color:#b45309; margin-left:auto; font-style:italic;">sugerido pela IA →</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.4rem; padding:0.35rem 0.5rem; background:#fffbeb; border-radius:8px; border:1px dashed #fde68a;">
+            <span style="font-size:0.6rem; color:#92400e; font-weight:500;">AWS</span>
+            <span style="font-size:0.5rem; color:#b45309; margin-left:auto; font-style:italic;">sugerido pela IA →</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="card-body">
+      <h3>C — Análise Detalhada com Contexto</h3>
+      <p>Score em gradiente com "level bars" (4/5). Keywords como checklist mostrando ONDE foram encontradas ("em Experiência", "em Skills"). Gaps com hint "sugerido pela IA →" indicando a próxima ação. Mais informativo e fiel ao app real.</p>
+    </div>
+  </div>
+
+</div>
+
+<style>
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes growBar {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes ringFill {
+  to { stroke-dashoffset: 15.08; }
+}
+@keyframes ringFill2 {
+  to { stroke-dashoffset: 11.56; }
+}
+</style>
