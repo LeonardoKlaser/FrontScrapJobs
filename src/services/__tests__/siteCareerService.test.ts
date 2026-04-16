@@ -27,6 +27,7 @@ const mockFormData: SiteConfigFormData = {
   next_page_selector: '.next',
   job_description_selector: '.desc',
   job_requisition_id_selector: '.req-id',
+  job_requisition_id_attribute: '',
   api_endpoint_template: '',
   api_method: '',
   api_headers_json: '',

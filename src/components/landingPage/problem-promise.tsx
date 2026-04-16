@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { AlertTriangle, Sparkles } from 'lucide-react'
 import { SectionWrapper } from './section-wrapper'
-import React from 'react'
 
 export function ProblemPromiseSection() {
   const { t } = useTranslation('landing')
