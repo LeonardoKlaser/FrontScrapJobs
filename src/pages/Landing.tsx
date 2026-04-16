@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { MotionConfig } from 'framer-motion'
 import { Footer } from '@/components/landingPage/footer'
 import { HeroSection } from '@/components/landingPage/hero-section'
 import { LandingNavbar } from '@/components/landingPage/navbar'
@@ -25,8 +26,15 @@ export function Landing() {
     const sentinel = heroSentinelRef.current
     if (!sentinel) return
 
+    if (typeof IntersectionObserver === 'undefined') {
+      setStickyVisible(true)
+      return
+    }
+
     const observer = new IntersectionObserver(
-      ([entry]) => {
+      (entries) => {
+        const entry = entries[0]
+        if (!entry) return
         setStickyVisible(!entry.isIntersecting)
       },
       { threshold: 0 }
@@ -37,16 +45,18 @@ export function Landing() {
   }, [])
 
   return (
-    <div className="bg-white">
-      <LandingNavbar />
-      <StickyCtaBar visible={stickyVisible} />
-      <HeroSection />
-      <div ref={heroSentinelRef} aria-hidden="true" />
-      <ProblemSection />
-      <ValueFeaturesSection />
-      <TrustSection />
-      <PricingSection />
-      <Footer />
-    </div>
+    <MotionConfig reducedMotion="user">
+      <div className="bg-white">
+        <LandingNavbar />
+        <StickyCtaBar visible={stickyVisible} />
+        <HeroSection />
+        <div ref={heroSentinelRef} aria-hidden="true" />
+        <ProblemSection />
+        <ValueFeaturesSection />
+        <TrustSection />
+        <PricingSection />
+        <Footer />
+      </div>
+    </MotionConfig>
   )
 }

@@ -16,10 +16,13 @@ export function useCountUp({
   const [value, setValue] = useState(0)
 
   useEffect(() => {
-    if (!inView) return
+    if (!inView) {
+      setValue(0)
+      return
+    }
 
     const start = performance.now()
-    let rafId: number
+    let rafId: number | null = null
 
     const animate = (now: number) => {
       const elapsed = Math.min((now - start) / (duration * 1000), 1)
@@ -38,7 +41,7 @@ export function useCountUp({
     rafId = requestAnimationFrame(animate)
 
     return () => {
-      if (rafId) cancelAnimationFrame(rafId)
+      if (rafId !== null) cancelAnimationFrame(rafId)
     }
   }, [inView, target, duration, decimals])
 
