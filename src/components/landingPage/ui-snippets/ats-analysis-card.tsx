@@ -15,7 +15,11 @@ import {
 const matchedKeywords = ['Java', 'Spring Boot', 'Microservices', 'Kubernetes', 'CI/CD', 'Agile']
 const missingKeywords = ['Payments', 'FinTech', 'Technical leadership', 'Observability', 'Security']
 
-export function AtsAnalysisCard() {
+interface AtsAnalysisCardProps {
+  compact?: boolean
+}
+
+export function AtsAnalysisCard({ compact = false }: AtsAnalysisCardProps = {}) {
   const { t } = useTranslation('landing')
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
@@ -25,6 +29,7 @@ export function AtsAnalysisCard() {
   const dashOffset = circumference - (score / 100) * circumference
 
   return (
+    <div className={compact ? 'scale-75 origin-top-left pointer-events-none' : ''}>
     <motion.div
       ref={ref}
       initial={{ opacity: 0, x: -20 }}
@@ -143,6 +148,7 @@ export function AtsAnalysisCard() {
         </motion.div>
 
         {/* Lacunas e Melhorias */}
+        {!compact && (
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -170,8 +176,10 @@ export function AtsAnalysisCard() {
             ))}
           </div>
         </motion.div>
+        )}
 
         {/* Sugestões para o Currículo */}
+        {!compact && (
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -217,8 +225,10 @@ export function AtsAnalysisCard() {
             </div>
           </div>
         </motion.div>
+        )}
 
         {/* Considerações Finais */}
+        {!compact && (
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -233,8 +243,10 @@ export function AtsAnalysisCard() {
           </div>
           <p className="text-[0.55rem] text-zinc-500 leading-relaxed">{t('valueFeatures.ats.finalText')}</p>
         </motion.div>
+        )}
 
         {/* Action Buttons */}
+        {!compact && (
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -267,7 +279,9 @@ export function AtsAnalysisCard() {
             {t('valueFeatures.ats.applyButton')}
           </button>
         </motion.div>
+        )}
       </div>
     </motion.div>
+    </div>
   )
 }

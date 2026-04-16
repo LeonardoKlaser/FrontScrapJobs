@@ -2,11 +2,16 @@ import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import { Lightbulb, Shield, Check, ChevronRight } from 'lucide-react'
 
-export function RadarNotifications() {
+interface RadarNotificationsProps {
+  compact?: boolean
+}
+
+export function RadarNotifications({ compact = false }: RadarNotificationsProps = {}) {
   const { t, i18n } = useTranslation('landing')
   const isPtBR = i18n.language.startsWith('pt')
 
   return (
+    <div className={compact ? 'scale-75 origin-top-left pointer-events-none' : ''}>
     <div className="flex flex-col gap-2.5" aria-hidden="true" role="presentation">
       {/* Card 1 — New job, not yet analyzed */}
       <motion.div
@@ -89,39 +94,44 @@ export function RadarNotifications() {
         </div>
       </motion.div>
 
-      {/* Card 3 — Faded / older */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.4, delay: 0.55 }}
-        className="bg-zinc-50 border border-zinc-100 rounded-xl p-4"
-      >
-        <div className="opacity-50">
-          <span className="text-[0.65rem] text-zinc-400 block mb-2">
-            {isPtBR ? 'há 38 min' : '38 min ago'} · carreiras.mercadolivre.com
-          </span>
-          <p className="text-[0.85rem] font-bold text-zinc-500 mb-1">Data Engineer Senior</p>
-          <div className="flex items-center gap-1.5">
-            <span className="text-[0.7rem] font-semibold text-zinc-500">Mercado Livre</span>
-            <span className="text-[0.6rem] text-zinc-400">• São Paulo, SP</span>
-          </div>
-        </div>
-      </motion.div>
+      {!compact && (
+        <>
+          {/* Card 3 — Faded / older */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.4, delay: 0.55 }}
+            className="bg-zinc-50 border border-zinc-100 rounded-xl p-4"
+          >
+            <div className="opacity-50">
+              <span className="text-[0.65rem] text-zinc-400 block mb-2">
+                {isPtBR ? 'há 38 min' : '38 min ago'} · carreiras.mercadolivre.com
+              </span>
+              <p className="text-[0.85rem] font-bold text-zinc-500 mb-1">Data Engineer Senior</p>
+              <div className="flex items-center gap-1.5">
+                <span className="text-[0.7rem] font-semibold text-zinc-500">Mercado Livre</span>
+                <span className="text-[0.6rem] text-zinc-400">• São Paulo, SP</span>
+              </div>
+            </div>
+          </motion.div>
 
-      {/* Source badge */}
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.4, delay: 0.7 }}
-        className="flex items-center gap-2 mt-1 px-3 py-2 bg-white border border-emerald-200 rounded-lg"
-      >
-        <Shield className="w-3 h-3 text-emerald-500 shrink-0" />
-        <span className="text-[0.65rem] text-emerald-800 font-semibold">
-          {t('valueFeatures.radar.sourceBadge')}
-        </span>
-      </motion.div>
+          {/* Source badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.4, delay: 0.7 }}
+            className="flex items-center gap-2 mt-1 px-3 py-2 bg-white border border-emerald-200 rounded-lg"
+          >
+            <Shield className="w-3 h-3 text-emerald-500 shrink-0" />
+            <span className="text-[0.65rem] text-emerald-800 font-semibold">
+              {t('valueFeatures.radar.sourceBadge')}
+            </span>
+          </motion.div>
+        </>
+      )}
+    </div>
     </div>
   )
 }

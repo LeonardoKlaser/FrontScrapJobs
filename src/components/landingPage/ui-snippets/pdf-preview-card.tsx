@@ -43,12 +43,17 @@ function ScoreRing({
   )
 }
 
-export function PdfPreviewCard() {
+interface PdfPreviewCardProps {
+  compact?: boolean
+}
+
+export function PdfPreviewCard({ compact = false }: PdfPreviewCardProps = {}) {
   const { t } = useTranslation('landing')
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
 
   return (
+    <div className={compact ? 'scale-75 origin-top-left pointer-events-none' : ''}>
     <motion.div
       ref={ref}
       initial={{ opacity: 0, x: 20 }}
@@ -114,6 +119,8 @@ export function PdfPreviewCard() {
           </div>
         </motion.div>
 
+        {!compact && (
+        <>
         {/* Connector line */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
@@ -231,7 +238,10 @@ export function PdfPreviewCard() {
             <span className="text-[0.5rem] text-zinc-400">{t('valueFeatures.pdf.emailHint')}</span>
           </div>
         </motion.div>
+        </>
+        )}
       </div>
     </motion.div>
+    </div>
   )
 }
