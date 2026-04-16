@@ -28,7 +28,7 @@ function FeatureBlock({ overline, headline, headlineGradient, body, snippet, rev
         <span className="font-mono text-xs tracking-[0.15em] uppercase text-emerald-500 font-semibold">
           {overline}
         </span>
-        <h3 className="font-display text-xl lg:text-[1.8rem] font-extrabold text-zinc-900 leading-[1.2] mt-3">
+        <h3 className="font-display text-3xl lg:text-[2.75rem] font-extrabold text-zinc-900 leading-[1.1] mt-3">
           {headline}
           <br />
           <span className="text-gradient-primary">{headlineGradient}</span>

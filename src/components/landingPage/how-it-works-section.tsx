@@ -76,7 +76,7 @@ export function HowItWorksSection() {
             <span className="font-mono text-xs tracking-[0.15em] uppercase text-emerald-500 font-semibold">
               {t('howItWorksNew.overline')}
             </span>
-            <h2 className="font-display text-2xl lg:text-[1.8rem] font-extrabold text-zinc-900 mt-3 leading-[1.2]">
+            <h2 className="font-display text-3xl lg:text-[2.75rem] font-extrabold text-zinc-900 mt-3 leading-[1.1]">
               {t('howItWorksNew.headline')}
               <br />
               <span className="text-gradient-primary">{t('howItWorksNew.headlineGradient')}</span>
