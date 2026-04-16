@@ -12,7 +12,8 @@
     "subheading": "Monitoramos centenas de sites automaticamente. Você recebe as vagas certas, com currículo otimizado pra passar pelo ATS.",
     "cta": "Começar agora — é rápido",
     "socialProof": "2.000+ profissionais já usam",
-    "dashboardAlt": "Dashboard do ScrapJobs mostrando vagas monitoradas"
+    "dashboardAlt": "Dashboard do ScrapJobs mostrando vagas monitoradas",
+    "mobileAlt": "Análise de currículo no celular"
   },
   "problem": {
     "headline": "A realidade de quem busca emprego hoje",
@@ -81,10 +82,10 @@
     }
   },
   "trust": {
-    "overline": "Confiam em nós",
+    "overline": "Monitorando em tempo real",
     "statSites": "sites monitorados",
     "statJobs": "vagas encontradas",
-    "statUsers": "profissionais ativos"
+    "statsError": "Não foi possível carregar as estatísticas. Tente novamente em instantes."
   },
   "labels": {
     "pricing": "Preços"
@@ -99,7 +100,10 @@
     "cta": "Começar agora",
     "savingsAnchor": "Economize até {{hours}} horas por mês",
     "guarantee": "7 dias de garantia",
-    "urgency": "Vagas novas são publicadas agora. Quanto antes começar, menos você perde."
+    "urgency": "Vagas novas são publicadas agora. Quanto antes começar, menos você perde.",
+    "errorTitle": "Não foi possível carregar os planos",
+    "errorSubtitle": "Problema temporário. Tente novamente.",
+    "retry": "Tentar novamente"
   },
   "lgpd": {
     "badge": "LGPD Compliant",

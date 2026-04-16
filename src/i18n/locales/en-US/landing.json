@@ -12,7 +12,8 @@
     "subheading": "We monitor hundreds of sites automatically. You get the right jobs with a resume optimized to pass through the ATS.",
     "cta": "Get started — it's fast",
     "socialProof": "2,000+ professionals already use it",
-    "dashboardAlt": "ScrapJobs dashboard showing monitored jobs"
+    "dashboardAlt": "ScrapJobs dashboard showing monitored jobs",
+    "mobileAlt": "Resume analysis on mobile"
   },
   "problem": {
     "headline": "The reality of job hunting today",
@@ -81,10 +82,10 @@
     }
   },
   "trust": {
-    "overline": "Trusted by",
+    "overline": "Monitoring in real-time",
     "statSites": "sites monitored",
     "statJobs": "jobs found",
-    "statUsers": "active professionals"
+    "statsError": "Unable to load statistics. Please try again shortly."
   },
   "labels": {
     "pricing": "Pricing"
@@ -99,7 +100,10 @@
     "cta": "Get started",
     "savingsAnchor": "Save up to {{hours}} hours per month",
     "guarantee": "7-day guarantee",
-    "urgency": "New jobs are being posted right now. The sooner you start, the less you miss."
+    "urgency": "New jobs are being posted right now. The sooner you start, the less you miss.",
+    "errorTitle": "Unable to load plans",
+    "errorSubtitle": "Temporary issue. Please try again.",
+    "retry": "Try again"
   },
   "lgpd": {
     "badge": "LGPD Compliant",
