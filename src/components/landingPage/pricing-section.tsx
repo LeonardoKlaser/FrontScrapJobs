@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
+import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Check, Clock, ShieldCheck, Lock } from 'lucide-react'
 import { usePlans } from '@/hooks/usePlans'
 import { PATHS } from '@/router/paths'
-import { SectionWrapper } from './section-wrapper'
 
 export function PricingSection() {
   const { t, i18n } = useTranslation('landing')
@@ -28,9 +28,9 @@ export function PricingSection() {
 
   if (isLoading) {
     return (
-      <SectionWrapper id="pricing">
+      <section id="pricing">
         <div className="py-16 px-6 text-center text-zinc-500">{t('pricing.loading')}</div>
-      </SectionWrapper>
+      </section>
     )
   }
 
@@ -38,7 +38,7 @@ export function PricingSection() {
   const midIndex = Math.floor(sortedPlans.length / 2)
 
   return (
-    <SectionWrapper id="pricing">
+    <section id="pricing">
       <div className="py-16 px-6 text-center">
         <div className="container mx-auto">
           {/* Section Header */}
@@ -129,24 +129,32 @@ export function PricingSection() {
               })}
             </div>
 
-            {/* LGPD/GDPR Badge */}
-            <div className="mt-12 flex flex-col items-center gap-2 animate-fade-in-up [animation-delay:400ms]">
-              <div className="flex items-center gap-4 rounded-xl border border-zinc-200 bg-white px-6 py-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10">
-                  <Lock className="h-5 w-5 text-emerald-500" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-zinc-900 flex items-center gap-1.5">
-                    <ShieldCheck className="h-4 w-4 text-emerald-500" />
-                    {t('lgpd.badge')}
-                  </p>
-                  <p className="text-xs text-zinc-500">{t('lgpd.encryption')}</p>
-                </div>
-              </div>
+            {/* Urgency line */}
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: 0.3 }}
+              className="mt-10 text-center text-sm text-amber-600 flex items-center justify-center gap-2"
+            >
+              <span aria-hidden>⚡</span>
+              {t('pricing.urgency')}
+            </motion.p>
+
+            {/* Trust badges */}
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-zinc-500">
+              <span className="flex items-center gap-1.5">
+                <Lock className="w-3.5 h-3.5 text-emerald-500" />
+                {t('lgpd.badge')}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                {t('lgpd.encryption')}
+              </span>
             </div>
           </div>
         </div>
       </div>
-    </SectionWrapper>
+    </section>
   )
 }
