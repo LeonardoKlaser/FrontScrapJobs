@@ -1,186 +1,41 @@
 {
-  "hero": {
-    "brand": "ScrapJobs",
-    "heading1": "Pare de Procurar.",
-    "heading2": "Comece a Ser Entrevistado.",
-    "subheading": "Você perde horas acessando sites de carreira um por um — e ainda perde vagas. O ScrapJobs monitora automaticamente e usa IA para adaptar seu currículo a cada oportunidade.",
-    "cta": "Começar a Automatizar",
-    "loginPrompt": "Já tem uma conta?",
-    "loginLink": "Fazer login",
-    "microcopy": "Liberação imediata • Cancele a qualquer momento",
-    "dashboardAlt": "Dashboard do ScrapJobs mostrando vagas monitoradas e alertas de IA"
-  },
   "navbar": {
-    "features": "Funcionalidades",
-    "howItWorks": "Como funciona",
-    "pricing": "Preços",
-    "faq": "FAQ",
-    "cta": "Comece agora"
+    "cta": "Começar agora"
   },
-  "labels": {
-    "features": "FUNCIONALIDADES",
-    "howItWorks": "COMO FUNCIONA",
-    "pricing": "PLANOS",
-    "faq": "FAQ",
-    "productVisualization": "PRODUTO",
-    "calculator": "ECONOMIA"
+  "stickyBar": {
+    "message": "Vagas novas são publicadas a cada hora. Não perca as suas.",
+    "cta": "Começar agora"
   },
-  "features": {
-    "title": "Uma Vantagem Injusta para Sua Carreira",
-    "subtitle": "Ferramentas poderosas para automatizar sua busca de emprego",
-    "scraping": {
-      "title": "Vagas Novas Antes de Todo Mundo",
-      "description": "Monitoramos as páginas de carreira das suas empresas-alvo 6x por dia. Scraping inteligente com 3 estratégias diferentes — nenhuma vaga escapa."
-    },
-    "alerts": {
-      "title": "Alertas que Filtram o Ruído",
-      "description": "Defina palavras-chave do seu perfil. Só receba vagas que fazem sentido para você, direto no email — sem spam."
-    },
-    "ai": {
-      "title": "IA que Reescreve Seu Currículo",
-      "description": "Score de compatibilidade, keywords ATS faltando e sugestões com texto pronto para colar. Não é conselho genérico — é o seu currículo adaptado para cada vaga."
-    },
-    "monitoring": {
-      "title": "Acompanhe Suas Candidaturas",
-      "description": "Kanban visual para organizar todo o processo: da candidatura à oferta. Saiba exatamente onde cada oportunidade está."
-    }
-  },
-  "howItWorks": {
-    "title": "Comece em 3 Passos Simples",
-    "step1": {
-      "title": "1. Escolha suas Empresas",
-      "description": "Selecione as empresas onde você sonha em trabalhar."
-    },
-    "step2": {
-      "title": "2. Defina seus Filtros",
-      "description": "Especifique os cargos e palavras-chave que correspondem ao seu perfil."
-    },
-    "step3": {
-      "title": "3. Receba e Otimize",
-      "description": "Vagas novas chegam no seu email. Clique para ver a análise de IA e aplique as sugestões direto no seu currículo."
-    }
+  "hero": {
+    "headline1": "Sua próxima vaga já foi publicada.",
+    "headline2": "Você só não viu ainda.",
+    "subheading": "Monitoramos centenas de sites automaticamente. Você recebe as vagas certas, com currículo otimizado pra passar pelo ATS.",
+    "cta": "Começar agora — é rápido",
+    "socialProof": "2.000+ profissionais já usam",
+    "dashboardAlt": "Dashboard do ScrapJobs mostrando vagas monitoradas"
   },
   "problem": {
-    "heading": "A busca de emprego não deveria ser um segundo emprego.",
-    "description": "Você passa horas navegando entre dezenas de sites de emprego, abrindo abas infinitas, adaptando currículos para cada vaga e ainda assim perde oportunidades que surgem quando você não está olhando. É frustrante, demorado e ineficiente.",
-    "promiseHeading": "Recupere seu tempo. Candidate-se com inteligência.",
-    "promiseDescription": "A ScrapJobs automatiza toda sua busca de emprego, monitorando suas empresas favoritas 24/7 e enviando alertas inteligentes com análise de IA. Concentre sua energia no que realmente importa: preparar-se para as entrevistas."
-  },
-  "faq": {
-    "title": "Perguntas Frequentes",
-    "security": {
-      "question": "Meus dados de currículo estão seguros?",
-      "answer": "Sim, usamos criptografia de ponta a ponta e seguimos as melhores práticas de segurança. Seus dados nunca são compartilhados com terceiros e você tem controle total sobre suas informações."
-    },
-    "ai": {
-      "question": "Como funciona a análise de IA?",
-      "answer": "Nossa IA compara as palavras-chave e requisitos da vaga com as habilidades e experiências do seu currículo, gerando um score de compatibilidade e sugestões personalizadas para melhorar suas chances."
-    },
-    "cancel": {
-      "question": "Posso cancelar a qualquer momento?",
-      "answer": "Sim, você pode cancelar sua assinatura a qualquer momento, sem complicações. Não há taxas de cancelamento ou períodos de carência."
-    },
-    "limits": {
-      "question": "Quantas empresas posso monitorar?",
-      "answer": "Depende do seu plano! O plano Básico permite até 3 sites, o Profissional até 8 e o Premium até 30 sites."
-    },
-    "ctaTitle": "Pronto para Acelerar sua Carreira?",
-    "ctaDescription": "Deixe a busca de emprego manual no passado. Concentre sua energia no que realmente importa: preparar-se para as entrevistas e conseguir o emprego dos seus sonhos.",
-    "ctaButton": "Começar a Automatizar"
-  },
-  "productVisualization": {
-    "title": "Análise de IA Direto no Seu Email",
-    "description": "Receba uma análise detalhada de compatibilidade entre seu currículo e cada vaga, com score, pontos fortes e sugestões de melhoria.",
-    "emailSubtitle": "Nova oportunidade encontrada!",
-    "jobDescription": "Descrição da Vaga:",
-    "bullet1": "Score de compatibilidade: saiba em segundos se a vaga é pra você",
-    "bullet2": "Pontos fortes e gaps: entenda exatamente onde você se encaixa",
-    "bullet3": "Sugestões para o currículo: ajuste seu CV para cada vaga automaticamente",
-    "applyNow": "Ver Vaga Completa",
-    "emailAlt": "Email de análise do ScrapJobs com score de compatibilidade 85/100"
-  },
-  "footer": {
-    "terms": "Termos de Serviço",
-    "privacy": "Política de Privacidade",
-    "copyright": "© {{year}} ScrapJobs. Todos os direitos reservados."
-  },
-  "socialProof": {
-    "subtitle": "Monitorando oportunidades das maiores empresas, como:"
-  },
-  "calculator": {
-    "title": "Quanto vale o seu",
-    "titleHighlight": "tempo?",
-    "description": "ScrapJobs economiza até 50 horas de busca massante por novas vagas de trabalho",
-    "salaryLabel": "Insira seu salário abaixo",
-    "hourlyRate": "Seu valor/hora",
-    "hoursSaved": "Horas economizadas/mês",
-    "yourSavings": "Você economiza",
-    "planCost": "ScrapJobs custa",
-    "roi": "{{value}}x o investimento",
-    "perMonth": "/mês",
-    "currencySymbol": "R$",
-    "hoursPerMonth": "220",
-    "hoursUnit": "50h"
-  },
-  "ctaFinal": {
-    "title": "Pronto para encontrar sua",
-    "titleHighlight": "próxima vaga?",
-    "subtitle": "Automatize sua busca e ganhe tempo para o que realmente importa: as entrevistas.",
-    "cta": "Comece agora"
-  },
-  "pricing": {
-    "title": "Preço Simples e Transparente",
-    "subtitle": "Simples e transparente. Cancele quando quiser.",
-    "loading": "Carregando planos...",
-    "monthly": "Mensal",
-    "popular": "Mais Popular",
-    "planName": "Plano {{name}}",
-    "perMonth": "/mês",
-    "cta": "Começar a Automatizar",
-    "savingsAnchor": "Economize até {{hours}} horas de busca maçante por mês",
-    "guarantee": "Satisfação garantida nos primeiros 7 dias ou devolvemos seu dinheiro integralmente"
-  },
-  "lgpd": {
-    "badge": "Em conformidade com LGPD e GDPR",
-    "encryption": "Seus dados são protegidos com criptografia de ponta a ponta",
-    "noSharing": "Nunca compartilhamos seus dados com terceiros"
-  },
-  "stats": {
-    "sitesAnalyzed": "Sites monitorados",
-    "jobsCollected": "Vagas coletadas",
-    "trustLine": "Dados reais da nossa plataforma, atualizados em tempo real"
-  },
-  "problemSection": {
-    "overline": "A realidade que ninguém fala",
-    "headline1": "Você envia.",
-    "headline2": "A Gupy rejeita.",
-    "headline3": "Chance zero",
-    "subtext": "75% dos currículos são eliminados por robôs antes de um humano sequer os ver. Você não é ruim —",
-    "subtextBold": "o sistema é que está quebrado.",
-    "stat1Value": "4.7h",
-    "stat1Label": "perdidas por semana em busca manual",
-    "stat2Value": "75%",
-    "stat2Label": "dos CVs eliminados pelo ATS",
-    "stat3Value": "3h",
-    "stat3Label": "é o tempo médio para uma vaga boa lotar",
-    "transition": "E se você chegasse primeiro?"
+    "headline": "A realidade de quem busca emprego hoje",
+    "subheading": "E provavelmente a sua também.",
+    "pain1": "dos currículos são descartados por robôs antes de um humano ver",
+    "pain2": "por semana perdidas buscando vagas manualmente em dezenas de sites",
+    "pain3": "das vagas ideais são preenchidas antes de você sequer descobrir"
   },
   "valueFeatures": {
+    "heading": "O ScrapJobs resolve tudo isso",
+    "subheading": "Três funcionalidades. Zero trabalho manual.",
     "radar": {
-      "overline": "Monitoramento Direto",
-      "headline": "Vagas direto da fonte.",
-      "headlineGradient": "Antes de chegar na Gupy.",
-      "body1": "Enquanto todo mundo briga por vagas recicladas no LinkedIn, o ScrapJobs monitora diretamente o site de carreiras das empresas que você escolheu. Sem intermediários. Sem filtros de terceiros.",
-      "body2": "A vaga apareceu no site da Nubank às 9h.",
-      "body2Bold": "Às 9h01 você já sabia.",
-      "body2End": "Quem depende da Gupy só vai ver amanhã.",
-      "sourceBadge": "Direto do site oficial da empresa — sem intermediários",
-      "analyzeButton": "Analisar com IA",
+      "title": "Radar de Vagas",
+      "description": "Monitoramento automático em centenas de sites. Receba alertas das vagas certas no seu perfil, em tempo real.",
+      "newBadge": "NOVA",
+      "analyzeButton": "Analisar",
+      "matchBadge": "Match",
       "viewAnalysis": "Ver análise",
-      "newBadge": "NOVO",
-      "matchBadge": "match"
+      "sourceBadge": "Fonte verificada · site oficial da empresa"
     },
     "ats": {
+      "title": "Análise ATS com IA",
+      "description": "Descubra exatamente por que seu currículo é rejeitado e corrija antes de enviar. Score de compatibilidade + sugestões.",
       "scoreLabel": "Compatibilidade ATS",
       "keywordsTitle": "Palavras-chave ATS",
       "strengthsTitle": "Pontos Fortes",
@@ -200,27 +55,17 @@
       "gap2Desc": "Requisito fundamental para o cargo senior.",
       "suggestion1Text": "Inclua palavras-chave de pagamentos e liderança técnica.",
       "suggestion1Section": "Resumo Profissional",
-      "suggestion1Example": "Software Developer focado em backend e ambientes cloud, com experiência em microserviços Java Spring Boot...",
+      "suggestion1Example": "Software Developer focado em backend e ambientes cloud...",
       "suggestion2Text": "Reforce arquitetura e sistemas de alta disponibilidade.",
       "suggestion2Section": "Experiência",
       "sendEmailButton": "Enviar por email",
       "redoButton": "Refazer",
       "applyButton": "Aplicar 1 Sugestão",
-      "finalText": "Foque em alinhar sua experiência com palavras-chave da área de pagamentos e fintech, além de evidenciar liderança técnica.",
-      "overline": "Análise com IA",
-      "headline": "Descubra por que você",
-      "headlineGradient": "está sendo rejeitado.",
-      "body1": "Faça upload do seu currículo atual. Em segundos, a IA cruza o seu perfil com a vaga e entrega um diagnóstico completo: score ATS, keywords que faltam e gaps que estão a sabotar as suas candidaturas.",
-      "body2": "Chega de adivinhar.",
-      "body2Bold": "Agora você sabe exatamente o que corrigir."
+      "finalText": "Foque em alinhar sua experiência com palavras-chave da área de pagamentos."
     },
     "pdf": {
-      "overline": "Geração Inteligente",
-      "headline": "Um currículo perfeito",
-      "headlineGradient": "para cada vaga. Sem esforço.",
-      "body1": "A IA pega nos gaps, sugere as palavras-chave certas e reconstrói as suas frases para passar no filtro ATS. Você escolhe o que aplicar e baixa o PDF — pronto para enviar.",
-      "body2": "Sem reescrever nada do zero.",
-      "body2Bold": "Um clique entre você e a candidatura perfeita.",
+      "title": "Currículo Otimizado",
+      "description": "Gere um currículo personalizado para cada vaga em segundos. Formatado pra passar pelos filtros automáticos.",
       "aiOptimizedTitle": "Currículo otimizado pela IA",
       "scoreBefore": "Médio",
       "scoreAfter": "Excelente",
@@ -235,20 +80,34 @@
       "emailHint": "Ou envie a análise completa por email"
     }
   },
-  "howItWorksNew": {
-    "overline": "Como funciona",
-    "headline": "Do zero à candidatura perfeita.",
-    "headlineGradient": "Em menos de 1 minuto.",
-    "step1Title": "Importe seu CV",
-    "step1Description": "Upload do PDF atual. Preenchimento automático dos dados.",
-    "step2Title": "A IA analisa a vaga",
-    "step2Description": "Score ATS, keywords e gaps identificados em segundos.",
-    "step3Title": "Exporte e aplique",
-    "step3Description": "Baixe o CV otimizado e candidate-se antes de todos.",
-    "cta": "Começar agora →"
+  "trust": {
+    "overline": "Confiam em nós",
+    "statSites": "sites monitorados",
+    "statJobs": "vagas encontradas",
+    "statUsers": "profissionais ativos"
   },
-  "socialProofNew": {
-    "title": "Monitoramos as empresas que você ama.",
-    "subtitle": "Adicionamos novas empresas toda semana. Não encontrou a sua? Nos diga."
+  "labels": {
+    "pricing": "Preços"
+  },
+  "pricing": {
+    "title": "Escolha seu plano",
+    "subtitle": "Cancele quando quiser. Garantia de 7 dias.",
+    "loading": "Carregando planos...",
+    "popular": "Mais Popular",
+    "planName": "Plano {{name}}",
+    "perMonth": "/mês",
+    "cta": "Começar agora",
+    "savingsAnchor": "Economize até {{hours}} horas por mês",
+    "guarantee": "7 dias de garantia",
+    "urgency": "Vagas novas são publicadas agora. Quanto antes começar, menos você perde."
+  },
+  "lgpd": {
+    "badge": "LGPD Compliant",
+    "encryption": "Dados criptografados"
+  },
+  "footer": {
+    "terms": "Termos",
+    "privacy": "Privacidade",
+    "copyright": "© {{year}} ScrapJobs"
   }
 }

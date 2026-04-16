@@ -1,233 +1,78 @@
 {
-  "hero": {
-    "brand": "ScrapJobs",
-    "heading1": "Stop Searching.",
-    "heading2": "Start Getting Interviewed.",
-    "subheading": "You waste hours checking career sites one by one — and still miss openings. ScrapJobs monitors them automatically and uses AI to tailor your resume to each opportunity.",
-    "cta": "Start Automating",
-    "loginPrompt": "Already have an account?",
-    "loginLink": "Sign in",
-    "microcopy": "Instant access • Cancel anytime",
-    "dashboardAlt": "ScrapJobs dashboard showing monitored jobs and AI alerts"
-  },
   "navbar": {
-    "features": "Features",
-    "howItWorks": "How it works",
-    "pricing": "Pricing",
-    "faq": "FAQ",
     "cta": "Get started"
   },
-  "labels": {
-    "features": "FEATURES",
-    "howItWorks": "HOW IT WORKS",
-    "pricing": "PRICING",
-    "faq": "FAQ",
-    "productVisualization": "PRODUCT",
-    "calculator": "SAVINGS"
+  "stickyBar": {
+    "message": "New jobs are posted every hour. Don't miss yours.",
+    "cta": "Get started"
   },
-  "features": {
-    "title": "An Unfair Advantage for Your Career",
-    "subtitle": "Powerful tools to automate your job search",
-    "scraping": {
-      "title": "New Jobs Before Everyone Else",
-      "description": "We monitor career pages of your target companies 6x per day. Smart scraping with 3 different strategies — no job slips through."
-    },
-    "alerts": {
-      "title": "Alerts That Cut the Noise",
-      "description": "Set keywords that match your profile. Only get jobs that make sense for you, straight to your inbox — no spam."
-    },
-    "ai": {
-      "title": "AI That Rewrites Your Resume",
-      "description": "Compatibility score, missing ATS keywords, and suggestions with ready-to-paste text. Not generic advice — your resume tailored for each job."
-    },
-    "monitoring": {
-      "title": "Track Your Applications",
-      "description": "Visual Kanban to organize the entire process: from application to offer. Know exactly where each opportunity stands."
-    }
-  },
-  "howItWorks": {
-    "title": "Get Started in 3 Simple Steps",
-    "step1": {
-      "title": "1. Choose Your Companies",
-      "description": "Select the companies where you dream of working."
-    },
-    "step2": {
-      "title": "2. Set Your Filters",
-      "description": "Specify the roles and keywords that match your profile."
-    },
-    "step3": {
-      "title": "3. Receive & Optimize",
-      "description": "New jobs land in your inbox. Click to see the AI analysis and apply suggestions directly to your resume."
-    }
+  "hero": {
+    "headline1": "Your next job has already been posted.",
+    "headline2": "You just haven't seen it yet.",
+    "subheading": "We monitor hundreds of sites automatically. You get the right jobs with a resume optimized to pass through the ATS.",
+    "cta": "Get started — it's fast",
+    "socialProof": "2,000+ professionals already use it",
+    "dashboardAlt": "ScrapJobs dashboard showing monitored jobs"
   },
   "problem": {
-    "heading": "Job searching shouldn't be a second job.",
-    "description": "You spend hours browsing dozens of job sites, opening endless tabs, adapting resumes for each position, and still miss opportunities that come up when you're not looking. It's frustrating, time-consuming, and inefficient.",
-    "promiseHeading": "Reclaim your time. Apply with intelligence.",
-    "promiseDescription": "ScrapJobs automates your entire job search, monitoring your favorite companies 24/7 and sending smart alerts with AI analysis. Focus your energy on what really matters: preparing for interviews."
-  },
-  "faq": {
-    "title": "Frequently Asked Questions",
-    "security": {
-      "question": "Is my resume data secure?",
-      "answer": "Yes, we use end-to-end encryption and follow security best practices. Your data is never shared with third parties and you have full control over your information."
-    },
-    "ai": {
-      "question": "How does the AI analysis work?",
-      "answer": "Our AI compares the job's keywords and requirements with your resume's skills and experiences, generating a compatibility score and personalized suggestions to improve your chances."
-    },
-    "cancel": {
-      "question": "Can I cancel at any time?",
-      "answer": "Yes, you can cancel your subscription at any time, no hassle. There are no cancellation fees or grace periods."
-    },
-    "limits": {
-      "question": "How many companies can I monitor?",
-      "answer": "It depends on your plan! The Basic plan allows up to 3 sites, Professional up to 8, and Premium up to 30 sites."
-    },
-    "ctaTitle": "Ready to Accelerate Your Career?",
-    "ctaDescription": "Leave manual job searching in the past. Focus your energy on what really matters: preparing for interviews and landing your dream job.",
-    "ctaButton": "Start Automating"
-  },
-  "productVisualization": {
-    "title": "AI Analysis Straight to Your Inbox",
-    "description": "Get a detailed compatibility analysis between your resume and each job, with score, strengths, and improvement suggestions.",
-    "emailSubtitle": "New opportunity found!",
-    "jobDescription": "Job Description:",
-    "bullet1": "Compatibility score: know in seconds if the job is right for you",
-    "bullet2": "Strengths and gaps: understand exactly where you fit",
-    "bullet3": "Resume suggestions: tailor your CV for each job automatically",
-    "applyNow": "View Full Job",
-    "emailAlt": "ScrapJobs analysis email with 85/100 compatibility score"
-  },
-  "footer": {
-    "terms": "Terms of Service",
-    "privacy": "Privacy Policy",
-    "copyright": "© {{year}} ScrapJobs. All rights reserved."
-  },
-  "socialProof": {
-    "subtitle": "Monitoring opportunities from the biggest companies, like:"
-  },
-  "calculator": {
-    "title": "How much is your",
-    "titleHighlight": "time worth?",
-    "description": "ScrapJobs saves up to 50 hours of tedious job searching per month",
-    "salaryLabel": "Your monthly salary",
-    "hourlyRate": "Your hourly rate",
-    "hoursSaved": "Hours saved/month",
-    "yourSavings": "You save",
-    "planCost": "ScrapJobs costs",
-    "roi": "{{value}}x your investment",
-    "perMonth": "/mo",
-    "currencySymbol": "$",
-    "hoursPerMonth": "160",
-    "hoursUnit": "50h"
-  },
-  "ctaFinal": {
-    "title": "Ready to find your",
-    "titleHighlight": "next job?",
-    "subtitle": "Automate your search and free up time for what really matters: the interviews.",
-    "cta": "Get started"
-  },
-  "pricing": {
-    "title": "Simple and Transparent Pricing",
-    "subtitle": "Simple and transparent. Cancel anytime.",
-    "loading": "Loading plans...",
-    "monthly": "Monthly",
-    "popular": "Popular",
-    "planName": "{{name}} Plan",
-    "perMonth": "/mo",
-    "cta": "Start Automating",
-    "savingsAnchor": "Save up to {{hours}} hours of tedious job searching per month",
-    "guarantee": "Satisfaction guaranteed in the first 7 days or we refund your money in full"
-  },
-  "lgpd": {
-    "badge": "LGPD and GDPR Compliant",
-    "encryption": "Your data is protected with end-to-end encryption",
-    "noSharing": "We never share your data with third parties"
-  },
-  "stats": {
-    "sitesAnalyzed": "Monitored sites",
-    "jobsCollected": "Jobs collected",
-    "trustLine": "Real data from our platform, updated in real time"
-  },
-  "problemSection": {
-    "overline": "The reality no one talks about",
-    "headline1": "You send.",
-    "headline2": "Gupy rejects.",
-    "headline3": "Repeat 47 times.",
-    "subtext": "75% of resumes are eliminated by bots before a human even sees them. You're not bad —",
-    "subtextBold": "the system is broken.",
-    "stat1Value": "4.7h",
-    "stat1Label": "wasted per week on manual searching",
-    "stat2Value": "75%",
-    "stat2Label": "of CVs eliminated by ATS",
-    "stat3Value": "3h",
-    "stat3Label": "average time for a good job to fill up",
-    "transition": "What if you got there first?"
+    "headline": "The reality of job hunting today",
+    "subheading": "And probably yours too.",
+    "pain1": "of resumes are discarded by bots before a human ever sees them",
+    "pain2": "lost per week searching for jobs manually across dozens of sites",
+    "pain3": "of ideal jobs are filled before you even find out about them"
   },
   "valueFeatures": {
+    "heading": "ScrapJobs solves all that",
+    "subheading": "Three features. Zero manual work.",
     "radar": {
-      "overline": "Direct Monitoring",
-      "headline": "Jobs straight from the source.",
-      "headlineGradient": "Before they hit Gupy.",
-      "body1": "While everyone fights over recycled listings on LinkedIn, ScrapJobs monitors the career sites of the companies you chose directly. No middlemen. No third-party filters.",
-      "body2": "The job appeared on Nubank's site at 9am.",
-      "body2Bold": "At 9:01am you already knew.",
-      "body2End": "Those relying on Gupy won't see it until tomorrow.",
-      "sourceBadge": "Straight from the official company site — no middlemen",
-      "analyzeButton": "Analyze with AI",
-      "viewAnalysis": "View analysis",
+      "title": "Job Radar",
+      "description": "Automatic monitoring across hundreds of sites. Get alerts for the right jobs for your profile in real-time.",
       "newBadge": "NEW",
-      "matchBadge": "match"
+      "analyzeButton": "Analyze",
+      "matchBadge": "Match",
+      "viewAnalysis": "View analysis",
+      "sourceBadge": "Verified source · official company site"
     },
     "ats": {
+      "title": "AI ATS Analysis",
+      "description": "Find out exactly why your resume is being rejected and fix it before sending. Compatibility score + suggestions.",
       "scoreLabel": "ATS Compatibility",
       "keywordsTitle": "ATS Keywords",
       "strengthsTitle": "Strengths",
-      "gapsTitle": "Gaps & Improvements",
+      "gapsTitle": "Gaps and Improvements",
       "suggestionsTitle": "Resume Suggestions",
       "suggestionsCount": "1 of 3 selected",
       "finalTitle": "Final Considerations",
-      "scoreSummary": "The candidate demonstrates strong backend experience with Java and Spring Boot, but lacks details in payments and technical leadership.",
-      "scoreBadge": "Average",
-      "strength1Title": "Experience with microservices using Java and Spring Boot",
-      "strength1Desc": "Foundation for the job's architecture, including scalable distributed systems.",
-      "strength2Title": "Hands-on knowledge of Kubernetes and CI/CD",
-      "strength2Desc": "Important for high availability and secure deployment pipelines.",
-      "gap1Title": "Missing experience with payment systems and authorization.",
-      "gap1Desc": "Payment cycles and fintech are critical for this role.",
-      "gap2Title": "No evidence of technical leadership and mentoring.",
-      "gap2Desc": "Fundamental requirement for the senior position.",
-      "suggestion1Text": "Include payment and technical leadership keywords.",
+      "scoreSummary": "The candidate shows strong backend experience with Java and Spring Boot, but lacks details in payments and technical leadership.",
+      "scoreBadge": "Medium",
+      "strength1Title": "Microservices experience with Java and Spring Boot",
+      "strength1Desc": "Foundation for the role's architecture, including scalable distributed systems.",
+      "strength2Title": "Practical knowledge in Kubernetes and CI/CD",
+      "strength2Desc": "Important for high availability and secure deploy pipelines.",
+      "gap1Title": "Missing experience with payments and authorization systems.",
+      "gap1Desc": "Payment cycles and fintech critical for the role.",
+      "gap2Title": "No proof of technical leadership and mentorship.",
+      "gap2Desc": "Fundamental requirement for senior roles.",
+      "suggestion1Text": "Include keywords for payments and technical leadership.",
       "suggestion1Section": "Professional Summary",
-      "suggestion1Example": "Software Developer focused on backend and cloud environments, with experience in Java Spring Boot microservices...",
+      "suggestion1Example": "Software Developer focused on backend and cloud environments...",
       "suggestion2Text": "Reinforce architecture and high-availability systems.",
       "suggestion2Section": "Experience",
       "sendEmailButton": "Send by email",
       "redoButton": "Redo",
       "applyButton": "Apply 1 Suggestion",
-      "finalText": "Focus on aligning your experience with payment and fintech keywords, and highlighting technical leadership.",
-      "overline": "AI Analysis",
-      "headline": "Find out why you're",
-      "headlineGradient": "being rejected.",
-      "body1": "Upload your current resume. In seconds, our AI cross-references your profile with the job and delivers a complete diagnosis: ATS score, missing keywords, and gaps that are sabotaging your applications.",
-      "body2": "Stop guessing.",
-      "body2Bold": "Now you know exactly what to fix."
+      "finalText": "Focus on aligning your experience with payments and fintech keywords."
     },
     "pdf": {
-      "overline": "Smart Generation",
-      "headline": "A perfect resume",
-      "headlineGradient": "for every job. Effortlessly.",
-      "body1": "The AI takes the gaps, suggests the right keywords, and rebuilds your sentences to pass the ATS filter. You choose what to apply and download the PDF — ready to send.",
-      "body2": "No rewriting from scratch.",
-      "body2Bold": "One click between you and the perfect application.",
+      "title": "Optimized Resume",
+      "description": "Generate a customized resume for each job in seconds. Formatted to pass automatic filters.",
       "aiOptimizedTitle": "AI-optimized resume",
-      "scoreBefore": "Average",
+      "scoreBefore": "Medium",
       "scoreAfter": "Excellent",
       "pill1": "+8 ATS keywords",
-      "pill2": "Summary rewritten",
-      "pill3": "Experience optimized",
-      "templatePrompt": "Choose a template to export:",
+      "pill2": "Rewritten summary",
+      "pill3": "Optimized experience",
+      "templatePrompt": "Choose the template to export:",
       "templateModerno": "Modern",
       "templateClassico": "Classic",
       "templateCriativo": "Creative",
@@ -235,20 +80,34 @@
       "emailHint": "Or send the full analysis by email"
     }
   },
-  "howItWorksNew": {
-    "overline": "How it works",
-    "headline": "From zero to perfect application.",
-    "headlineGradient": "In less than 1 minute.",
-    "step1Title": "Import your CV",
-    "step1Description": "Upload your current PDF. Auto-fill your data.",
-    "step2Title": "AI analyzes the job",
-    "step2Description": "ATS score, keywords and gaps identified in seconds.",
-    "step3Title": "Export and apply",
-    "step3Description": "Download the optimized CV and apply before everyone else.",
-    "cta": "Get started now →"
+  "trust": {
+    "overline": "Trusted by",
+    "statSites": "sites monitored",
+    "statJobs": "jobs found",
+    "statUsers": "active professionals"
   },
-  "socialProofNew": {
-    "title": "We monitor the companies you love.",
-    "subtitle": "We add new companies every week. Didn't find yours? Tell us."
+  "labels": {
+    "pricing": "Pricing"
+  },
+  "pricing": {
+    "title": "Choose your plan",
+    "subtitle": "Cancel anytime. 7-day guarantee.",
+    "loading": "Loading plans...",
+    "popular": "Most Popular",
+    "planName": "{{name}} Plan",
+    "perMonth": "/month",
+    "cta": "Get started",
+    "savingsAnchor": "Save up to {{hours}} hours per month",
+    "guarantee": "7-day guarantee",
+    "urgency": "New jobs are being posted right now. The sooner you start, the less you miss."
+  },
+  "lgpd": {
+    "badge": "LGPD Compliant",
+    "encryption": "Encrypted data"
+  },
+  "footer": {
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "copyright": "© {{year}} ScrapJobs"
   }
 }
