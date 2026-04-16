@@ -3,13 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
-import { Check, Clock, ShieldCheck, Lock } from 'lucide-react'
+import { AlertTriangle, Check, Clock, ShieldCheck, Lock } from 'lucide-react'
 import { usePlans } from '@/hooks/usePlans'
 import { PATHS } from '@/router/paths'
 
 export function PricingSection() {
   const { t, i18n } = useTranslation('landing')
-  const { data: plans, isLoading } = usePlans()
+  const { data: plans, isLoading, isError, refetch } = usePlans()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -34,7 +34,26 @@ export function PricingSection() {
     )
   }
 
-  const sortedPlans = plans ? [...plans].sort((a, b) => a.price - b.price) : []
+  if (isError || !plans || plans.length === 0) {
+    return (
+      <section id="pricing">
+        <div className="py-16 px-6 text-center">
+          <div className="max-w-md mx-auto bg-white border border-zinc-200 rounded-2xl p-8">
+            <AlertTriangle className="w-10 h-10 text-amber-500 mx-auto mb-4" />
+            <h3 className="font-display text-xl font-semibold text-zinc-900">
+              {t('pricing.errorTitle')}
+            </h3>
+            <p className="mt-2 text-sm text-zinc-500">{t('pricing.errorSubtitle')}</p>
+            <Button variant="glow" size="lg" className="mt-6" onClick={() => refetch()}>
+              {t('pricing.retry')}
+            </Button>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  const sortedPlans = [...plans].sort((a, b) => a.price - b.price)
   const midIndex = Math.floor(sortedPlans.length / 2)
 
   return (
