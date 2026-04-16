@@ -1,136 +1,64 @@
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { motion, useInView } from 'framer-motion'
-import { useRef, useEffect, useState } from 'react'
-import { SectionWrapper } from './section-wrapper'
+import { useCountUp } from '@/hooks/useCountUp'
 
-function CountUp({ target, duration = 2 }: { target: string; duration?: number }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const isInView = useInView(ref, { once: true, amount: 0.5 })
-  const [display, setDisplay] = useState('0')
+interface PainCardProps {
+  target: number
+  suffix: string
+  label: string
+  delay: number
+  decimals?: number
+}
 
-  const isPercentage = target.endsWith('%')
-  const isHours = target.endsWith('h')
-  const numericValue = parseFloat(target)
+function PainCard({ target, suffix, label, delay, decimals = 0 }: PainCardProps) {
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref, { once: true, amount: 0.5 })
+  const value = useCountUp({ target, inView, decimals })
 
-  useEffect(() => {
-    if (!isInView) return
-    const start = performance.now()
-    const animate = (now: number) => {
-      const elapsed = Math.min((now - start) / (duration * 1000), 1)
-      const eased = 1 - Math.pow(1 - elapsed, 3)
-      const current = numericValue * eased
-
-      if (isPercentage) {
-        setDisplay(`${Math.round(current)}%`)
-      } else if (isHours) {
-        setDisplay(`${current.toFixed(1)}h`)
-      } else {
-        setDisplay(`${Math.round(current)}`)
-      }
-
-      if (elapsed < 1) requestAnimationFrame(animate)
-    }
-    requestAnimationFrame(animate)
-  }, [isInView, numericValue, duration, isPercentage, isHours])
-
-  return <span ref={ref}>{display}</span>
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ duration: 0.5, delay, ease: 'easeOut' }}
+      className="flex-1 bg-red-50 border border-red-100 rounded-2xl p-8 text-center"
+    >
+      <div className="font-display text-5xl lg:text-6xl font-extrabold text-red-500">
+        {decimals > 0 ? value.toFixed(decimals) : value}
+        {suffix}
+      </div>
+      <p className="mt-3 text-sm text-zinc-600 leading-relaxed">{label}</p>
+    </motion.div>
+  )
 }
 
 export function ProblemSection() {
   const { t } = useTranslation('landing')
 
-  const stats = [
-    { value: t('problemSection.stat1Value'), label: t('problemSection.stat1Label'), ariaLabel: '4.7 horas perdidas por semana' },
-    { value: t('problemSection.stat2Value'), label: t('problemSection.stat2Label'), ariaLabel: '75 por cento dos CVs eliminados' },
-    { value: t('problemSection.stat3Value'), label: t('problemSection.stat3Label'), ariaLabel: '3 horas para uma vaga lotar' },
-  ]
-
   return (
-    <SectionWrapper>
-      <div className="py-16 px-6 lg:py-24 lg:px-8 flex items-center relative">
-        {/* Left accent bar */}
-        <div
-          className="absolute left-0 top-[15%] bottom-[15%] w-1 rounded-r-sm hidden lg:block"
-          style={{ background: 'linear-gradient(180deg, #10b981, #06b6d4)' }}
-        />
+    <section className="py-20 lg:py-28 px-4 sm:px-6 bg-zinc-50">
+      <div className="max-w-5xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-14"
+        >
+          <h2 className="font-display text-3xl lg:text-5xl font-bold text-zinc-900 text-balance">
+            {t('problem.headline')}
+          </h2>
+          <p className="mt-4 text-lg text-zinc-500">{t('problem.subheading')}</p>
+        </motion.div>
 
-        <div className="max-w-3xl mx-auto lg:mx-0 lg:ml-16">
-          {/* Overline */}
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.4 }}
-            className="font-mono text-xs tracking-[0.15em] uppercase text-emerald-500 mb-6"
-          >
-            {t('problemSection.overline')}
-          </motion.p>
-
-          {/* Headline */}
-          <motion.h2
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-            className="font-display font-extrabold leading-[1.15] mb-6"
-          >
-            <span className="text-2xl lg:text-[2.75rem] text-zinc-900 block">
-              {t('problemSection.headline1')}
-            </span>
-            <span className="text-2xl lg:text-[2.75rem] text-zinc-500 block">
-              {t('problemSection.headline2')}
-            </span>
-            <span className="text-xl lg:text-[2rem] text-zinc-400 block">
-              {t('problemSection.headline3')}
-            </span>
-          </motion.h2>
-
-          {/* Subtext */}
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-            className="text-zinc-500 text-[0.95rem] leading-[1.7] max-w-lg"
-          >
-            {t('problemSection.subtext')}{' '}
-            <span className="text-zinc-900 font-semibold">{t('problemSection.subtextBold')}</span>
-          </motion.p>
-
-          {/* Stats in mini-cards */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.4, delay: 0.3 }}
-            className="flex flex-col sm:flex-row gap-3 mt-8"
-          >
-            {stats.map((stat) => (
-              <div
-                key={stat.label}
-                aria-label={stat.ariaLabel}
-                className="flex-1 bg-zinc-50 border border-zinc-200 rounded-xl p-3 text-center"
-              >
-                <span className="text-zinc-900 font-display font-extrabold text-2xl block">
-                  <CountUp target={stat.value} />
-                </span>
-                <p className="text-zinc-400 text-[0.55rem] mt-1">{stat.label}</p>
-              </div>
-            ))}
-          </motion.div>
-
-          {/* Transition Line */}
-          <motion.p
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="text-emerald-500 font-display font-semibold text-lg mt-8"
-          >
-            {t('problemSection.transition')}
-          </motion.p>
+        <div className="flex flex-col md:flex-row gap-5">
+          <PainCard target={85} suffix="%" label={t('problem.pain1')} delay={0} />
+          <PainCard target={6} suffix="h" label={t('problem.pain2')} delay={0.15} />
+          <PainCard target={72} suffix="%" label={t('problem.pain3')} delay={0.3} />
         </div>
       </div>
-    </SectionWrapper>
+    </section>
   )
 }
