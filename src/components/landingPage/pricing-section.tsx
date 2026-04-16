@@ -88,7 +88,7 @@ export function PricingSection() {
                       </div>
                       <p className="flex items-center justify-center gap-1.5 text-xs text-zinc-500 mt-3">
                         <Clock className="w-3.5 h-3.5 text-emerald-500" />
-                        {t('pricing.savingsAnchor')}
+                        {t('pricing.savingsAnchor', { hours: plan.max_ai_analyses })}
                       </p>
                     </div>
 

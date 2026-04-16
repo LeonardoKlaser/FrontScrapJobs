@@ -137,7 +137,7 @@
     "planName": "{{name}} Plan",
     "perMonth": "/mo",
     "cta": "Start Automating",
-    "savingsAnchor": "Save up to 15 hours of tedious job searching per month",
+    "savingsAnchor": "Save up to {{hours}} hours of tedious job searching per month",
     "guarantee": "Satisfaction guaranteed in the first 7 days or we refund your money in full"
   },
   "lgpd": {
