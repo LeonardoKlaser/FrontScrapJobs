@@ -8,13 +8,12 @@ interface PainCardProps {
   suffix: string
   label: string
   delay: number
-  decimals?: number
 }
 
-function PainCard({ target, suffix, label, delay, decimals = 0 }: PainCardProps) {
+function PainCard({ target, suffix, label, delay }: PainCardProps) {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, amount: 0.5 })
-  const value = useCountUp({ target, inView, decimals })
+  const value = useCountUp({ target, inView })
 
   return (
     <motion.div
@@ -26,7 +25,7 @@ function PainCard({ target, suffix, label, delay, decimals = 0 }: PainCardProps)
       className="flex-1 bg-red-50 border border-red-100 rounded-2xl p-8 text-center"
     >
       <div className="font-display text-5xl lg:text-6xl font-extrabold text-red-500">
-        {decimals > 0 ? value.toFixed(decimals) : value}
+        {value}
         {suffix}
       </div>
       <p className="mt-3 text-sm text-zinc-600 leading-relaxed">{label}</p>

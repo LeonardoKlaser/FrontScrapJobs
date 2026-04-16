@@ -31,8 +31,8 @@ export function StickyCtaBar({ visible }: StickyCtaBarProps) {
             </p>
             <Button
               size="sm"
-              variant="secondary"
-              className="flex-shrink-0 bg-white text-emerald-600 hover:bg-emerald-50 font-semibold min-h-[40px]"
+              variant="ghost"
+              className="flex-shrink-0 bg-white text-emerald-600 hover:bg-emerald-50 hover:text-emerald-600 font-semibold min-h-[40px]"
               onClick={handleClick}
             >
               {t('stickyBar.cta')}

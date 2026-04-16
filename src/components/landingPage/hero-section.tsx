@@ -102,7 +102,7 @@ export function HeroSection() {
             />
             <motion.img
               src="/analysis_mockup_cel.png"
-              alt="Mobile view"
+              alt={t('hero.mobileAlt')}
               loading="eager"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
