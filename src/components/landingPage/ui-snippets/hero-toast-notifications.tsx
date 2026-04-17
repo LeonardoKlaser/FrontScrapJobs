@@ -10,7 +10,7 @@ const TOAST_DATA = [
     time: 'agora',
     hasActions: true,
     top: 'top-0',
-    left: 'left-[30px] lg:left-[10px]',
+    left: 'left-[10px]',
     zIndex: 'z-[4]',
     opacity: 1,
     borderClass: 'border-emerald-300',
@@ -25,7 +25,7 @@ const TOAST_DATA = [
     time: '1 min atrás',
     hasActions: false,
     top: 'top-[160px]',
-    left: 'left-[30px] lg:left-[40px]',
+    left: 'left-[40px]',
     zIndex: 'z-[3]',
     opacity: 0.8,
     borderClass: 'border-zinc-200',
@@ -40,7 +40,7 @@ const TOAST_DATA = [
     time: '3 min atrás',
     hasActions: false,
     top: 'top-[290px]',
-    left: 'left-[30px] lg:left-0',
+    left: 'left-0',
     zIndex: 'z-[2]',
     opacity: 0.5,
     borderClass: 'border-zinc-200',
@@ -55,7 +55,7 @@ const TOAST_DATA = [
     time: '5 min atrás',
     hasActions: false,
     top: 'top-[390px]',
-    left: 'left-[30px] lg:left-[30px]',
+    left: 'left-[30px]',
     zIndex: 'z-[1]',
     opacity: 0.25,
     borderClass: 'border-zinc-200',
@@ -66,7 +66,7 @@ const TOAST_DATA = [
 export function HeroToastNotifications() {
   return (
     <div
-      className="relative w-[400px] h-[480px] mx-auto lg:ml-auto lg:mr-[200px] scale-75 md:scale-[0.85] lg:scale-100 origin-top"
+      className="relative w-[400px] h-[480px] -ml-[30px] sm:mx-auto lg:ml-auto lg:mr-[200px] scale-75 md:scale-[0.85] lg:scale-100 origin-top"
       aria-hidden="true"
       role="presentation"
     >
