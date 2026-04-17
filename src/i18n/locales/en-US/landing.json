@@ -224,13 +224,15 @@
   "howItWorksNew": {
     "overline": "How it works",
     "headline": "From zero to perfect application.",
-    "headlineGradient": "In less than 1 minute.",
-    "step1Title": "Import your CV",
-    "step1Description": "Upload your current PDF. Auto-fill your data.",
-    "step2Title": "AI analyzes the job",
-    "step2Description": "ATS score, keywords and gaps identified in seconds.",
-    "step3Title": "Export and apply",
-    "step3Description": "Download the optimized CV and apply before everyone else.",
+    "headlineGradient": "In 4 simple steps.",
+    "step1Title": "Upload your resume",
+    "step1Description": "Upload your PDF. Your data is filled in automatically.",
+    "step2Title": "Get job alerts",
+    "step2Description": "As soon as a job is posted at the companies you monitor, you're notified.",
+    "step3Title": "AI matches job + resume",
+    "step3Description": "ATS score, missing keywords and gaps — all analyzed in seconds.",
+    "step4Title": "Export and apply",
+    "step4Description": "Download the optimized CV for the job and apply before everyone else.",
     "cta": "Get started now →"
   },
   "socialProofNew": {

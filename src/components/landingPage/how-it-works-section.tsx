@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
-import { FileText, PenLine, Download } from 'lucide-react'
+import { FileText, Bell, BrainCircuit, Download } from 'lucide-react'
 import { SectionWrapper } from './section-wrapper'
 
 const steps = [
@@ -16,7 +16,7 @@ const steps = [
   },
   {
     number: '02',
-    icon: PenLine,
+    icon: Bell,
     titleKey: 'howItWorksNew.step2Title',
     descKey: 'howItWorksNew.step2Description',
     gradient: 'from-emerald-100 to-emerald-200',
@@ -26,9 +26,19 @@ const steps = [
   },
   {
     number: '03',
-    icon: Download,
+    icon: BrainCircuit,
     titleKey: 'howItWorksNew.step3Title',
     descKey: 'howItWorksNew.step3Description',
+    gradient: 'from-emerald-200 to-emerald-300',
+    border: 'border-emerald-400',
+    iconColor: 'text-emerald-700',
+    numberColor: 'text-emerald-500',
+  },
+  {
+    number: '04',
+    icon: Download,
+    titleKey: 'howItWorksNew.step4Title',
+    descKey: 'howItWorksNew.step4Description',
     gradient: '',
     border: '',
     iconColor: 'text-white',
@@ -37,9 +47,13 @@ const steps = [
   },
 ]
 
-function Connector({ variant }: { variant: 1 | 2 }) {
-  const from = variant === 1 ? '#a7f3d0' : '#10b981'
-  const to = variant === 1 ? '#10b981' : '#06b6d4'
+function Connector({ variant }: { variant: number }) {
+  const colors = [
+    { from: '#a7f3d0', to: '#10b981' },
+    { from: '#10b981', to: '#10b981' },
+    { from: '#10b981', to: '#06b6d4' },
+  ]
+  const { from, to } = colors[variant - 1] ?? colors[0]
 
   return (
     <div className="hidden lg:flex items-center shrink-0" style={{ paddingTop: '1.5rem' }}>
@@ -114,7 +128,7 @@ export function HowItWorksSection() {
                     {t(step.descKey)}
                   </p>
                 </motion.div>
-                {i < steps.length - 1 && <Connector variant={(i + 1) as 1 | 2} />}
+                {i < steps.length - 1 && <Connector variant={i + 1} />}
               </div>
             ))}
           </div>
