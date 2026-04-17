@@ -35,12 +35,12 @@ Follows existing pattern of `ui-snippets/` directory (see `radar-notifications.t
 
 Hardcoded array in the component (not i18n — these are visual demo data):
 
-| # | Company | Logo BG | Initials | Job Title | Location | Timestamp | Opacity | Actions |
-|---|---------|---------|----------|-----------|----------|-----------|---------|---------|
-| 1 | Nubank | #820ad1 | Nu | Senior Frontend Developer | Nubank · São Paulo · Remoto | agora | 1.0 | Yes (Analisar + Apliquei) |
-| 2 | iFood | #ea1d2c | iF | Product Designer Pleno | iFood · Campinas · Híbrido | 1 min atrás | 0.8 | No |
-| 3 | Mercado Livre | #ffe600 (text #333) | ML | Data Engineer Senior | Mercado Livre · São Paulo | 3 min atrás | 0.5 | No |
-| 4 | Itaú | #0a66c2 | In | Backend Engineer | Itaú · São Paulo | 5 min atrás | 0.25 | No |
+| # | Company | Logo URL | Job Title | Location | Timestamp | Opacity | Actions |
+|---|---------|----------|-----------|----------|-----------|---------|---------|
+| 1 | Nubank | `scrapjobs-state-bucket.s3.amazonaws.com/logos/1630b6e3-7956-4677-85e2-f92b34a01364.png` | Senior Frontend Developer | Nubank · São Paulo · Remoto | agora | 1.0 | Yes (Analisar + Apliquei) |
+| 2 | iFood | `scrapjobs-state-bucket.s3.amazonaws.com/logos/373e4794-7189-489a-8844-7df3273d2322.jpeg` | Product Designer Pleno | iFood · Campinas · Híbrido | 1 min atrás | 0.8 | No |
+| 3 | Mercado Livre | `scrapjobs-state-bucket.s3.amazonaws.com/logos/86f7f791-9cbd-4996-90ea-163429386d12.png` | Data Engineer Senior | Mercado Livre · São Paulo | 3 min atrás | 0.5 | No |
+| 4 | Itaú | `scrapjobs-state-bucket.s3.amazonaws.com/logos/aec1db60-75d9-4d6b-923d-fd87d0eaa1a5.png` | Backend Engineer | Itaú · São Paulo | 5 min atrás | 0.25 | No |
 
 ### Toast Anatomy
 
@@ -50,7 +50,7 @@ Each toast card:
 ┌──────────────────────────────────────┐
 │ [ScrapJobs icon] ScrapJobs    agora  │  ← Header: app icon (gradient emerald→cyan, 28x28, rounded-lg) + brand name + timestamp
 │                                      │
-│ [Nu] Nova vaga: Senior Frontend Dev  │  ← Body: company logo (36x36 initials) + "Nova vaga: {title}" + "{company} · {location}"
+│ [Nu] Nova vaga: Senior Frontend Dev  │  ← Body: company logo (36x36 img from S3) + "Nova vaga: {title}" + "{company} · {location}"
 │      Nubank · São Paulo · Remoto     │
 │                                      │
 │ [🤖 Analisar com IA] [✓ Apliquei]   │  ← Actions (toast 1 only): outline green button + filled green button
@@ -76,7 +76,7 @@ All Tailwind CSS. Key tokens:
 - Card: `bg-white border border-zinc-200 rounded-[14px] p-3.5 shadow-lg`
 - Toast 1 border: `border-emerald-300` (highlighted)
 - App icon: `bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-lg` with magnifying glass SVG
-- Company logo: `rounded-lg flex items-center justify-center font-bold text-white text-sm`
+- Company logo: `w-9 h-9 rounded-lg object-cover` — real logos loaded from S3 URLs
 - Action buttons: existing project patterns (outline green + filled green, small size)
 
 ### Animations
