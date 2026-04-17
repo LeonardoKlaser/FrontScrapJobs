@@ -1,104 +1,116 @@
-import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
-import { Radar, Target, FileText, type LucideIcon } from 'lucide-react'
+import { SectionWrapper } from './section-wrapper'
 import { RadarNotifications } from './ui-snippets/radar-notifications'
 import { AtsAnalysisCard } from './ui-snippets/ats-analysis-card'
 import { PdfPreviewCard } from './ui-snippets/pdf-preview-card'
 
-interface FeatureRow {
-  Icon: LucideIcon
-  titleKey: string
-  descKey: string
-  mockup: ReactNode
+interface FeatureBlockProps {
+  overline: string
+  headline: string
+  headlineGradient: string
+  body: React.ReactNode
+  snippet: React.ReactNode
+  reverse?: boolean
 }
 
-const FEATURES: FeatureRow[] = [
-  {
-    Icon: Radar,
-    titleKey: 'valueFeatures.radar.title',
-    descKey: 'valueFeatures.radar.description',
-    mockup: <RadarNotifications compact />
-  },
-  {
-    Icon: Target,
-    titleKey: 'valueFeatures.ats.title',
-    descKey: 'valueFeatures.ats.description',
-    mockup: <AtsAnalysisCard compact />
-  },
-  {
-    Icon: FileText,
-    titleKey: 'valueFeatures.pdf.title',
-    descKey: 'valueFeatures.pdf.description',
-    mockup: <PdfPreviewCard compact />
-  }
-]
+function FeatureBlock({ overline, headline, headlineGradient, body, snippet, reverse }: FeatureBlockProps) {
+  return (
+    <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center py-12 lg:py-20 ${reverse ? 'lg:[direction:rtl]' : ''}`}>
+      {/* Text side */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.5 }}
+        className={reverse ? 'lg:[direction:ltr]' : ''}
+      >
+        <span className="font-mono text-xs tracking-[0.15em] uppercase text-emerald-500 font-semibold">
+          {overline}
+        </span>
+        <h3 className="font-display text-3xl lg:text-[2.75rem] font-extrabold text-zinc-900 leading-[1.1] mt-3">
+          {headline}
+          <br />
+          <span className="text-gradient-primary">{headlineGradient}</span>
+        </h3>
+        <div className="mt-4 space-y-3">{body}</div>
+      </motion.div>
+
+      {/* UI snippet side */}
+      <div className={`max-w-sm mx-auto lg:max-w-none ${reverse ? 'lg:[direction:ltr]' : ''}`}>
+        {snippet}
+      </div>
+    </div>
+  )
+}
 
 export function ValueFeaturesSection() {
   const { t } = useTranslation('landing')
 
   return (
-    <section id="features" className="py-20 lg:py-28 px-4 sm:px-6 bg-white">
-      <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-14"
-        >
-          <h2 className="font-display text-3xl lg:text-5xl font-bold text-zinc-900 text-balance">
-            {t('valueFeatures.heading')}
-          </h2>
-          <p className="mt-4 text-lg text-zinc-500">{t('valueFeatures.subheading')}</p>
-        </motion.div>
+    <SectionWrapper id="features">
+      <div className="px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          {/* Block 1: O Radar — Text LEFT, UI RIGHT */}
+          <FeatureBlock
+            overline={t('valueFeatures.radar.overline')}
+            headline={t('valueFeatures.radar.headline')}
+            headlineGradient={t('valueFeatures.radar.headlineGradient')}
+            body={
+              <>
+                <p className="text-zinc-500 text-[0.95rem] leading-[1.7]">
+                  {t('valueFeatures.radar.body1')}
+                </p>
+                <p className="text-zinc-500 text-[0.95rem] leading-[1.7]">
+                  {t('valueFeatures.radar.body2')}{' '}
+                  <span className="text-zinc-900 font-semibold">{t('valueFeatures.radar.body2Bold')}</span>{' '}
+                  {t('valueFeatures.radar.body2End')}
+                </p>
+              </>
+            }
+            snippet={<RadarNotifications />}
+          />
 
-        <div className="space-y-6">
-          {FEATURES.map(({ Icon, titleKey, descKey, mockup }, index) => (
-            <motion.div
-              key={titleKey}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.5, delay: index * 0.1, ease: 'easeOut' }}
-              className="flex flex-col md:flex-row gap-6 items-center p-6 lg:p-8 bg-zinc-50/50 border border-zinc-200/50 rounded-2xl"
-            >
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: '-80px' }}
-                transition={{ duration: 0.5, delay: index * 0.1 + 0.1 }}
-                className="flex-shrink-0 w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center"
-              >
-                <Icon className="w-7 h-7 text-emerald-500" />
-              </motion.div>
+          {/* Block 2: A Análise ATS — UI LEFT, Text RIGHT */}
+          <FeatureBlock
+            reverse
+            overline={t('valueFeatures.ats.overline')}
+            headline={t('valueFeatures.ats.headline')}
+            headlineGradient={t('valueFeatures.ats.headlineGradient')}
+            body={
+              <>
+                <p className="text-zinc-500 text-[0.95rem] leading-[1.7]">
+                  {t('valueFeatures.ats.body1')}
+                </p>
+                <p className="text-zinc-500 text-[0.95rem] leading-[1.7]">
+                  {t('valueFeatures.ats.body2')}{' '}
+                  <span className="text-zinc-900 font-semibold">{t('valueFeatures.ats.body2Bold')}</span>
+                </p>
+              </>
+            }
+            snippet={<AtsAnalysisCard />}
+          />
 
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: '-80px' }}
-                transition={{ duration: 0.5, delay: index * 0.1 + 0.15 }}
-                className="flex-1 text-center md:text-left"
-              >
-                <h3 className="font-display text-xl lg:text-2xl font-bold text-zinc-900">
-                  {t(titleKey)}
-                </h3>
-                <p className="mt-2 text-zinc-600 leading-relaxed">{t(descKey)}</p>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: '-80px' }}
-                transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
-                className="hidden md:block flex-shrink-0 w-56 h-32 overflow-hidden rounded-xl bg-white border border-zinc-200/70"
-              >
-                {mockup}
-              </motion.div>
-            </motion.div>
-          ))}
+          {/* Block 3: A Vantagem Injusta — Text LEFT, UI RIGHT */}
+          <FeatureBlock
+            overline={t('valueFeatures.pdf.overline')}
+            headline={t('valueFeatures.pdf.headline')}
+            headlineGradient={t('valueFeatures.pdf.headlineGradient')}
+            body={
+              <>
+                <p className="text-zinc-500 text-[0.95rem] leading-[1.7]">
+                  {t('valueFeatures.pdf.body1')}
+                </p>
+                <p className="text-zinc-500 text-[0.95rem] leading-[1.7]">
+                  {t('valueFeatures.pdf.body2')}{' '}
+                  <span className="text-zinc-900 font-semibold">{t('valueFeatures.pdf.body2Bold')}</span>
+                </p>
+              </>
+            }
+            snippet={<PdfPreviewCard />}
+          />
         </div>
       </div>
-    </section>
+    </SectionWrapper>
   )
 }

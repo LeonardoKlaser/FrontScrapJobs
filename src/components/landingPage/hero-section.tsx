@@ -1,117 +1,92 @@
 import { useTranslation } from 'react-i18next'
-import { motion, type Variants } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
+import { Link } from 'react-router'
 import { Button } from '@/components/ui/button'
-
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15, delayChildren: 0.2 }
-  }
-}
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } }
-}
+import { ArrowRight, ShieldCheck } from 'lucide-react'
+import { SectionWrapper } from './section-wrapper'
 
 export function HeroSection() {
   const { t } = useTranslation('landing')
-
-  const handleCtaClick = () => {
-    document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
-  }
-
   return (
-    <section className="relative pt-28 pb-16 lg:pt-36 lg:pb-24 px-4 sm:px-6 overflow-hidden bg-white">
-      <div
-        aria-hidden="true"
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-emerald-400/10 rounded-full blur-[180px] pointer-events-none"
-      />
+    <SectionWrapper className="pt-8 lg:pt-12 pb-8 lg:pb-12 px-6 sm:px-8 overflow-hidden bg-white">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center lg:items-start">
+          {/* Left column — Text */}
+          <div className="lg:w-[420px] lg:shrink-0 space-y-8 text-center lg:text-left max-w-xl lg:max-w-none lg:pt-16">
+            {/* Headline */}
+            <h1 className="text-3xl min-[400px]:text-4xl lg:text-[56px] font-semibold leading-tight tracking-tight animate-fade-in-up text-balance text-zinc-900 [animation-delay:0ms]">
+              {t('hero.heading1')}
+              <br />
+              <span className="text-gradient-primary">{t('hero.heading2')}</span>
+            </h1>
 
-      <div className="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={containerVariants}
-          className="text-center md:text-left"
-        >
-          <motion.h1
-            variants={itemVariants}
-            className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-tight text-zinc-900 text-balance"
-          >
-            {t('hero.headline1')}{' '}
-            <span className="text-gradient-primary">{t('hero.headline2')}</span>
-          </motion.h1>
+            {/* Subheadline */}
+            <p className="text-lg text-zinc-500 leading-relaxed animate-fade-in-up text-pretty max-w-[480px] mx-auto lg:mx-0 [animation-delay:100ms]">
+              {t('hero.subheading')}
+            </p>
 
-          <motion.p
-            variants={itemVariants}
-            className="mt-6 text-lg text-zinc-600 max-w-xl mx-auto md:mx-0 leading-relaxed"
-          >
-            {t('hero.subheading')}
-          </motion.p>
+            {/* CTA */}
+            <div className="animate-fade-in-up [animation-delay:200ms]">
+              <Button
+                variant="glow"
+                size="lg"
+                className="w-full sm:w-auto px-8 py-4 text-lg font-medium rounded-lg animate-pulse-glow"
+                onClick={() =>
+                  document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
+                }
+              >
+                {t('hero.cta')}
+                <ArrowRight className="w-5 h-5 ml-1" />
+              </Button>
 
-          <motion.div
-            variants={itemVariants}
-            className="mt-8 flex flex-col sm:flex-row items-center gap-4 justify-center md:justify-start"
-          >
-            <Button
-              variant="glow"
-              size="lg"
-              className="px-8 py-4 text-base font-semibold rounded-lg animate-pulse-glow w-full sm:w-auto"
-              onClick={handleCtaClick}
-            >
-              {t('hero.cta')}
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
-          </motion.div>
+              {/* Micro-copy */}
+              <p className="flex items-center justify-center lg:justify-start gap-2 text-sm text-zinc-500 mt-4">
+                <ShieldCheck className="w-4 h-4 text-primary" />
+                {t('hero.microcopy')}
+              </p>
 
-          <motion.div
-            variants={itemVariants}
-            className="mt-6 flex items-center gap-3 justify-center md:justify-start"
-          >
-            <div className="flex">
-              {[0, 1, 2, 3].map((i) => (
-                <span
-                  key={i}
-                  className="inline-block w-7 h-7 rounded-full border-2 border-white"
-                  style={{
-                    background: 'linear-gradient(135deg, #10b981, #06b6d4)',
-                    marginLeft: i === 0 ? 0 : -8
-                  }}
-                />
-              ))}
+              <p className="text-sm text-zinc-500 mt-3 text-center lg:text-left">
+                {t('hero.loginPrompt')}{' '}
+                <Link to="/login" className="text-primary hover:underline font-medium">
+                  {t('hero.loginLink')}
+                </Link>
+              </p>
             </div>
-            <p className="text-sm text-zinc-500">{t('hero.socialProof')}</p>
-          </motion.div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, delay: 0.3, ease: 'easeOut' }}
-          className="relative w-full"
-        >
-          <div className="relative mx-auto max-w-[560px]">
-            <img
-              src="/dashboard_mockup.png"
-              alt={t('hero.dashboardAlt')}
-              loading="eager"
-              className="w-full"
-            />
-            <motion.img
-              src="/analysis_mockup_cel.png"
-              alt={t('hero.mobileAlt')}
-              loading="eager"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.8 }}
-              className="absolute -left-8 sm:-left-12 lg:-left-16 top-1/3 w-[35%] animate-float"
-            />
           </div>
-        </motion.div>
+
+          {/* Right column — Mockup Composition */}
+          <div className="flex-1 min-w-0 w-full lg:w-auto mt-8 lg:mt-0">
+            <div className="relative mx-auto max-w-[560px] lg:max-w-none lg:mr-[-180px] pt-8 lg:pt-16 pb-4 lg:pb-4">
+              {/* Glow effect — large blurred emerald orb */}
+              <div
+                aria-hidden="true"
+                className="absolute z-0 w-[700px] h-[700px] bg-emerald-400/10 rounded-full blur-[150px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-glow-pulse pointer-events-none"
+              />
+
+              {/* Dashboard mockup — flat, clean, large */}
+              <div className="relative animate-fade-in-up [animation-delay:300ms] scale-[1.1] origin-top-center lg:scale-[0.85] lg:origin-top-right">
+                <img
+                  src="/dashboard_mockup.png"
+                  alt={t('hero.dashboardAlt')}
+                  loading="eager"
+                  className="w-full max-w-[1200px] border-0 outline-none"
+                />
+              </div>
+
+              {/* Phone mockup — anchored bottom-left */}
+              <div className="absolute top-[50%] lg:top-[32%] -left-[120px] sm:-left-[160px] lg:-left-[243px] z-20 h-[65%] lg:h-[58%] animate-pop-in [animation-delay:600ms]">
+                <div className="animate-float h-full">
+                  <img
+                    src="/analysis_mockup_cel.png"
+                    alt="Mobile analysis view"
+                    loading="eager"
+                    className="h-full w-auto border-0 outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </section>
+    </SectionWrapper>
   )
 }
