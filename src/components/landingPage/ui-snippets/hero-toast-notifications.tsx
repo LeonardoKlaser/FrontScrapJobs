@@ -1,5 +1,4 @@
-// src/components/landingPage/ui-snippets/hero-toast-notifications.tsx
-import { Search } from 'lucide-react'
+import { LogoMark } from '@/components/common/logo'
 
 const TOAST_DATA = [
   {
@@ -11,9 +10,9 @@ const TOAST_DATA = [
     time: 'agora',
     hasActions: true,
     top: 'top-0',
-    left: 'left-[30px]',
+    left: 'left-[10px]',
     zIndex: 'z-[4]',
-    opacity: 'opacity-100',
+    opacity: 1,
     borderClass: 'border-emerald-300',
     delay: '[animation-delay:0ms]',
   },
@@ -26,9 +25,9 @@ const TOAST_DATA = [
     time: '1 min atrás',
     hasActions: false,
     top: 'top-[160px]',
-    left: 'left-[60px]',
+    left: 'left-[40px]',
     zIndex: 'z-[3]',
-    opacity: 'opacity-80',
+    opacity: 0.8,
     borderClass: 'border-zinc-200',
     delay: '[animation-delay:200ms]',
   },
@@ -41,9 +40,9 @@ const TOAST_DATA = [
     time: '3 min atrás',
     hasActions: false,
     top: 'top-[290px]',
-    left: 'left-[20px]',
+    left: 'left-0',
     zIndex: 'z-[2]',
-    opacity: 'opacity-50',
+    opacity: 0.5,
     borderClass: 'border-zinc-200',
     delay: '[animation-delay:400ms]',
   },
@@ -56,9 +55,9 @@ const TOAST_DATA = [
     time: '5 min atrás',
     hasActions: false,
     top: 'top-[390px]',
-    left: 'left-[50px]',
+    left: 'left-[30px]',
     zIndex: 'z-[1]',
-    opacity: 'opacity-25',
+    opacity: 0.25,
     borderClass: 'border-zinc-200',
     delay: '[animation-delay:600ms]',
   },
@@ -67,50 +66,53 @@ const TOAST_DATA = [
 export function HeroToastNotifications() {
   return (
     <div
-      className="relative w-[400px] h-[480px] mx-auto lg:mx-0 scale-75 md:scale-[0.85] lg:scale-100"
+      className="relative w-[400px] h-[480px] mx-auto lg:ml-auto lg:mr-[200px] scale-75 md:scale-[0.85] lg:scale-100"
       aria-hidden="true"
       role="presentation"
     >
       {TOAST_DATA.map((toast) => (
         <div
           key={toast.company}
-          className={`absolute w-[340px] bg-white border ${toast.borderClass} rounded-[14px] p-3.5 shadow-lg animate-slide-in-from-top ${toast.top} ${toast.left} ${toast.zIndex} ${toast.opacity} ${toast.delay}`}
+          className={`absolute animate-slide-in-from-top ${toast.top} ${toast.left} ${toast.zIndex} ${toast.delay}`}
         >
-          {/* Toast header — ScrapJobs branding + timestamp */}
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-7 h-7 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-lg flex items-center justify-center">
-              <Search className="w-3.5 h-3.5 text-white" />
+          <div
+            className={`w-[340px] bg-white border ${toast.borderClass} rounded-[14px] p-3.5 shadow-lg`}
+            style={{ opacity: toast.opacity }}
+          >
+            {/* Toast header — ScrapJobs branding + timestamp */}
+            <div className="flex items-center gap-2 mb-2">
+              <LogoMark size={28} className="rounded-lg" />
+              <span className="text-[11px] font-bold text-emerald-500">ScrapJobs</span>
+              <span className="text-[10px] text-zinc-400 ml-auto">{toast.time}</span>
             </div>
-            <span className="text-[11px] font-bold text-emerald-500">ScrapJobs</span>
-            <span className="text-[10px] text-zinc-400 ml-auto">{toast.time}</span>
-          </div>
 
-          {/* Toast body — company logo + job info */}
-          <div className="flex items-center gap-2.5">
-            <img
-              src={toast.logoUrl}
-              alt={toast.company}
-              className="w-9 h-9 rounded-lg object-cover"
-            />
-            <div>
-              <p className="text-[13px] font-semibold text-zinc-900">
-                Nova vaga: {toast.title}
-              </p>
-              <p className="text-[11px] text-zinc-500">{toast.location}</p>
+            {/* Toast body — company logo + job info */}
+            <div className="flex items-center gap-2.5">
+              <img
+                src={toast.logoUrl}
+                alt={toast.company}
+                className="w-9 h-9 rounded-lg object-cover"
+              />
+              <div>
+                <p className="text-[13px] font-semibold text-zinc-900">
+                  Nova vaga: {toast.title}
+                </p>
+                <p className="text-[11px] text-zinc-500">{toast.location}</p>
+              </div>
             </div>
-          </div>
 
-          {/* Action buttons — only on first toast */}
-          {toast.hasActions && (
-            <div className="flex gap-1.5 mt-2.5">
-              <span className="flex-1 py-1.5 rounded-md border border-emerald-500 bg-white text-emerald-600 text-[11px] font-semibold text-center">
-                🤖 Analisar com IA
-              </span>
-              <span className="flex-1 py-1.5 rounded-md bg-emerald-500 text-white text-[11px] font-semibold text-center">
-                ✓ Apliquei
-              </span>
-            </div>
-          )}
+            {/* Action buttons — only on first toast */}
+            {toast.hasActions && (
+              <div className="flex gap-1.5 mt-2.5">
+                <span className="flex-1 py-1.5 rounded-md border border-emerald-500 bg-white text-emerald-600 text-[11px] font-semibold text-center">
+                  🤖 Analisar com IA
+                </span>
+                <span className="flex-1 py-1.5 rounded-md bg-emerald-500 text-white text-[11px] font-semibold text-center">
+                  ✓ Apliquei
+                </span>
+              </div>
+            )}
+          </div>
         </div>
       ))}
     </div>
