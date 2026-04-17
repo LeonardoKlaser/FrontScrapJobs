@@ -1,4 +1,3 @@
-// src/components/landingPage/hero-section.tsx
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { Button } from '@/components/ui/button'
