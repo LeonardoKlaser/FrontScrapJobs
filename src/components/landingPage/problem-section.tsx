@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { motion, useInView } from 'framer-motion'
 import { useCountUp } from '@/hooks/useCountUp'
+import { SectionWrapper } from './section-wrapper'
 
 interface PainCardProps {
   target: number
@@ -37,7 +38,7 @@ export function ProblemSection() {
   const { t } = useTranslation('landing')
 
   return (
-    <section className="py-20 lg:py-28 px-4 sm:px-6 bg-zinc-50">
+    <SectionWrapper className="py-20 lg:py-28 px-4 sm:px-6 bg-zinc-50">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -58,6 +59,6 @@ export function ProblemSection() {
           <PainCard target={72} suffix="%" label={t('problem.pain3')} delay={0.3} />
         </div>
       </div>
-    </section>
+    </SectionWrapper>
   )
 }
