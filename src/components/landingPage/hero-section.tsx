@@ -7,7 +7,7 @@ import { SectionWrapper } from './section-wrapper'
 export function HeroSection() {
   const { t } = useTranslation('landing')
   return (
-    <SectionWrapper className="pt-8 lg:pt-12 pb-8 lg:pb-12 px-6 sm:px-8 overflow-hidden bg-white">
+    <SectionWrapper className="pt-20 lg:pt-12 pb-8 lg:pb-12 px-6 sm:px-8 overflow-hidden bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center lg:items-start">
           {/* Left column — Text */}
