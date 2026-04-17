@@ -1,9 +1,9 @@
 {
   "hero": {
     "brand": "ScrapJobs",
-    "heading1": "Pare de Procurar.",
-    "heading2": "Comece a Ser Entrevistado.",
-    "subheading": "Você perde horas acessando sites de carreira um por um — e ainda perde vagas. O ScrapJobs monitora automaticamente e usa IA para adaptar seu currículo a cada oportunidade.",
+    "heading1": "Mesmo que você envie 100 curriculos",
+    "heading2": "Vai continuar sem respostas.",
+    "subheading": "Além de você chegar atrasado quado a vaga ja tem 2 mil candidatos, seu currículo não passa pelo ATS",
     "cta": "Começar a Automatizar",
     "loginPrompt": "Já tem uma conta?",
     "loginLink": "Fazer login",
@@ -63,7 +63,7 @@
   "problem": {
     "headline": "A realidade de quem busca emprego hoje",
     "subheading": "E provavelmente a sua também.",
-    "pain1": "dos currículos são descartados por robôs antes de um humano ver",
+    "pain1": "dos currículos são descartados por robôs (ATS) antes de um humano ver",
     "pain2": "por semana perdidas buscando vagas manualmente em dezenas de sites",
     "pain3": "das vagas ideais são preenchidas antes de você sequer descobrir"
   },
