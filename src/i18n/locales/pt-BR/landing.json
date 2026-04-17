@@ -1,7 +1,7 @@
 {
   "hero": {
     "brand": "ScrapJobs",
-    "heading1": "Mesmo que você envie 100 curriculos",
+    "heading1": "Mesmo que você envie 100 currículos",
     "heading2": "Vai continuar sem respostas.",
     "subheading": "Além de você chegar atrasado quado a vaga ja tem 2 mil candidatos, seu currículo não passa pelo ATS",
     "cta": "Começar a Automatizar",
@@ -130,8 +130,8 @@
     "cta": "Comece agora"
   },
   "pricing": {
-    "title": "Preço Simples e Transparente",
-    "subtitle": "Simples e transparente. Cancele quando quiser.",
+    "title": "Sua maior vantagem competitiva por menos de R$ 10",
+    "subtitle": "Garantia de 7 dias. Cancele quando quiser.",
     "loading": "Carregando planos...",
     "monthly": "Mensal",
     "popular": "Mais Popular",
@@ -155,8 +155,8 @@
     "radar": {
       "overline": "Monitoramento Direto",
       "headline": "Vagas direto da fonte.",
-      "headlineGradient": "Antes de chegar na Gupy.",
-      "body1": "Enquanto todo mundo briga por vagas recicladas no LinkedIn, o ScrapJobs monitora diretamente o site de carreiras das empresas que você escolheu. Sem intermediários. Sem filtros de terceiros.",
+      "headlineGradient": "Antes de virarem disputadas",
+      "body1": "Enquanto todo mundo briga por vagas recicladas nos murais de vagas, o ScrapJobs monitora diretamente o site de carreiras das empresas que você escolheu. Sem intermediários. Sem filtros de terceiros.",
       "body2": "A vaga apareceu no site da Nubank às 9h.",
       "body2Bold": "Às 9h01 você já sabia.",
       "body2End": "Quem depende da Gupy só vai ver amanhã.",
