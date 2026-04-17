@@ -1,8 +1,10 @@
+// src/components/landingPage/hero-section.tsx
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, ShieldCheck } from 'lucide-react'
 import { SectionWrapper } from './section-wrapper'
+import { HeroToastNotifications } from './ui-snippets/hero-toast-notifications'
 
 export function HeroSection() {
   const { t } = useTranslation('landing')
@@ -53,35 +55,17 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* Right column — Mockup Composition */}
+          {/* Right column — Toast Notifications */}
           <div className="flex-1 min-w-0 w-full lg:w-auto mt-8 lg:mt-0">
-            <div className="relative mx-auto max-w-[560px] lg:max-w-none lg:mr-[-180px] pt-8 lg:pt-16 pb-4 lg:pb-4">
+            <div className="relative mx-auto max-w-[460px] lg:max-w-none lg:mr-[-40px] pt-8 lg:pt-16 pb-4">
               {/* Glow effect — large blurred emerald orb */}
               <div
                 aria-hidden="true"
                 className="absolute z-0 w-[700px] h-[700px] bg-emerald-400/10 rounded-full blur-[150px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-glow-pulse pointer-events-none"
               />
 
-              {/* Dashboard mockup — flat, clean, large */}
-              <div className="relative animate-fade-in-up [animation-delay:300ms] scale-[1.1] origin-top-center lg:scale-[0.85] lg:origin-top-right">
-                <img
-                  src="/dashboard_mockup.png"
-                  alt={t('hero.dashboardAlt')}
-                  loading="eager"
-                  className="w-full max-w-[1200px] border-0 outline-none"
-                />
-              </div>
-
-              {/* Phone mockup — anchored bottom-left */}
-              <div className="absolute top-[50%] lg:top-[32%] -left-[120px] sm:-left-[160px] lg:-left-[243px] z-20 h-[65%] lg:h-[58%] animate-pop-in [animation-delay:600ms]">
-                <div className="animate-float h-full">
-                  <img
-                    src="/analysis_mockup_cel.png"
-                    alt={t('hero.mobileAlt', 'Mobile analysis view')}
-                    loading="eager"
-                    className="h-full w-auto border-0 outline-none"
-                  />
-                </div>
+              <div className="relative z-10">
+                <HeroToastNotifications />
               </div>
             </div>
 
