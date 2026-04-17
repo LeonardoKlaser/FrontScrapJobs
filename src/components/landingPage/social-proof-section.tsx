@@ -41,6 +41,10 @@ export function SocialProofSection() {
               ))}
             </div>
           </div>
+
+          <p className="text-xs text-zinc-500 text-center max-w-2xl mx-auto mt-6">
+            {t('socialProofNew.disclaimer')}
+          </p>
         </div>
       </div>
     </SectionWrapper>

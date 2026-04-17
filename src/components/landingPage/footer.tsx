@@ -41,6 +41,10 @@ export function Footer() {
               {t('footer.copyright', { year: new Date().getFullYear() })}
             </p>
           </div>
+
+          <p className="mt-6 pt-4 border-t border-zinc-200/60 max-w-3xl mx-auto text-xs text-zinc-400 text-center leading-relaxed">
+            {t('footer.disclaimer')}
+          </p>
         </div>
       </footer>
     </SectionWrapper>

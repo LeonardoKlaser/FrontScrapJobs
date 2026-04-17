@@ -103,7 +103,8 @@
   "footer": {
     "terms": "Termos de Serviço",
     "privacy": "Política de Privacidade",
-    "copyright": "© {{year}} ScrapJobs. Todos os direitos reservados."
+    "copyright": "© {{year}} ScrapJobs. Todos os direitos reservados.",
+    "disclaimer": "As marcas, logotipos e nomes de empresas exibidos pertencem aos seus respectivos proprietários e são usados apenas para identificação. O ScrapJobs não possui afiliação, patrocínio ou endosso dessas empresas."
   },
   "socialProof": {
     "subtitle": "Monitorando oportunidades das maiores empresas, como:"
@@ -164,7 +165,8 @@
       "analyzeButton": "Analisar com IA",
       "viewAnalysis": "Ver análise",
       "newBadge": "NOVO",
-      "matchBadge": "match"
+      "matchBadge": "match",
+      "mockDisclaimer": "Exemplos ilustrativos. Marcas pertencem a seus proprietários."
     },
     "ats": {
       "scoreLabel": "Compatibilidade ATS",
@@ -237,6 +239,7 @@
   },
   "socialProofNew": {
     "title": "Monitoramos as empresas que você ama.",
-    "subtitle": "Adicionamos novas empresas toda semana. Não encontrou a sua? Nos diga."
+    "subtitle": "Adicionamos novas empresas toda semana. Não encontrou a sua? Nos diga.",
+    "disclaimer": "Logos exibidos são marcas registradas de seus respectivos proprietários. Monitoramos páginas públicas de carreiras — sem afiliação oficial."
   }
 }

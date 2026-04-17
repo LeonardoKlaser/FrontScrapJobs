@@ -1,8 +1,10 @@
 # Disclaimer Legal de Marcas na LP — Resposta ao Aviso da Meta Ads
 
 **Data:** 2026-04-17
-**Status:** Aprovado
+**Status:** Aprovado (ajustado após rebase)
 **Escopo:** Adicionar disclaimer de uso nominativo de marcas na landing page pública
+
+> **Nota de ajuste (2026-04-17):** O spec original mirava a LP anterior (que tinha `trust-section.tsx` + `RadarNotifications` com prop `compact`). O rebase em cima de `origin/main` revelou que a LP foi reestruturada: `trust-section.tsx` foi removida (carrossel de logos migrou para `social-proof-section.tsx`), `RadarNotifications` perdeu o `compact`, e `footer.tsx` agora usa `SectionWrapper`. Esta seção **"Componentes Tocados"** e as chaves i18n foram reescritas para refletir a estrutura atual. O restante do spec (problema, objetivo, cópias dos disclaimers) permanece válido.
 
 ---
 
@@ -41,13 +43,13 @@ Rodapé sozinho não basta: o bot da Meta pode ler frames/DOM de uma seção iso
 
 ### Cópias (3 variantes por contexto)
 
-| Local | Texto PT-BR | Função |
+| Chave i18n | Texto PT-BR | Função |
 |---|---|---|
 | `footer.disclaimer` | "As marcas, logotipos e nomes de empresas exibidos pertencem aos seus respectivos proprietários e são usados apenas para identificação. O ScrapJobs não possui afiliação, patrocínio ou endosso dessas empresas." | Cobertura jurídica completa, visível em todas as páginas que usam o Footer da LP |
-| `trust.disclaimer` | "Logos exibidos são marcas registradas de seus respectivos proprietários. Monitoramos páginas públicas de carreiras — sem afiliação oficial." | Contextualiza o carrossel de logos: esclarece que são alvos de monitoramento, não parceiros |
+| `socialProofNew.disclaimer` | "Logos exibidos são marcas registradas de seus respectivos proprietários. Monitoramos páginas públicas de carreiras — sem afiliação oficial." | Contextualiza o carrossel de logos: esclarece que são alvos de monitoramento, não parceiros |
 | `valueFeatures.radar.mockDisclaimer` | "Exemplos ilustrativos. Marcas pertencem a seus proprietários." | Sinaliza explicitamente que os cards de notificação são mockups — bloqueia a leitura do bot como "oferta real de produto" |
 
-Versões EN-US equivalentes serão traduzidas mantendo a mesma semântica.
+Versões EN-US equivalentes traduzidas mantendo a mesma semântica.
 
 ## Arquitetura
 
@@ -57,29 +59,29 @@ Zero mudança estrutural. Apenas 3 adições de JSX com `t()` + 6 chaves de i18n
 
 ### 1. `src/components/landingPage/footer.tsx`
 
-Adicionar bloco de disclaimer abaixo da linha atual (Logo + Termos/Privacidade + Copyright).
+Adicionar `<p>` de disclaimer dentro do `<SectionWrapper>` → `<footer>` → `<div className="container mx-auto">`, como **irmão** da `<div>` com a linha atual (Logo / Links / Copyright).
 
 - Tipografia: `text-xs text-zinc-400`
 - Layout: centralizado, `max-w-3xl mx-auto`
-- Separador visual: `mt-6 pt-4 border-t border-zinc-100`
+- Separador visual: `mt-6 pt-4 border-t border-zinc-200/60`
 - Wrapping: flexível, leading relaxado (`leading-relaxed`)
 
-### 2. `src/components/landingPage/trust-section.tsx`
+### 2. `src/components/landingPage/social-proof-section.tsx`
 
-Adicionar `<p>` de caption dentro do bloco `{hasLogos && (...)}`, logo após o carrossel de logos (antes dos stats).
+Adicionar `<p>` de caption logo após o `<div>` do carrossel de logos, como último filho do `<div className="container mx-auto px-4">`.
 
 - Tipografia: `text-xs text-zinc-500 text-center`
-- Spacing: `mt-4`
-- Visível mas sem competir com o `trust.overline` acima ou os stats abaixo.
+- Layout: `max-w-2xl mx-auto mt-6`
+- Só renderiza quando há logos (o componente inteiro retorna `null` se `logos.length === 0`) — correto: sem logos visíveis, disclaimer perderia contexto.
 
 ### 3. `src/components/landingPage/ui-snippets/radar-notifications.tsx`
 
-Adicionar `<p>` pequeno, dentro do bloco `{!compact && (...)}`, **como último filho** (após o source badge "Fonte verificada"). Essa ordem cria uma progressão visual: cards-mock → badge de fonte → nota de que os exemplos são ilustrativos.
+Adicionar `<motion.p>` como **último filho** do `<div className="flex flex-col gap-2.5">` (após o "Source badge" com ícone Shield). Renderiza sempre (não há mais prop `compact` — todos os cards + source badge sempre aparecem).
 
 - Tipografia: `text-[0.65rem] text-zinc-400 italic text-center`
 - Spacing: `mt-1`
-- Modo `compact`: não renderizar (cards vêm cortados em compact mode — consistente com o source badge que também só aparece quando `!compact`).
-- **Acessibilidade**: o container externo já tem `aria-hidden="true"` (decorativo). A nota visível permanece dentro desse container — ela é para usuários visuais e para o scanner da Meta que lê renders/screenshots, não para screen readers (que corretamente ignoram o bloco inteiro como decorativo).
+- Animação: `motion.p` com `whileInView opacity 0→1`, `delay: 0.85` (após o source badge em `0.7`).
+- **Acessibilidade**: o container externo já tem `aria-hidden="true" role="presentation"` (decorativo). A nota visível permanece dentro desse container — ela é para usuários visuais e para o scanner da Meta que lê renders/screenshots, não para screen readers (que corretamente ignoram o bloco inteiro como decorativo).
 
 ## i18n
 

@@ -122,6 +122,17 @@ export function RadarNotifications() {
           {t('valueFeatures.radar.sourceBadge')}
         </span>
       </motion.div>
+
+      {/* Mock disclaimer */}
+      <motion.p
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.4, delay: 0.85 }}
+        className="text-[0.65rem] text-zinc-400 italic text-center mt-1"
+      >
+        {t('valueFeatures.radar.mockDisclaimer')}
+      </motion.p>
     </div>
   )
 }
