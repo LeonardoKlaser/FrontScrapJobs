@@ -77,13 +77,17 @@ export function HeroSection() {
                 <div className="animate-float h-full">
                   <img
                     src="/analysis_mockup_cel.png"
-                    alt="Mobile analysis view"
+                    alt={t('hero.mobileAlt', 'Mobile analysis view')}
                     loading="eager"
                     className="h-full w-auto border-0 outline-none"
                   />
                 </div>
               </div>
             </div>
+
+            <p className="text-[0.7rem] text-zinc-400 italic text-center max-w-md mx-auto mt-4 lg:mt-6 px-4 leading-relaxed">
+              {t('hero.mockupDisclaimer')}
+            </p>
           </div>
         </div>
       </div>

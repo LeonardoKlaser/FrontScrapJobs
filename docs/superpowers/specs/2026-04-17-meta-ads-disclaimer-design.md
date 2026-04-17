@@ -41,15 +41,26 @@ Fora de escopo: edição dos vídeos de anúncio (responsabilidade do editor); P
 
 Rodapé sozinho não basta: o bot da Meta pode ler frames/DOM de uma seção isolada sem cruzar com o rodapé. Disclaimer inline próximo das marcas garante contexto semântico imediato.
 
-### Cópias (3 variantes por contexto)
+### Cópias (4 variantes por contexto)
 
 | Chave i18n | Texto PT-BR | Função |
 |---|---|---|
 | `footer.disclaimer` | "As marcas, logotipos e nomes de empresas exibidos pertencem aos seus respectivos proprietários e são usados apenas para identificação. O ScrapJobs não possui afiliação, patrocínio ou endosso dessas empresas." | Cobertura jurídica completa, visível em todas as páginas que usam o Footer da LP |
 | `socialProofNew.disclaimer` | "Logos exibidos são marcas registradas de seus respectivos proprietários. Monitoramos páginas públicas de carreiras — sem afiliação oficial." | Contextualiza o carrossel de logos: esclarece que são alvos de monitoramento, não parceiros |
 | `valueFeatures.radar.mockDisclaimer` | "Exemplos ilustrativos. Marcas pertencem a seus proprietários." | Sinaliza explicitamente que os cards de notificação são mockups — bloqueia a leitura do bot como "oferta real de produto" |
+| `hero.mockupDisclaimer` | "Visualização ilustrativa. Empresas exibidas pertencem a seus respectivos proprietários." | Caption abaixo do mockup composto do hero (dashboard + celular). Necessário porque o PNG do dashboard (`/dashboard_mockup.png`) tem nomes de marca **burned-in nos pixels** ("Nubank Careers" ×7+, "C6 Bank Carreiras" ×3). O disclaimer em HTML protege contra DOM-scan da Meta, mas **não protege contra OCR de screenshot** — ver "Asset a regerar" abaixo. |
 
 Versões EN-US equivalentes traduzidas mantendo a mesma semântica.
+
+### Asset a regerar
+
+`public/dashboard_mockup.png` contém nomes de marcas renderizados como pixels (não HTML), visíveis ao OCR do bot da Meta. O disclaimer HTML em `hero.mockupDisclaimer` cobre DOM-scan, mas para blindar o OCR é necessário:
+
+- Regerar o PNG com nomes fictícios ("TechBank Careers", "NeoBank", "MarketFlow", etc.) onde hoje aparecem "Nubank Careers" e "C6 Bank Carreiras"
+- Responsabilidade: designer com acesso à fonte do mockup (Figma/Sketch) ou edição manual no Photoshop/GIMP
+- Status: **pendente**, fora de escopo deste PR
+
+`public/analysis_mockup_cel.png` está limpo (só tech stack: Java, Spring Boot, microserviços, Kubernetes etc. — nenhuma marca).
 
 ## Arquitetura
 
@@ -73,6 +84,14 @@ Adicionar `<p>` de caption logo após o `<div>` do carrossel de logos, como últ
 - Tipografia: `text-xs text-zinc-500 text-center`
 - Layout: `max-w-2xl mx-auto mt-6`
 - Só renderiza quando há logos (o componente inteiro retorna `null` se `logos.length === 0`) — correto: sem logos visíveis, disclaimer perderia contexto.
+
+### 4. `src/components/landingPage/hero-section.tsx`
+
+Adicionar `<p>` de caption como último filho do `<div className="flex-1 min-w-0 ...">` (coluna direita do hero), **fora** do container relativo que compõe os mockups (dashboard PNG + celular PNG sobreposto). Visualmente fica logo abaixo da composição, sem interferir nas animações `animate-float` / `animate-pop-in`.
+
+- Tipografia: `text-[0.7rem] text-zinc-400 italic text-center`
+- Layout: `max-w-md mx-auto mt-4 lg:mt-6 px-4 leading-relaxed`
+- Propósito: reforçar que o dashboard é ilustrativo. Cobre leitura DOM; **não cobre OCR de screenshot** (ver "Asset a regerar").
 
 ### 3. `src/components/landingPage/ui-snippets/radar-notifications.tsx`
 

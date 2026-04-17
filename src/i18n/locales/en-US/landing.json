@@ -8,7 +8,9 @@
     "loginPrompt": "Already have an account?",
     "loginLink": "Sign in",
     "microcopy": "Instant access • Cancel anytime",
-    "dashboardAlt": "ScrapJobs dashboard showing monitored jobs and AI alerts"
+    "dashboardAlt": "ScrapJobs dashboard showing monitored jobs and AI alerts",
+    "mobileAlt": "Resume compatibility analysis on mobile",
+    "mockupDisclaimer": "Illustrative preview. Companies shown belong to their respective owners."
   },
   "navbar": {
     "features": "Features",

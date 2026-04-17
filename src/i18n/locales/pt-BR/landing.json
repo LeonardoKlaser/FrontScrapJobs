@@ -8,7 +8,9 @@
     "loginPrompt": "Já tem uma conta?",
     "loginLink": "Fazer login",
     "microcopy": "Liberação imediata • Cancele a qualquer momento",
-    "dashboardAlt": "Dashboard do ScrapJobs mostrando vagas monitoradas e alertas de IA"
+    "dashboardAlt": "Dashboard do ScrapJobs mostrando vagas monitoradas e alertas de IA",
+    "mobileAlt": "Análise de compatibilidade do currículo no celular",
+    "mockupDisclaimer": "Visualização ilustrativa. Empresas exibidas pertencem a seus respectivos proprietários."
   },
   "navbar": {
     "features": "Funcionalidades",
