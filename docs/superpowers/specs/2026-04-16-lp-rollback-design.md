@@ -8,7 +8,7 @@ Reverter o design da Landing Page para a versão de `feat/merge-lps`, mantendo a
 
 | # | Seção | Origem | Notas |
 |---|-------|--------|-------|
-| 1 | Navbar | feat/merge-lps | — |
+| 1 | Navbar | **main** | Manter como está |
 | 2 | HeroSection | feat/merge-lps | Shield icon, login prompt, CSS animations |
 | 3 | **ProblemSection** | **main** | Cards vermelhos (85%/6h/72%), useCountUp, envolvida em SectionWrapper |
 | 4 | ValueFeaturesSection | feat/merge-lps | Alternating layout com FeatureBlock, full mockups |
@@ -56,9 +56,8 @@ A ProblemSection da main precisa de adaptações mínimas para funcionar na estr
    - `faq-section.tsx` (novo)
    - `cta-final-section.tsx` (novo)
    - `footer.tsx` (atualizado)
-   - `navbar.tsx` (atualizado se diferente)
    - UI snippets atualizados (radar-notifications, ats-analysis-card, pdf-preview-card)
-3. **NÃO** trazer `problem-section.tsx` de feat/merge-lps — manter a versão da main
+3. **NÃO** trazer `navbar.tsx` nem `problem-section.tsx` de feat/merge-lps — manter as versões da main
 4. Adaptar a ProblemSection da main para usar SectionWrapper
 5. Mesclar arquivos i18n conforme estratégia acima
 6. Manter `useCountUp.ts` hook
