@@ -11,6 +11,7 @@ import ptBRAdmin from './locales/pt-BR/admin.json'
 import ptBRLanding from './locales/pt-BR/landing.json'
 import ptBRAccount from './locales/pt-BR/account.json'
 import ptBRApplications from './locales/pt-BR/applications.json'
+import ptBRPrivacy from './locales/pt-BR/privacy.json'
 
 import enUSCommon from './locales/en-US/common.json'
 import enUSAuth from './locales/en-US/auth.json'
@@ -22,6 +23,7 @@ import enUSAdmin from './locales/en-US/admin.json'
 import enUSLanding from './locales/en-US/landing.json'
 import enUSAccount from './locales/en-US/account.json'
 import enUSApplications from './locales/en-US/applications.json'
+import enUSPrivacy from './locales/en-US/privacy.json'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -35,7 +37,8 @@ i18n.use(initReactI18next).init({
       admin: ptBRAdmin,
       landing: ptBRLanding,
       account: ptBRAccount,
-      applications: ptBRApplications
+      applications: ptBRApplications,
+      privacy: ptBRPrivacy
     },
     'en-US': {
       common: enUSCommon,
@@ -47,7 +50,8 @@ i18n.use(initReactI18next).init({
       admin: enUSAdmin,
       landing: enUSLanding,
       account: enUSAccount,
-      applications: enUSApplications
+      applications: enUSApplications,
+      privacy: enUSPrivacy
     }
   },
   lng: typeof window !== 'undefined' ? localStorage.getItem('i18n-lng') || 'pt-BR' : 'pt-BR',

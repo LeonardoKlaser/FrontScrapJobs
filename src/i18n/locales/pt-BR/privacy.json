@@ -1,0 +1,79 @@
+{
+  "pageTitle": "Política de Privacidade",
+  "lastUpdated": "Última atualização: Abril de 2026",
+  "backLink": "Voltar",
+  "s1_title": "1. Informações que Coletamos",
+  "s1_controller": "ScrapJobs (<inserir razão social antes de publicar>, CNPJ <inserir antes de publicar>) é o controlador dos dados pessoais coletados nesta plataforma.",
+  "s1_items": [
+    "Dados de cadastro: nome, e-mail, CPF e telefone",
+    "Dados de currículo: experiências, formação, habilidades, idiomas e resumo profissional",
+    "Preferências de busca: sites monitorados e filtros de palavras-chave",
+    "Dados de uso: análises realizadas, candidaturas, extrações de PDF"
+  ],
+  "s2_title": "2. Base Legal do Tratamento (LGPD Art. 7)",
+  "s2_intro": "Todo tratamento de dados pessoais no ScrapJobs possui base legal explícita:",
+  "s2_items": [
+    "Execução de contrato (Art. 7, V): cadastro, currículo, match de vagas, notificações e pagamento.",
+    "Obrigação legal (Art. 7, II): retenção de identificadores de pagamento Pagar.me por 5 anos (legislação fiscal brasileira).",
+    "Interesse legítimo (Art. 7, IX): coleta de vagas em sites públicos para operação do serviço."
+  ],
+  "s3_title": "3. Como Utilizamos suas Informações",
+  "s3_intro": "Utilizamos suas informações para:",
+  "s3_items": [
+    "Fornecer e manter o serviço de monitoramento de vagas",
+    "Enviar notificações de vagas compatíveis com seu perfil",
+    "Realizar análises de compatibilidade com inteligência artificial",
+    "Processar pagamentos e gerenciar assinaturas",
+    "Melhorar e personalizar a experiência do usuário"
+  ],
+  "s4_title": "4. Compartilhamento e Sub-operadores",
+  "s4_intro": "Não vendemos seus dados. Compartilhamos apenas com sub-operadores necessários à operação:",
+  "s4_operators": [
+    {"name": "Pagar.me", "role": "Processamento de pagamentos", "country": "Brasil"},
+    {"name": "OpenAI", "role": "Análise de currículo e vagas por IA", "country": "Estados Unidos"},
+    {"name": "AWS SES", "role": "Envio de e-mails transacionais e digests", "country": "Estados Unidos"},
+    {"name": "Resend", "role": "Envio de e-mails (fallback)", "country": "Estados Unidos"},
+    {"name": "PDFMonkey", "role": "Geração de PDF do currículo", "country": "França (União Europeia)"},
+    {"name": "AWS S3", "role": "Armazenamento de imagens operacionais", "country": "Estados Unidos"},
+    {"name": "Railway", "role": "Hospedagem da aplicação e banco de dados", "country": "Estados Unidos"}
+  ],
+  "s5_title": "5. Transferência Internacional de Dados",
+  "s5_content": "Em conformidade com o Art. 33 da LGPD, dados pessoais são transferidos para: Estados Unidos (OpenAI, AWS SES, Resend, AWS S3, Railway) e França (PDFMonkey). Ao utilizar o ScrapJobs, você consente com essas transferências necessárias à prestação do serviço.",
+  "s6_title": "6. Armazenamento e Segurança",
+  "s6_content": "Seus dados são armazenados em servidores seguros com criptografia em trânsito e em repouso. Adotamos medidas técnicas e organizacionais para proteger suas informações contra acesso não autorizado, alteração, divulgação ou destruição.",
+  "s7_title": "7. Seus Direitos (LGPD Art. 18)",
+  "s7_intro": "Em conformidade com a LGPD, você tem direito a:",
+  "s7_items": [
+    "Acessar seus dados pessoais",
+    "Corrigir dados incompletos ou inexatos (acesse /app/account)",
+    "Solicitar a exclusão de seus dados (acesse /app/account > Segurança)",
+    "Revogar o consentimento para uso dos dados (equivale à exclusão de conta)",
+    "Solicitar a portabilidade dos dados",
+    "Ser informado sobre compartilhamento de dados"
+  ],
+  "s7_contact": "Para exercer seus direitos, envie e-mail a contato@scrapjobs.com.br. Respondemos em até 15 dias (Art. 19 da LGPD).",
+  "s8_title": "8. Cookies",
+  "s8_content": "Utilizamos cookies essenciais para autenticação e manutenção da sessão do usuário. Não utilizamos cookies de rastreamento ou publicidade de terceiros.",
+  "s9_title": "9. Retenção de Dados",
+  "s9_intro": "Os dados são retidos de acordo com a finalidade de cada categoria:",
+  "s9_rows": [
+    {"data": "Nome, e-mail, CPF, telefone, currículo", "retention": "Enquanto conta ativa + 30 dias após exclusão", "basis": "Execução de contrato"},
+    {"data": "Sites monitorados, notificações, candidaturas, extrações e gerações de PDF", "retention": "Enquanto conta ativa + 30 dias após exclusão", "basis": "Execução de contrato"},
+    {"data": "Identificadores de pagamento Pagar.me", "retention": "5 anos após encerramento da assinatura", "basis": "Obrigação legal fiscal"},
+    {"data": "Vagas coletadas (sites públicos)", "retention": "1 dia após última aparição no site de origem", "basis": "Interesse legítimo"},
+    {"data": "Cookie de sessão (JWT)", "retention": "Até expirar conforme TTL do token", "basis": "Execução de contrato"}
+  ],
+  "s9_process": "Após 30 dias da exclusão da conta: dados pessoais identificáveis são removidos e o registro é anonimizado. Após 5 anos: o registro anonimizado é permanentemente removido.",
+  "s9_retention_data_header": "Dado",
+  "s9_retention_period_header": "Retenção",
+  "s9_retention_basis_header": "Base legal",
+  "s10_title": "10. Alterações nesta Política",
+  "s10_content": "Podemos atualizar esta política periodicamente. Notificaremos sobre alterações significativas por e-mail ou por aviso no serviço. A data da última atualização será sempre indicada no topo desta página.",
+  "s11_title": "11. Condição de Uso — Processamento por Inteligência Artificial",
+  "s11_content": "Ao usar as funcionalidades de análise por IA (match de vagas e análise de compatibilidade), dados de currículo e vagas são enviados à OpenAI (EUA). A OpenAI pode reter essas transmissões por até 30 dias em logs, conforme sua política padrão de uso da API. O uso dessas funcionalidades implica aceitação desta condição. É possível utilizar o ScrapJobs sem as funcionalidades de IA — o serviço básico de monitoramento e notificação continua disponível.",
+  "s12_title": "12. Encarregado pelo Tratamento de Dados",
+  "s12_dpo_label": "Encarregado (Art. 41 da LGPD):",
+  "s12_dpo_name": "Leonardo Klaser",
+  "s12_dpo_email": "contato@scrapjobs.com.br",
+  "s12_contact_label": "Para exercer seus direitos ou esclarecer dúvidas sobre privacidade:"
+}

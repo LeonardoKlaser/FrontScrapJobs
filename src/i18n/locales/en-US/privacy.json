@@ -1,0 +1,79 @@
+{
+  "pageTitle": "Privacy Policy",
+  "lastUpdated": "Last updated: April 2026",
+  "backLink": "Back",
+  "s1_title": "1. Information We Collect",
+  "s1_controller": "ScrapJobs (<insert legal name before publishing>, CNPJ <insert before publishing>) is the controller of personal data collected on this platform.",
+  "s1_items": [
+    "Account data: name, e-mail, tax ID and phone number",
+    "Resume data: experience, education, skills, languages and professional summary",
+    "Search preferences: monitored sites and keyword filters",
+    "Usage data: AI analyses, job applications, PDF extractions"
+  ],
+  "s2_title": "2. Legal Basis for Processing (Brazilian LGPD, Art. 7)",
+  "s2_intro": "All personal data processing on ScrapJobs has explicit legal basis:",
+  "s2_items": [
+    "Contract performance (Art. 7, V): account, resume, job matching, notifications and payment.",
+    "Legal obligation (Art. 7, II): retention of Pagar.me payment identifiers for 5 years (Brazilian tax law).",
+    "Legitimate interest (Art. 7, IX): collection of jobs from public websites for service operation."
+  ],
+  "s3_title": "3. How We Use Your Information",
+  "s3_intro": "We use your information to:",
+  "s3_items": [
+    "Provide and maintain the job monitoring service",
+    "Send notifications of jobs matching your profile",
+    "Perform compatibility analysis using artificial intelligence",
+    "Process payments and manage subscriptions",
+    "Improve and personalize the user experience"
+  ],
+  "s4_title": "4. Sharing and Sub-processors",
+  "s4_intro": "We do not sell your data. We share only with sub-processors necessary for operation:",
+  "s4_operators": [
+    {"name": "Pagar.me", "role": "Payment processing", "country": "Brazil"},
+    {"name": "OpenAI", "role": "AI-powered resume and job analysis", "country": "United States"},
+    {"name": "AWS SES", "role": "Transactional and digest e-mails", "country": "United States"},
+    {"name": "Resend", "role": "E-mail delivery (fallback)", "country": "United States"},
+    {"name": "PDFMonkey", "role": "Resume PDF generation", "country": "France (European Union)"},
+    {"name": "AWS S3", "role": "Operational image storage", "country": "United States"},
+    {"name": "Railway", "role": "Application and database hosting", "country": "United States"}
+  ],
+  "s5_title": "5. International Data Transfer",
+  "s5_content": "In compliance with Art. 33 of the Brazilian LGPD, personal data is transferred to: United States (OpenAI, AWS SES, Resend, AWS S3, Railway) and France (PDFMonkey). By using ScrapJobs, you consent to these transfers necessary for service delivery.",
+  "s6_title": "6. Storage and Security",
+  "s6_content": "Your data is stored on secure servers with encryption in transit and at rest. We adopt technical and organizational measures to protect your information against unauthorized access, alteration, disclosure or destruction.",
+  "s7_title": "7. Your Rights (Brazilian LGPD Art. 18)",
+  "s7_intro": "In compliance with Brazilian LGPD (Law 13.709/2018), you have the right to:",
+  "s7_items": [
+    "Access your personal data",
+    "Correct incomplete or inaccurate data (visit /app/account)",
+    "Request deletion of your data (visit /app/account > Security)",
+    "Revoke consent for data usage (equivalent to account deletion)",
+    "Request data portability",
+    "Be informed about data sharing"
+  ],
+  "s7_contact": "To exercise your rights, e-mail contato@scrapjobs.com.br. We respond within 15 days (LGPD Art. 19).",
+  "s8_title": "8. Cookies",
+  "s8_content": "We use essential cookies for authentication and user session management. We do not use tracking or third-party advertising cookies.",
+  "s9_title": "9. Data Retention",
+  "s9_intro": "Data is retained according to the purpose of each category:",
+  "s9_rows": [
+    {"data": "Name, e-mail, tax ID, phone, resume", "retention": "While account is active + 30 days after deletion", "basis": "Contract performance"},
+    {"data": "Monitored sites, notifications, applications, PDF extractions and generations", "retention": "While account is active + 30 days after deletion", "basis": "Contract performance"},
+    {"data": "Pagar.me payment identifiers", "retention": "5 years after subscription termination", "basis": "Legal obligation (tax law)"},
+    {"data": "Collected jobs (public websites)", "retention": "1 day after last appearance on source site", "basis": "Legitimate interest"},
+    {"data": "Session cookie (JWT)", "retention": "Until token TTL expires", "basis": "Contract performance"}
+  ],
+  "s9_process": "30 days after account deletion: personally identifiable data is removed and the record is anonymized. After 5 years: the anonymized record is permanently removed.",
+  "s9_retention_data_header": "Data",
+  "s9_retention_period_header": "Retention",
+  "s9_retention_basis_header": "Legal basis",
+  "s10_title": "10. Changes to this Policy",
+  "s10_content": "We may update this policy periodically. We will notify you of significant changes by e-mail or service notice. The last update date is always indicated at the top of this page.",
+  "s11_title": "11. Terms of Use — AI Processing",
+  "s11_content": "By using AI-powered features (job matching and compatibility analysis), resume and job data is sent to OpenAI (USA). OpenAI may retain these transmissions for up to 30 days in logs, according to their standard API usage policy. Using these features implies acceptance of this condition. You can use ScrapJobs without AI features — basic monitoring and notification remain available.",
+  "s12_title": "12. Data Protection Officer",
+  "s12_dpo_label": "Data Protection Officer (Brazilian LGPD Art. 41):",
+  "s12_dpo_name": "Leonardo Klaser",
+  "s12_dpo_email": "contato@scrapjobs.com.br",
+  "s12_contact_label": "To exercise your rights or ask privacy-related questions:"
+}

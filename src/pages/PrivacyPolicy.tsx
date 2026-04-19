@@ -1,126 +1,152 @@
 import { Link } from 'react-router'
 import { ArrowLeft } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { PATHS } from '@/router/paths'
 
+interface PrivacyOperator {
+  name: string
+  role: string
+  country: string
+}
+
+interface PrivacyRetentionRow {
+  data: string
+  retention: string
+  basis: string
+}
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section>
+      <h2 className="text-lg font-semibold text-foreground mb-3">{title}</h2>
+      {children}
+    </section>
+  )
+}
+
 export default function PrivacyPolicy() {
+  const { t } = useTranslation('privacy')
+
+  const operators = t('s4_operators', { returnObjects: true }) as PrivacyOperator[]
+  const retention = t('s9_rows', { returnObjects: true }) as PrivacyRetentionRow[]
+
+  const renderItems = (key: string) => {
+    const items = t(key, { returnObjects: true }) as string[]
+    return (
+      <ul className="list-disc pl-5 mt-2 space-y-1">
+        {items.map((item, i) => (
+          <li key={i}>{item}</li>
+        ))}
+      </ul>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-background py-16 px-4">
       <div className="container mx-auto max-w-3xl">
         <Link
           to={PATHS.landing}
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground
+            hover:text-foreground transition-colors mb-8"
         >
           <ArrowLeft className="h-4 w-4" />
-          Voltar
+          {t('backLink')}
         </Link>
 
         <h1 className="font-display text-3xl font-bold tracking-tight text-foreground mb-2">
-          Política de Privacidade
+          {t('pageTitle')}
         </h1>
-        <p className="text-sm text-muted-foreground mb-10">Última atualização: Fevereiro de 2026</p>
+        <p className="text-sm text-muted-foreground mb-10">{t('lastUpdated')}</p>
 
         <div className="space-y-8 text-sm text-muted-foreground leading-relaxed">
-          <section>
-            <h2 className="text-lg font-semibold text-foreground mb-3">
-              1. Informações que Coletamos
-            </h2>
-            <p>Coletamos as seguintes informações quando você utiliza o ScrapJobs:</p>
+          <Section title={t('s1_title')}>
+            <p>{t('s1_controller')}</p>
+            {renderItems('s1_items')}
+          </Section>
+
+          <Section title={t('s2_title')}>
+            <p>{t('s2_intro')}</p>
+            {renderItems('s2_items')}
+          </Section>
+
+          <Section title={t('s3_title')}>
+            <p>{t('s3_intro')}</p>
+            {renderItems('s3_items')}
+          </Section>
+
+          <Section title={t('s4_title')}>
+            <p>{t('s4_intro')}</p>
             <ul className="list-disc pl-5 mt-2 space-y-1">
-              <li>Dados de cadastro: nome, e-mail, CPF e telefone</li>
-              <li>Dados de currículo: experiências, formação, habilidades e idiomas</li>
-              <li>Preferências de busca: empresas monitoradas e palavras-chave</li>
-              <li>Dados de uso: interações com o serviço e análises realizadas</li>
+              {operators.map((op, i) => (
+                <li key={i}>
+                  <span className="font-medium text-foreground">{op.name}</span>
+                  {' — '}
+                  {op.role} ({op.country})
+                </li>
+              ))}
             </ul>
-          </section>
+          </Section>
 
-          <section>
-            <h2 className="text-lg font-semibold text-foreground mb-3">
-              2. Como Utilizamos suas Informações
-            </h2>
-            <p>Utilizamos suas informações para:</p>
-            <ul className="list-disc pl-5 mt-2 space-y-1">
-              <li>Fornecer e manter nosso serviço</li>
-              <li>Enviar notificações de vagas compatíveis</li>
-              <li>Realizar análises de compatibilidade com inteligência artificial</li>
-              <li>Processar pagamentos e gerenciar assinaturas</li>
-              <li>Melhorar e personalizar a experiência do usuário</li>
-            </ul>
-          </section>
+          <Section title={t('s5_title')}>
+            <p>{t('s5_content')}</p>
+          </Section>
 
-          <section>
-            <h2 className="text-lg font-semibold text-foreground mb-3">
-              3. Compartilhamento de Dados
-            </h2>
+          <Section title={t('s6_title')}>
+            <p>{t('s6_content')}</p>
+          </Section>
+
+          <Section title={t('s7_title')}>
+            <p>{t('s7_intro')}</p>
+            {renderItems('s7_items')}
+            <p className="mt-3">{t('s7_contact')}</p>
+          </Section>
+
+          <Section title={t('s8_title')}>
+            <p>{t('s8_content')}</p>
+          </Section>
+
+          <Section title={t('s9_title')}>
+            <p>{t('s9_intro')}</p>
+            <table className="w-full text-xs mt-2 border-collapse">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left p-2">{t('s9_retention_data_header')}</th>
+                  <th className="text-left p-2">{t('s9_retention_period_header')}</th>
+                  <th className="text-left p-2">{t('s9_retention_basis_header')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {retention.map((row, i) => (
+                  <tr key={i} className="border-b border-border/40">
+                    <td className="p-2">{row.data}</td>
+                    <td className="p-2">{row.retention}</td>
+                    <td className="p-2">{row.basis}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <p className="mt-3">{t('s9_process')}</p>
+          </Section>
+
+          <Section title={t('s10_title')}>
+            <p>{t('s10_content')}</p>
+          </Section>
+
+          <Section title={t('s11_title')}>
+            <p>{t('s11_content')}</p>
+          </Section>
+
+          <Section title={t('s12_title')}>
             <p>
-              Não vendemos, alugamos ou compartilhamos seus dados pessoais com terceiros para fins
-              de marketing. Podemos compartilhar dados com:
+              <span className="font-medium text-foreground">{t('s12_dpo_label')}</span>{' '}
+              {t('s12_dpo_name')}
+              {' — '}
+              <a href={`mailto:${t('s12_dpo_email')}`} className="text-foreground hover:underline">
+                {t('s12_dpo_email')}
+              </a>
             </p>
-            <ul className="list-disc pl-5 mt-2 space-y-1">
-              <li>Provedores de serviço que auxiliam na operação da plataforma</li>
-              <li>Processadores de pagamento para conclusão de transações</li>
-              <li>Autoridades legais quando exigido por lei</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-semibold text-foreground mb-3">
-              4. Armazenamento e Segurança
-            </h2>
-            <p>
-              Seus dados são armazenados em servidores seguros com criptografia em trânsito e em
-              repouso. Adotamos medidas técnicas e organizacionais para proteger suas informações
-              contra acesso não autorizado, alteração, divulgação ou destruição.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-semibold text-foreground mb-3">5. Seus Direitos (LGPD)</h2>
-            <p>Em conformidade com a Lei Geral de Proteção de Dados (LGPD), você tem direito a:</p>
-            <ul className="list-disc pl-5 mt-2 space-y-1">
-              <li>Acessar seus dados pessoais</li>
-              <li>Corrigir dados incompletos ou inexatos</li>
-              <li>Solicitar a exclusão de seus dados</li>
-              <li>Revogar o consentimento para uso dos dados</li>
-              <li>Solicitar a portabilidade dos dados</li>
-              <li>Ser informado sobre compartilhamento de dados</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-semibold text-foreground mb-3">6. Cookies</h2>
-            <p>
-              Utilizamos cookies essenciais para autenticação e manutenção da sessão do usuário. Não
-              utilizamos cookies de rastreamento ou publicidade de terceiros.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-semibold text-foreground mb-3">7. Retenção de Dados</h2>
-            <p>
-              Mantemos seus dados enquanto sua conta estiver ativa. Após a exclusão da conta, os
-              dados são mantidos por 30 dias para fins de recuperação e então permanentemente
-              removidos de nossos sistemas.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-semibold text-foreground mb-3">
-              8. Alterações nesta Política
-            </h2>
-            <p>
-              Podemos atualizar esta política periodicamente. Notificaremos sobre alterações
-              significativas por e-mail ou por aviso no serviço. A data da última atualização será
-              sempre indicada no topo desta página.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-semibold text-foreground mb-3">9. Contato</h2>
-            <p>
-              Para exercer seus direitos ou esclarecer dúvidas sobre esta política, entre em
-              contato: <span className="text-foreground">privacidade@scrapjobs.com.br</span>
-            </p>
-          </section>
+            <p className="mt-2">{t('s12_contact_label')}</p>
+          </Section>
         </div>
       </div>
     </div>
