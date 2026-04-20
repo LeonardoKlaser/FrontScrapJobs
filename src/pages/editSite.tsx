@@ -24,14 +24,18 @@ export default function EditSitePage() {
   const { t } = useTranslation('admin')
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
-  const siteId = parseInt(id ?? '', 10)
+  // Fallback pra 0 em vez de NaN — React Query 5 serializa queryKey via
+  // JSON.stringify, e [‹site, NaN›] mapeia pro mesmo hash que
+  // [‹site, null›]. Usar 0 garante key estavel (e enabled:id>0 continua
+  // prevenindo fetch de id invalido).
+  const siteId = parseInt(id ?? '', 10) || 0
 
   // Hooks devem ser chamados incondicionalmente (Rules of Hooks). useSite
   // ja tem `enabled: id > 0`, entao o fetch nao dispara pra id invalido.
   const { data, isLoading, error, refetch } = useSite(siteId)
   const { mutateAsync } = useUpdateSiteConfig()
 
-  if (Number.isNaN(siteId) || siteId <= 0) {
+  if (siteId <= 0) {
     return <Navigate to={PATHS.app.adminSites} replace />
   }
 
@@ -54,7 +58,9 @@ export default function EditSitePage() {
           title={t('editSite.notFound', { defaultValue: 'Site não encontrado' })}
           action={
             <Button asChild variant="outline" size="sm">
-              <Link to={PATHS.app.adminSites}>Voltar para a lista</Link>
+              <Link to={PATHS.app.adminSites}>
+                {t('editSite.backToList', { defaultValue: 'Voltar para a lista' })}
+              </Link>
             </Button>
           }
         />
@@ -65,8 +71,16 @@ export default function EditSitePage() {
         icon={Building2}
         title={t('editSite.loadError', { defaultValue: 'Erro ao carregar site' })}
         action={
-          <Button variant="outline" size="sm" onClick={() => refetch()}>
-            Tentar novamente
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              refetch().catch(() => {
+                toast.error(t('editSite.retryFailed', { defaultValue: 'Nova tentativa falhou' }))
+              })
+            }}
+          >
+            {t('editSite.retry', { defaultValue: 'Tentar novamente' })}
           </Button>
         }
       />

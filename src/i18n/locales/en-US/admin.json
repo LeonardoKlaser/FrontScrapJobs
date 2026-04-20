@@ -44,6 +44,9 @@
     "loading": "Loading...",
     "notFound": "Site not found",
     "loadError": "Error loading site",
+    "backToList": "Back to list",
+    "retry": "Try again",
+    "retryFailed": "Retry failed",
     "submitButton": "Save Changes",
     "success": "Site updated successfully!"
   },
@@ -101,7 +104,8 @@
       "jsonMapping": "JSON Data Mapping",
       "jsonMappingTooltip": "Defines the path to extract each data field from the API JSON response",
       "paginationDelay": "Pagination Delay (ms)",
-      "paginationDelayTooltip": "Milliseconds to wait between paginated requests to avoid rate limiting (429). E.g. 1500 = 1.5s"
+      "paginationDelayTooltip": "Milliseconds to wait between paginated requests to avoid rate limiting (429). E.g. 1500 = 1.5s",
+      "invalidJsonMappingError": "Invalid JSON mapping — fix the field before saving."
     },
     "logo": {
       "title": "Company Logo",

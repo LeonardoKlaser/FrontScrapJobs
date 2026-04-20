@@ -44,6 +44,9 @@
     "loading": "Carregando...",
     "notFound": "Site não encontrado",
     "loadError": "Erro ao carregar site",
+    "backToList": "Voltar para a lista",
+    "retry": "Tentar novamente",
+    "retryFailed": "Nova tentativa falhou",
     "submitButton": "Salvar Alterações",
     "success": "Site atualizado com sucesso!"
   },
@@ -101,7 +104,8 @@
       "jsonMapping": "Mapeamento dos Dados JSON",
       "jsonMappingTooltip": "Define o caminho para extrair cada dado do objeto JSON retornado pela API",
       "paginationDelay": "Delay entre Páginas (ms)",
-      "paginationDelayTooltip": "Intervalo em milissegundos entre requests de paginação para evitar rate limiting (429). Ex: 1500 = 1.5s"
+      "paginationDelayTooltip": "Intervalo em milissegundos entre requests de paginação para evitar rate limiting (429). Ex: 1500 = 1.5s",
+      "invalidJsonMappingError": "JSON mapping inválido — corrija o campo antes de salvar."
     },
     "logo": {
       "title": "Logo da Empresa",

@@ -45,7 +45,11 @@ function extractPaginationDelay(jsonMappings: string | null | undefined): string
     const parsed = JSON.parse(jsonMappings)
     const delay = parsed?.pagination_delay_ms
     return typeof delay === 'number' && delay > 0 ? String(delay) : ''
-  } catch {
+  } catch (err) {
+    // json_data_mappings corrompido no DB — admin vera toast quando
+    // tentar salvar (parseBucketKey do backend tambem rejeita 400).
+    // Log pra browser console pra facilitar debug de suporte.
+    console.warn('json_data_mappings malformado — pagination_delay_ms nao extraido', err)
     return ''
   }
 }
@@ -168,13 +172,16 @@ export default function SiteConfigForm({
     setLogoFile(file)
   }
 
-  const buildFormDataWithDelay = (): SiteConfigFormData => {
+  // Retorna { formData, error } — erro nao-nulo significa JSON mapping
+  // invalido e o chamador deve abortar o submit em vez de prosseguir
+  // com o delay silenciosamente dropado.
+  const buildFormDataWithDelay = (): { formData: SiteConfigFormData; error: string | null } => {
     if (
       formData.scraping_type !== 'API' ||
       !paginationDelayMs ||
       !formData.json_data_mappings.trim()
     ) {
-      return formData
+      return { formData, error: null }
     }
     try {
       const mappings = JSON.parse(formData.json_data_mappings)
@@ -184,12 +191,12 @@ export default function SiteConfigForm({
       } else {
         delete mappings.pagination_delay_ms
       }
-      return { ...formData, json_data_mappings: JSON.stringify(mappings) }
+      return {
+        formData: { ...formData, json_data_mappings: JSON.stringify(mappings) },
+        error: null
+      }
     } catch {
-      // JSON do mappings e invalido — avisa o admin em vez de silenciar.
-      // O delay configurado nao sera aplicado.
-      toast.error('JSON mapping inválido — delay de paginação não foi aplicado.')
-      return formData
+      return { formData, error: t('addSite.apiConfig.invalidJsonMappingError') }
     }
   }
 
@@ -198,8 +205,13 @@ export default function SiteConfigForm({
       toast.error('URL base é obrigatória para testar')
       return
     }
+    const { formData: payload, error } = buildFormDataWithDelay()
+    if (error) {
+      setValidationError(error)
+      return
+    }
     resetSandbox()
-    testScrape(buildFormDataWithDelay(), {
+    testScrape(payload, {
       onSuccess: (result) => {
         if (result.success) {
           toast.success(`${result.data?.length || 0} vaga(s) encontrada(s)`)
@@ -208,7 +220,7 @@ export default function SiteConfigForm({
         }
       },
       onError: (err) => {
-        toast.error(err?.message || 'Erro ao testar scraping')
+        toast.error(extractErrorMessage(err, 'Erro ao testar scraping'))
       }
     })
   }
@@ -226,9 +238,15 @@ export default function SiteConfigForm({
       return
     }
 
+    const { formData: payload, error: delayError } = buildFormDataWithDelay()
+    if (delayError) {
+      setValidationError(delayError)
+      return
+    }
+
     setLoading()
     try {
-      await onSubmit(buildFormDataWithDelay(), logoFile)
+      await onSubmit(payload, logoFile)
       setSuccess()
       if (mode === 'create') {
         setFormData(DEFAULT_FORM_DATA)
@@ -729,10 +747,12 @@ export default function SiteConfigForm({
                   <div className="flex items-center gap-3">
                     <img
                       src={existingLogoURL}
-                      alt="Logo atual"
+                      alt={t('addSite.logo.currentLogo')}
                       className="h-12 w-12 rounded border border-border/50 object-contain bg-muted/30 p-1"
                     />
-                    <span className="text-xs text-muted-foreground">Logo atual</span>
+                    <span className="text-xs text-muted-foreground">
+                      {t('addSite.logo.currentLogo')}
+                    </span>
                   </div>
                 )}
                 <Input
@@ -749,7 +769,7 @@ export default function SiteConfigForm({
                 >
                   <ImagePlus className="size-4" />
                   {mode === 'edit' && existingLogoURL
-                    ? 'Substituir'
+                    ? t('addSite.logo.replace')
                     : t('addSite.logo.chooseImage')}
                 </Button>
                 {logoFile && (

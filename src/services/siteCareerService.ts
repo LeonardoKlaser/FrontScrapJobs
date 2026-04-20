@@ -72,6 +72,8 @@ export const siteCareerService = {
     formData: SiteConfigFormData,
     logoFile: File | null
   ): Promise<SiteConfig> => {
+    // Mesma normalizacao do addSiteConfig (ver comentario la sobre
+    // limitacao com campos nao-string).
     const cleanedData = Object.fromEntries(
       Object.entries(formData).map(([key, value]) => [key, value === '' ? null : value])
     )
