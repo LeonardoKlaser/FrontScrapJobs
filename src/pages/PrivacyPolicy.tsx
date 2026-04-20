@@ -25,21 +25,32 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 // asArray blinda contra o cenário onde i18next retorna a própria key
-// (string) quando a tradução está ausente ou mal-formada — sem esse guard,
-// `.map()` em string crasharia a página com TypeError e quebraria a
-// política de privacidade, que é link obrigatório no footer (LGPD Art. 9).
-function asArray<T>(value: unknown): T[] {
-  return Array.isArray(value) ? (value as T[]) : []
+// (string) ou um object quando a tradução está ausente/mal-formada —
+// sem esse guard, `.map()` em valor não-array crasharia a página com
+// TypeError e quebraria a política de privacidade, que é link
+// obrigatório no footer (LGPD Art. 9).
+//
+// Em dev, loga warn no console pra flagar regressão de locale; em prod
+// degrada silenciosamente pra []  (seção vazia > página quebrada).
+function asArray<T>(key: string, value: unknown): T[] {
+  if (Array.isArray(value)) return value as T[]
+  if (import.meta.env.DEV) {
+    console.warn(`[PrivacyPolicy] i18n key "${key}" não é array:`, value)
+  }
+  return []
 }
 
 export default function PrivacyPolicy() {
   const { t } = useTranslation('privacy')
 
-  const operators = asArray<PrivacyOperator>(t('s4_operators', { returnObjects: true }))
-  const retention = asArray<PrivacyRetentionRow>(t('s9_rows', { returnObjects: true }))
+  const operators = asArray<PrivacyOperator>(
+    's4_operators',
+    t('s4_operators', { returnObjects: true })
+  )
+  const retention = asArray<PrivacyRetentionRow>('s9_rows', t('s9_rows', { returnObjects: true }))
 
   const renderItems = (key: string) => {
-    const items = asArray<string>(t(key, { returnObjects: true }))
+    const items = asArray<string>(key, t(key, { returnObjects: true }))
     return (
       <ul className="list-disc pl-5 mt-2 space-y-1">
         {items.map((item, i) => (
