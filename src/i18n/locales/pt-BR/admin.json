@@ -78,9 +78,12 @@
     },
     "logo": {
       "title": "Logo da Empresa",
+      "titleRequired": "Logo da Empresa *",
       "description": "Imagem exibida junto ao nome do site",
       "chooseImage": "Escolher Imagem"
     },
+    "logoRequiredError": "Selecione um logo para a empresa.",
+    "logoTooLargeError": "O logo excede o tamanho máximo de 2MB.",
     "submitButton": "Cadastrar Site",
     "sandbox": {
       "testing": "Testando...",

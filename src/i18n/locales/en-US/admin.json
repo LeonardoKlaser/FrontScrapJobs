@@ -78,9 +78,12 @@
     },
     "logo": {
       "title": "Company Logo",
+      "titleRequired": "Company Logo *",
       "description": "Image displayed alongside the site name",
       "chooseImage": "Choose Image"
     },
+    "logoRequiredError": "Please select a logo for the company.",
+    "logoTooLargeError": "The logo exceeds the 2MB limit.",
     "submitButton": "Register Site",
     "sandbox": {
       "testing": "Testing...",

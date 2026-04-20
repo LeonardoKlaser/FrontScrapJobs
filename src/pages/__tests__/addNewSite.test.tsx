@@ -52,7 +52,10 @@ function wrap(ui: ReactNode) {
 
 async function fillBasicCSSForm() {
   await userEvent.type(screen.getByLabelText(/basicInfo\.nameLabel/), 'Acme Careers')
-  await userEvent.type(screen.getByLabelText(/basicInfo\.urlLabel/), 'https://acme.example.com/jobs')
+  await userEvent.type(
+    screen.getByLabelText(/basicInfo\.urlLabel/),
+    'https://acme.example.com/jobs'
+  )
 }
 
 async function attachLogo(filename = 'logo.png', size = 1024) {
@@ -161,5 +164,50 @@ describe('AdicionarSitePage (characterization)', () => {
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalled()
     })
+  })
+
+  it('submit without logo: shows logoRequiredError, mutation not called', async () => {
+    render(wrap(<AdicionarSitePage />))
+
+    await fillBasicCSSForm()
+    // Sem attachLogo
+
+    const submitButton = screen.getByRole('button', { name: /addSite\.submitButton/ })
+    await userEvent.click(submitButton)
+
+    await waitFor(() => {
+      expect(screen.getByText(/addSite\.logoRequiredError/)).toBeInTheDocument()
+    })
+    expect(mockAddSite).not.toHaveBeenCalled()
+  })
+
+  it('logo >2MB: shows logoTooLargeError, logoFile state not set', async () => {
+    render(wrap(<AdicionarSitePage />))
+
+    await fillBasicCSSForm()
+    // Arquivo 3MB — excede 2MB
+    const input = document.getElementById('logo_upload') as HTMLInputElement
+    const big = new File(['x'.repeat(3 * 1024 * 1024)], 'big.png', { type: 'image/png' })
+    fireEvent.change(input, { target: { files: [big] } })
+
+    await waitFor(() => {
+      expect(screen.getByText(/addSite\.logoTooLargeError/)).toBeInTheDocument()
+    })
+
+    // Submit ainda deve falhar por falta de logo (file size guard nao setou logoFile)
+    const submitButton = screen.getByRole('button', { name: /addSite\.submitButton/ })
+    await userEvent.click(submitButton)
+
+    await waitFor(() => {
+      expect(screen.getByText(/addSite\.logoRequiredError/)).toBeInTheDocument()
+    })
+    expect(mockAddSite).not.toHaveBeenCalled()
+  })
+
+  it('file input accept attribute is png/jpeg/webp (backend-aligned)', () => {
+    render(wrap(<AdicionarSitePage />))
+
+    const input = document.getElementById('logo_upload') as HTMLInputElement
+    expect(input.getAttribute('accept')).toBe('image/png, image/jpeg, image/webp')
   })
 })

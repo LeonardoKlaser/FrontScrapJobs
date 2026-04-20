@@ -82,13 +82,22 @@ export default function AdicionarSitePage() {
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setLogoFile(e.target.files[0])
+    if (!e.target.files || !e.target.files[0]) return
+    const file = e.target.files[0]
+    if (file.size > 2 * 1024 * 1024) {
+      setValidationError(t('addSite.logoTooLargeError'))
+      return
     }
+    setValidationError(null)
+    setLogoFile(file)
   }
 
   const buildFormDataWithDelay = (): SiteConfigFormData => {
-    if (formData.scraping_type !== 'API' || !paginationDelayMs || !formData.json_data_mappings.trim()) {
+    if (
+      formData.scraping_type !== 'API' ||
+      !paginationDelayMs ||
+      !formData.json_data_mappings.trim()
+    ) {
       return formData
     }
     try {
@@ -133,6 +142,10 @@ export default function AdicionarSitePage() {
 
     if (!formData.site_name || !formData.base_url) {
       setValidationError(t('addSite.requiredFieldsError'))
+      return
+    }
+    if (!logoFile) {
+      setValidationError(t('addSite.logoRequiredError'))
       return
     }
     setLoading()
@@ -621,7 +634,9 @@ export default function AdicionarSitePage() {
 
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <Label htmlFor="pagination_delay_ms">{t('addSite.apiConfig.paginationDelay')}</Label>
+                    <Label htmlFor="pagination_delay_ms">
+                      {t('addSite.apiConfig.paginationDelay')}
+                    </Label>
                     <Tooltip content={t('addSite.apiConfig.paginationDelayTooltip')}>
                       <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
                     </Tooltip>
@@ -645,7 +660,9 @@ export default function AdicionarSitePage() {
         <div className="animate-fade-in-up [animation-delay:200ms]">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base tracking-tight">{t('addSite.logo.title')}</CardTitle>
+              <CardTitle className="text-base tracking-tight">
+                {t('addSite.logo.title')} <span className="text-destructive">*</span>
+              </CardTitle>
               <CardDescription>{t('addSite.logo.description')}</CardDescription>
             </CardHeader>
             <CardContent>
@@ -653,7 +670,7 @@ export default function AdicionarSitePage() {
                 <Input
                   id="logo_upload"
                   type="file"
-                  accept="image/png, image/jpeg, image/svg+xml"
+                  accept="image/png, image/jpeg, image/webp"
                   onChange={handleFileChange}
                   className="hidden"
                 />
