@@ -113,4 +113,58 @@ describe('siteCareerService', () => {
       expect(api.delete).toHaveBeenCalledWith('/userSite/42')
     })
   })
+
+  describe('getAllSitesAdmin', () => {
+    it('sends GET /siteCareer and returns sites', async () => {
+      const mockSites = [{ id: 1, site_name: 'Admin1' }]
+      vi.mocked(api.get).mockResolvedValue({ data: mockSites })
+
+      const result = await siteCareerService.getAllSitesAdmin()
+
+      expect(api.get).toHaveBeenCalledWith('/siteCareer')
+      expect(result).toEqual(mockSites)
+    })
+  })
+
+  describe('getSiteById', () => {
+    it('sends GET /siteCareer/:id', async () => {
+      const mockSite = { id: 57, site_name: 'Netflix' }
+      vi.mocked(api.get).mockResolvedValue({ data: mockSite })
+
+      const result = await siteCareerService.getSiteById(57)
+
+      expect(api.get).toHaveBeenCalledWith('/siteCareer/57')
+      expect(result).toEqual(mockSite)
+    })
+  })
+
+  describe('updateSiteConfig', () => {
+    it('sends PUT /siteCareer/:id with multipart FormData (no logo)', async () => {
+      vi.mocked(api.put).mockResolvedValue({ data: { id: 57 } })
+
+      const result = await siteCareerService.updateSiteConfig(57, mockFormData, null)
+
+      expect(api.put).toHaveBeenCalledWith('/siteCareer/57', expect.any(FormData), {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+      expect(result).toEqual({ id: 57 })
+
+      const sentFormData = vi.mocked(api.put).mock.calls[0][1] as FormData
+      expect(sentFormData.get('logo')).toBeNull()
+      const expectedCleaned = Object.fromEntries(
+        Object.entries(mockFormData).map(([k, v]) => [k, v === '' ? null : v])
+      )
+      expect(sentFormData.get('siteData')).toBe(JSON.stringify(expectedCleaned))
+    })
+
+    it('appends logo when provided', async () => {
+      vi.mocked(api.put).mockResolvedValue({ data: { id: 57 } })
+      const file = new File(['png'], 'new.png', { type: 'image/png' })
+
+      await siteCareerService.updateSiteConfig(57, mockFormData, file)
+
+      const sentFormData = vi.mocked(api.put).mock.calls[0][1] as FormData
+      expect(sentFormData.get('logo')).toBeTruthy()
+    })
+  })
 })

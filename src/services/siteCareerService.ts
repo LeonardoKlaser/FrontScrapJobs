@@ -1,4 +1,4 @@
-import type { SiteCareer, UserSiteRequest } from '@/models/siteCareer'
+import type { SiteCareer, SiteConfig, UserSiteRequest } from '@/models/siteCareer'
 import { api } from './api'
 
 export type ScrapingType = 'CSS' | 'API' | 'HEADLESS'
@@ -52,6 +52,35 @@ export const siteCareerService = {
     })
 
     return response.data
+  },
+
+  getAllSitesAdmin: async (): Promise<SiteConfig[]> => {
+    const { data } = await api.get('/siteCareer')
+    return data
+  },
+
+  getSiteById: async (id: number): Promise<SiteConfig> => {
+    const { data } = await api.get(`/siteCareer/${id}`)
+    return data
+  },
+
+  updateSiteConfig: async (
+    id: number,
+    formData: SiteConfigFormData,
+    logoFile: File | null
+  ): Promise<SiteConfig> => {
+    const cleanedData = Object.fromEntries(
+      Object.entries(formData).map(([key, value]) => [key, value === '' ? null : value])
+    )
+    const multipartData = new FormData()
+    multipartData.append('siteData', JSON.stringify(cleanedData))
+    if (logoFile) {
+      multipartData.append('logo', logoFile)
+    }
+    const { data } = await api.put(`/siteCareer/${id}`, multipartData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    return data
   },
 
   requestSite: async (url: string) => {
