@@ -24,7 +24,7 @@
     "title": "Gerenciar Sites",
     "description": "Lista completa de sites cadastrados (ativos e inativos).",
     "searchPlaceholder": "Buscar por nome...",
-    "newSite": "+ Novo Site",
+    "newSite": "Novo Site",
     "loading": "Carregando...",
     "empty": "Nenhum site encontrado",
     "active": "Ativo",

@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Building2, CheckCircle, Radar, Search, X } from 'lucide-react'
+import { ArrowUpDown, Building2, CheckCircle, Radar, Search, X } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -191,13 +191,14 @@ export default function EmpresasPage() {
             </button>
           )}
         </div>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <FilterPills options={filters} activeKey={filter} onChange={setFilter} />
           <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortKey)}>
             <SelectTrigger
               aria-label={t('sort.label', { defaultValue: 'Ordenar por' })}
-              className="w-full sm:w-56"
+              className="w-full gap-2 sm:w-52"
             >
+              <ArrowUpDown className="size-3.5 text-muted-foreground" />
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

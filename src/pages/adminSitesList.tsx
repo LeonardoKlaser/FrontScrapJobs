@@ -59,7 +59,7 @@ export default function AdminSitesListPage() {
         </div>
         <Button onClick={() => navigate(PATHS.app.addNewSite)} variant="glow">
           <Plus className="size-4" />
-          {t('adminSites.newSite', { defaultValue: '+ Novo Site' })}
+          {t('adminSites.newSite', { defaultValue: 'Novo Site' })}
         </Button>
       </div>
 

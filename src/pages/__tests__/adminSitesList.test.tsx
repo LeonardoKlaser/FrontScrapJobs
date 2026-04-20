@@ -92,7 +92,7 @@ describe('AdminSitesListPage', () => {
 
     render(wrap(<AdminSitesListPage />))
 
-    const button = screen.getByRole('button', { name: /\+ Novo Site/ })
+    const button = screen.getByRole('button', { name: /Novo Site/ })
     await userEvent.click(button)
 
     expect(mockNavigate).toHaveBeenCalledWith(PATHS.app.addNewSite)

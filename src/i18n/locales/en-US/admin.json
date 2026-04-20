@@ -24,7 +24,7 @@
     "title": "Manage Sites",
     "description": "Complete list of registered sites (active and inactive).",
     "searchPlaceholder": "Search by name...",
-    "newSite": "+ New Site",
+    "newSite": "New Site",
     "loading": "Loading...",
     "empty": "No sites found",
     "active": "Active",
