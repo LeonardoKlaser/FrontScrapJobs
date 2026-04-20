@@ -19,6 +19,8 @@ const Home = lazy(() => import('@/pages/Home').then((m) => ({ default: m.Home })
 const NotFound = lazy(() => import('@/pages/NotFound').then((m) => ({ default: m.NotFound })))
 const EmpresasPage = lazy(() => import('@/pages/ListSites'))
 const AdicionarSitePage = lazy(() => import('@/pages/addNewSite'))
+const AdminSitesListPage = lazy(() => import('@/pages/adminSitesList'))
+const EditSitePage = lazy(() => import('@/pages/editSite'))
 const AccountPage = lazy(() => import('@/pages/accountPage'))
 const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'))
 const ResetPassword = lazy(() => import('@/pages/ResetPassword'))
@@ -99,6 +101,30 @@ export const createRouter = (queryClient: QueryClient) =>
           element: (
             <AdminGuard>
               <AdicionarSitePage />
+            </AdminGuard>
+          )
+        },
+        {
+          path: PATHS.app.adminSites,
+          element: (
+            <AdminGuard>
+              <Suspense
+                fallback={<LoadingSection variant="section" label={i18n.t('loadingPanel')} />}
+              >
+                <AdminSitesListPage />
+              </Suspense>
+            </AdminGuard>
+          )
+        },
+        {
+          path: '/app/admin-sites/:id/edit',
+          element: (
+            <AdminGuard>
+              <Suspense
+                fallback={<LoadingSection variant="section" label={i18n.t('loadingPanel')} />}
+              >
+                <EditSitePage />
+              </Suspense>
             </AdminGuard>
           )
         },

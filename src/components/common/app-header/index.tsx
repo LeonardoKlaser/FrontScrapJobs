@@ -32,7 +32,7 @@ export function AppHeader() {
 
   const adminItems = [
     { title: t('nav.admin'), href: PATHS.app.adminDashboard },
-    { title: t('nav.addSite'), href: PATHS.app.addNewSite }
+    { title: t('nav.manageSites'), href: PATHS.app.adminSites }
   ]
 
   const items = user?.is_admin ? [...baseItems, ...adminItems] : baseItems
