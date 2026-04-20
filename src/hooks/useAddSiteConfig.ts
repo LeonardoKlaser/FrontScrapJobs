@@ -10,6 +10,8 @@ export function useAddSiteConfig() {
       siteCareerService.addSiteConfig(formData, logoFile),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['siteCareerList'] })
+      queryClient.invalidateQueries({ queryKey: ['adminSites'] })
+      queryClient.invalidateQueries({ queryKey: ['public-site-logos'] })
     }
   })
 }

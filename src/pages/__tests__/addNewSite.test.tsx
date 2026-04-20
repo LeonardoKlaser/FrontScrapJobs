@@ -21,7 +21,7 @@ const mockTestScrape = vi.fn()
 const mockResetSandbox = vi.fn()
 
 vi.mock('@/hooks/useAddSiteConfig', () => ({
-  useAddSiteConfig: () => ({ mutate: mockAddSite }),
+  useAddSiteConfig: () => ({ mutate: mockAddSite, mutateAsync: mockAddSite }),
   useSandboxScrape: () => ({
     mutate: mockTestScrape,
     data: undefined,
@@ -70,6 +70,7 @@ describe('AdicionarSitePage (characterization)', () => {
   })
 
   it('happy path: fills form, attaches logo, submits → addSite mutation called with payload', async () => {
+    mockAddSite.mockResolvedValue(undefined)
     render(wrap(<AdicionarSitePage />))
 
     await fillBasicCSSForm()
@@ -148,15 +149,12 @@ describe('AdicionarSitePage (characterization)', () => {
     })
   })
 
-  it('mutation error path: calls onError with setBtnError + toast.error', async () => {
+  it('mutation error path: toast.error called when mutation rejects', async () => {
+    mockAddSite.mockRejectedValueOnce(new Error('boom'))
     render(wrap(<AdicionarSitePage />))
 
     await fillBasicCSSForm()
     await attachLogo()
-
-    mockAddSite.mockImplementation((_payload, opts) => {
-      opts.onError(new Error('boom'))
-    })
 
     const submitButton = screen.getByRole('button', { name: /addSite\.submitButton/ })
     await userEvent.click(submitButton)
