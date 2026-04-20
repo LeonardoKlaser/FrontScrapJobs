@@ -3,6 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { Building2, CheckCircle, Radar, Search, X } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
 import { RegistrationModal } from '@/components/companyPopup'
 import { useSiteCareer } from '@/hooks/useSiteCareer'
 import type { SiteCareer } from '@/models/siteCareer'
@@ -18,6 +25,23 @@ import { RequestSiteBanner } from '@/components/sites/request-site-banner'
 import { RequestSiteForm } from '@/components/sites/request-site-form'
 import { PageHeader } from '@/components/common/page-header'
 
+type SortKey = 'alphabetical' | 'newest' | 'subscribed_first'
+const SORT_STORAGE_KEY = 'sitesSortBy'
+const collator = new Intl.Collator('pt', { sensitivity: 'base' })
+
+const sortFn: Record<SortKey, (a: SiteCareer, b: SiteCareer) => number> = {
+  alphabetical: (a, b) => collator.compare(a.site_name, b.site_name),
+  newest: (a, b) => {
+    const ta = new Date(a.created_at).getTime() || 0
+    const tb = new Date(b.created_at).getTime() || 0
+    return tb - ta
+  },
+  subscribed_first: (a, b) => {
+    if (a.is_subscribed !== b.is_subscribed) return a.is_subscribed ? -1 : 1
+    return collator.compare(a.site_name, b.site_name)
+  }
+}
+
 export default function EmpresasPage() {
   const { t } = useTranslation('sites')
   const [searchTerm, setSearchTerm] = useState('')
@@ -27,6 +51,14 @@ export default function EmpresasPage() {
   const { data: user } = useUser()
   const [filter, setFilter] = useState('all')
   const hasAutoSelected = useRef(false)
+  const [sortBy, setSortBy] = useState<SortKey>(() => {
+    if (typeof window === 'undefined') return 'alphabetical'
+    const stored = window.localStorage.getItem(SORT_STORAGE_KEY)
+    if (stored === 'alphabetical' || stored === 'newest' || stored === 'subscribed_first') {
+      return stored
+    }
+    return 'alphabetical'
+  })
 
   useEffect(() => {
     if (!hasAutoSelected.current && data && data.some((c) => c.is_subscribed)) {
@@ -34,6 +66,12 @@ export default function EmpresasPage() {
       hasAutoSelected.current = true
     }
   }, [data])
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(SORT_STORAGE_KEY, sortBy)
+    }
+  }, [sortBy])
   const { mutate: registerUserToSite, isPending: isRegisteringUser } = useRegisterUserSite()
   const { mutate: unregisterUser } = useUnregisterUserSite()
   const { mutate: updateFilters, isPending: isUpdatingFilters } = useUpdateUserSiteFilters()
@@ -45,14 +83,17 @@ export default function EmpresasPage() {
   ] as const
 
   const filteredCompanies = useMemo(() => {
+    if (!data) return undefined
     return data
-      ?.filter((company) => company.site_name.toLowerCase().includes(searchTerm.toLowerCase()))
+      .filter((company) => company.site_name.toLowerCase().includes(searchTerm.toLowerCase()))
       .filter((company) => {
         if (filter === 'subscribed') return company.is_subscribed
         if (filter === 'not_subscribed') return !company.is_subscribed
         return true
       })
-  }, [searchTerm, data, filter])
+      .slice()
+      .sort(sortFn[sortBy])
+  }, [searchTerm, data, filter, sortBy])
 
   const subscribedCount = useMemo(() => {
     return data?.filter((company) => company.is_subscribed).length ?? 0
@@ -150,8 +191,27 @@ export default function EmpresasPage() {
             </button>
           )}
         </div>
-        <div className="flex justify-center">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-3">
           <FilterPills options={filters} activeKey={filter} onChange={setFilter} />
+          <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortKey)}>
+            <SelectTrigger
+              aria-label={t('sort.label', { defaultValue: 'Ordenar por' })}
+              className="w-full sm:w-56"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="alphabetical">
+                {t('sort.alphabetical', { defaultValue: 'Alfabético (A-Z)' })}
+              </SelectItem>
+              <SelectItem value="newest">
+                {t('sort.newest', { defaultValue: 'Data de inclusão mais recente' })}
+              </SelectItem>
+              <SelectItem value="subscribed_first">
+                {t('sort.subscribedFirst', { defaultValue: 'Inscritas primeiro' })}
+              </SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 

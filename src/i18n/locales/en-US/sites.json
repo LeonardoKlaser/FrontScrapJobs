@@ -10,6 +10,12 @@
   "filterAll": "All",
   "filterSubscribed": "Subscribed",
   "filterAvailable": "Available",
+  "sort": {
+    "label": "Sort by",
+    "alphabetical": "Alphabetical (A-Z)",
+    "newest": "Most recently added",
+    "subscribedFirst": "Subscribed first"
+  },
   "emptySearch": "No company found for \"{{term}}\"",
   "requestBanner": {
     "text": "Didn't find your company?",
