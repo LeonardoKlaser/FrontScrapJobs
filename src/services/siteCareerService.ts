@@ -35,6 +35,9 @@ export const siteCareerService = {
   addSiteConfig: async (formData: SiteConfigFormData, logoFile: File | null) => {
     const multipartData = new FormData()
 
+    // Normaliza campos vazios: React controlled inputs sao '', mas a API
+    // espera null pra campos opcionais. Isso so e seguro enquanto o form
+    // nao tem campos nao-string (ex.: numericos) — cuidado ao extender.
     const cleanedData = Object.fromEntries(
       Object.entries(formData).map(([key, value]) => [key, value === '' ? null : value])
     )

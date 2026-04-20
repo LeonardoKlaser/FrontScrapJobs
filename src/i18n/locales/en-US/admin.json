@@ -20,6 +20,33 @@
     "errorMessage": "Error Message",
     "empty": "No scraping errors recorded"
   },
+  "adminSites": {
+    "title": "Manage Sites",
+    "description": "Complete list of registered sites (active and inactive).",
+    "searchPlaceholder": "Search by name...",
+    "newSite": "+ New Site",
+    "loading": "Loading...",
+    "empty": "No sites found",
+    "active": "Active",
+    "inactive": "Inactive",
+    "edit": "Edit",
+    "col": {
+      "logo": "Logo",
+      "name": "Name",
+      "type": "Type",
+      "status": "Status",
+      "createdAt": "Added",
+      "actions": "Actions"
+    }
+  },
+  "editSite": {
+    "title": "Edit Site",
+    "loading": "Loading...",
+    "notFound": "Site not found",
+    "loadError": "Error loading site",
+    "submitButton": "Save Changes",
+    "success": "Site updated successfully!"
+  },
   "addSite": {
     "title": "Add New Site",
     "description": "Configure a new career site for automatic monitoring",
@@ -78,9 +105,10 @@
     },
     "logo": {
       "title": "Company Logo",
-      "titleRequired": "Company Logo *",
       "description": "Image displayed alongside the site name",
-      "chooseImage": "Choose Image"
+      "chooseImage": "Choose Image",
+      "currentLogo": "Current logo",
+      "replace": "Replace"
     },
     "logoRequiredError": "Please select a logo for the company.",
     "logoTooLargeError": "The logo exceeds the 2MB limit.",

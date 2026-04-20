@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useParams, Navigate } from 'react-router'
+import { useNavigate, useParams, Navigate, Link } from 'react-router'
 import { toast } from 'sonner'
 import { Building2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { EmptyState } from '@/components/common/empty-state'
 import { PageHeader } from '@/components/common/page-header'
 import SiteConfigForm from '@/components/sites/site-config-form'
@@ -25,12 +26,14 @@ export default function EditSitePage() {
   const { id } = useParams<{ id: string }>()
   const siteId = parseInt(id ?? '', 10)
 
+  // Hooks devem ser chamados incondicionalmente (Rules of Hooks). useSite
+  // ja tem `enabled: id > 0`, entao o fetch nao dispara pra id invalido.
+  const { data, isLoading, error, refetch } = useSite(siteId)
+  const { mutateAsync } = useUpdateSiteConfig()
+
   if (Number.isNaN(siteId) || siteId <= 0) {
     return <Navigate to={PATHS.app.adminSites} replace />
   }
-
-  const { data, isLoading, error } = useSite(siteId)
-  const { mutateAsync } = useUpdateSiteConfig()
 
   if (isLoading) {
     return (
@@ -49,6 +52,11 @@ export default function EditSitePage() {
         <EmptyState
           icon={Building2}
           title={t('editSite.notFound', { defaultValue: 'Site não encontrado' })}
+          action={
+            <Button asChild variant="outline" size="sm">
+              <Link to={PATHS.app.adminSites}>Voltar para a lista</Link>
+            </Button>
+          }
         />
       )
     }
@@ -56,6 +64,11 @@ export default function EditSitePage() {
       <EmptyState
         icon={Building2}
         title={t('editSite.loadError', { defaultValue: 'Erro ao carregar site' })}
+        action={
+          <Button variant="outline" size="sm" onClick={() => refetch()}>
+            Tentar novamente
+          </Button>
+        }
       />
     )
   }

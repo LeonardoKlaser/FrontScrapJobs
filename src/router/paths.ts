@@ -15,6 +15,9 @@ export const PATHS = {
     adminDashboard: '/app/admin-dashboard',
     addNewSite: '/app/add-new-site',
     adminSites: '/app/admin-sites',
+    // editSitePath e o pattern pra router config; editSite(id) e o helper
+    // de navegacao. Manter ambos sincronizados se o pattern mudar.
+    editSitePath: '/app/admin-sites/:id/edit',
     editSite: (id: number) => `/app/admin-sites/${id}/edit`,
     account: '/app/account',
     renew: '/app/renew',

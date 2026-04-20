@@ -117,7 +117,7 @@ export const createRouter = (queryClient: QueryClient) =>
           )
         },
         {
-          path: '/app/admin-sites/:id/edit',
+          path: PATHS.app.editSitePath,
           element: (
             <AdminGuard>
               <Suspense

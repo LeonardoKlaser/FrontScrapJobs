@@ -16,13 +16,14 @@ const DATE_FMT = new Intl.DateTimeFormat('pt-BR', {
   year: 'numeric'
 })
 
+// Module-scope — evita recriar a cada render, consistente com ListSites.tsx.
+const collator = new Intl.Collator('pt', { sensitivity: 'base' })
+
 export default function AdminSitesListPage() {
   const { t } = useTranslation('admin')
   const navigate = useNavigate()
   const { data, isLoading } = useAdminSites()
   const [search, setSearch] = useState('')
-
-  const collator = useMemo(() => new Intl.Collator('pt', { sensitivity: 'base' }), [])
 
   const filtered = useMemo(() => {
     if (!data) return []
@@ -33,7 +34,7 @@ export default function AdminSitesListPage() {
 
   const sorted = useMemo(
     () => [...filtered].sort((a, b) => collator.compare(a.site_name, b.site_name)),
-    [filtered, collator]
+    [filtered]
   )
 
   return (

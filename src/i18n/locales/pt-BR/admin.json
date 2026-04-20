@@ -20,6 +20,33 @@
     "errorMessage": "Mensagem de Erro",
     "empty": "Nenhum erro de scraping registrado"
   },
+  "adminSites": {
+    "title": "Gerenciar Sites",
+    "description": "Lista completa de sites cadastrados (ativos e inativos).",
+    "searchPlaceholder": "Buscar por nome...",
+    "newSite": "+ Novo Site",
+    "loading": "Carregando...",
+    "empty": "Nenhum site encontrado",
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "edit": "Editar",
+    "col": {
+      "logo": "Logo",
+      "name": "Nome",
+      "type": "Tipo",
+      "status": "Status",
+      "createdAt": "Cadastrado",
+      "actions": "Ações"
+    }
+  },
+  "editSite": {
+    "title": "Editar Site",
+    "loading": "Carregando...",
+    "notFound": "Site não encontrado",
+    "loadError": "Erro ao carregar site",
+    "submitButton": "Salvar Alterações",
+    "success": "Site atualizado com sucesso!"
+  },
   "addSite": {
     "title": "Adicionar Novo Site",
     "description": "Configure um novo site de carreiras para monitoramento automático",
@@ -78,9 +105,10 @@
     },
     "logo": {
       "title": "Logo da Empresa",
-      "titleRequired": "Logo da Empresa *",
       "description": "Imagem exibida junto ao nome do site",
-      "chooseImage": "Escolher Imagem"
+      "chooseImage": "Escolher Imagem",
+      "currentLogo": "Logo atual",
+      "replace": "Substituir"
     },
     "logoRequiredError": "Selecione um logo para a empresa.",
     "logoTooLargeError": "O logo excede o tamanho máximo de 2MB.",

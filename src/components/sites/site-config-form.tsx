@@ -36,6 +36,32 @@ import type { SiteConfig } from '@/models/siteCareer'
 import { useTranslation } from 'react-i18next'
 import { safeHref } from '@/utils/url'
 
+// Extrai pagination_delay_ms do JSON mapping em edit mode — sem isso o
+// campo sempre renderiza vazio e, ao re-salvar, buildFormDataWithDelay
+// deleta o delay existente do mappings (silent data loss).
+function extractPaginationDelay(jsonMappings: string | null | undefined): string {
+  if (!jsonMappings) return ''
+  try {
+    const parsed = JSON.parse(jsonMappings)
+    const delay = parsed?.pagination_delay_ms
+    return typeof delay === 'number' && delay > 0 ? String(delay) : ''
+  } catch {
+    return ''
+  }
+}
+
+// Extrai mensagem de erro util de erros de axios, Error, ou fallback.
+// Prefere response.data.error (API devolve {"error": "..."} em pt-BR).
+function extractErrorMessage(err: unknown, fallback: string): string {
+  if (err && typeof err === 'object') {
+    const axiosLike = err as { response?: { data?: { error?: string } }; message?: string }
+    const apiError = axiosLike.response?.data?.error
+    if (apiError) return apiError
+    if (axiosLike.message) return axiosLike.message
+  }
+  return fallback
+}
+
 const DEFAULT_FORM_DATA: SiteConfigFormData = {
   site_name: '',
   base_url: '',
@@ -104,7 +130,9 @@ export default function SiteConfigForm({
     initialData ? siteConfigToFormData(initialData) : DEFAULT_FORM_DATA
   )
   const [logoFile, setLogoFile] = useState<File | null>(null)
-  const [paginationDelayMs, setPaginationDelayMs] = useState('')
+  const [paginationDelayMs, setPaginationDelayMs] = useState(() =>
+    extractPaginationDelay(initialData?.json_data_mappings)
+  )
   const [validationError, setValidationError] = useState<string | null>(null)
 
   const {
@@ -130,6 +158,10 @@ export default function SiteConfigForm({
     const file = e.target.files[0]
     if (file.size > 2 * 1024 * 1024) {
       setValidationError(t('addSite.logoTooLargeError'))
+      // Limpa o DOM input pra state React e visual ficarem sincronizados —
+      // sem isso, filename rejeitado aparece no input embora logoFile seja null.
+      e.target.value = ''
+      setLogoFile(null)
       return
     }
     setValidationError(null)
@@ -154,6 +186,9 @@ export default function SiteConfigForm({
       }
       return { ...formData, json_data_mappings: JSON.stringify(mappings) }
     } catch {
+      // JSON do mappings e invalido — avisa o admin em vez de silenciar.
+      // O delay configurado nao sera aplicado.
+      toast.error('JSON mapping inválido — delay de paginação não foi aplicado.')
       return formData
     }
   }
@@ -203,8 +238,7 @@ export default function SiteConfigForm({
       onSubmitSuccess?.()
     } catch (err) {
       setBtnError()
-      const message = err instanceof Error ? err.message : t('addSite.addError')
-      toast.error(message)
+      toast.error(extractErrorMessage(err, t('addSite.addError')))
     }
   }
 
