@@ -17,6 +17,41 @@ export const mockUser = {
   }
 }
 
+export const mockAdminUser = {
+  ...mockUser,
+  id: '2',
+  user_name: 'Admin Silva',
+  email: 'admin@test.com',
+  is_admin: true
+}
+
+// Admin-facing SiteConfig (full shape) for GET /siteCareer responses.
+export const mockAdminSites = [
+  {
+    id: 57,
+    site_name: 'Netflix Careers',
+    base_url: 'https://jobs.netflix.com/search',
+    logo_url: null,
+    is_active: true,
+    scraping_type: 'API',
+    job_list_item_selector: null,
+    title_selector: null,
+    link_selector: null,
+    link_attribute: null,
+    location_selector: null,
+    next_page_selector: null,
+    job_description_selector: null,
+    job_requisition_id_selector: null,
+    job_requisition_id_attribute: null,
+    api_endpoint_template: 'https://jobs.netflix.com/api/search',
+    api_method: 'GET',
+    api_headers_json: null,
+    api_payload_template: null,
+    json_data_mappings: null,
+    created_at: '2026-04-20T00:00:00Z'
+  }
+]
+
 export const mockPlans = [
   {
     id: 1,
@@ -146,16 +181,18 @@ export const mockJobsPage2 = {
 
 type MockAPIOptions = {
   authenticated?: boolean
+  admin?: boolean
 }
 
 async function setupMocks(page: Page, opts: MockAPIOptions = {}) {
-  const { authenticated = true } = opts
+  const { authenticated = true, admin = false } = opts
   const apiBase = 'http://localhost:8080'
+  const currentUser = admin ? mockAdminUser : mockUser
 
   // Auth: GET /api/me
   await page.route(`${apiBase}/api/me`, (route) => {
     if (authenticated) {
-      return route.fulfill({ status: 200, json: mockUser })
+      return route.fulfill({ status: 200, json: currentUser })
     }
     return route.fulfill({ status: 401, json: { error: 'Unauthorized' } })
   })
@@ -201,6 +238,33 @@ async function setupMocks(page: Page, opts: MockAPIOptions = {}) {
   await page.route(`${apiBase}/api/getSites`, (route) =>
     route.fulfill({ status: 200, json: mockSites })
   )
+
+  // Admin sites list: GET /siteCareer
+  await page.route(`${apiBase}/siteCareer`, (route) => {
+    if (route.request().method() === 'GET') {
+      return route.fulfill({ status: 200, json: mockAdminSites })
+    }
+    return route.fallback()
+  })
+
+  // Admin site single / update: GET|PUT /siteCareer/:id
+  await page.route(`${apiBase}/siteCareer/*`, (route) => {
+    const method = route.request().method()
+    if (method === 'GET') {
+      return route.fulfill({ status: 200, json: mockAdminSites[0] })
+    }
+    if (method === 'PUT') {
+      // Devolver site atualizado com logo preenchido
+      return route.fulfill({
+        status: 200,
+        json: {
+          ...mockAdminSites[0],
+          logo_url: 'https://bucket.s3.amazonaws.com/logos/netflix-test.png'
+        }
+      })
+    }
+    return route.fallback()
+  })
 
   // Register to site: POST /userSite
   await page.route(`${apiBase}/userSite`, (route) =>
