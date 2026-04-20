@@ -1,12 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { siteCareerService } from '@/services/siteCareerService'
-import {
-  useSiteCareer,
-  useAdminSites,
-  useSite,
-  useUpdateSiteConfig
-} from '@/hooks/useSiteCareer'
+import { useSiteCareer, useAdminSites, useSite, useUpdateSiteConfig } from '@/hooks/useSiteCareer'
 import type { SiteCareer, SiteConfig } from '@/models/siteCareer'
 import type { ReactNode } from 'react'
 import { createElement } from 'react'

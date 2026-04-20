@@ -10,7 +10,11 @@ import { PageHeader } from '@/components/common/page-header'
 import { useAdminSites } from '@/hooks/useSiteCareer'
 import { PATHS } from '@/router/paths'
 
-const DATE_FMT = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+const DATE_FMT = new Intl.DateTimeFormat('pt-BR', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric'
+})
 
 export default function AdminSitesListPage() {
   const { t } = useTranslation('admin')

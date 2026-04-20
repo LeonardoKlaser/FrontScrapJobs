@@ -465,9 +465,7 @@ export default function SiteConfigForm({
 
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <Label htmlFor="link_attribute">
-                        {t('addSite.cssConfig.linkAttribute')}
-                      </Label>
+                      <Label htmlFor="link_attribute">{t('addSite.cssConfig.linkAttribute')}</Label>
                       <Tooltip content="Ex: href, data-href">
                         <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
                       </Tooltip>
@@ -642,9 +640,7 @@ export default function SiteConfigForm({
 
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <Label htmlFor="json_data_mappings">
-                      {t('addSite.apiConfig.jsonMapping')}
-                    </Label>
+                    <Label htmlFor="json_data_mappings">{t('addSite.apiConfig.jsonMapping')}</Label>
                     <Tooltip content={t('addSite.apiConfig.jsonMappingTooltip')}>
                       <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
                     </Tooltip>
