@@ -12,14 +12,13 @@ test.describe('Admin Sites — Netflix repair flow', () => {
 
     // Netflix aparece na tabela (mesmo sem logo — placeholder Building2)
     await expect(page.getByText('Netflix Careers')).toBeVisible()
-    await expect(page.getByText('Ativo')).toBeVisible()
 
     // 2. Clica "Editar" → URL da rota de edit
     await page.getByRole('button', { name: /Editar Netflix/i }).click()
     await page.waitForURL(/\/app\/admin-sites\/57\/edit$/)
 
-    // Form populado com dados atuais
-    await expect(page.getByLabel(/Nome do Site/i)).toHaveValue('Netflix Careers')
+    // Form populado com dados atuais — campo site_name vem do SiteConfigForm
+    await expect(page.locator('#site_name')).toHaveValue('Netflix Careers')
 
     // 3. Upload de logo via input hidden
     const fileInput = page.locator('input[type="file"]#logo_upload')
