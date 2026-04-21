@@ -11,6 +11,7 @@ import { ValueFeaturesSection } from '@/components/landingPage/value-features-se
 import { SavingsCalculatorSection } from '@/components/landingPage/savings-calculator-section'
 import { SocialProofSection } from '@/components/landingPage/social-proof-section'
 import { StatsCounterSection } from '@/components/landingPage/stats-counter-section'
+import { TestimonialsSection } from '@/components/landingPage/testimonials-section'
 
 export function Landing() {
   useLayoutEffect(() => {
@@ -27,10 +28,11 @@ export function Landing() {
       <LandingNavbar />
       <HeroSection />
       <ProblemSection />
-      <ValueFeaturesSection />
       <HowItWorksSection />
+      <ValueFeaturesSection />
       <SocialProofSection />
       <StatsCounterSection />
+      <TestimonialsSection />
       <SavingsCalculatorSection />
       <PricingSection />
       <FaqSection />
