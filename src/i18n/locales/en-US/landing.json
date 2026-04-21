@@ -1,7 +1,6 @@
 {
   "hero": {
-    "brand": "ScrapJobs",
-    "eyebrow": "MONITORING +{{count}} COMPANIES · 24/7",
+    "eyebrow": "MONITORING +{{sites}} COMPANIES · 24/7",
     "eyebrowFallback": "MONITORING · 24/7",
     "heading1": "All the jobs from the companies you care about.",
     "heading2": "Hot off the press.",
@@ -10,9 +9,18 @@
     "loginPrompt": "Already have an account?",
     "loginLink": "Sign in",
     "microcopy": "Instant access • Cancel anytime",
-    "dashboardAlt": "ScrapJobs dashboard showing monitored jobs and AI alerts",
-    "mobileAlt": "Resume compatibility analysis on mobile",
-    "mockupDisclaimer": "Illustrative preview. Companies shown belong to their respective owners."
+    "mockupDisclaimer": "Illustrative. Companies shown belong to their respective owners.",
+    "mockup": {
+      "inboxLabel": "📬 Inbox",
+      "unreadBadge": "● 2 min ago",
+      "primaryTitle": "🔥 New job at Nubank — posted 3 min ago",
+      "primaryPreview": "Senior Frontend Developer · São Paulo · Remote",
+      "primaryCta": "Apply before the competition →",
+      "secondaryText": "3 new jobs: iFood, Itaú, Mercado Livre",
+      "secondaryTime": "just now",
+      "tertiaryText": "Daily digest · 12 new jobs",
+      "tertiaryTime": "yesterday"
+    }
   },
   "navbar": {
     "features": "Features",

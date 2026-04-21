@@ -41,16 +41,17 @@ function TestimonialCard({ item, index }: { item: TestimonialItem; index: number
         </div>
       </div>
 
-      <div className="flex gap-0.5 mb-3" aria-hidden="true">
+      <div className="flex gap-0.5 mb-3">
+        <span className="sr-only">5 de 5 estrelas</span>
         {Array.from({ length: 5 }).map((_, i) => (
-          <Star key={i} className="w-4 h-4 fill-amber-500 text-amber-500" />
+          <Star key={i} className="w-4 h-4 fill-amber-500 text-amber-500" aria-hidden="true" />
         ))}
       </div>
 
       <p className="text-sm text-zinc-700 leading-relaxed mb-4 flex-1">
         {item.body1}
         <strong className="text-zinc-900">{item.body2Bold}</strong>
-        {item.body3 ?? ''}
+        {item.body3}
       </p>
 
       <div className="flex items-center justify-between pt-3 border-t border-zinc-100">
@@ -69,9 +70,14 @@ function TestimonialCard({ item, index }: { item: TestimonialItem; index: number
 }
 
 export function TestimonialsSection() {
-  const { t } = useTranslation('landing')
-  const items = t('testimonials.items', { returnObjects: true }) as TestimonialItem[]
-  const safeItems = Array.isArray(items) ? items : []
+  const { t, i18n } = useTranslation('landing')
+  const raw = t('testimonials.items', { returnObjects: true })
+  const items: TestimonialItem[] = Array.isArray(raw) ? (raw as TestimonialItem[]) : []
+  if (!Array.isArray(raw)) {
+    console.warn(
+      `[TestimonialsSection] testimonials.items missing or invalid in locale "${i18n.language}"`
+    )
+  }
 
   return (
     <SectionWrapper className="py-20 lg:py-28 px-4 sm:px-6 bg-zinc-50" id="testimonials">
@@ -88,8 +94,8 @@ export function TestimonialsSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {safeItems.map((item, i) => (
-            <TestimonialCard key={item.name} item={item} index={i} />
+          {items.map((item, i) => (
+            <TestimonialCard key={i} item={item} index={i} />
           ))}
         </div>
       </div>

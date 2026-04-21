@@ -8,10 +8,13 @@ import { usePublicStats } from '@/hooks/usePublicStats'
 
 export function HeroSection() {
   const { t } = useTranslation('landing')
-  const { data: stats } = usePublicStats()
+  const { data: stats, error: statsError } = usePublicStats()
+  if (statsError) {
+    console.error('[HeroSection] usePublicStats failed', statsError)
+  }
   const monitored = stats?.monitored_sites ?? 0
   const eyebrowText =
-    monitored >= 30 ? t('hero.eyebrow', { count: monitored }) : t('hero.eyebrowFallback')
+    monitored >= 30 ? t('hero.eyebrow', { sites: monitored }) : t('hero.eyebrowFallback')
 
   return (
     <SectionWrapper className="pt-20 lg:pt-12 pb-8 lg:pb-12 px-6 sm:px-8 overflow-hidden bg-white">

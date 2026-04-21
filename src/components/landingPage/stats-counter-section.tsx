@@ -49,7 +49,10 @@ export function StatsCounterSection() {
   const { t, i18n } = useTranslation('landing')
   const locale = i18n.language === 'pt-BR' ? 'pt-BR' : 'en-US'
   const formatNumber = (num: number) => num.toLocaleString(locale)
-  const { data: stats } = usePublicStats()
+  const { data: stats, error: statsError } = usePublicStats()
+  if (statsError) {
+    console.error('[StatsCounterSection] usePublicStats failed', statsError)
+  }
 
   const sites = useCountUp(stats?.monitored_sites ?? 0)
   const jobs = useCountUp(stats?.total_jobs ?? 0)
