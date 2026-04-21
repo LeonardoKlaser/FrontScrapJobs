@@ -4,6 +4,9 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { SectionWrapper } from './section-wrapper'
 
+// Whitespace convention pra renderização correta: body1 deve terminar com
+// espaço quando body2Bold começa com letra/dígito; body3 (opcional) deve
+// começar com espaço ou pontuação (sem quebrar contexto de quem for traduzir).
 interface TestimonialItem {
   name: string
   role: string
