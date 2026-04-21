@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { Button } from '@/components/ui/button'
@@ -9,12 +10,14 @@ import { usePublicStats } from '@/hooks/usePublicStats'
 export function HeroSection() {
   const { t } = useTranslation('landing')
   const { data: stats, error: statsError } = usePublicStats()
-  if (statsError) {
-    console.error(
-      '[HeroSection] usePublicStats failed:',
-      statsError instanceof Error ? statsError.message : statsError
-    )
-  }
+  useEffect(() => {
+    if (statsError) {
+      console.error(
+        '[HeroSection] usePublicStats failed:',
+        statsError instanceof Error ? statsError.message : statsError
+      )
+    }
+  }, [statsError])
   const monitored = stats?.monitored_sites ?? 0
   const eyebrowText =
     monitored >= 30 ? t('hero.eyebrow', { sites: monitored }) : t('hero.eyebrowFallback')

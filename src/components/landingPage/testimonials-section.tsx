@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Star } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -18,7 +19,15 @@ interface TestimonialItem {
   badgeVariant: 'hired' | 'interviewing'
 }
 
-function TestimonialCard({ item, index }: { item: TestimonialItem; index: number }) {
+function TestimonialCard({
+  item,
+  index,
+  ratingLabel
+}: {
+  item: TestimonialItem
+  index: number
+  ratingLabel: string
+}) {
   const initial = item.name.charAt(0).toUpperCase()
   return (
     <motion.article
@@ -45,7 +54,7 @@ function TestimonialCard({ item, index }: { item: TestimonialItem; index: number
       </div>
 
       <div className="flex gap-0.5 mb-3">
-        <span className="sr-only">5 de 5 estrelas</span>
+        <span className="sr-only">{ratingLabel}</span>
         {Array.from({ length: 5 }).map((_, i) => (
           <Star key={i} className="w-4 h-4 fill-amber-500 text-amber-500" aria-hidden="true" />
         ))}
@@ -76,11 +85,14 @@ export function TestimonialsSection() {
   const { t, i18n } = useTranslation('landing')
   const raw = t('testimonials.items', { returnObjects: true })
   const items: TestimonialItem[] = Array.isArray(raw) ? (raw as TestimonialItem[]) : []
-  if (!Array.isArray(raw)) {
-    console.warn(
-      `[TestimonialsSection] testimonials.items missing or invalid in locale "${i18n.language}"`
-    )
-  }
+  const isMalformed = !Array.isArray(raw)
+  useEffect(() => {
+    if (isMalformed) {
+      console.warn(
+        `[TestimonialsSection] testimonials.items missing or invalid in locale "${i18n.language}"`
+      )
+    }
+  }, [isMalformed, i18n.language])
 
   return (
     <SectionWrapper className="py-20 lg:py-28 px-4 sm:px-6 bg-zinc-50" id="testimonials">
@@ -98,7 +110,12 @@ export function TestimonialsSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {items.map((item, i) => (
-            <TestimonialCard key={i} item={item} index={i} />
+            <TestimonialCard
+              key={item.name}
+              item={item}
+              index={i}
+              ratingLabel={t('testimonials.rating')}
+            />
           ))}
         </div>
       </div>

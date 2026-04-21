@@ -50,12 +50,14 @@ export function StatsCounterSection() {
   const locale = i18n.language === 'pt-BR' ? 'pt-BR' : 'en-US'
   const formatNumber = (num: number) => num.toLocaleString(locale)
   const { data: stats, error: statsError } = usePublicStats()
-  if (statsError) {
-    console.error(
-      '[StatsCounterSection] usePublicStats failed:',
-      statsError instanceof Error ? statsError.message : statsError
-    )
-  }
+  useEffect(() => {
+    if (statsError) {
+      console.error(
+        '[StatsCounterSection] usePublicStats failed:',
+        statsError instanceof Error ? statsError.message : statsError
+      )
+    }
+  }, [statsError])
 
   const sites = useCountUp(stats?.monitored_sites ?? 0)
   const jobs = useCountUp(stats?.total_jobs ?? 0)
