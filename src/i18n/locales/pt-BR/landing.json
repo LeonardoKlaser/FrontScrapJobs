@@ -71,6 +71,52 @@
     "pain2": "por semana perdidas buscando vagas manualmente em dezenas de sites",
     "pain3": "das vagas ideais são preenchidas antes de você sequer descobrir"
   },
+  "testimonials": {
+    "eyebrow": "HISTÓRIAS REAIS",
+    "headline": "Quem chega primeiro",
+    "headlineGradient": "tem mais chance.",
+    "sub": "Candidatos que usaram o ScrapJobs para sair na frente. Veja o que eles estão dizendo.",
+    "items": [
+      {
+        "name": "Mariana Silva",
+        "role": "Backend Pleno · Go",
+        "body1": "Procurei backend Go por meses. Em 2 semanas usando o ScrapJobs, recebi 3 convites pra entrevista. ",
+        "body2Bold": "A diferença é chegar antes.",
+        "date": "12 fev 2026",
+        "badge": "Contratada",
+        "badgeVariant": "hired"
+      },
+      {
+        "name": "Rafael Costa",
+        "role": "Frontend Sênior",
+        "body1": "Uma vaga na Nubank chegou 4 min depois de sair. Fui o ",
+        "body2Bold": "terceiro candidato",
+        "body3": " — e o único chamado pra entrevista técnica.",
+        "date": "5 mar 2026",
+        "badge": "Contratado",
+        "badgeVariant": "hired"
+      },
+      {
+        "name": "Camila Oliveira",
+        "role": "Product Designer",
+        "body1": "Monitoro só 8 empresas que quero trabalhar. Recebo só o que importa. ",
+        "body2Bold": "Menos ruído, mais sinal.",
+        "date": "18 mar 2026",
+        "badge": "Em entrevista",
+        "badgeVariant": "interviewing"
+      },
+      {
+        "name": "Lucas Ferreira",
+        "role": "Analista Financeiro Pleno",
+        "body1": "6 meses procurando vaga sem sucesso. Em 3 semanas no ScrapJobs recebi 2 propostas. Hoje trabalho na ",
+        "body2Bold": "Stone",
+        "body3": ".",
+        "date": "22 jan 2026",
+        "badge": "Contratado",
+        "badgeVariant": "hired"
+      }
+    ]
+  },
   "faq": {
     "title": "Perguntas Frequentes",
     "security": {

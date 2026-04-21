@@ -71,6 +71,52 @@
     "pain2": "lost per week searching for jobs manually across dozens of sites",
     "pain3": "of ideal jobs are filled before you even find out about them"
   },
+  "testimonials": {
+    "eyebrow": "REAL STORIES",
+    "headline": "Getting there first",
+    "headlineGradient": "gives you better odds.",
+    "sub": "Candidates who used ScrapJobs to beat the competition. Here's what they're saying.",
+    "items": [
+      {
+        "name": "Mariana Silva",
+        "role": "Mid-level Backend · Go",
+        "body1": "I searched for Go backend roles for months. Two weeks using ScrapJobs and I got 3 interview invites. ",
+        "body2Bold": "The edge is getting there first.",
+        "date": "Feb 12, 2026",
+        "badge": "Hired",
+        "badgeVariant": "hired"
+      },
+      {
+        "name": "Rafael Costa",
+        "role": "Senior Frontend",
+        "body1": "A Nubank role landed in my inbox 4 min after posting. I was the ",
+        "body2Bold": "third applicant",
+        "body3": " — and the only one invited to the tech interview.",
+        "date": "Mar 5, 2026",
+        "badge": "Hired",
+        "badgeVariant": "hired"
+      },
+      {
+        "name": "Camila Oliveira",
+        "role": "Product Designer",
+        "body1": "I monitor only 8 companies I actually want to work for. I get only what matters. ",
+        "body2Bold": "Less noise, more signal.",
+        "date": "Mar 18, 2026",
+        "badge": "In interview",
+        "badgeVariant": "interviewing"
+      },
+      {
+        "name": "Lucas Ferreira",
+        "role": "Mid-level Finance Analyst",
+        "body1": "6 months searching with no luck. Three weeks into ScrapJobs I had 2 offers. Today I work at ",
+        "body2Bold": "Stone",
+        "body3": ".",
+        "date": "Jan 22, 2026",
+        "badge": "Hired",
+        "badgeVariant": "hired"
+      }
+    ]
+  },
   "faq": {
     "title": "Frequently Asked Questions",
     "security": {
