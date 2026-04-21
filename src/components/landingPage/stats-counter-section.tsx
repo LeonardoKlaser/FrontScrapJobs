@@ -51,7 +51,10 @@ export function StatsCounterSection() {
   const formatNumber = (num: number) => num.toLocaleString(locale)
   const { data: stats, error: statsError } = usePublicStats()
   if (statsError) {
-    console.error('[StatsCounterSection] usePublicStats failed', statsError)
+    console.error(
+      '[StatsCounterSection] usePublicStats failed:',
+      statsError instanceof Error ? statsError.message : statsError
+    )
   }
 
   const sites = useCountUp(stats?.monitored_sites ?? 0)

@@ -10,7 +10,10 @@ export function HeroSection() {
   const { t } = useTranslation('landing')
   const { data: stats, error: statsError } = usePublicStats()
   if (statsError) {
-    console.error('[HeroSection] usePublicStats failed', statsError)
+    console.error(
+      '[HeroSection] usePublicStats failed:',
+      statsError instanceof Error ? statsError.message : statsError
+    )
   }
   const monitored = stats?.monitored_sites ?? 0
   const eyebrowText =
