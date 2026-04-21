@@ -9,18 +9,7 @@
     "loginPrompt": "Já tem uma conta?",
     "loginLink": "Fazer login",
     "microcopy": "Liberação imediata • Cancele a qualquer momento",
-    "mockupDisclaimer": "Visualização ilustrativa. Empresas exibidas pertencem a seus respectivos proprietários.",
-    "mockup": {
-      "inboxLabel": "📬 Caixa de entrada",
-      "unreadBadge": "● há 2 min",
-      "primaryTitle": "🔥 Nova vaga na Nubank — publicada há 3 min",
-      "primaryPreview": "Senior Frontend Developer · São Paulo · Remoto",
-      "primaryCta": "Aplique antes da concorrência →",
-      "secondaryText": "3 novas vagas: iFood, Itaú, Mercado Livre",
-      "secondaryTime": "agora",
-      "tertiaryText": "Digest diário · 12 vagas novas",
-      "tertiaryTime": "ontem"
-    }
+    "mockupDisclaimer": "Visualização ilustrativa. Empresas exibidas pertencem a seus respectivos proprietários."
   },
   "navbar": {
     "features": "Funcionalidades",

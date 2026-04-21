@@ -4,7 +4,7 @@ import { Link } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, ShieldCheck } from 'lucide-react'
 import { SectionWrapper } from './section-wrapper'
-import { HeroInboxMockup } from './ui-snippets/hero-inbox-mockup'
+import { HeroToastNotifications } from './ui-snippets/hero-toast-notifications'
 import { usePublicStats } from '@/hooks/usePublicStats'
 
 export function HeroSection() {
@@ -88,7 +88,7 @@ export function HeroSection() {
               />
 
               <div className="relative z-10">
-                <HeroInboxMockup />
+                <HeroToastNotifications />
               </div>
             </div>
 

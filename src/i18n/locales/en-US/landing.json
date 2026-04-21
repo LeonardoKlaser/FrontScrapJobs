@@ -9,18 +9,7 @@
     "loginPrompt": "Already have an account?",
     "loginLink": "Sign in",
     "microcopy": "Instant access • Cancel anytime",
-    "mockupDisclaimer": "Illustrative. Companies shown belong to their respective owners.",
-    "mockup": {
-      "inboxLabel": "📬 Inbox",
-      "unreadBadge": "● 2 min ago",
-      "primaryTitle": "🔥 New job at Nubank — posted 3 min ago",
-      "primaryPreview": "Senior Frontend Developer · São Paulo · Remote",
-      "primaryCta": "Apply before the competition →",
-      "secondaryText": "3 new jobs: iFood, Itaú, Mercado Livre",
-      "secondaryTime": "just now",
-      "tertiaryText": "Daily digest · 12 new jobs",
-      "tertiaryTime": "yesterday"
-    }
+    "mockupDisclaimer": "Illustrative. Companies shown belong to their respective owners."
   },
   "navbar": {
     "features": "Features",
