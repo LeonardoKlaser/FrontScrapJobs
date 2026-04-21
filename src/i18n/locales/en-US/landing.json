@@ -1,10 +1,12 @@
 {
   "hero": {
     "brand": "ScrapJobs",
-    "heading1": "Stop Searching.",
-    "heading2": "Start Getting Interviewed.",
-    "subheading": "You waste hours checking career sites one by one — and still miss openings. ScrapJobs monitors them automatically and uses AI to tailor your resume to each opportunity.",
-    "cta": "Start Automating",
+    "eyebrow": "MONITORING +{{count}} COMPANIES · 24/7",
+    "eyebrowFallback": "MONITORING · 24/7",
+    "heading1": "All the jobs from the companies you care about.",
+    "heading2": "Hot off the press.",
+    "subheading": "You pick the companies. We monitor 24/7. You get the job in your inbox minutes after it's posted — before the competition shows up.",
+    "cta": "I want it first",
     "loginPrompt": "Already have an account?",
     "loginLink": "Sign in",
     "microcopy": "Instant access • Cancel anytime",

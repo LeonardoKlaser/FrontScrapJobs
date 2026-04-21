@@ -1,10 +1,12 @@
 {
   "hero": {
     "brand": "ScrapJobs",
-    "heading1": "Mesmo que você envie 100 currículos",
-    "heading2": "Vai continuar sem respostas.",
-    "subheading": "Além de você chegar atrasado quando a vaga ja tem 2 mil candidatos, seu currículo não passa pelo ATS",
-    "cta": "Começar a Automatizar",
+    "eyebrow": "MONITORANDO +{{count}} EMPRESAS · 24/7",
+    "eyebrowFallback": "MONITORANDO · 24/7",
+    "heading1": "Todas as vagas das empresas que você quer.",
+    "heading2": "Em primeira mão.",
+    "subheading": "Você escolhe as empresas. A gente monitora 24/7. Você recebe a vaga no email minutos depois que ela sai — antes da concorrência aparecer.",
+    "cta": "Quero receber primeiro",
     "loginPrompt": "Já tem uma conta?",
     "loginLink": "Fazer login",
     "microcopy": "Liberação imediata • Cancele a qualquer momento",
