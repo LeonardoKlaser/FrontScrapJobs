@@ -9,7 +9,7 @@ import {
   TrendingUp,
   Plus,
   Mail,
-  RefreshCw,
+  RefreshCw
 } from 'lucide-react'
 
 const matchedKeywords = ['Java', 'Spring Boot', 'Microservices', 'Kubernetes', 'CI/CD', 'Agile']
@@ -89,7 +89,9 @@ export function AtsAnalysisCard() {
             <div className="w-5 h-5 rounded-md bg-emerald-50 flex items-center justify-center">
               <Search className="w-3 h-3 text-emerald-500" />
             </div>
-            <span className="text-[0.65rem] font-bold text-zinc-900">{t('valueFeatures.ats.keywordsTitle')}</span>
+            <span className="text-[0.65rem] font-bold text-zinc-900">
+              {t('valueFeatures.ats.keywordsTitle')}
+            </span>
           </div>
           <div className="flex flex-wrap gap-1.5">
             {matchedKeywords.map((kw) => (
@@ -124,14 +126,25 @@ export function AtsAnalysisCard() {
             <div className="w-5 h-5 rounded-md bg-emerald-50 flex items-center justify-center">
               <CheckCircle className="w-3 h-3 text-emerald-500" />
             </div>
-            <span className="text-[0.65rem] font-bold text-zinc-900">{t('valueFeatures.ats.strengthsTitle')}</span>
+            <span className="text-[0.65rem] font-bold text-zinc-900">
+              {t('valueFeatures.ats.strengthsTitle')}
+            </span>
           </div>
           <div className="space-y-1.5">
             {[
-              { title: t('valueFeatures.ats.strength1Title'), desc: t('valueFeatures.ats.strength1Desc') },
-              { title: t('valueFeatures.ats.strength2Title'), desc: t('valueFeatures.ats.strength2Desc') },
+              {
+                title: t('valueFeatures.ats.strength1Title'),
+                desc: t('valueFeatures.ats.strength1Desc')
+              },
+              {
+                title: t('valueFeatures.ats.strength2Title'),
+                desc: t('valueFeatures.ats.strength2Desc')
+              }
             ].map((item) => (
-              <div key={item.title} className="flex items-start gap-2 px-3 py-2 bg-white border border-zinc-200 rounded-lg">
+              <div
+                key={item.title}
+                className="flex items-start gap-2 px-3 py-2 bg-white border border-zinc-200 rounded-lg"
+              >
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
                 <div className="text-[0.55rem] text-zinc-900 leading-relaxed">
                   <strong>{item.title}</strong>
@@ -153,14 +166,19 @@ export function AtsAnalysisCard() {
             <div className="w-5 h-5 rounded-md bg-amber-100 flex items-center justify-center">
               <AlertTriangle className="w-3 h-3 text-amber-500" />
             </div>
-            <span className="text-[0.65rem] font-bold text-zinc-900">{t('valueFeatures.ats.gapsTitle')}</span>
+            <span className="text-[0.65rem] font-bold text-zinc-900">
+              {t('valueFeatures.ats.gapsTitle')}
+            </span>
           </div>
           <div className="space-y-1.5">
             {[
               { title: t('valueFeatures.ats.gap1Title'), desc: t('valueFeatures.ats.gap1Desc') },
-              { title: t('valueFeatures.ats.gap2Title'), desc: t('valueFeatures.ats.gap2Desc') },
+              { title: t('valueFeatures.ats.gap2Title'), desc: t('valueFeatures.ats.gap2Desc') }
             ].map((item) => (
-              <div key={item.title} className="flex items-start gap-2 px-3 py-2 bg-white border border-zinc-200 rounded-lg">
+              <div
+                key={item.title}
+                className="flex items-start gap-2 px-3 py-2 bg-white border border-zinc-200 rounded-lg"
+              >
                 <div className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0" />
                 <div className="text-[0.55rem] text-zinc-900 leading-relaxed">
                   <strong>{item.title}</strong>
@@ -183,17 +201,29 @@ export function AtsAnalysisCard() {
               <div className="w-5 h-5 rounded-md bg-blue-100 flex items-center justify-center">
                 <Lightbulb className="w-3 h-3 text-blue-500" />
               </div>
-              <span className="text-[0.65rem] font-bold text-zinc-900">{t('valueFeatures.ats.suggestionsTitle')}</span>
+              <span className="text-[0.65rem] font-bold text-zinc-900">
+                {t('valueFeatures.ats.suggestionsTitle')}
+              </span>
             </div>
-            <span className="text-[0.5rem] text-zinc-500">{t('valueFeatures.ats.suggestionsCount')}</span>
+            <span className="text-[0.5rem] text-zinc-500">
+              {t('valueFeatures.ats.suggestionsCount')}
+            </span>
           </div>
           <div className="space-y-1.5">
             {/* Suggestion 1 — selected */}
             <div className="px-3 py-2.5 bg-blue-50 border border-blue-200 border-l-[3px] border-l-blue-500 rounded-lg">
               <div className="flex items-start gap-2">
-                <input type="checkbox" checked readOnly className="w-3 h-3 accent-emerald-500 mt-0.5" tabIndex={-1} />
+                <input
+                  type="checkbox"
+                  checked
+                  readOnly
+                  className="w-3 h-3 accent-emerald-500 mt-0.5"
+                  tabIndex={-1}
+                />
                 <div>
-                  <p className="text-[0.55rem] text-zinc-900 font-semibold mb-1">{t('valueFeatures.ats.suggestion1Text')}</p>
+                  <p className="text-[0.55rem] text-zinc-900 font-semibold mb-1">
+                    {t('valueFeatures.ats.suggestion1Text')}
+                  </p>
                   <span className="inline-block bg-zinc-100 text-zinc-600 text-[0.5rem] px-1.5 py-0.5 rounded font-medium mb-1">
                     {t('valueFeatures.ats.suggestion1Section')}
                   </span>
@@ -208,7 +238,9 @@ export function AtsAnalysisCard() {
               <div className="flex items-start gap-2">
                 <input type="checkbox" readOnly className="w-3 h-3 mt-0.5" tabIndex={-1} />
                 <div>
-                  <p className="text-[0.55rem] text-zinc-900 font-semibold mb-1">{t('valueFeatures.ats.suggestion2Text')}</p>
+                  <p className="text-[0.55rem] text-zinc-900 font-semibold mb-1">
+                    {t('valueFeatures.ats.suggestion2Text')}
+                  </p>
                   <span className="inline-block bg-zinc-100 text-zinc-600 text-[0.5rem] px-1.5 py-0.5 rounded font-medium">
                     {t('valueFeatures.ats.suggestion2Section')}
                   </span>
@@ -229,9 +261,13 @@ export function AtsAnalysisCard() {
             <div className="w-5 h-5 rounded-md bg-emerald-50 flex items-center justify-center">
               <Search className="w-3 h-3 text-emerald-500" />
             </div>
-            <span className="text-[0.65rem] font-bold text-zinc-900">{t('valueFeatures.ats.finalTitle')}</span>
+            <span className="text-[0.65rem] font-bold text-zinc-900">
+              {t('valueFeatures.ats.finalTitle')}
+            </span>
           </div>
-          <p className="text-[0.55rem] text-zinc-500 leading-relaxed">{t('valueFeatures.ats.finalText')}</p>
+          <p className="text-[0.55rem] text-zinc-500 leading-relaxed">
+            {t('valueFeatures.ats.finalText')}
+          </p>
         </motion.div>
 
         {/* Action Buttons */}

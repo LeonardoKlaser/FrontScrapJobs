@@ -14,9 +14,18 @@ interface FeatureBlockProps {
   reverse?: boolean
 }
 
-function FeatureBlock({ overline, headline, headlineGradient, body, snippet, reverse }: FeatureBlockProps) {
+function FeatureBlock({
+  overline,
+  headline,
+  headlineGradient,
+  body,
+  snippet,
+  reverse
+}: FeatureBlockProps) {
   return (
-    <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center py-12 lg:py-20 ${reverse ? 'lg:[direction:rtl]' : ''}`}>
+    <div
+      className={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center py-12 lg:py-20 ${reverse ? 'lg:[direction:rtl]' : ''}`}
+    >
       {/* Text side */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
@@ -63,7 +72,9 @@ export function ValueFeaturesSection() {
                 </p>
                 <p className="text-zinc-500 text-[0.95rem] leading-[1.7]">
                   {t('valueFeatures.radar.body2')}{' '}
-                  <span className="text-zinc-900 font-semibold">{t('valueFeatures.radar.body2Bold')}</span>{' '}
+                  <span className="text-zinc-900 font-semibold">
+                    {t('valueFeatures.radar.body2Bold')}
+                  </span>{' '}
                   {t('valueFeatures.radar.body2End')}
                 </p>
               </>
@@ -84,7 +95,9 @@ export function ValueFeaturesSection() {
                 </p>
                 <p className="text-zinc-500 text-[0.95rem] leading-[1.7]">
                   {t('valueFeatures.ats.body2')}{' '}
-                  <span className="text-zinc-900 font-semibold">{t('valueFeatures.ats.body2Bold')}</span>
+                  <span className="text-zinc-900 font-semibold">
+                    {t('valueFeatures.ats.body2Bold')}
+                  </span>
                 </p>
               </>
             }
@@ -103,7 +116,9 @@ export function ValueFeaturesSection() {
                 </p>
                 <p className="text-zinc-500 text-[0.95rem] leading-[1.7]">
                   {t('valueFeatures.pdf.body2')}{' '}
-                  <span className="text-zinc-900 font-semibold">{t('valueFeatures.pdf.body2Bold')}</span>
+                  <span className="text-zinc-900 font-semibold">
+                    {t('valueFeatures.pdf.body2Bold')}
+                  </span>
                 </p>
               </>
             }

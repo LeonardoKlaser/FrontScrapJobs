@@ -12,7 +12,7 @@ const steps = [
     gradient: 'from-emerald-50 to-emerald-100',
     border: 'border-emerald-300',
     iconColor: 'text-emerald-500',
-    numberColor: 'text-emerald-500',
+    numberColor: 'text-emerald-500'
   },
   {
     number: '02',
@@ -22,7 +22,7 @@ const steps = [
     gradient: 'from-emerald-100 to-emerald-200',
     border: 'border-emerald-400',
     iconColor: 'text-emerald-600',
-    numberColor: 'text-emerald-500',
+    numberColor: 'text-emerald-500'
   },
   {
     number: '03',
@@ -32,7 +32,7 @@ const steps = [
     gradient: 'from-emerald-200 to-emerald-300',
     border: 'border-emerald-400',
     iconColor: 'text-emerald-700',
-    numberColor: 'text-emerald-500',
+    numberColor: 'text-emerald-500'
   },
   {
     number: '04',
@@ -43,15 +43,15 @@ const steps = [
     border: '',
     iconColor: 'text-white',
     numberColor: 'text-cyan-500',
-    solid: true,
-  },
+    solid: true
+  }
 ]
 
 function Connector({ variant }: { variant: number }) {
   const colors = [
     { from: '#a7f3d0', to: '#10b981' },
     { from: '#10b981', to: '#10b981' },
-    { from: '#10b981', to: '#06b6d4' },
+    { from: '#10b981', to: '#06b6d4' }
   ]
   const { from, to } = colors[variant - 1] ?? colors[0]
 
@@ -114,7 +114,11 @@ export function HowItWorksSection() {
                         ? 'shadow-[0_4px_12px_rgba(16,185,129,0.2)]'
                         : `bg-gradient-to-br ${step.gradient} ${step.border} border shadow-[0_4px_12px_rgba(16,185,129,0.1)]`
                     }`}
-                    style={step.solid ? { background: 'linear-gradient(135deg, #10b981, #06b6d4)' } : undefined}
+                    style={
+                      step.solid
+                        ? { background: 'linear-gradient(135deg, #10b981, #06b6d4)' }
+                        : undefined
+                    }
                   >
                     <step.icon className={`w-6 h-6 ${step.iconColor}`} />
                   </div>
@@ -124,9 +128,7 @@ export function HowItWorksSection() {
                   <h3 className="font-display text-sm font-bold text-zinc-900 mt-1.5">
                     {t(step.titleKey)}
                   </h3>
-                  <p className="text-xs text-zinc-500 leading-relaxed mt-1">
-                    {t(step.descKey)}
-                  </p>
+                  <p className="text-xs text-zinc-500 leading-relaxed mt-1">{t(step.descKey)}</p>
                 </motion.div>
                 {i < steps.length - 1 && <Connector variant={i + 1} />}
               </div>

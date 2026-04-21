@@ -14,7 +14,7 @@ const TOAST_DATA = [
     zIndex: 'z-[4]',
     opacity: 1,
     borderClass: 'border-emerald-300',
-    delay: '[animation-delay:0ms]',
+    delay: '[animation-delay:0ms]'
   },
   {
     company: 'iFood',
@@ -29,7 +29,7 @@ const TOAST_DATA = [
     zIndex: 'z-[3]',
     opacity: 0.8,
     borderClass: 'border-zinc-200',
-    delay: '[animation-delay:200ms]',
+    delay: '[animation-delay:200ms]'
   },
   {
     company: 'Mercado Livre',
@@ -44,7 +44,7 @@ const TOAST_DATA = [
     zIndex: 'z-[2]',
     opacity: 0.5,
     borderClass: 'border-zinc-200',
-    delay: '[animation-delay:400ms]',
+    delay: '[animation-delay:400ms]'
   },
   {
     company: 'Itaú',
@@ -59,8 +59,8 @@ const TOAST_DATA = [
     zIndex: 'z-[1]',
     opacity: 0.25,
     borderClass: 'border-zinc-200',
-    delay: '[animation-delay:600ms]',
-  },
+    delay: '[animation-delay:600ms]'
+  }
 ] as const
 
 export function HeroToastNotifications() {
@@ -94,9 +94,7 @@ export function HeroToastNotifications() {
                 className="w-9 h-9 rounded-lg object-cover"
               />
               <div>
-                <p className="text-[13px] font-semibold text-zinc-900">
-                  Nova vaga: {toast.title}
-                </p>
+                <p className="text-[13px] font-semibold text-zinc-900">Nova vaga: {toast.title}</p>
                 <p className="text-[11px] text-zinc-500">{toast.location}</p>
               </div>
             </div>

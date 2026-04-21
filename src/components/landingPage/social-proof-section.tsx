@@ -20,9 +20,7 @@ export function SocialProofSection() {
             <h2 className="font-display text-2xl lg:text-3xl font-bold text-zinc-900">
               {t('socialProofNew.title')}
             </h2>
-            <p className="text-sm text-zinc-500 mt-2">
-              {t('socialProofNew.subtitle')}
-            </p>
+            <p className="text-sm text-zinc-500 mt-2">{t('socialProofNew.subtitle')}</p>
           </div>
 
           {/* Existing carousel */}

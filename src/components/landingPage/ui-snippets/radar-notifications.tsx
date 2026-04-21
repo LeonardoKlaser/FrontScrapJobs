@@ -27,7 +27,9 @@ export function RadarNotifications() {
         <p className="text-[0.85rem] font-bold text-zinc-900 mb-1">Senior Frontend Developer</p>
         <div className="flex items-center gap-1.5 mb-3">
           <span className="text-[0.7rem] font-semibold text-zinc-900">Nubank</span>
-          <span className="text-[0.6rem] text-zinc-400">• São Paulo, SP • {isPtBR ? 'Remoto' : 'Remote'}</span>
+          <span className="text-[0.6rem] text-zinc-400">
+            • São Paulo, SP • {isPtBR ? 'Remoto' : 'Remote'}
+          </span>
         </div>
         <div className="flex flex-wrap gap-1.5 mb-3">
           {['React', 'TypeScript', 'Node.js'].map((tag) => (
@@ -69,7 +71,9 @@ export function RadarNotifications() {
         <p className="text-[0.85rem] font-bold text-zinc-900 mb-1">Product Designer Pleno</p>
         <div className="flex items-center gap-1.5 mb-3">
           <span className="text-[0.7rem] font-semibold text-zinc-900">iFood</span>
-          <span className="text-[0.6rem] text-zinc-400">• Campinas, SP • {isPtBR ? 'Híbrido' : 'Hybrid'}</span>
+          <span className="text-[0.6rem] text-zinc-400">
+            • Campinas, SP • {isPtBR ? 'Híbrido' : 'Hybrid'}
+          </span>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex-1 h-1 bg-zinc-200 rounded-full overflow-hidden">

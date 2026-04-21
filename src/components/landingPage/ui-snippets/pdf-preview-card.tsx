@@ -7,7 +7,7 @@ function ScoreRing({
   score,
   color,
   inView,
-  delay,
+  delay
 }: {
   score: number
   color: string
@@ -76,7 +76,9 @@ export function PdfPreviewCard() {
             >
               <Lightbulb className="w-3 h-3 text-white" />
             </div>
-            <span className="text-[0.65rem] font-bold text-zinc-900">{t('valueFeatures.pdf.aiOptimizedTitle')}</span>
+            <span className="text-[0.65rem] font-bold text-zinc-900">
+              {t('valueFeatures.pdf.aiOptimizedTitle')}
+            </span>
           </div>
 
           {/* Score before → after */}
@@ -84,11 +86,20 @@ export function PdfPreviewCard() {
             {/* Before */}
             <div className="text-center">
               <ScoreRing score={65} color="#f59e0b" inView={isInView} delay={0.3} />
-              <span className="text-[0.45rem] text-amber-500 font-semibold">{t('valueFeatures.pdf.scoreBefore')}</span>
+              <span className="text-[0.45rem] text-amber-500 font-semibold">
+                {t('valueFeatures.pdf.scoreBefore')}
+              </span>
             </div>
             {/* Arrow */}
             <div className="flex flex-col items-center gap-0.5">
-              <svg width="20" height="20" fill="none" stroke="#10b981" strokeWidth="2.5" viewBox="0 0 24 24">
+              <svg
+                width="20"
+                height="20"
+                fill="none"
+                stroke="#10b981"
+                strokeWidth="2.5"
+                viewBox="0 0 24 24"
+              >
                 <path d="M5 12h14m-7-7l7 7-7 7" />
               </svg>
               <span className="text-[0.5rem] text-emerald-500 font-extrabold">+27</span>
@@ -96,7 +107,9 @@ export function PdfPreviewCard() {
             {/* After */}
             <div className="text-center">
               <ScoreRing score={92} color="#10b981" inView={isInView} delay={0.6} />
-              <span className="text-[0.45rem] text-emerald-500 font-semibold">{t('valueFeatures.pdf.scoreAfter')}</span>
+              <span className="text-[0.45rem] text-emerald-500 font-semibold">
+                {t('valueFeatures.pdf.scoreAfter')}
+              </span>
             </div>
           </div>
 
@@ -122,7 +135,10 @@ export function PdfPreviewCard() {
           transition={{ duration: 0.3, delay: 0.35 }}
           className="flex justify-center"
         >
-          <div className="w-0.5 h-4" style={{ background: 'linear-gradient(180deg, #a7f3d0, #d1fae5)' }} />
+          <div
+            className="w-0.5 h-4"
+            style={{ background: 'linear-gradient(180deg, #a7f3d0, #d1fae5)' }}
+          />
         </motion.div>
 
         {/* Step 2: Template Selector */}
@@ -157,7 +173,9 @@ export function PdfPreviewCard() {
                 <div className="h-0.5 w-[86%] bg-zinc-200 rounded-sm mb-0.5" />
                 <div className="h-0.5 w-[68%] bg-zinc-200 rounded-sm" />
               </div>
-              <span className="text-[0.5rem] text-emerald-500 font-semibold">{t('valueFeatures.pdf.templateModerno')}</span>
+              <span className="text-[0.5rem] text-emerald-500 font-semibold">
+                {t('valueFeatures.pdf.templateModerno')}
+              </span>
             </div>
 
             {/* Clássico */}
@@ -173,13 +191,18 @@ export function PdfPreviewCard() {
                 <div className="h-0.5 w-[85%] bg-zinc-200 rounded-sm mb-0.5" />
                 <div className="h-0.5 w-[65%] bg-zinc-200 rounded-sm" />
               </div>
-              <span className="text-[0.5rem] text-zinc-500 font-medium">{t('valueFeatures.pdf.templateClassico')}</span>
+              <span className="text-[0.5rem] text-zinc-500 font-medium">
+                {t('valueFeatures.pdf.templateClassico')}
+              </span>
             </div>
 
             {/* Criativo */}
             <div className="bg-white border border-zinc-200 rounded-lg p-2 text-center cursor-pointer">
               <div className="w-full aspect-[794/1123] bg-white border border-zinc-200 rounded mx-auto mb-1 overflow-hidden flex shadow-sm">
-                <div className="w-[35%] p-1" style={{ background: 'linear-gradient(180deg, #0f9d8f, #0a7b71)' }}>
+                <div
+                  className="w-[35%] p-1"
+                  style={{ background: 'linear-gradient(180deg, #0f9d8f, #0a7b71)' }}
+                >
                   <div className="w-2.5 h-2.5 rounded-full bg-white/20 mx-auto mb-1" />
                   <div className="h-0.5 w-[80%] bg-white/30 rounded-sm mb-0.5" />
                   <div className="h-0.5 w-[60%] bg-white/20 rounded-sm mb-1" />
@@ -195,7 +218,9 @@ export function PdfPreviewCard() {
                   <div className="h-0.5 w-[60%] bg-zinc-200 rounded-sm" />
                 </div>
               </div>
-              <span className="text-[0.5rem] text-zinc-500 font-medium">{t('valueFeatures.pdf.templateCriativo')}</span>
+              <span className="text-[0.5rem] text-zinc-500 font-medium">
+                {t('valueFeatures.pdf.templateCriativo')}
+              </span>
             </div>
           </div>
         </motion.div>
@@ -208,7 +233,10 @@ export function PdfPreviewCard() {
           transition={{ duration: 0.3, delay: 0.55 }}
           className="flex justify-center"
         >
-          <div className="w-0.5 h-4" style={{ background: 'linear-gradient(180deg, #d1fae5, #a7f3d0)' }} />
+          <div
+            className="w-0.5 h-4"
+            style={{ background: 'linear-gradient(180deg, #d1fae5, #a7f3d0)' }}
+          />
         </motion.div>
 
         {/* Step 3: Generate PDF CTA */}

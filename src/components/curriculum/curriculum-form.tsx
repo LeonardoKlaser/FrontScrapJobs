@@ -56,15 +56,30 @@ function createEmptyFormData(): Omit<Curriculum, 'id'> {
     summary: '',
     skills: '',
     languages: '',
-    experiences: [{ id: crypto.randomUUID(), company: '', title: '', startDate: '', endDate: '', description: [''] }],
-    educations: [{ id: crypto.randomUUID(), institution: '', degree: '', startDate: '', endDate: '' }]
+    experiences: [
+      {
+        id: crypto.randomUUID(),
+        company: '',
+        title: '',
+        startDate: '',
+        endDate: '',
+        description: ['']
+      }
+    ],
+    educations: [
+      { id: crypto.randomUUID(), institution: '', degree: '', startDate: '', endDate: '' }
+    ]
   }
 }
 
-
 const SUMMARY_MAX_LENGTH = 1200
 
-export function CurriculumForm({ curriculum, isEditing, initialData, onSaveSuccess }: CurriculumFormProps) {
+export function CurriculumForm({
+  curriculum,
+  isEditing,
+  initialData,
+  onSaveSuccess
+}: CurriculumFormProps) {
   const { t } = useTranslation('curriculum')
   const [formData, setFormData] = useState(createEmptyFormData)
   const {
@@ -112,7 +127,16 @@ export function CurriculumForm({ curriculum, isEditing, initialData, onSaveSucce
               endDate: e.endDate || '',
               description: normalizeDescription(e.description)
             }))
-          : [{ id: crypto.randomUUID(), company: '', title: '', startDate: '', endDate: '', description: [''] }],
+          : [
+              {
+                id: crypto.randomUUID(),
+                company: '',
+                title: '',
+                startDate: '',
+                endDate: '',
+                description: ['']
+              }
+            ],
         educations: initialData.educations?.length
           ? initialData.educations.map((e) => ({
               ...normalizeEducation(e),
@@ -168,7 +192,14 @@ export function CurriculumForm({ curriculum, isEditing, initialData, onSaveSucce
       ...formData,
       experiences: [
         ...formData.experiences,
-        { id: crypto.randomUUID(), company: '', title: '', startDate: '', endDate: '', description: [''] }
+        {
+          id: crypto.randomUUID(),
+          company: '',
+          title: '',
+          startDate: '',
+          endDate: '',
+          description: ['']
+        }
       ]
     })
   }
@@ -180,7 +211,11 @@ export function CurriculumForm({ curriculum, isEditing, initialData, onSaveSucce
     })
   }
 
-  const updateExperience = (id: string | undefined, field: keyof Omit<Experience, 'description'>, value: string) => {
+  const updateExperience = (
+    id: string | undefined,
+    field: keyof Omit<Experience, 'description'>,
+    value: string
+  ) => {
     setFormData({
       ...formData,
       experiences: formData.experiences.map((exp) =>
@@ -364,7 +399,9 @@ export function CurriculumForm({ curriculum, isEditing, initialData, onSaveSucce
             value={formData.summary}
             onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
           />
-          <p className={`text-xs text-right ${formData.summary.length > 1100 ? 'text-destructive' : 'text-muted-foreground'}`}>
+          <p
+            className={`text-xs text-right ${formData.summary.length > 1100 ? 'text-destructive' : 'text-muted-foreground'}`}
+          >
             {t('form.summaryCounter', { count: formData.summary.length, max: SUMMARY_MAX_LENGTH })}
           </p>
         </div>
@@ -503,7 +540,9 @@ export function CurriculumForm({ curriculum, isEditing, initialData, onSaveSucce
                         id={`exp-startDate-${experience.id}`}
                         placeholder={t('form.experience.startDatePlaceholder')}
                         value={experience.startDate}
-                        onChange={(e) => updateExperience(experience.id, 'startDate', e.target.value)}
+                        onChange={(e) =>
+                          updateExperience(experience.id, 'startDate', e.target.value)
+                        }
                       />
                     </div>
                     <div className="space-y-2">
@@ -529,11 +568,15 @@ export function CurriculumForm({ curriculum, isEditing, initialData, onSaveSucce
                     <div className="space-y-2">
                       {experience.description.map((bullet, bulletIndex) => (
                         <div key={bulletIndex} className="flex gap-2 items-start">
-                          <span className="text-muted-foreground text-xs mt-2.5 select-none">&#8226;</span>
+                          <span className="text-muted-foreground text-xs mt-2.5 select-none">
+                            &#8226;
+                          </span>
                           <Input
                             placeholder={t('form.experience.bulletPlaceholder')}
                             value={bullet}
-                            onChange={(e) => updateBulletPoint(experience.id, bulletIndex, e.target.value)}
+                            onChange={(e) =>
+                              updateBulletPoint(experience.id, bulletIndex, e.target.value)
+                            }
                             className="flex-1"
                           />
                           {experience.description.length > 1 && (
