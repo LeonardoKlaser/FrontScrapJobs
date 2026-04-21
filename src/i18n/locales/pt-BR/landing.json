@@ -78,18 +78,17 @@
       {
         "name": "Mariana Silva",
         "role": "Backend Pleno · Go",
-        "body1": "Procurei backend Go por meses. Em 2 semanas usando o ScrapJobs, recebi 3 convites pra entrevista. ",
-        "body2Bold": "A diferença é chegar antes.",
+        "body1": "Eu abria umas 6 páginas de carreira todo dia e esquecia metade. Agora chega no email e eu escolho o que responder. ",
+        "body2Bold": "Já tô em processo em duas empresas.",
         "date": "12 fev 2026",
-        "badge": "Contratada",
-        "badgeVariant": "hired"
+        "badge": "Em entrevista",
+        "badgeVariant": "interviewing"
       },
       {
         "name": "Rafael Costa",
         "role": "Frontend Sênior",
-        "body1": "Uma vaga na Nubank chegou 4 min depois de sair. Fui o ",
-        "body2Bold": "terceiro candidato",
-        "body3": " — e o único chamado pra entrevista técnica.",
+        "body1": "Apliquei pra uma vaga no mesmo dia que ela saiu, fiquei sabendo pelo email. Antes eu só descobria quando já tinha uns mil candidatos. ",
+        "body2Bold": "Dessa vez me chamaram pra conversar.",
         "date": "5 mar 2026",
         "badge": "Contratado",
         "badgeVariant": "hired"
@@ -97,8 +96,8 @@
       {
         "name": "Camila Oliveira",
         "role": "Product Designer",
-        "body1": "Monitoro só 8 empresas que quero trabalhar. Recebo só o que importa. ",
-        "body2Bold": "Menos ruído, mais sinal.",
+        "body1": "Os sites de vaga jogam tudo junto e o filtro é péssimo. Aqui eu escolho as empresas que me interessam de verdade. ",
+        "body2Bold": "Recebo menos vaga, mas todas fazem sentido pra mim.",
         "date": "18 mar 2026",
         "badge": "Em entrevista",
         "badgeVariant": "interviewing"
@@ -106,9 +105,8 @@
       {
         "name": "Lucas Ferreira",
         "role": "Analista Financeiro Pleno",
-        "body1": "6 meses procurando vaga sem sucesso. Em 3 semanas no ScrapJobs recebi 2 propostas. Hoje trabalho na ",
-        "body2Bold": "Stone",
-        "body3": ".",
+        "body1": "Tava mandando currículo pra vaga com 500 candidatos e nunca ouvia de volta. Comecei a aplicar só nas que o ScrapJobs avisava recém-postadas. ",
+        "body2Bold": "Foi numa delas que deu certo.",
         "date": "22 jan 2026",
         "badge": "Contratado",
         "badgeVariant": "hired"

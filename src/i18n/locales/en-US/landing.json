@@ -78,18 +78,17 @@
       {
         "name": "Mariana Silva",
         "role": "Mid-level Backend · Go",
-        "body1": "I searched for Go backend roles for months. Two weeks using ScrapJobs and I got 3 interview invites. ",
-        "body2Bold": "The edge is getting there first.",
+        "body1": "I used to open 6 career pages every day and forget half of them. Now it lands in my inbox and I pick what to reply to. ",
+        "body2Bold": "Already in process at two companies.",
         "date": "Feb 12, 2026",
-        "badge": "Hired",
-        "badgeVariant": "hired"
+        "badge": "In interview",
+        "badgeVariant": "interviewing"
       },
       {
         "name": "Rafael Costa",
         "role": "Senior Frontend",
-        "body1": "A Nubank role landed in my inbox 4 min after posting. I was the ",
-        "body2Bold": "third applicant",
-        "body3": " — and the only one invited to the tech interview.",
+        "body1": "Applied to a role the day it went live — found out by email. Before I'd only hear about it when there were already a thousand applicants. ",
+        "body2Bold": "This time they called me.",
         "date": "Mar 5, 2026",
         "badge": "Hired",
         "badgeVariant": "hired"
@@ -97,8 +96,8 @@
       {
         "name": "Camila Oliveira",
         "role": "Product Designer",
-        "body1": "I monitor only 8 companies I actually want to work for. I get only what matters. ",
-        "body2Bold": "Less noise, more signal.",
+        "body1": "Job sites dump everything together and the filter is awful. Here I pick the companies I actually care about. ",
+        "body2Bold": "Fewer jobs reach me, but all of them make sense.",
         "date": "Mar 18, 2026",
         "badge": "In interview",
         "badgeVariant": "interviewing"
@@ -106,9 +105,8 @@
       {
         "name": "Lucas Ferreira",
         "role": "Mid-level Finance Analyst",
-        "body1": "6 months searching with no luck. Three weeks into ScrapJobs I had 2 offers. Today I work at ",
-        "body2Bold": "Stone",
-        "body3": ".",
+        "body1": "I kept sending resumes to jobs that had 500 applicants and never heard back. I started applying only to the ones ScrapJobs flagged as freshly posted. ",
+        "body2Bold": "That's how one of them finally worked.",
         "date": "Jan 22, 2026",
         "badge": "Hired",
         "badgeVariant": "hired"
