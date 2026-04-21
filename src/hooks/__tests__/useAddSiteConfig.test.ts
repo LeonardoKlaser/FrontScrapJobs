@@ -46,7 +46,8 @@ describe('useAddSiteConfig', () => {
       api_method: '',
       api_headers_json: '',
       api_payload_template: '',
-      json_data_mappings: ''
+      json_data_mappings: '',
+      headless_actions_json: ''
     }
 
     const { result } = renderHook(() => useAddSiteConfig(), { wrapper: createWrapper() })
@@ -82,7 +83,8 @@ describe('useAddSiteConfig', () => {
       api_method: '',
       api_headers_json: '',
       api_payload_template: '',
-      json_data_mappings: ''
+      json_data_mappings: '',
+      headless_actions_json: ''
     }
 
     const { result } = renderHook(() => useAddSiteConfig(), { wrapper: createWrapper() })

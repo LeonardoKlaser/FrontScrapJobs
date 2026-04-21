@@ -107,6 +107,13 @@
       "paginationDelayTooltip": "Milliseconds to wait between paginated requests to avoid rate limiting (429). E.g. 1500 = 1.5s",
       "invalidJsonMappingError": "Invalid JSON mapping — fix the field before saving."
     },
+    "headlessActions": {
+      "title": "Headless Actions (optional)",
+      "description": "List of chromedp actions run before the page is extracted — useful for sites with 'load more', infinite scroll, or filters that need to be triggered",
+      "fieldLabel": "Actions JSON",
+      "fieldTooltip": "JSON array of actions: click, click_until_gone, scroll_to_bottom, fill, wait_selector, wait_network_idle, wait_ms. Max 20 actions, 90s global cap",
+      "help": "Leave empty for legacy behavior (Navigate + WaitVisible only). Ex: [{\"type\":\"scroll_to_bottom\",\"max_scrolls\":90}] for infinite scroll"
+    },
     "logo": {
       "title": "Company Logo",
       "description": "Image displayed alongside the site name",

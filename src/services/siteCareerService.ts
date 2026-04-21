@@ -24,6 +24,9 @@ export interface SiteConfigFormData {
   api_headers_json: string
   api_payload_template: string
   json_data_mappings: string
+  // Headless actions (opcional): lista JSON de acoes chromedp executadas
+  // entre Navigate e WaitVisible. Ver docs/headless-actions-spec.md no backend.
+  headless_actions_json: string
 }
 
 export const siteCareerService = {

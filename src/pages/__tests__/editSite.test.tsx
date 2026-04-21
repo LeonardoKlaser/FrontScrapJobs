@@ -68,6 +68,7 @@ function makeSite(partial: Partial<SiteConfig> = {}): SiteConfig {
     api_headers_json: null,
     api_payload_template: null,
     json_data_mappings: null,
+    headless_actions_json: null,
     created_at: '2026-04-20T00:00:00Z',
     ...partial
   }

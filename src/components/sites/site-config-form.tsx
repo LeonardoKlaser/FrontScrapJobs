@@ -84,7 +84,8 @@ const DEFAULT_FORM_DATA: SiteConfigFormData = {
   api_method: 'GET',
   api_headers_json: '',
   api_payload_template: '',
-  json_data_mappings: ''
+  json_data_mappings: '',
+  headless_actions_json: ''
 }
 
 // Converte os campos nullable do SiteConfig (edit) pra strings vazias
@@ -108,7 +109,8 @@ function siteConfigToFormData(site: SiteConfig): SiteConfigFormData {
     api_method: site.api_method ?? 'GET',
     api_headers_json: site.api_headers_json ?? '',
     api_payload_template: site.api_payload_template ?? '',
-    json_data_mappings: site.json_data_mappings ?? ''
+    json_data_mappings: site.json_data_mappings ?? '',
+    headless_actions_json: site.headless_actions_json ?? ''
   }
 }
 
@@ -725,6 +727,50 @@ export default function SiteConfigForm({
                     value={paginationDelayMs}
                     onChange={(e) => setPaginationDelayMs(e.target.value)}
                   />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Headless Actions (só visível pra scraping_type=HEADLESS) */}
+        {formData.scraping_type === 'HEADLESS' && (
+          <div className="animate-fade-in-up">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <Play className="size-5 text-primary" />
+                  <div>
+                    <CardTitle className="text-base tracking-tight">
+                      {t('addSite.headlessActions.title')}
+                    </CardTitle>
+                    <CardDescription>{t('addSite.headlessActions.description')}</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="headless_actions_json">
+                      {t('addSite.headlessActions.fieldLabel')}
+                    </Label>
+                    <Tooltip content={t('addSite.headlessActions.fieldTooltip')}>
+                      <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                    </Tooltip>
+                  </div>
+                  <Textarea
+                    id="headless_actions_json"
+                    className="font-mono text-sm"
+                    placeholder={
+                      '[{"type":"scroll_to_bottom","max_scrolls":90,"stable_after_ms":900}]'
+                    }
+                    value={formData.headless_actions_json}
+                    onChange={(e) => handleInputChange('headless_actions_json', e.target.value)}
+                    rows={6}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    {t('addSite.headlessActions.help')}
+                  </p>
                 </div>
               </CardContent>
             </Card>

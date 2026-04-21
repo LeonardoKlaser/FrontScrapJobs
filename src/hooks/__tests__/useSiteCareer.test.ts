@@ -142,7 +142,8 @@ describe('useUpdateSiteConfig', () => {
         api_method: 'GET',
         api_headers_json: '',
         api_payload_template: '',
-        json_data_mappings: ''
+        json_data_mappings: '',
+      headless_actions_json: ''
       },
       logoFile: null
     })
