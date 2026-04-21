@@ -157,6 +157,7 @@ export function RegistrationModal({
                     {t('popup.addKeyword')}
                   </Button>
                 </div>
+                <p className="text-xs text-muted-foreground">{t('popup.keywordsHelp')}</p>
               </div>
               <div className="flex flex-col gap-2 pt-2">
                 <Button
@@ -202,6 +203,7 @@ export function RegistrationModal({
                   onChange={(e) => setKeywords(e.target.value)}
                   disabled={isLoading}
                 />
+                <p className="text-xs text-muted-foreground">{t('popup.keywordsHelp')}</p>
               </div>
               {previewTags.length > 0 && (
                 <div className="flex flex-wrap gap-1.5">

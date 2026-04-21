@@ -46,6 +46,7 @@
     "confirmSubscription": "Confirm Subscription",
     "registering": "Registering...",
     "keywordsEdit": "Alert keywords",
+    "keywordsHelp": "Each tag can have multiple words (e.g. 'senior developer'). The job title must contain all of them, in any order.",
     "addKeyword": "Add",
     "saveFilters": "Save changes",
     "saving": "Saving..."

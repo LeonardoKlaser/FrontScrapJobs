@@ -46,6 +46,7 @@
     "confirmSubscription": "Confirmar Inscrição",
     "registering": "Registrando...",
     "keywordsEdit": "Palavras-chave para alertas",
+    "keywordsHelp": "Cada tag pode ter várias palavras (ex: 'desenvolvedor senior'). A vaga precisa ter todas no título, em qualquer ordem.",
     "addKeyword": "Adicionar",
     "saveFilters": "Salvar alterações",
     "saving": "Salvando..."
