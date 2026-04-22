@@ -7,6 +7,28 @@ import { useTranslation } from 'react-i18next'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
 
+// Espelha a ordem do backend Tokenize: ToLower → NFD → strip Mn → NFC.
+// Ordem importa pra edge cases (Turkish dotless-i, eszett). Divergência
+// backend/frontend causaria miss silencioso: preview mostra token X mas
+// backend grava Y. Mantém os dois alinhados.
+const splitIntoTags = (input: string): string[] => {
+  const folded = input
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/\p{Mn}/gu, '')
+    .normalize('NFC')
+  const seen = new Set<string>()
+  const out: string[] = []
+  for (const match of folded.matchAll(/[\p{L}\p{N}]+/gu)) {
+    const tok = match[0]
+    if (!seen.has(tok)) {
+      seen.add(tok)
+      out.push(tok)
+    }
+  }
+  return out
+}
+
 interface RegistrationModalProps {
   isOpen: boolean
   onClose: () => void
@@ -45,35 +67,31 @@ export function RegistrationModal({
   useEffect(() => {
     if (isOpen) {
       setKeywords('')
-      setEditKeywords(currentTargetWords ?? [])
+      const hydrated = (currentTargetWords ?? []).flatMap(splitIntoTags)
+      setEditKeywords(Array.from(new Set(hydrated)))
       setKeywordInput('')
     }
   }, [isOpen, currentTargetWords])
 
   const addKeyword = useCallback(() => {
-    const newWord = keywordInput.trim()
-    if (newWord && !editKeywords.includes(newWord)) {
-      setEditKeywords((prev) => [...prev, newWord])
-      setKeywordInput('')
-    }
-  }, [keywordInput, editKeywords])
+    const tokens = splitIntoTags(keywordInput)
+    if (tokens.length === 0) return
+    setEditKeywords((prev) => {
+      const existing = new Set(prev)
+      const additions = tokens.filter((t) => !existing.has(t))
+      return additions.length === 0 ? prev : [...prev, ...additions]
+    })
+    setKeywordInput('')
+  }, [keywordInput])
+
+  const previewTags = splitIntoTags(keywords)
 
   const isRegisterButtonDisabled =
-    hasNoSlots || isLoading || (!keywords.trim() && !isAlreadyRegistered)
-
-  const previewTags = keywords
-    .split(',')
-    .map((w) => w.trim())
-    .filter(Boolean)
+    hasNoSlots || isLoading || (previewTags.length === 0 && !isAlreadyRegistered)
 
   const handleRegisterClick = () => {
-    if (!keywords.trim()) return
-    const targetWords = keywords
-      .split(',')
-      .map((word) => word.trim())
-      .filter(Boolean)
-
-    onRegister(targetWords)
+    if (previewTags.length === 0) return
+    onRegister(previewTags)
   }
 
   const handleClose = () => {
