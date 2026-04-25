@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { PlanSummary } from '@/components/checkout/plan-summary'
 import { PaymentForm } from '@/components/checkout/payment-form'
@@ -9,6 +9,7 @@ import { Spinner } from '@/components/ui/spinner'
 import { ArrowLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { PageHeader } from '@/components/common/page-header'
+import { trackCheckout } from '@/lib/analytics'
 
 export default function CheckoutPage() {
   const { t } = useTranslation('plans')
@@ -17,6 +18,10 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const planId = parseInt(params.planId || '', 10)
+
+  useEffect(() => {
+    trackCheckout('checkout_view', { plan_id: planId })
+  }, [planId])
 
   if (plansLoading) {
     return (

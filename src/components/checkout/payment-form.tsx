@@ -18,7 +18,8 @@ import { CheckoutStepper } from './checkout-stepper'
 import { PersonalDataStep } from './personal-data-step'
 import type { PersonalFormData } from './personal-data-step'
 import { CardPaymentStep } from './card-payment-step'
-import type { AddressData } from './card-payment-step'
+import type { AddressData, DocumentContactData } from './card-payment-step'
+import { trackCheckout } from '@/lib/analytics'
 
 interface PaymentFormProps {
   plan: Plan
@@ -37,10 +38,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
   const [formData, setFormData] = useState<PersonalFormData>({
     name: '',
     email: '',
-    password: '',
-    confirmPassword: '',
-    cpfCnpj: '',
-    phone: ''
+    password: ''
   })
 
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -66,12 +64,14 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
           if (pollingRef.current) clearInterval(pollingRef.current)
           if (pollingTimeoutRef.current) clearTimeout(pollingTimeoutRef.current)
           setIsLoading(false)
+          trackCheckout('checkout_payment_confirmed', { plan_id: plan.id })
           navigate(`${PATHS.paymentConfirmation}?plan=${encodeURIComponent(plan.name)}`)
         }
         // not_found e processing: continua polling até o timeout de 2 min
         // (webhook pode estar atrasado ou Redis pode ter evicted a key temporariamente)
-      } catch {
+      } catch (err) {
         consecutiveErrors++
+        console.error('payment status check failed', err)
         if (consecutiveErrors >= 3) {
           if (pollingRef.current) clearInterval(pollingRef.current)
           if (pollingTimeoutRef.current) clearTimeout(pollingTimeoutRef.current)
@@ -89,7 +89,11 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
     }, 120000)
   }
 
-  const handleCardSubmit = async (cardData: CardData, addressData: AddressData) => {
+  const handleCardSubmit = async (
+    cardData: CardData,
+    addressData: AddressData,
+    docData: DocumentContactData
+  ) => {
     setIsLoading(true)
     setCardError('')
 
@@ -100,8 +104,8 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        tax: formData.cpfCnpj.replace(/\D/g, ''),
-        cellphone: formData.phone.replace(/\D/g, ''),
+        tax: docData.cpfCnpj.replace(/\D/g, ''),
+        cellphone: docData.phone.replace(/\D/g, ''),
         card_token: token.id,
         zip_code: addressData.zipCode,
         street: addressData.street,
@@ -133,7 +137,6 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
     }
   }
 
-  // Polling overlay
   if (pollingStatus === 'polling') {
     return (
       <Card className="w-full border-border/50">
@@ -162,6 +165,8 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
     )
   }
 
+  const formattedPrice = `R$ ${plan.price.toFixed(2).replace('.', ',')}`
+
   return (
     <Card className="w-full border-border/50">
       <CardHeader>
@@ -180,7 +185,10 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
             formData={formData}
             setFormData={setFormData}
             isLoading={isLoading}
-            onNext={() => setCurrentStep(2)}
+            onNext={() => {
+              trackCheckout('checkout_step2_view')
+              setCurrentStep(2)
+            }}
           />
         )}
 
@@ -188,6 +196,9 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
           <CardPaymentStep
             isLoading={isLoading}
             error={cardError}
+            userName={formData.name}
+            userEmail={formData.email}
+            planPrice={formattedPrice}
             onSubmit={handleCardSubmit}
             onBack={() => setCurrentStep(1)}
           />
