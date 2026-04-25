@@ -5,35 +5,19 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Spinner } from '@/components/ui/spinner'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import {
-  AlertCircle,
-  Lock,
-  CreditCard,
-  ArrowLeft,
-  ShieldCheck,
-  MapPin,
-  FileTextIcon,
-  PhoneIcon
-} from 'lucide-react'
+import { AlertCircle, Lock, CreditCard, ArrowLeft, ShieldCheck, FileTextIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { CardData } from '@/services/paymentService'
-import { useCepLookup } from '@/hooks/useCepLookup'
 import { useValidateCheckout } from '@/hooks/useValidateCheckout'
 import { trackCheckout } from '@/lib/analytics'
+import { CardPreview } from './card-preview'
 
 interface CardFormState {
   cpfCnpj: string
-  phone: string
   holderName: string
   cardNumber: string
   expDate: string
   cvv: string
-  zipCode: string
-  street: string
-  number: string
-  neighborhood: string
-  city: string
-  state: string
 }
 
 export interface AddressData {
@@ -45,9 +29,8 @@ export interface AddressData {
   state: string
 }
 
-export interface DocumentContactData {
+export interface DocumentData {
   cpfCnpj: string
-  phone: string
 }
 
 interface CardPaymentStepProps {
@@ -56,7 +39,7 @@ interface CardPaymentStepProps {
   userName: string
   userEmail: string
   planPrice: string
-  onSubmit: (cardData: CardData, addressData: AddressData, docData: DocumentContactData) => void
+  onSubmit: (cardData: CardData, docData: DocumentData) => void
   onBack: () => void
 }
 
@@ -96,51 +79,6 @@ function formatCpfCnpj(value: string): string {
     .replace(/(\d{4})(\d{1,2})$/, '$1-$2')
 }
 
-function formatPhone(value: string): string {
-  return value
-    .replace(/\D/g, '')
-    .slice(0, 11)
-    .replace(/(\d{2})(\d)/, '($1) $2')
-    .replace(/(\d{5})(\d)/, '$1-$2')
-}
-
-function formatZipCode(value: string): string {
-  return value
-    .replace(/\D/g, '')
-    .slice(0, 8)
-    .replace(/(\d{5})(\d)/, '$1-$2')
-}
-
-const BRAZILIAN_STATES = [
-  'AC',
-  'AL',
-  'AP',
-  'AM',
-  'BA',
-  'CE',
-  'DF',
-  'ES',
-  'GO',
-  'MA',
-  'MT',
-  'MS',
-  'MG',
-  'PA',
-  'PB',
-  'PR',
-  'PE',
-  'PI',
-  'RJ',
-  'RN',
-  'RS',
-  'RO',
-  'RR',
-  'SC',
-  'SP',
-  'SE',
-  'TO'
-]
-
 export function CardPaymentStep({
   isLoading,
   error,
@@ -155,38 +93,40 @@ export function CardPaymentStep({
 
   const [cardForm, setCardForm] = useState<CardFormState>({
     cpfCnpj: '',
-    phone: '',
+    // Inicializa com o nome do step 1 (UPPERCASE). Se o user voltar e mudar
+    // o nome, sincronizamos via useEffect abaixo enquanto ele não tiver
+    // editado holderName manualmente.
     holderName: userName.toUpperCase(),
     cardNumber: '',
     expDate: '',
-    cvv: '',
-    zipCode: '',
-    street: '',
-    number: '',
-    neighborhood: '',
-    city: '',
-    state: ''
+    cvv: ''
   })
-  const [autoFilledFields, setAutoFilledFields] = useState<Set<keyof CardFormState>>(new Set())
+  const holderManuallyEdited = useRef(false)
   const [validationErrors, setValidationErrors] = useState<
     Partial<Record<keyof CardFormState, string>>
   >({})
   const [cpfExistsOnServer, setCpfExistsOnServer] = useState(false)
+  const [cvvFocused, setCvvFocused] = useState(false)
   const cpfDebounce = useRef<ReturnType<typeof setTimeout> | null>(null)
-  // mutateAsync é estável; o objeto inteiro de useMutation muda toda render.
   const { mutateAsync: validateAsync } = useValidateCheckout()
   const inFlightCpfRef = useRef<string>('')
   // Skip do primeiro tick do effect-on-userEmail (mount) pra não disparar
   // setStates inúteis sem nenhuma mudança real.
   const isFirstUserEmailEffect = useRef(true)
 
-  const cep = useCepLookup(cardForm.zipCode)
-
   useEffect(() => {
     return () => {
       if (cpfDebounce.current) clearTimeout(cpfDebounce.current)
     }
   }, [])
+
+  // Sincroniza holderName com userName se o user voltou ao step 1 e mudou o nome,
+  // mas SOMENTE se ele ainda não editou o campo holderName aqui no step 3.
+  useEffect(() => {
+    if (!holderManuallyEdited.current) {
+      setCardForm((prev) => ({ ...prev, holderName: userName.toUpperCase() }))
+    }
+  }, [userName])
 
   // Se o usuário voltar pra etapa 1 e mudar o email, o resultado anterior do CPF
   // (que era único pro email antigo) fica stale. Reseta + limpa erro inline
@@ -200,50 +140,6 @@ export function CardPaymentStep({
     setValidationErrors((prev) => (prev.cpfCnpj ? { ...prev, cpfCnpj: '' } : prev))
   }, [userEmail])
 
-  useEffect(() => {
-    if (!cep.data) return
-    const data = cep.data
-    const filled = new Set<keyof CardFormState>()
-
-    setCardForm((prev) => {
-      const next = { ...prev }
-      if (!prev.street) {
-        next.street = data.logradouro
-        filled.add('street')
-      }
-      if (!prev.neighborhood) {
-        next.neighborhood = data.bairro
-        filled.add('neighborhood')
-      }
-      if (!prev.city) {
-        next.city = data.localidade
-        filled.add('city')
-      }
-      if (!prev.state) {
-        next.state = data.uf
-        filled.add('state')
-      }
-      return next
-    })
-
-    // Mutações de outros estados ficam fora do updater do setCardForm —
-    // updaters devem ser puros (StrictMode em dev roda 2x).
-    if (filled.size === 0) return
-
-    setAutoFilledFields((prev) => {
-      const merged = new Set(prev)
-      filled.forEach((f) => merged.add(f))
-      return merged
-    })
-    setValidationErrors((errs) => {
-      const cleared = { ...errs }
-      filled.forEach((f) => {
-        cleared[f] = ''
-      })
-      return cleared
-    })
-  }, [cep.data])
-
   const validateCpfOnServer = useCallback(
     async (cpf: string) => {
       const tax = cpf.replace(/\D/g, '')
@@ -251,7 +147,6 @@ export function CardPaymentStep({
       inFlightCpfRef.current = tax
       try {
         const data = await validateAsync({ email: userEmail, tax })
-        // Race guard: ignora resposta stale se usuário já mudou o CPF
         if (inFlightCpfRef.current !== tax) return
         setCpfExistsOnServer(data.tax_exists)
         setValidationErrors((prev) => ({
@@ -260,8 +155,12 @@ export function CardPaymentStep({
         }))
       } catch (err) {
         // Não bloqueia o submit; o backend ainda valida no createPayment.
-        // Mas loga: falha silenciosa aqui mata a UX prometida pelo spec.
+        // Reporta pra telemetria — sem isso, falha mata a UX prometida.
         console.error('validate-checkout (cpf) failed', err)
+        trackCheckout('checkout_validate_failed', {
+          field: 'cpf',
+          message: err instanceof Error ? err.message : 'unknown'
+        })
       }
     },
     [userEmail, t, validateAsync]
@@ -274,26 +173,6 @@ export function CardPaymentStep({
     }, 300)
   }
 
-  // Núcleo do "usuário editou X": atualiza valor, remove flag de auto-fill
-  // e limpa qualquer erro pendente desse campo. Compartilhado entre input e select.
-  const applyFieldEdit = (name: keyof CardFormState, value: string) => {
-    setCardForm((prev) => ({ ...prev, [name]: value }))
-
-    if (autoFilledFields.has(name)) {
-      setAutoFilledFields((prev) => {
-        const next = new Set(prev)
-        next.delete(name)
-        return next
-      })
-    }
-
-    if (name === 'cpfCnpj') setCpfExistsOnServer(false)
-
-    if (validationErrors[name]) {
-      setValidationErrors((prev) => ({ ...prev, [name]: '' }))
-    }
-  }
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     let formattedValue = value
@@ -302,10 +181,13 @@ export function CardPaymentStep({
     else if (name === 'expDate') formattedValue = formatExpDate(value)
     else if (name === 'cvv') formattedValue = value.replace(/\D/g, '').slice(0, 4)
     else if (name === 'cpfCnpj') formattedValue = formatCpfCnpj(value)
-    else if (name === 'phone') formattedValue = formatPhone(value)
-    else if (name === 'zipCode') formattedValue = formatZipCode(value)
 
-    applyFieldEdit(name as keyof CardFormState, formattedValue)
+    setCardForm((prev) => ({ ...prev, [name]: formattedValue }))
+    if (name === 'holderName') holderManuallyEdited.current = true
+    if (name === 'cpfCnpj') setCpfExistsOnServer(false)
+    if (validationErrors[name as keyof CardFormState]) {
+      setValidationErrors((prev) => ({ ...prev, [name]: '' }))
+    }
   }
 
   const validateForm = (): boolean => {
@@ -315,18 +197,6 @@ export function CardPaymentStep({
     if (!cardForm.cpfCnpj.trim()) errors.cpfCnpj = tAuth('validation.cpfRequired')
     else if (cpfDigits.length !== 11 && cpfDigits.length !== 14)
       errors.cpfCnpj = tAuth('validation.cpfInvalid')
-
-    const phoneDigits = cardForm.phone.replace(/\D/g, '')
-    if (!cardForm.phone.trim()) errors.phone = tAuth('validation.phoneRequired')
-    else if (phoneDigits.length < 10 || phoneDigits.length > 11)
-      errors.phone = tAuth('validation.phoneInvalid')
-
-    if (!cardForm.zipCode.trim()) errors.zipCode = t('paymentForm.fieldRequired')
-    if (!cardForm.street.trim()) errors.street = t('paymentForm.fieldRequired')
-    if (!cardForm.number.trim()) errors.number = t('paymentForm.fieldRequired')
-    if (!cardForm.neighborhood.trim()) errors.neighborhood = t('paymentForm.fieldRequired')
-    if (!cardForm.city.trim()) errors.city = t('paymentForm.fieldRequired')
-    if (!cardForm.state) errors.state = t('paymentForm.fieldRequired')
 
     const cardDigits = cardForm.cardNumber.replace(/\s/g, '')
     if (!cardForm.holderName.trim()) errors.holderName = t('paymentForm.fieldRequired')
@@ -358,7 +228,7 @@ export function CardPaymentStep({
     if (cpfExistsOnServer) return
     if (!validateForm()) return
 
-    trackCheckout('checkout_step2_submit')
+    trackCheckout('checkout_step3_submit')
 
     const { month, year } = parseExpDate(cardForm.expDate)
     onSubmit(
@@ -370,22 +240,10 @@ export function CardPaymentStep({
         cvv: cardForm.cvv
       },
       {
-        zipCode: cardForm.zipCode.replace(/\D/g, ''),
-        street: cardForm.street,
-        number: cardForm.number,
-        neighborhood: cardForm.neighborhood,
-        city: cardForm.city,
-        state: cardForm.state
-      },
-      {
-        cpfCnpj: cardForm.cpfCnpj,
-        phone: cardForm.phone
+        cpfCnpj: cardForm.cpfCnpj
       }
     )
   }
-
-  const autoFillClass = (field: keyof CardFormState) =>
-    autoFilledFields.has(field) ? 'text-muted-foreground/70 italic' : ''
 
   const firstName = userName.trim().split(/\s+/)[0] || ''
 
@@ -395,7 +253,10 @@ export function CardPaymentStep({
         type="button"
         onClick={onBack}
         disabled={isLoading}
-        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        className={
+          'inline-flex items-center gap-1.5 text-sm text-muted-foreground' +
+          ' transition-colors hover:text-foreground'
+        }
       >
         <ArrowLeft className="h-4 w-4" />
         {t('paymentForm.prevStep')}
@@ -405,7 +266,7 @@ export function CardPaymentStep({
         <h3 className="text-lg font-semibold">
           {t('paymentForm.step2Greeting', { name: firstName })}
         </h3>
-        <p className="text-sm text-muted-foreground">{t('paymentForm.step2Subtitle')}</p>
+        <p className="text-sm text-muted-foreground">{t('paymentForm.step3Subtitle')}</p>
       </div>
 
       {error && (
@@ -416,216 +277,61 @@ export function CardPaymentStep({
       )}
 
       <fieldset className="space-y-4 animate-fade-in-up">
-        <legend className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-          {t('paymentForm.documentSection')}
+        <legend
+          className={
+            'text-sm font-semibold uppercase tracking-wider text-muted-foreground' +
+            ' flex items-center gap-2'
+          }
+        >
+          <FileTextIcon className="h-4 w-4" />
+          {t('paymentForm.identificationSection')}
         </legend>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div className="space-y-2">
-            <Label htmlFor="cpfCnpj" className="text-muted-foreground">
-              {t('paymentForm.cpfLabel')}
-            </Label>
-            <div className="relative">
-              <FileTextIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                id="cpfCnpj"
-                name="cpfCnpj"
-                type="text"
-                inputMode="numeric"
-                placeholder={t('paymentForm.cpfPlaceholder')}
-                value={cardForm.cpfCnpj}
-                onChange={handleChange}
-                onBlur={handleCpfBlur}
-                disabled={isLoading}
-                className={`pl-10 font-mono ${
-                  validationErrors.cpfCnpj ? 'border-destructive' : ''
-                }`}
-              />
-            </div>
-            {validationErrors.cpfCnpj && (
-              <p className="text-xs text-destructive">{validationErrors.cpfCnpj}</p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="phone" className="text-muted-foreground">
-              {t('paymentForm.phoneLabel')}
-            </Label>
-            <div className="relative">
-              <PhoneIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                id="phone"
-                name="phone"
-                type="text"
-                inputMode="tel"
-                autoComplete="tel"
-                placeholder={t('paymentForm.phonePlaceholder')}
-                value={cardForm.phone}
-                onChange={handleChange}
-                disabled={isLoading}
-                className={`pl-10 font-mono ${validationErrors.phone ? 'border-destructive' : ''}`}
-              />
-            </div>
-            {validationErrors.phone && (
-              <p className="text-xs text-destructive">{validationErrors.phone}</p>
-            )}
-          </div>
-        </div>
-      </fieldset>
-
-      <fieldset className="space-y-4 animate-fade-in-up">
-        <legend className="text-sm font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-          <MapPin className="h-4 w-4" />
-          {t('paymentForm.billingAddress')}
-        </legend>
-
-        <div className="grid grid-cols-3 gap-3">
-          <div className="space-y-2">
-            <Label htmlFor="zipCode" className="text-muted-foreground">
-              {t('paymentForm.zipCode')}
-            </Label>
-            <div className="relative">
-              <Input
-                id="zipCode"
-                name="zipCode"
-                type="text"
-                inputMode="numeric"
-                autoComplete="postal-code"
-                placeholder={t('paymentForm.zipCodePlaceholder')}
-                value={cardForm.zipCode}
-                onChange={handleChange}
-                disabled={isLoading}
-                maxLength={9}
-                className={validationErrors.zipCode ? 'border-destructive' : ''}
-              />
-              {cep.isLoading && (
-                <Spinner className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              )}
-            </div>
-            {validationErrors.zipCode && (
-              <p className="text-xs text-destructive">{validationErrors.zipCode}</p>
-            )}
-            {cep.error && (
-              <p className="text-xs text-muted-foreground">{t('paymentForm.cepLookupError')}</p>
-            )}
-          </div>
-          <div className="col-span-2 space-y-2">
-            <Label htmlFor="street" className="text-muted-foreground">
-              {t('paymentForm.street')}
-            </Label>
-            <Input
-              id="street"
-              name="street"
-              type="text"
-              autoComplete="address-line1"
-              placeholder={t('paymentForm.streetPlaceholder')}
-              value={cardForm.street}
-              onChange={handleChange}
-              disabled={isLoading}
-              className={`${autoFillClass('street')} ${
-                validationErrors.street ? 'border-destructive' : ''
-              }`}
+        <div className="space-y-2">
+          <Label htmlFor="cpfCnpj" className="text-muted-foreground">
+            {t('paymentForm.cpfLabel')}
+          </Label>
+          <div className="relative">
+            <FileTextIcon
+              className={
+                'pointer-events-none absolute left-3 top-1/2 h-4 w-4' +
+                ' -translate-y-1/2 text-muted-foreground'
+              }
             />
-            {validationErrors.street && (
-              <p className="text-xs text-destructive">{validationErrors.street}</p>
-            )}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-3 gap-3">
-          <div className="space-y-2">
-            <Label htmlFor="number" className="text-muted-foreground">
-              {t('paymentForm.addressNumber')}
-            </Label>
             <Input
-              id="number"
-              name="number"
+              id="cpfCnpj"
+              name="cpfCnpj"
               type="text"
               inputMode="numeric"
-              placeholder={t('paymentForm.addressNumberPlaceholder')}
-              value={cardForm.number}
+              placeholder={t('paymentForm.cpfPlaceholder')}
+              value={cardForm.cpfCnpj}
               onChange={handleChange}
+              onBlur={handleCpfBlur}
               disabled={isLoading}
-              className={validationErrors.number ? 'border-destructive' : ''}
+              className={`pl-10 font-mono ${validationErrors.cpfCnpj ? 'border-destructive' : ''}`}
             />
-            {validationErrors.number && (
-              <p className="text-xs text-destructive">{validationErrors.number}</p>
-            )}
           </div>
-          <div className="col-span-2 space-y-2">
-            <Label htmlFor="neighborhood" className="text-muted-foreground">
-              {t('paymentForm.neighborhood')}
-            </Label>
-            <Input
-              id="neighborhood"
-              name="neighborhood"
-              type="text"
-              placeholder={t('paymentForm.neighborhoodPlaceholder')}
-              value={cardForm.neighborhood}
-              onChange={handleChange}
-              disabled={isLoading}
-              className={`${autoFillClass('neighborhood')} ${
-                validationErrors.neighborhood ? 'border-destructive' : ''
-              }`}
-            />
-            {validationErrors.neighborhood && (
-              <p className="text-xs text-destructive">{validationErrors.neighborhood}</p>
-            )}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          <div className="space-y-2">
-            <Label htmlFor="city" className="text-muted-foreground">
-              {t('paymentForm.city')}
-            </Label>
-            <Input
-              id="city"
-              name="city"
-              type="text"
-              autoComplete="address-level2"
-              placeholder={t('paymentForm.cityPlaceholder')}
-              value={cardForm.city}
-              onChange={handleChange}
-              disabled={isLoading}
-              className={`${autoFillClass('city')} ${
-                validationErrors.city ? 'border-destructive' : ''
-              }`}
-            />
-            {validationErrors.city && (
-              <p className="text-xs text-destructive">{validationErrors.city}</p>
-            )}
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="state" className="text-muted-foreground">
-              {t('paymentForm.state')}
-            </Label>
-            <select
-              id="state"
-              name="state"
-              value={cardForm.state}
-              onChange={(e) => applyFieldEdit('state', e.target.value)}
-              disabled={isLoading}
-              className={`flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 ${autoFillClass(
-                'state'
-              )}`}
-            >
-              <option value="">{t('paymentForm.statePlaceholder')}</option>
-              {BRAZILIAN_STATES.map((uf) => (
-                <option key={uf} value={uf}>
-                  {uf}
-                </option>
-              ))}
-            </select>
-            {validationErrors.state && (
-              <p className="text-xs text-destructive">{validationErrors.state}</p>
-            )}
-          </div>
+          {validationErrors.cpfCnpj && (
+            <p className="text-xs text-destructive">{validationErrors.cpfCnpj}</p>
+          )}
         </div>
       </fieldset>
 
+      <CardPreview
+        cardNumber={cardForm.cardNumber}
+        holderName={cardForm.holderName}
+        expDate={cardForm.expDate}
+        cvv={cardForm.cvv}
+        cvvFocused={cvvFocused}
+      />
+
       <fieldset className="space-y-4 animate-fade-in-up">
-        <legend className="text-sm font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+        <legend
+          className={
+            'text-sm font-semibold uppercase tracking-wider text-muted-foreground' +
+            ' flex items-center gap-2'
+          }
+        >
           <CreditCard className="h-4 w-4" />
           {t('paymentForm.cardData')}
         </legend>
@@ -708,6 +414,8 @@ export function CardPaymentStep({
               placeholder={t('paymentForm.cardCvvPlaceholder')}
               value={cardForm.cvv}
               onChange={handleChange}
+              onFocus={() => setCvvFocused(true)}
+              onBlur={() => setCvvFocused(false)}
               disabled={isLoading}
               className={`font-mono text-center ${
                 validationErrors.cvv ? 'border-destructive' : ''

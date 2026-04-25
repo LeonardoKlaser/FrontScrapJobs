@@ -1,15 +1,15 @@
 import { Check } from 'lucide-react'
 
 interface CheckoutStepperProps {
-  currentStep: 1 | 2
-  labels: [string, string]
+  currentStep: number
+  labels: string[]
 }
 
 export function CheckoutStepper({ currentStep, labels }: CheckoutStepperProps) {
   return (
     <div className="flex items-center gap-3 mb-8">
       {labels.map((label, index) => {
-        const stepNumber = (index + 1) as 1 | 2
+        const stepNumber = index + 1
         const isCompleted = stepNumber < currentStep
         const isActive = stepNumber === currentStep
 

@@ -3,7 +3,7 @@ import { useState, useRef, useCallback, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Eye, EyeOff, UserIcon, MailIcon, LockIcon, ArrowRight } from 'lucide-react'
+import { Eye, EyeOff, UserIcon, MailIcon, LockIcon, PhoneIcon, ArrowRight } from 'lucide-react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { PATHS } from '@/router/paths'
@@ -14,6 +14,18 @@ export interface PersonalFormData {
   name: string
   email: string
   password: string
+  phone: string
+}
+
+function formatPhone(value: string): string {
+  const digits = value.replace(/\D/g, '').slice(0, 11)
+  if (digits.length <= 2) return digits.length === 0 ? '' : `(${digits}`
+  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`
+  // Landline (10 dig): (XX) XXXX-XXXX. Cell (11 dig): (XX) XXXXX-XXXX.
+  if (digits.length <= 10) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`
+  }
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`
 }
 
 interface FormErrors {
@@ -66,8 +78,12 @@ export function PersonalDataStep({
         }))
       } catch (err) {
         // Não bloqueia o usuário; o gate final é o createPayment.
-        // Mas loga pra observabilidade — falha silenciosa aqui mata a prevenção do duplicado.
+        // Reporta pra telemetria — sem isso, failure aqui mata a prevenção do duplicado.
         console.error('validate-checkout (email) failed', err)
+        trackCheckout('checkout_validate_failed', {
+          field: 'email',
+          message: err instanceof Error ? err.message : 'unknown'
+        })
       }
     },
     [t, validateAsync]
@@ -82,7 +98,8 @@ export function PersonalDataStep({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    const formatted = name === 'phone' ? formatPhone(value) : value
+    setFormData((prev) => ({ ...prev, [name]: formatted }))
     if (name === 'email') setEmailExistsOnServer(false)
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }))
@@ -106,6 +123,13 @@ export function PersonalDataStep({
       newErrors.password = tAuth('validation.passwordRequired')
     } else if (formData.password.length < 8) {
       newErrors.password = tAuth('validation.passwordMin')
+    }
+
+    const phoneDigits = formData.phone.replace(/\D/g, '')
+    if (!formData.phone.trim()) {
+      newErrors.phone = tAuth('validation.phoneRequired')
+    } else if (phoneDigits.length < 10 || phoneDigits.length > 11) {
+      newErrors.phone = tAuth('validation.phoneInvalid')
     }
 
     setErrors(newErrors)
@@ -212,6 +236,28 @@ export function PersonalDataStep({
             </button>
           </div>
           {errors.password && <p className="text-xs text-destructive">{errors.password}</p>}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="phone" className="text-muted-foreground">
+            {t('paymentForm.phoneLabel')}
+          </Label>
+          <div className="relative">
+            <PhoneIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              id="phone"
+              name="phone"
+              type="text"
+              inputMode="tel"
+              autoComplete="tel"
+              placeholder={t('paymentForm.phonePlaceholder')}
+              value={formData.phone}
+              onChange={handleInputChange}
+              disabled={isLoading}
+              className={`pl-10 font-mono ${errors.phone ? 'border-destructive' : ''}`}
+            />
+          </div>
+          {errors.phone && <p className="text-xs text-destructive">{errors.phone}</p>}
         </div>
       </fieldset>
 

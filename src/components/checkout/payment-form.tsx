@@ -18,8 +18,10 @@ import { CheckoutStepper } from './checkout-stepper'
 import { PersonalDataStep } from './personal-data-step'
 import type { PersonalFormData } from './personal-data-step'
 import { CardPaymentStep } from './card-payment-step'
-import type { AddressData, DocumentContactData } from './card-payment-step'
+import type { AddressData, DocumentData } from './card-payment-step'
+import { AddressStep } from './address-step'
 import { trackCheckout } from '@/lib/analytics'
+import { useSaveLead } from '@/hooks/useSaveLead'
 
 interface PaymentFormProps {
   plan: Plan
@@ -32,14 +34,28 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
   const { t: tCommon } = useTranslation('common')
   const navigate = useNavigate()
 
-  const [currentStep, setCurrentStep] = useState<1 | 2>(1)
+  const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1)
   const [cardError, setCardError] = useState('')
   const [pollingStatus, setPollingStatus] = useState<'idle' | 'polling' | 'timeout'>('idle')
   const [formData, setFormData] = useState<PersonalFormData>({
     name: '',
     email: '',
-    password: ''
+    password: '',
+    phone: ''
   })
+  const [addressData, setAddressData] = useState<AddressData>({
+    zipCode: '',
+    street: '',
+    number: '',
+    neighborhood: '',
+    city: '',
+    state: ''
+  })
+
+  const { mutate: saveLead } = useSaveLead()
+  // Dedup: evita inflar attempts no banco quando user clica Next/Back/Next.
+  // Re-fire só se algum campo do payload mudou desde o último envio.
+  const lastLeadKeyRef = useRef<string>('')
 
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const pollingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -89,11 +105,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
     }, 120000)
   }
 
-  const handleCardSubmit = async (
-    cardData: CardData,
-    addressData: AddressData,
-    docData: DocumentContactData
-  ) => {
+  const handleCardSubmit = async (cardData: CardData, docData: DocumentData) => {
     setIsLoading(true)
     setCardError('')
 
@@ -105,9 +117,10 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
         email: formData.email,
         password: formData.password,
         tax: docData.cpfCnpj.replace(/\D/g, ''),
-        cellphone: docData.phone.replace(/\D/g, ''),
+        // Telefone agora vem do step 1 (formData), não mais do step 2.
+        cellphone: formData.phone.replace(/\D/g, ''),
         card_token: token.id,
-        zip_code: addressData.zipCode,
+        zip_code: addressData.zipCode.replace(/\D/g, ''),
         street: addressData.street,
         number: addressData.number,
         neighborhood: addressData.neighborhood,
@@ -177,7 +190,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
       <CardContent>
         <CheckoutStepper
           currentStep={currentStep}
-          labels={[t('checkout.stepData'), t('checkout.stepPayment')]}
+          labels={[t('checkout.stepData'), t('checkout.stepAddress'), t('checkout.stepPayment')]}
         />
 
         {currentStep === 1 && (
@@ -186,6 +199,29 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
             setFormData={setFormData}
             isLoading={isLoading}
             onNext={() => {
+              // Fire-and-forget — falha de save NAO pode bloquear o checkout.
+              const leadKey = `${formData.name}|${formData.email}|${formData.phone}|${plan.id}`
+              if (leadKey !== lastLeadKeyRef.current) {
+                lastLeadKeyRef.current = leadKey
+                saveLead(
+                  {
+                    name: formData.name,
+                    email: formData.email,
+                    phone: formData.phone,
+                    plan_id: plan.id
+                  },
+                  {
+                    onError: (err) => {
+                      // Fire-and-forget: NÃO bloqueia o avanço, mas reporta a falha
+                      // pra telemetria — sem isso, falha de save fica invisível em prod.
+                      console.error('saveLead failed', err)
+                      trackCheckout('checkout_lead_save_failed', {
+                        message: err instanceof Error ? err.message : 'unknown'
+                      })
+                    }
+                  }
+                )
+              }
               trackCheckout('checkout_step2_view')
               setCurrentStep(2)
             }}
@@ -193,6 +229,19 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
         )}
 
         {currentStep === 2 && (
+          <AddressStep
+            addressData={addressData}
+            setAddressData={setAddressData}
+            isLoading={isLoading}
+            onNext={() => {
+              trackCheckout('checkout_step3_view')
+              setCurrentStep(3)
+            }}
+            onBack={() => setCurrentStep(1)}
+          />
+        )}
+
+        {currentStep === 3 && (
           <CardPaymentStep
             isLoading={isLoading}
             error={cardError}
@@ -200,7 +249,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
             userEmail={formData.email}
             planPrice={formattedPrice}
             onSubmit={handleCardSubmit}
-            onBack={() => setCurrentStep(1)}
+            onBack={() => setCurrentStep(2)}
           />
         )}
       </CardContent>

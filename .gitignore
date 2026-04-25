@@ -25,3 +25,10 @@ dist-ssr
 storybook-static
 *.tsbuildinfo
 test-results/
+
+# Specs/plans/mockups gerados localmente em sessões de brainstorming/planning
+# (Claude Code superpowers). Ficam na máquina, não vão pro repo.
+docs/superpowers/specs/
+docs/superpowers/plans/
+docs/superpowers/mockups/
+.superpowers/
