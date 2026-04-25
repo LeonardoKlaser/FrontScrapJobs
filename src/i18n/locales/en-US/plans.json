@@ -53,7 +53,7 @@
     "backToHome": "Back to Home",
     "cardHolder": "Name on Card",
     "cardNumber": "Card Number",
-    "cardNumberPlaceholder": "0000 0000 0000 0000",
+    "cardNumberPlaceholder": "•••• •••• •••• ••••",
     "cardExpMonth": "Month",
     "cardExpMonthPlaceholder": "MM",
     "cardExpYear": "Year",

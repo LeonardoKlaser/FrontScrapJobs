@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Spinner } from '@/components/ui/spinner'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, ChevronDown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useCepLookup } from '@/hooks/useCepLookup'
 import { trackCheckout } from '@/lib/analytics'
@@ -27,42 +27,21 @@ export function AddressStep({ addressData, setAddressData, isLoading, onNext }: 
   useEffect(() => {
     if (!cep.data) return
     const data = cep.data
-    const filled = new Set<keyof AddressData>()
-
-    setAddressData((prev) => {
-      const next = { ...prev }
-      if (!prev.street) {
-        next.street = data.logradouro
-        filled.add('street')
-      }
-      if (!prev.neighborhood) {
-        next.neighborhood = data.bairro
-        filled.add('neighborhood')
-      }
-      if (!prev.city) {
-        next.city = data.localidade
-        filled.add('city')
-      }
-      if (!prev.state) {
-        next.state = data.uf
-        filled.add('state')
-      }
-      return next
-    })
-
-    if (filled.size === 0) return
-    setAutoFilled((prev) => {
-      const merged = new Set(prev)
-      filled.forEach((f) => merged.add(f))
-      return merged
-    })
-    setErrors((errs) => {
-      const cleared = { ...errs }
-      filled.forEach((f) => {
-        cleared[f] = ''
-      })
-      return cleared
-    })
+    setAddressData((prev) => ({
+      ...prev,
+      street: data.logradouro,
+      neighborhood: data.bairro,
+      city: data.localidade,
+      state: data.uf
+    }))
+    setAutoFilled(new Set(['street', 'neighborhood', 'city', 'state']))
+    setErrors((errs) => ({
+      ...errs,
+      street: '',
+      neighborhood: '',
+      city: '',
+      state: ''
+    }))
   }, [cep.data, setAddressData])
 
   const applyEdit = (name: keyof AddressData, value: string) => {
@@ -214,27 +193,31 @@ export function AddressStep({ addressData, setAddressData, isLoading, onNext }: 
             <Label htmlFor="state" className="text-muted-foreground">
               {t('paymentForm.state')}
             </Label>
-            <select
-              id="state"
-              name="state"
-              value={addressData.state}
-              onChange={(e) => applyEdit('state', e.target.value)}
-              disabled={isLoading}
-              className={
-                'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1' +
-                ' text-sm shadow-sm transition-colors placeholder:text-muted-foreground' +
-                ' focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring' +
-                ' disabled:cursor-not-allowed disabled:opacity-50 ' +
-                autoFillClass('state')
-              }
-            >
-              <option value="">{t('paymentForm.statePlaceholder')}</option>
-              {BRAZILIAN_STATES.map((uf) => (
-                <option key={uf} value={uf}>
-                  {uf}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                id="state"
+                name="state"
+                value={addressData.state}
+                onChange={(e) => applyEdit('state', e.target.value)}
+                disabled={isLoading}
+                className={
+                  'flex h-9 w-full appearance-none rounded-md border border-input bg-transparent' +
+                  ' pl-3 pr-9 py-1 text-sm shadow-sm transition-colors' +
+                  ' placeholder:text-muted-foreground focus-visible:outline-none' +
+                  ' focus-visible:ring-1 focus-visible:ring-ring' +
+                  ' disabled:cursor-not-allowed disabled:opacity-50 ' +
+                  autoFillClass('state')
+                }
+              >
+                <option value="">{t('paymentForm.statePlaceholder')}</option>
+                {BRAZILIAN_STATES.map((uf) => (
+                  <option key={uf} value={uf}>
+                    {uf}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            </div>
             {errors.state && <p className="text-xs text-destructive">{errors.state}</p>}
           </div>
         </div>
