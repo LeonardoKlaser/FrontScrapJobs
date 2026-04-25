@@ -178,8 +178,6 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
     )
   }
 
-  const formattedPrice = `R$ ${plan.price.toFixed(2).replace('.', ',')}`
-
   const handleBack = () => {
     setCurrentStep((s) => Math.max(1, s - 1) as 1 | 2 | 3)
   }
@@ -267,7 +265,6 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
             error={cardError}
             userName={formData.name}
             userEmail={formData.email}
-            planPrice={formattedPrice}
             onSubmit={handleCardSubmit}
           />
         )}

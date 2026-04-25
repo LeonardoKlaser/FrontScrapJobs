@@ -38,7 +38,6 @@ interface CardPaymentStepProps {
   error: string
   userName: string
   userEmail: string
-  planPrice: string
   onSubmit: (cardData: CardData, docData: DocumentData) => void
 }
 
@@ -83,7 +82,6 @@ export function CardPaymentStep({
   error,
   userName,
   userEmail,
-  planPrice,
   onSubmit
 }: CardPaymentStepProps) {
   const { t } = useTranslation('plans')
@@ -399,7 +397,7 @@ export function CardPaymentStep({
           ) : (
             <>
               <Lock className="mr-2 h-4 w-4" />
-              {t('paymentForm.finishPayment', { price: planPrice })}
+              {t('paymentForm.finishPayment')}
             </>
           )}
         </Button>

@@ -212,7 +212,6 @@ export function PersonalDataStep({
               name="password"
               type={showPassword ? 'text' : 'password'}
               autoComplete="new-password"
-              placeholder="••••••••"
               value={formData.password}
               onChange={handleInputChange}
               disabled={isLoading}

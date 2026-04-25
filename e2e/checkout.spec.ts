@@ -48,7 +48,7 @@ test.describe('Checkout — fluxo de 3 steps', () => {
     await page.fill('#password', 'abc')
     await page.fill('#phone', '11987654321')
 
-    await page.getByRole('button', { name: /Ir para o Pagamento/i }).click()
+    await page.getByRole('button', { name: /^Próximo$/i }).click()
 
     await expect(page.getByText(/8 caracteres/i)).toBeVisible()
   })
@@ -61,7 +61,7 @@ test.describe('Checkout — fluxo de 3 steps', () => {
     await page.fill('#password', 'umaSenhaQualquer8')
     // phone vazio
 
-    await page.getByRole('button', { name: /Ir para o Pagamento/i }).click()
+    await page.getByRole('button', { name: /^Próximo$/i }).click()
 
     await expect(page.getByText(/Telefone é obrigatório/i)).toBeVisible()
     // Continua na etapa 1 — #password só existe nesta etapa
@@ -78,7 +78,7 @@ test.describe('Checkout — fluxo de 3 steps', () => {
     await page.fill('#password', 'umaSenhaQualquer8')
     await page.fill('#phone', '11987654321')
 
-    await page.getByRole('button', { name: /Ir para o Pagamento/i }).click()
+    await page.getByRole('button', { name: /^Próximo$/i }).click()
 
     // Lead foi disparado fire-and-forget
     const req = await leadRequest
@@ -102,7 +102,7 @@ test.describe('Checkout — fluxo de 3 steps', () => {
     await page.fill('#email', 'joao@novo.com')
     await page.fill('#password', 'umaSenhaQualquer8')
     await page.fill('#phone', '11987654321')
-    await page.getByRole('button', { name: /Ir para o Pagamento/i }).click()
+    await page.getByRole('button', { name: /^Próximo$/i }).click()
 
     // Step 2 (endereço — preencher manual já que não vamos mockar viacep)
     await page.fill('#zipCode', '01001000')
@@ -111,7 +111,7 @@ test.describe('Checkout — fluxo de 3 steps', () => {
     await page.fill('#neighborhood', 'Se')
     await page.fill('#city', 'Sao Paulo')
     await page.selectOption('#state', 'SP')
-    await page.getByRole('button', { name: /Ir para o Pagamento/i }).click()
+    await page.getByRole('button', { name: /^Próximo$/i }).click()
 
     // Step 3 — CPF + cartão visíveis
     await expect(page.locator('#cpfCnpj')).toBeVisible()
