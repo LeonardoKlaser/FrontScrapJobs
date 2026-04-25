@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Spinner } from '@/components/ui/spinner'
-import { AlertCircle } from 'lucide-react'
+import { AlertCircle, ArrowLeft } from 'lucide-react'
 import type { Plan } from '@/models/plan'
 import {
   createPayment,
@@ -180,11 +180,32 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
 
   const formattedPrice = `R$ ${plan.price.toFixed(2).replace('.', ',')}`
 
+  const handleBack = () => {
+    setCurrentStep((s) => Math.max(1, s - 1) as 1 | 2 | 3)
+  }
+
   return (
     <Card className="w-full border-border/50">
-      <CardHeader>
-        <CardTitle className="text-2xl tracking-tight">{t('paymentForm.title')}</CardTitle>
-        <CardDescription>{t('paymentForm.description')}</CardDescription>
+      <CardHeader className="flex flex-row items-start gap-3 space-y-0">
+        {currentStep > 1 && (
+          <button
+            type="button"
+            onClick={handleBack}
+            disabled={isLoading}
+            aria-label={t('paymentForm.prevStep')}
+            className={
+              'mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full' +
+              ' text-muted-foreground transition-colors hover:bg-muted hover:text-foreground' +
+              ' disabled:cursor-not-allowed disabled:opacity-50'
+            }
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </button>
+        )}
+        <div className="flex-1 space-y-1.5">
+          <CardTitle className="text-2xl tracking-tight">{t('paymentForm.title')}</CardTitle>
+          <CardDescription>{t('paymentForm.description')}</CardDescription>
+        </div>
       </CardHeader>
 
       <CardContent>
@@ -237,7 +258,6 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
               trackCheckout('checkout_step3_view')
               setCurrentStep(3)
             }}
-            onBack={() => setCurrentStep(1)}
           />
         )}
 
@@ -249,7 +269,6 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
             userEmail={formData.email}
             planPrice={formattedPrice}
             onSubmit={handleCardSubmit}
-            onBack={() => setCurrentStep(2)}
           />
         )}
       </CardContent>

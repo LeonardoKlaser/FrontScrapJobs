@@ -29,7 +29,6 @@ test.describe('Checkout — fluxo de 3 steps', () => {
     await page.goto('/checkout/2')
 
     await expect(page.getByText('Finalize sua Assinatura')).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Crie sua conta' })).toBeVisible()
 
     await expect(page.locator('#name')).toBeVisible()
     await expect(page.locator('#email')).toBeVisible()
@@ -65,8 +64,8 @@ test.describe('Checkout — fluxo de 3 steps', () => {
     await page.getByRole('button', { name: /Ir para o Pagamento/i }).click()
 
     await expect(page.getByText(/Telefone é obrigatório/i)).toBeVisible()
-    // Continua na etapa 1
-    await expect(page.getByRole('heading', { name: 'Crie sua conta' })).toBeVisible()
+    // Continua na etapa 1 — #password só existe nesta etapa
+    await expect(page.locator('#password')).toBeVisible()
   })
 
   test('avança pro step 2 (endereço) e dispara saveLead', async ({ page }) => {
@@ -95,7 +94,7 @@ test.describe('Checkout — fluxo de 3 steps', () => {
     await expect(page.locator('#cardNumber')).toHaveCount(0)
   })
 
-  test('step 3 saúda pelo nome e mostra CPF + cartão (sem endereço)', async ({ page }) => {
+  test('step 3 mostra CPF + cartão (sem telefone nem endereço)', async ({ page }) => {
     await page.goto('/checkout/2')
 
     // Step 1
@@ -114,8 +113,7 @@ test.describe('Checkout — fluxo de 3 steps', () => {
     await page.selectOption('#state', 'SP')
     await page.getByRole('button', { name: /Ir para o Pagamento/i }).click()
 
-    // Step 3
-    await expect(page.getByRole('heading', { name: /Falta pouco, Joao/ })).toBeVisible()
+    // Step 3 — CPF + cartão visíveis
     await expect(page.locator('#cpfCnpj')).toBeVisible()
     await expect(page.locator('#cardNumber')).toBeVisible()
     await expect(page.locator('#holderName')).toHaveValue(/JOAO SILVA/i)

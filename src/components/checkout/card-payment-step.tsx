@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Spinner } from '@/components/ui/spinner'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { AlertCircle, Lock, CreditCard, ArrowLeft, ShieldCheck, FileTextIcon } from 'lucide-react'
+import { AlertCircle, Lock, ShieldCheck, FileTextIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { CardData } from '@/services/paymentService'
 import { useValidateCheckout } from '@/hooks/useValidateCheckout'
@@ -40,7 +40,6 @@ interface CardPaymentStepProps {
   userEmail: string
   planPrice: string
   onSubmit: (cardData: CardData, docData: DocumentData) => void
-  onBack: () => void
 }
 
 function formatCardNumber(value: string): string {
@@ -85,8 +84,7 @@ export function CardPaymentStep({
   userName,
   userEmail,
   planPrice,
-  onSubmit,
-  onBack
+  onSubmit
 }: CardPaymentStepProps) {
   const { t } = useTranslation('plans')
   const { t: tAuth } = useTranslation('auth')
@@ -245,77 +243,14 @@ export function CardPaymentStep({
     )
   }
 
-  const firstName = userName.trim().split(/\s+/)[0] || ''
-
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-6">
-      <button
-        type="button"
-        onClick={onBack}
-        disabled={isLoading}
-        className={
-          'inline-flex items-center gap-1.5 text-sm text-muted-foreground' +
-          ' transition-colors hover:text-foreground'
-        }
-      >
-        <ArrowLeft className="h-4 w-4" />
-        {t('paymentForm.prevStep')}
-      </button>
-
-      <div className="space-y-1">
-        <h3 className="text-lg font-semibold">
-          {t('paymentForm.step2Greeting', { name: firstName })}
-        </h3>
-        <p className="text-sm text-muted-foreground">{t('paymentForm.step3Subtitle')}</p>
-      </div>
-
       {error && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
-
-      <fieldset className="space-y-4 animate-fade-in-up">
-        <legend
-          className={
-            'text-sm font-semibold uppercase tracking-wider text-muted-foreground' +
-            ' flex items-center gap-2'
-          }
-        >
-          <FileTextIcon className="h-4 w-4" />
-          {t('paymentForm.identificationSection')}
-        </legend>
-
-        <div className="space-y-2">
-          <Label htmlFor="cpfCnpj" className="text-muted-foreground">
-            {t('paymentForm.cpfLabel')}
-          </Label>
-          <div className="relative">
-            <FileTextIcon
-              className={
-                'pointer-events-none absolute left-3 top-1/2 h-4 w-4' +
-                ' -translate-y-1/2 text-muted-foreground'
-              }
-            />
-            <Input
-              id="cpfCnpj"
-              name="cpfCnpj"
-              type="text"
-              inputMode="numeric"
-              placeholder={t('paymentForm.cpfPlaceholder')}
-              value={cardForm.cpfCnpj}
-              onChange={handleChange}
-              onBlur={handleCpfBlur}
-              disabled={isLoading}
-              className={`pl-10 font-mono ${validationErrors.cpfCnpj ? 'border-destructive' : ''}`}
-            />
-          </div>
-          {validationErrors.cpfCnpj && (
-            <p className="text-xs text-destructive">{validationErrors.cpfCnpj}</p>
-          )}
-        </div>
-      </fieldset>
 
       <CardPreview
         cardNumber={cardForm.cardNumber}
@@ -325,17 +260,7 @@ export function CardPaymentStep({
         cvvFocused={cvvFocused}
       />
 
-      <fieldset className="space-y-4 animate-fade-in-up">
-        <legend
-          className={
-            'text-sm font-semibold uppercase tracking-wider text-muted-foreground' +
-            ' flex items-center gap-2'
-          }
-        >
-          <CreditCard className="h-4 w-4" />
-          {t('paymentForm.cardData')}
-        </legend>
-
+      <div className="space-y-4 animate-fade-in-up">
         <div className="space-y-2">
           <Label htmlFor="holderName" className="text-muted-foreground">
             {t('paymentForm.cardHolder')}
@@ -345,7 +270,6 @@ export function CardPaymentStep({
             name="holderName"
             type="text"
             autoComplete="cc-name"
-            placeholder={t('paymentForm.cardHolderPlaceholder')}
             value={cardForm.holderName}
             onChange={handleChange}
             disabled={isLoading}
@@ -411,7 +335,6 @@ export function CardPaymentStep({
               type="password"
               inputMode="numeric"
               autoComplete="off"
-              placeholder={t('paymentForm.cardCvvPlaceholder')}
               value={cardForm.cvv}
               onChange={handleChange}
               onFocus={() => setCvvFocused(true)}
@@ -427,7 +350,38 @@ export function CardPaymentStep({
             )}
           </div>
         </div>
-      </fieldset>
+      </div>
+
+      <div className="space-y-4 animate-fade-in-up">
+        <div className="space-y-2">
+          <Label htmlFor="cpfCnpj" className="text-muted-foreground">
+            {t('paymentForm.cpfLabel')}
+          </Label>
+          <div className="relative">
+            <FileTextIcon
+              className={
+                'pointer-events-none absolute left-3 top-1/2 h-4 w-4' +
+                ' -translate-y-1/2 text-muted-foreground'
+              }
+            />
+            <Input
+              id="cpfCnpj"
+              name="cpfCnpj"
+              type="text"
+              inputMode="numeric"
+              placeholder={t('paymentForm.cpfPlaceholder')}
+              value={cardForm.cpfCnpj}
+              onChange={handleChange}
+              onBlur={handleCpfBlur}
+              disabled={isLoading}
+              className={`pl-10 font-mono ${validationErrors.cpfCnpj ? 'border-destructive' : ''}`}
+            />
+          </div>
+          {validationErrors.cpfCnpj && (
+            <p className="text-xs text-destructive">{validationErrors.cpfCnpj}</p>
+          )}
+        </div>
+      </div>
 
       <div className="space-y-4 border-t border-border/50 pt-6">
         <Button

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Spinner } from '@/components/ui/spinner'
-import { ArrowLeft, ArrowRight, MapPin } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useCepLookup } from '@/hooks/useCepLookup'
 import { trackCheckout } from '@/lib/analytics'
@@ -16,16 +16,9 @@ interface AddressStepProps {
   setAddressData: React.Dispatch<React.SetStateAction<AddressData>>
   isLoading: boolean
   onNext: () => void
-  onBack: () => void
 }
 
-export function AddressStep({
-  addressData,
-  setAddressData,
-  isLoading,
-  onNext,
-  onBack
-}: AddressStepProps) {
+export function AddressStep({ addressData, setAddressData, isLoading, onNext }: AddressStepProps) {
   const { t } = useTranslation('plans')
   const [autoFilled, setAutoFilled] = useState<Set<keyof AddressData>>(new Set())
   const [errors, setErrors] = useState<Partial<Record<keyof AddressData, string>>>({})
@@ -115,27 +108,7 @@ export function AddressStep({
 
   return (
     <div className="space-y-6">
-      <button
-        type="button"
-        onClick={onBack}
-        disabled={isLoading}
-        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        {t('paymentForm.prevStep')}
-      </button>
-
-      <div className="space-y-1">
-        <h3 className="text-lg font-semibold">{t('paymentForm.step2Title')}</h3>
-        <p className="text-sm text-muted-foreground">{t('paymentForm.step2Subtitle')}</p>
-      </div>
-
-      <fieldset className="space-y-4 animate-fade-in-up">
-        <legend className="text-sm font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-          <MapPin className="h-4 w-4" />
-          {t('paymentForm.billingAddress')}
-        </legend>
-
+      <div className="space-y-4 animate-fade-in-up">
         <div className="grid grid-cols-3 gap-3">
           <div className="space-y-2">
             <Label htmlFor="zipCode" className="text-muted-foreground">
@@ -173,7 +146,6 @@ export function AddressStep({
               name="street"
               type="text"
               autoComplete="address-line1"
-              placeholder={t('paymentForm.streetPlaceholder')}
               value={addressData.street}
               onChange={handleChange}
               disabled={isLoading}
@@ -193,7 +165,6 @@ export function AddressStep({
               name="number"
               type="text"
               inputMode="numeric"
-              placeholder={t('paymentForm.addressNumberPlaceholder')}
               value={addressData.number}
               onChange={handleChange}
               disabled={isLoading}
@@ -209,7 +180,6 @@ export function AddressStep({
               id="neighborhood"
               name="neighborhood"
               type="text"
-              placeholder={t('paymentForm.neighborhoodPlaceholder')}
               value={addressData.neighborhood}
               onChange={handleChange}
               disabled={isLoading}
@@ -233,7 +203,6 @@ export function AddressStep({
               name="city"
               type="text"
               autoComplete="address-level2"
-              placeholder={t('paymentForm.cityPlaceholder')}
               value={addressData.city}
               onChange={handleChange}
               disabled={isLoading}
@@ -269,7 +238,7 @@ export function AddressStep({
             {errors.state && <p className="text-xs text-destructive">{errors.state}</p>}
           </div>
         </div>
-      </fieldset>
+      </div>
 
       <Button
         type="button"

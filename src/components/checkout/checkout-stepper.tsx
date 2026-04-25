@@ -1,3 +1,4 @@
+import { Fragment } from 'react'
 import { Check } from 'lucide-react'
 
 interface CheckoutStepperProps {
@@ -7,42 +8,39 @@ interface CheckoutStepperProps {
 
 export function CheckoutStepper({ currentStep, labels }: CheckoutStepperProps) {
   return (
-    <div className="flex items-center gap-3 mb-8">
+    <div className="flex items-center mb-8">
       {labels.map((label, index) => {
         const stepNumber = index + 1
         const isCompleted = stepNumber < currentStep
         const isActive = stepNumber === currentStep
+        const reached = isCompleted || isActive
 
         return (
-          <div key={label} className="flex items-center gap-3 flex-1">
+          <Fragment key={label}>
             {index > 0 && (
               <div
-                className={`h-px flex-1 transition-colors ${
-                  isCompleted || isActive ? 'bg-primary' : 'bg-border'
+                className={`h-px flex-1 mx-3 transition-colors ${
+                  reached ? 'bg-primary' : 'bg-border'
                 }`}
               />
             )}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 shrink-0">
               <div
                 className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium transition-colors ${
-                  isCompleted
-                    ? 'bg-primary text-primary-foreground'
-                    : isActive
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-muted text-muted-foreground'
+                  reached ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
                 }`}
               >
                 {isCompleted ? <Check className="h-4 w-4" /> : stepNumber}
               </div>
               <span
-                className={`text-sm font-medium transition-colors ${
+                className={`whitespace-nowrap text-sm font-medium transition-colors ${
                   isActive ? 'text-foreground' : 'text-muted-foreground'
                 }`}
               >
                 {label}
               </span>
             </div>
-          </div>
+          </Fragment>
         )
       })}
     </div>

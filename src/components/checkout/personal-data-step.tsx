@@ -146,11 +146,6 @@ export function PersonalDataStep({
 
   return (
     <div className="space-y-6">
-      <div className="space-y-1">
-        <h3 className="text-lg font-semibold">{t('paymentForm.step1Title')}</h3>
-        <p className="text-sm text-muted-foreground">{t('paymentForm.step1Subtitle')}</p>
-      </div>
-
       <fieldset className="space-y-4 animate-fade-in-up">
         <div className="space-y-2">
           <Label htmlFor="name" className="text-muted-foreground">
@@ -163,7 +158,6 @@ export function PersonalDataStep({
               name="name"
               type="text"
               autoComplete="name"
-              placeholder={t('paymentForm.fullNamePlaceholder')}
               value={formData.name}
               onChange={handleInputChange}
               disabled={isLoading}
