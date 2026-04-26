@@ -58,8 +58,8 @@ export function ValueFeaturesSection() {
 
   return (
     <SectionWrapper id="features">
-      <div className="py-20 lg:py-28 px-6">
-        <div className="max-w-6xl mx-auto space-y-20 lg:space-y-28">
+      <div className="py-16 lg:py-20 px-6">
+        <div className="max-w-6xl mx-auto space-y-20 lg:space-y-24">
           {/* Block 1: O Radar — Text LEFT, UI RIGHT */}
           <FeatureBlock
             overline={t('valueFeatures.radar.overline')}

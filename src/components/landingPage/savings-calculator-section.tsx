@@ -49,7 +49,7 @@ export function SavingsCalculatorSection() {
 
   return (
     <SectionWrapper id="calculator">
-      <div className="py-20 lg:py-28 px-6">
+      <div className="py-16 lg:py-20 px-6">
         <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
           {/* Left column — text */}
           <div>

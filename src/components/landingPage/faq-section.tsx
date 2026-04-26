@@ -14,7 +14,7 @@ export function FaqSection() {
 
   return (
     <SectionWrapper id="faq">
-      <div className="py-20 lg:py-28 px-6 text-center">
+      <div className="py-16 lg:py-20 px-6 text-center">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <span className="text-sm font-medium tracking-[2px] uppercase text-emerald-500">

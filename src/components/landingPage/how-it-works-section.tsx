@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { FileText, Bell, BrainCircuit, Download, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { SectionWrapper } from './section-wrapper'
+import { LANDING_CTA_CLASS } from './landing-cta'
 
 const steps = [
   {
@@ -78,7 +79,7 @@ export function HowItWorksSection() {
 
   return (
     <SectionWrapper id="howItWorks">
-      <div className="py-20 lg:py-28 px-6">
+      <div className="py-16 lg:py-20 px-6">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <motion.div
@@ -147,6 +148,7 @@ export function HowItWorksSection() {
             <Button
               variant="glow"
               size="lg"
+              className={LANDING_CTA_CLASS}
               onClick={() =>
                 document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
               }

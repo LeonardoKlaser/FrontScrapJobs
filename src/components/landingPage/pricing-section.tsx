@@ -29,7 +29,7 @@ export function PricingSection() {
   if (isLoading) {
     return (
       <SectionWrapper id="pricing">
-        <div className="py-20 lg:py-28 px-6 text-center text-zinc-500">{t('pricing.loading')}</div>
+        <div className="py-16 lg:py-20 px-6 text-center text-zinc-500">{t('pricing.loading')}</div>
       </SectionWrapper>
     )
   }
@@ -39,7 +39,7 @@ export function PricingSection() {
 
   return (
     <SectionWrapper id="pricing">
-      <div className="py-20 lg:py-28 px-6 text-center">
+      <div className="py-16 lg:py-20 px-6 text-center">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="mb-16">
@@ -110,7 +110,7 @@ export function PricingSection() {
                           .replace(/\s+/g, '-')}`}
                         variant="glow"
                         size="lg"
-                        className="w-full"
+                        className="w-full h-auto py-4 text-base font-semibold rounded-lg"
                         onClick={() => handleChoosePlan(plan.id)}
                       >
                         {t('pricing.cta')}

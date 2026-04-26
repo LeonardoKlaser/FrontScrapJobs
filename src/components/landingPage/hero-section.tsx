@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { ArrowRight, ShieldCheck } from 'lucide-react'
 import { SectionWrapper } from './section-wrapper'
 import { HeroToastNotifications } from './ui-snippets/hero-toast-notifications'
+import { LANDING_CTA_CLASS } from './landing-cta'
 import { usePublicStats } from '@/hooks/usePublicStats'
 
 export function HeroSection() {
@@ -23,11 +24,11 @@ export function HeroSection() {
     monitored >= 30 ? t('hero.eyebrow', { sites: monitored }) : t('hero.eyebrowFallback')
 
   return (
-    <SectionWrapper className="pt-20 lg:pt-24 pb-12 lg:pb-20 px-6 sm:px-8 overflow-hidden bg-white">
+    <SectionWrapper className="pt-16 pb-16 lg:pb-20 px-6 sm:px-8 overflow-hidden bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center lg:items-start">
           {/* Left column — Text */}
-          <div className="lg:w-[420px] lg:shrink-0 space-y-6 text-center lg:text-left max-w-xl lg:max-w-none lg:pt-16">
+          <div className="lg:w-[420px] lg:shrink-0 space-y-6 text-center lg:text-left max-w-xl lg:max-w-none lg:pt-8">
             {/* Eyebrow — live monitoring badge */}
             <span className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.15em] uppercase text-emerald-600 font-semibold animate-fade-in-up">
               <span className="relative flex h-2 w-2">
@@ -54,7 +55,7 @@ export function HeroSection() {
               <Button
                 variant="glow"
                 size="lg"
-                className="w-full sm:w-auto px-8 py-4 text-lg font-medium rounded-lg animate-pulse-glow"
+                className={`w-full sm:w-auto ${LANDING_CTA_CLASS}`}
                 onClick={() =>
                   document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
                 }
@@ -80,7 +81,7 @@ export function HeroSection() {
 
           {/* Right column — Inbox mockup */}
           <div className="flex-1 min-w-0 w-full lg:w-auto mt-8 lg:mt-0">
-            <div className="relative mx-auto max-w-[460px] lg:max-w-none lg:mr-[-40px] pt-8 lg:pt-16 pb-4">
+            <div className="relative mx-auto max-w-[460px] lg:max-w-none lg:mr-[-40px] pt-4 lg:pt-8 pb-4">
               {/* Glow effect — large blurred emerald orb */}
               <div
                 aria-hidden="true"

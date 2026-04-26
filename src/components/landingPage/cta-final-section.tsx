@@ -2,12 +2,13 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 import { SectionWrapper } from './section-wrapper'
+import { LANDING_CTA_CLASS } from './landing-cta'
 
 export function CtaFinalSection() {
   const { t } = useTranslation('landing')
 
   return (
-    <SectionWrapper className="py-20 lg:py-28 px-6 bg-emerald-50/30">
+    <SectionWrapper className="py-16 lg:py-20 px-6 bg-emerald-50/30">
       <div className="max-w-2xl mx-auto text-center space-y-6">
         <h2 className="font-display text-3xl lg:text-5xl font-semibold text-zinc-900">
           {t('ctaFinal.title')}{' '}
@@ -19,7 +20,7 @@ export function CtaFinalSection() {
         <Button
           variant="glow"
           size="lg"
-          className="px-10 py-4 text-base font-semibold rounded-lg animate-pulse-glow mt-4"
+          className={LANDING_CTA_CLASS}
           onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
         >
           {t('ctaFinal.cta')}

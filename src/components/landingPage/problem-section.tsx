@@ -38,7 +38,7 @@ export function ProblemSection() {
   const { t } = useTranslation('landing')
 
   return (
-    <SectionWrapper className="py-20 lg:py-28 px-6 bg-zinc-50">
+    <SectionWrapper className="py-16 lg:py-20 px-6 bg-zinc-50">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

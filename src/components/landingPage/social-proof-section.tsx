@@ -13,7 +13,7 @@ export function SocialProofSection() {
 
   return (
     <SectionWrapper>
-      <div className="py-20 lg:py-28 px-6">
+      <div className="py-16 lg:py-20 px-6">
         <div className="max-w-6xl mx-auto">
           {/* New title + subtitle */}
           <div className="text-center mb-10">
