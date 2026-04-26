@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
-import { FileText, Bell, BrainCircuit, Download } from 'lucide-react'
+import { FileText, Bell, BrainCircuit, Download, ArrowRight } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { SectionWrapper } from './section-wrapper'
 
 const steps = [
@@ -77,8 +78,8 @@ export function HowItWorksSection() {
 
   return (
     <SectionWrapper id="howItWorks">
-      <div className="py-16 px-6 lg:py-24 lg:px-8">
-        <div className="max-w-5xl mx-auto">
+      <div className="py-20 lg:py-28 px-6">
+        <div className="max-w-6xl mx-auto">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
@@ -90,7 +91,7 @@ export function HowItWorksSection() {
             <span className="font-mono text-xs tracking-[0.15em] uppercase text-emerald-500 font-semibold">
               {t('howItWorksNew.overline')}
             </span>
-            <h2 className="font-display text-3xl lg:text-[2.75rem] font-extrabold text-zinc-900 mt-3 leading-[1.1]">
+            <h2 className="font-display text-3xl lg:text-5xl font-extrabold text-zinc-900 mt-3 leading-[1.1]">
               {t('howItWorksNew.headline')}
               <br />
               <span className="text-gradient-primary">{t('howItWorksNew.headlineGradient')}</span>
@@ -143,13 +144,16 @@ export function HowItWorksSection() {
             transition={{ duration: 0.4, delay: 0.6 }}
             className="text-center mt-12"
           >
-            <a
-              href="#pricing"
-              className="inline-block text-white border-0 rounded-xl py-3 px-8 text-sm font-bold font-display shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] transition-shadow"
-              style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}
+            <Button
+              variant="glow"
+              size="lg"
+              onClick={() =>
+                document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
+              }
             >
               {t('howItWorksNew.cta')}
-            </a>
+              <ArrowRight className="w-5 h-5 ml-1" />
+            </Button>
           </motion.div>
         </div>
       </div>

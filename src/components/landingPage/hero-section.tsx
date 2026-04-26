@@ -23,7 +23,7 @@ export function HeroSection() {
     monitored >= 30 ? t('hero.eyebrow', { sites: monitored }) : t('hero.eyebrowFallback')
 
   return (
-    <SectionWrapper className="pt-20 lg:pt-12 pb-8 lg:pb-12 px-6 sm:px-8 overflow-hidden bg-white">
+    <SectionWrapper className="pt-20 lg:pt-24 pb-12 lg:pb-20 px-6 sm:px-8 overflow-hidden bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center lg:items-start">
           {/* Left column — Text */}
@@ -38,7 +38,7 @@ export function HeroSection() {
             </span>
 
             {/* Headline */}
-            <h1 className="text-3xl min-[400px]:text-4xl lg:text-[56px] font-semibold leading-tight tracking-tight animate-fade-in-up text-balance text-zinc-900 [animation-delay:50ms]">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-tight tracking-tight animate-fade-in-up text-balance text-zinc-900 [animation-delay:50ms]">
               {t('hero.heading1')}
               <br />
               <span className="text-gradient-primary">{t('hero.heading2')}</span>

@@ -10,8 +10,8 @@ export function Footer() {
 
   return (
     <SectionWrapper>
-      <footer className="py-8 px-6">
-        <div className="container mx-auto">
+      <footer className="py-12 px-6">
+        <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             {/* Logo */}
             <Logo size={24} showText textClassName="text-lg" />

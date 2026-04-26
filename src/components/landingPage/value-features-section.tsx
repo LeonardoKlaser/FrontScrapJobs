@@ -24,7 +24,7 @@ function FeatureBlock({
 }: FeatureBlockProps) {
   return (
     <div
-      className={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center py-12 lg:py-20 ${reverse ? 'lg:[direction:rtl]' : ''}`}
+      className={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center ${reverse ? 'lg:[direction:rtl]' : ''}`}
     >
       {/* Text side */}
       <motion.div
@@ -37,7 +37,7 @@ function FeatureBlock({
         <span className="font-mono text-xs tracking-[0.15em] uppercase text-emerald-500 font-semibold">
           {overline}
         </span>
-        <h3 className="font-display text-3xl lg:text-[2.75rem] font-extrabold text-zinc-900 leading-[1.1] mt-3">
+        <h3 className="font-display text-3xl lg:text-5xl font-extrabold text-zinc-900 leading-[1.1] mt-3">
           {headline}
           <br />
           <span className="text-gradient-primary">{headlineGradient}</span>
@@ -58,8 +58,8 @@ export function ValueFeaturesSection() {
 
   return (
     <SectionWrapper id="features">
-      <div className="px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
+      <div className="py-20 lg:py-28 px-6">
+        <div className="max-w-6xl mx-auto space-y-20 lg:space-y-28">
           {/* Block 1: O Radar — Text LEFT, UI RIGHT */}
           <FeatureBlock
             overline={t('valueFeatures.radar.overline')}

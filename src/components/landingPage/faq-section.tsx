@@ -14,13 +14,13 @@ export function FaqSection() {
 
   return (
     <SectionWrapper id="faq">
-      <div className="py-16 px-6 text-center">
-        <div className="container mx-auto max-w-4xl">
+      <div className="py-20 lg:py-28 px-6 text-center">
+        <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <span className="text-sm font-medium tracking-[2px] uppercase text-emerald-500">
             {t('labels.faq')}
           </span>
-          <h2 className="font-display text-3xl lg:text-4xl font-semibold text-zinc-900 leading-tight tracking-tight text-balance mt-3 mb-2">
+          <h2 className="font-display text-3xl lg:text-5xl font-semibold text-zinc-900 leading-tight tracking-tight text-balance mt-3 mb-2">
             {t('faq.title')}
           </h2>
 

@@ -66,8 +66,8 @@ export function StatsCounterSection() {
 
   return (
     <SectionWrapper variant="dark">
-      <div className="py-20 px-4">
-        <div className="container mx-auto flex flex-col sm:flex-row items-center justify-around gap-10">
+      <div className="py-20 lg:py-28 px-6">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-around gap-10">
           <div ref={sites.ref} className="flex flex-col items-center gap-3 animate-fade-in-up">
             <Globe className="h-8 w-8 text-emerald-400" />
             <span className="font-display text-5xl font-semibold text-white tabular-nums">

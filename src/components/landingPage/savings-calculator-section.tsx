@@ -49,15 +49,15 @@ export function SavingsCalculatorSection() {
 
   return (
     <SectionWrapper id="calculator">
-      <div className="max-w-6xl mx-auto py-16 px-6">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="py-20 lg:py-28 px-6">
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
           {/* Left column — text */}
           <div>
             <span className="text-sm font-medium tracking-[2px] uppercase text-emerald-500">
               {t('labels.calculator')}
             </span>
 
-            <h2 className="font-display text-2xl lg:text-4xl font-semibold text-zinc-900 mt-3">
+            <h2 className="font-display text-3xl lg:text-5xl font-semibold text-zinc-900 mt-3">
               {t('calculator.title')}{' '}
               <span className="text-gradient-primary">{t('calculator.titleHighlight')}</span>
             </h2>

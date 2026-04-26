@@ -95,8 +95,8 @@ export function TestimonialsSection() {
   }, [isMalformed, i18n.language])
 
   return (
-    <SectionWrapper className="py-20 lg:py-28 px-4 sm:px-6 bg-zinc-50" id="testimonials">
-      <div className="max-w-5xl mx-auto">
+    <SectionWrapper className="py-20 lg:py-28 px-6 bg-zinc-50" id="testimonials">
+      <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <span className="font-mono text-xs tracking-[0.15em] uppercase text-emerald-500 font-semibold">
             {t('testimonials.eyebrow')}

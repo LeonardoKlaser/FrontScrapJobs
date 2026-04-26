@@ -7,9 +7,9 @@ export function CtaFinalSection() {
   const { t } = useTranslation('landing')
 
   return (
-    <SectionWrapper className="py-20 bg-emerald-50/30">
-      <div className="max-w-2xl mx-auto text-center px-6 space-y-6">
-        <h2 className="font-display text-3xl lg:text-4xl font-semibold text-zinc-900">
+    <SectionWrapper className="py-20 lg:py-28 px-6 bg-emerald-50/30">
+      <div className="max-w-2xl mx-auto text-center space-y-6">
+        <h2 className="font-display text-3xl lg:text-5xl font-semibold text-zinc-900">
           {t('ctaFinal.title')}{' '}
           <span className="text-gradient-primary">{t('ctaFinal.titleHighlight')}</span>
         </h2>
