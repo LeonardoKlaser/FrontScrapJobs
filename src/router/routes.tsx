@@ -20,6 +20,7 @@ const NotFound = lazy(() => import('@/pages/NotFound').then((m) => ({ default: m
 const EmpresasPage = lazy(() => import('@/pages/ListSites'))
 const AdicionarSitePage = lazy(() => import('@/pages/addNewSite'))
 const AdminSitesListPage = lazy(() => import('@/pages/adminSitesList'))
+const AdminLeadsPage = lazy(() => import('@/pages/adminLeads'))
 const EditSitePage = lazy(() => import('@/pages/editSite'))
 const AccountPage = lazy(() => import('@/pages/accountPage'))
 const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'))
@@ -112,6 +113,18 @@ export const createRouter = (queryClient: QueryClient) =>
                 fallback={<LoadingSection variant="section" label={i18n.t('loadingPanel')} />}
               >
                 <AdminSitesListPage />
+              </Suspense>
+            </AdminGuard>
+          )
+        },
+        {
+          path: PATHS.app.adminLeads,
+          element: (
+            <AdminGuard>
+              <Suspense
+                fallback={<LoadingSection variant="section" label={i18n.t('loadingPanel')} />}
+              >
+                <AdminLeadsPage />
               </Suspense>
             </AdminGuard>
           )

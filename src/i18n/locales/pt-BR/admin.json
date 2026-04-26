@@ -159,5 +159,31 @@
     "usersVsCancellations": "Usuários vs. Cancelamentos",
     "thisMonth": "Este mês",
     "usersPlaceholder": "Histórico de usuários em breve"
+  },
+  "leads": {
+    "title": "Leads",
+    "description": "Pessoas que iniciaram o checkout e não finalizaram.",
+    "searchPlaceholder": "Buscar por nome ou email...",
+    "hideContacted": "Ocultar contatados",
+    "loading": "Carregando...",
+    "empty": "Nenhum lead encontrado",
+    "errorTitle": "Erro ao carregar leads",
+    "retry": "Tentar novamente",
+    "forbiddenTitle": "Sem permissão",
+    "forbiddenDescription": "Esta página é restrita a administradores.",
+    "markContacted": "Marcar como contatado",
+    "unmarkContacted": "Desmarcar",
+    "whatsapp": "WhatsApp",
+    "invalidPhone": "Telefone inválido",
+    "contactedOn": "Contatado em {{date}}",
+    "col": {
+      "name": "Nome",
+      "email": "Email",
+      "phone": "Telefone",
+      "plan": "Plano",
+      "attempts": "Tentativas",
+      "lastAttempt": "Última tentativa",
+      "actions": "Ações"
+    }
   }
 }

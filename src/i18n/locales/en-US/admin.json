@@ -159,5 +159,31 @@
     "usersVsCancellations": "Users vs. Cancellations",
     "thisMonth": "This month",
     "usersPlaceholder": "User history coming soon"
+  },
+  "leads": {
+    "title": "Leads",
+    "description": "People who started checkout and didn't finish.",
+    "searchPlaceholder": "Search by name or email...",
+    "hideContacted": "Hide contacted",
+    "loading": "Loading...",
+    "empty": "No leads found",
+    "errorTitle": "Failed to load leads",
+    "retry": "Try again",
+    "forbiddenTitle": "Access denied",
+    "forbiddenDescription": "This page is restricted to administrators.",
+    "markContacted": "Mark as contacted",
+    "unmarkContacted": "Unmark",
+    "whatsapp": "WhatsApp",
+    "invalidPhone": "Invalid phone",
+    "contactedOn": "Contacted on {{date}}",
+    "col": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "plan": "Plan",
+      "attempts": "Attempts",
+      "lastAttempt": "Last attempt",
+      "actions": "Actions"
+    }
   }
 }
