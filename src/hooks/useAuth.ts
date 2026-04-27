@@ -26,7 +26,31 @@ export function useAuth() {
         // browser. authLoader faz fetchQuery(['user']) na navegação seguinte.
         queryClient.clear()
         const redirectTo = searchParams.get('from')
-        navigate(redirectTo && redirectTo.startsWith('/app') ? redirectTo : PATHS.app.home)
+        // Decode primeiro pra validar; navega usando a forma decoded (a validacao
+        // tem que casar com o que e navegado, senao paths duplo-encoded passam
+        // a validacao mas levam pra rota quebrada).
+        let decoded: string | null = null
+        if (redirectTo) {
+          try {
+            decoded = decodeURIComponent(redirectTo)
+          } catch {
+            decoded = null
+          }
+        }
+        const isAllowed = (path: string | null): path is string => {
+          if (!path) return false
+          // Anti-bypass: //evil.com (protocol-relative), \evil.com (algumas
+          // browsers normalizam pra /), foo@evil.com (URL com userinfo).
+          if (path.includes('//') || path.includes('\\') || path.includes('@')) {
+            return false
+          }
+          return (
+            path.startsWith('/app') ||
+            path.startsWith('/checkout/') ||
+            path === '/payment-confirmation'
+          )
+        }
+        navigate(isAllowed(decoded) ? decoded : PATHS.app.home)
         return true
       } catch (e: unknown) {
         if (axios.isAxiosError(e)) {

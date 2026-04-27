@@ -7,5 +7,6 @@ export interface Plan {
   max_pdf_extractions: number
   max_suggestion_applies: number
   max_pdf_generations: number
+  is_trial: boolean
   features: string[]
 }

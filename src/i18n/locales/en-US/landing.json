@@ -184,10 +184,22 @@
     "popular": "Popular",
     "planName": "{{name}} Plan",
     "perMonth": "/mo",
-    "cta": "Try free for 7 days",
     "badge": "Try any plan free for 7 days. Pick yours later.",
     "savingsAnchor": "Save up to {{hours}} hours of tedious job searching per month",
-    "guarantee": "7 days free for you to decide. No card, no risk."
+    "guarantee": "7 days free for you to decide. No card, no risk.",
+    "trialBadge": "FREE FOR 7 DAYS",
+    "trialTitle": "Try before you subscribe",
+    "trialSubtitle": "Restricted trial — no card required.",
+    "trialCta": "Start free 7-day trial",
+    "trialFeatures": {
+      "sites": "1 monitored site",
+      "analyses": "3 AI analyses",
+      "extractions": "3 CV extractions",
+      "suggestions": "2 suggestions applied",
+      "pdfs": "1 PDF generated"
+    },
+    "paidCta": "Subscribe now — skip trial",
+    "paidSubtext": "Skip the trial and go straight to payment."
   },
   "lgpd": {
     "badge": "LGPD and GDPR Compliant",

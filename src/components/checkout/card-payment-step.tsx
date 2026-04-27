@@ -125,8 +125,8 @@ export function CardPaymentStep({
   }, [userName])
 
   // Se o usuário voltar pra etapa 1 e mudar o email, o resultado anterior do CPF
-  // (que era único pro email antigo) fica stale. Reseta + limpa erro inline
-  // pra evitar estado misto (erro vermelho + botão habilitado).
+  // (que era único pro email antigo) fica stale. Reseta o flag pra evitar
+  // mostrar mensagem informativa pro email errado.
   useEffect(() => {
     if (isFirstUserEmailEffect.current) {
       isFirstUserEmailEffect.current = false
@@ -140,18 +140,20 @@ export function CardPaymentStep({
     async (cpf: string) => {
       const tax = cpf.replace(/\D/g, '')
       if (!tax || (tax.length !== 11 && tax.length !== 14)) return
-      inFlightCpfRef.current = tax
+      // Race guard combina email+tax: se user mudou qualquer um dos dois durante
+      // o in-flight, descarta a resposta (CPF e tax_exists per email).
+      const key = `${userEmail}|${tax}`
+      inFlightCpfRef.current = key
       try {
         const data = await validateAsync({ email: userEmail, tax })
-        if (inFlightCpfRef.current !== tax) return
+        if (inFlightCpfRef.current !== key) return
         setCpfExistsOnServer(data.tax_exists)
-        setValidationErrors((prev) => ({
-          ...prev,
-          cpfCnpj: data.tax_exists ? t('paymentForm.cpfExists') : ''
-        }))
       } catch (err) {
         // Não bloqueia o submit; o backend ainda valida no createPayment.
-        // Reporta pra telemetria — sem isso, falha mata a UX prometida.
+        // Limpa flag stale (mesma justificativa do validateEmailOnServer).
+        if (inFlightCpfRef.current === key) {
+          setCpfExistsOnServer(false)
+        }
         console.error('validate-checkout (cpf) failed', err)
         trackCheckout('checkout_validate_failed', {
           field: 'cpf',
@@ -159,7 +161,7 @@ export function CardPaymentStep({
         })
       }
     },
-    [userEmail, t, validateAsync]
+    [userEmail, validateAsync]
   )
 
   const handleCpfBlur = () => {
@@ -221,7 +223,6 @@ export function CardPaymentStep({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (cpfExistsOnServer) return
     if (!validateForm()) return
 
     trackCheckout('checkout_step3_submit')
@@ -378,17 +379,14 @@ export function CardPaymentStep({
           {validationErrors.cpfCnpj && (
             <p className="text-xs text-destructive">{validationErrors.cpfCnpj}</p>
           )}
+          {cpfExistsOnServer && (
+            <p className="text-xs text-muted-foreground">{t('paymentForm.cpfExists')}</p>
+          )}
         </div>
       </div>
 
       <div className="space-y-4 border-t border-border/50 pt-6">
-        <Button
-          type="submit"
-          variant="glow"
-          disabled={isLoading || cpfExistsOnServer}
-          size="lg"
-          className="w-full"
-        >
+        <Button type="submit" variant="glow" disabled={isLoading} size="lg" className="w-full">
           {isLoading ? (
             <>
               <Spinner className="mr-2 h-4 w-4" />

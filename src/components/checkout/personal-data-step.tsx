@@ -36,6 +36,7 @@ interface PersonalDataStepProps {
   formData: PersonalFormData
   setFormData: React.Dispatch<React.SetStateAction<PersonalFormData>>
   isLoading: boolean
+  planId: number
   onNext: () => void
 }
 
@@ -43,6 +44,7 @@ export function PersonalDataStep({
   formData,
   setFormData,
   isLoading,
+  planId,
   onNext
 }: PersonalDataStepProps) {
   const { t } = useTranslation('plans')
@@ -72,13 +74,13 @@ export function PersonalDataStep({
         // Race guard: ignora resposta se o usuário já mudou o email
         if (inFlightEmailRef.current !== email) return
         setEmailExistsOnServer(data.email_exists)
-        setErrors((prev) => ({
-          ...prev,
-          email: data.email_exists ? t('paymentForm.emailExists') : ''
-        }))
       } catch (err) {
         // Não bloqueia o usuário; o gate final é o createPayment.
-        // Reporta pra telemetria — sem isso, failure aqui mata a prevenção do duplicado.
+        // Limpa flag stale: se a request anterior tinha email_exists=true e
+        // agora a request falha pra um email diferente, o aviso fica errado.
+        if (inFlightEmailRef.current === email) {
+          setEmailExistsOnServer(false)
+        }
         console.error('validate-checkout (email) failed', err)
         trackCheckout('checkout_validate_failed', {
           field: 'email',
@@ -86,7 +88,7 @@ export function PersonalDataStep({
         })
       }
     },
-    [t, validateAsync]
+    [validateAsync]
   )
 
   const handleEmailBlur = useCallback(() => {
@@ -137,7 +139,6 @@ export function PersonalDataStep({
   }
 
   const handleNext = () => {
-    if (emailExistsOnServer) return
     if (validateForm()) {
       trackCheckout('checkout_step1_submit')
       onNext()
@@ -186,17 +187,21 @@ export function PersonalDataStep({
               className={`pl-10 ${errors.email ? 'border-destructive' : ''}`}
             />
           </div>
-          {errors.email && (
-            <p className="text-xs text-destructive">
-              {errors.email}
-              {errors.email === t('paymentForm.emailExists') && (
-                <>
-                  {' '}
-                  <Link to={PATHS.login} className="font-medium underline">
-                    {t('paymentForm.goToLogin')}
-                  </Link>
-                </>
-              )}
+          {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
+          {emailExistsOnServer && (
+            <p className="text-xs text-muted-foreground">
+              <Trans
+                i18nKey="paymentForm.emailExists"
+                t={t}
+                components={{
+                  login: (
+                    <Link
+                      to={`${PATHS.login}?from=${encodeURIComponent(`/checkout/${planId}`)}`}
+                      className="font-medium underline text-primary"
+                    />
+                  )
+                }}
+              />
             </p>
           )}
         </div>
@@ -259,7 +264,7 @@ export function PersonalDataStep({
           type="button"
           variant="glow"
           onClick={handleNext}
-          disabled={isLoading || emailExistsOnServer}
+          disabled={isLoading}
           size="lg"
           className="w-full"
         >

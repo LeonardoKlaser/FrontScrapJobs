@@ -184,10 +184,22 @@
     "popular": "Mais Popular",
     "planName": "Plano {{name}}",
     "perMonth": "/mês",
-    "cta": "Testar grátis por 7 dias",
     "badge": "Teste qualquer plano grátis por 7 dias. Escolha o seu depois.",
     "savingsAnchor": "Economize até {{hours}} horas de busca maçante por mês",
-    "guarantee": "7 dias grátis pra você decidir. Sem cartão, sem risco."
+    "guarantee": "7 dias grátis pra você decidir. Sem cartão, sem risco.",
+    "trialBadge": "GRÁTIS POR 7 DIAS",
+    "trialTitle": "Teste antes de assinar",
+    "trialSubtitle": "Trial restrito pra você experimentar — sem cartão.",
+    "trialCta": "Começar grátis 7 dias",
+    "trialFeatures": {
+      "sites": "1 site monitorado",
+      "analyses": "3 análises de IA",
+      "extractions": "3 currículos extraídos",
+      "suggestions": "2 sugestões aplicadas",
+      "pdfs": "1 PDF gerado"
+    },
+    "paidCta": "Assinar agora — sem trial",
+    "paidSubtext": "Pulando o trial, vai direto pro pagamento."
   },
   "lgpd": {
     "badge": "Em conformidade com LGPD e GDPR",

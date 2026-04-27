@@ -37,17 +37,21 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
   // user data eh undefined em fluxo anonimo (landing → /checkout); presente quando
   // user vem de /app/renew apos trial expirar. from_trial separa metricas de
   // conversao do trial vs checkout direto.
-  const { data: currentUser } = useUser()
+  const { data: currentUser, isLoading: userLoading } = useUser()
+  const isAuthenticated = !!currentUser
 
-  const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1)
+  const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(isAuthenticated ? 2 : 1)
   const [cardError, setCardError] = useState('')
   const [pollingStatus, setPollingStatus] = useState<'idle' | 'polling' | 'timeout'>('idle')
-  const [formData, setFormData] = useState<PersonalFormData>({
-    name: '',
-    email: '',
-    password: '',
-    phone: ''
-  })
+  const [formData, setFormData] = useState<PersonalFormData>(() => ({
+    name: currentUser?.user_name ?? '',
+    email: currentUser?.email ?? '',
+    // RENEWAL_PLACEHOLDER_PWD: backend ignora senha em renewal (CompleteRegistration
+    // detecta user existente e renova sem tocar password). Manda valido (>=8 chars)
+    // pro binding do payload nao falhar.
+    password: isAuthenticated ? 'RENEWAL_PLACEHOLDER_PWD' : '',
+    phone: currentUser?.cellphone ?? ''
+  }))
   const [addressData, setAddressData] = useState<AddressData>({
     zipCode: '',
     street: '',
@@ -71,6 +75,30 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
       if (pollingTimeoutRef.current) clearTimeout(pollingTimeoutRef.current)
     }
   }, [])
+
+  useEffect(() => {
+    if (!currentUser) return
+    // Race: user comecou a digitar antes do currentUser resolver. Mantem
+    // o que foi digitado e NAO auto-avanca (so avanca quando o pre-fill
+    // realmente aconteceu). Guarda em todos os campos (email/name/phone) —
+    // qualquer coisa nao-vazia indica interacao.
+    let didPrefill = false
+    setFormData((prev) => {
+      if (prev.email || prev.name || prev.phone) return prev
+      didPrefill = true
+      return {
+        name: currentUser.user_name,
+        email: currentUser.email,
+        password: 'RENEWAL_PLACEHOLDER_PWD',
+        phone: currentUser.cellphone ?? ''
+      }
+    })
+    // setCurrentStep fora do updater de setFormData (updater deve ser puro;
+    // setState dentro de setState quebra StrictMode double-invocation).
+    if (didPrefill) {
+      setCurrentStep((s) => (s === 1 ? 2 : s))
+    }
+  }, [currentUser])
 
   const startPolling = (email: string) => {
     setPollingStatus('polling')
@@ -180,6 +208,23 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
           <p className="text-sm text-muted-foreground text-center max-w-md">
             {t('paymentForm.paymentTimeout')}
           </p>
+          <button
+            type="button"
+            onClick={() => navigate(isAuthenticated ? PATHS.app.home : PATHS.landing)}
+            className={'mt-2 text-sm font-medium text-primary underline-offset-4 hover:underline'}
+          >
+            {t('paymentForm.timeoutGoHome')}
+          </button>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  if (userLoading) {
+    return (
+      <Card className="w-full border-border/50">
+        <CardContent className="flex items-center justify-center py-16">
+          <Spinner className="h-8 w-8 text-primary" />
         </CardContent>
       </Card>
     )
@@ -192,7 +237,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
   return (
     <Card className="w-full border-border/50">
       <CardHeader className="flex flex-row items-start gap-3 space-y-0">
-        {currentStep > 1 && (
+        {currentStep > 1 && !(isAuthenticated && currentStep === 2) && (
           <button
             type="button"
             onClick={handleBack}
@@ -214,6 +259,14 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
       </CardHeader>
 
       <CardContent>
+        {isAuthenticated && currentUser && (
+          <div className="mb-4 rounded-md border border-primary/20 bg-primary/5 px-3 py-2">
+            <p className="text-sm text-foreground">
+              {t('paymentForm.renewalBanner', { email: currentUser.email })}
+            </p>
+          </div>
+        )}
+
         <CheckoutStepper
           currentStep={currentStep}
           labels={[t('checkout.stepData'), t('checkout.stepAddress'), t('checkout.stepPayment')]}
@@ -224,6 +277,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
             formData={formData}
             setFormData={setFormData}
             isLoading={isLoading}
+            planId={plan.id}
             onNext={() => {
               // Fire-and-forget — falha de save NAO pode bloquear o checkout.
               const leadKey = `${formData.name}|${formData.email}|${formData.phone}|${plan.id}`

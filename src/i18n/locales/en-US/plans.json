@@ -45,11 +45,11 @@
     "submitButton": "Pay now",
     "securityMessage": "Your data is protected with SSL encryption",
     "lgpdBadge": "LGPD and GDPR Compliant",
-    "emailExists": "This email is already registered. Please sign in.",
-    "cpfExists": "This Tax ID is already registered.",
+    "emailExists": "You already have an account. <login>Sign in</login> or continue to resubscribe with this email.",
+    "renewalBanner": "Renewing subscription for {{email}} — fill in address and card to continue.",
+    "cpfExists": "Tax ID already registered — continuing will resubscribe the existing account.",
     "hidePassword": "Hide password",
     "showPassword": "Show password",
-    "goToLogin": "Go to login",
     "backToHome": "Back to Home",
     "cardHolder": "Name on Card",
     "cardNumber": "Card Number",
@@ -63,6 +63,7 @@
     "processingPayment": "Processing payment...",
     "processingDescription": "We are confirming your payment. This may take a few seconds.",
     "paymentTimeout": "Payment is being processed. If you received the confirmation email, ignore this screen. Otherwise, wait a few minutes before retrying — do not reload now to avoid double charges. If in doubt, contact suporte@scrapjobs.com.br.",
+    "timeoutGoHome": "Back to home",
     "cardError": "Card error. Please check your details and try again.",
     "nextStep": "Next",
     "prevStep": "Go to previous step",
@@ -108,6 +109,9 @@
     "free": "Free",
     "currencySymbol": "$",
     "perMonth": "/mo",
-    "popular": "Most popular"
+    "popular": "Most popular",
+    "emptyTitle": "No plans available right now",
+    "emptyDescription": "We're having trouble loading plans. If the issue persists, contact suporte@scrapjobs.com.br.",
+    "emptyRetry": "Try again"
   }
 }

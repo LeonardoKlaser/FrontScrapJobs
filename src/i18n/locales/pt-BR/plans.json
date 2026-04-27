@@ -45,11 +45,11 @@
     "submitButton": "Pagar agora",
     "securityMessage": "Seus dados são protegidos com criptografia SSL",
     "lgpdBadge": "Em conformidade com LGPD e GDPR",
-    "emailExists": "Este e-mail já possui cadastro. Faça login.",
-    "cpfExists": "Este CPF/CNPJ já está cadastrado.",
+    "emailExists": "Você já tem conta. <login>Faça login</login> ou continue para reassinar com este e-mail.",
+    "renewalBanner": "Renovando assinatura de {{email}} — preencha endereço e cartão pra continuar.",
+    "cpfExists": "CPF já cadastrado — continuar vai reassinar a conta existente.",
     "hidePassword": "Ocultar senha",
     "showPassword": "Mostrar senha",
-    "goToLogin": "Ir para login",
     "backToHome": "Voltar para a Página Inicial",
     "cardHolder": "Nome no Cartão",
     "cardNumber": "Número do Cartão",
@@ -63,6 +63,7 @@
     "processingPayment": "Processando pagamento...",
     "processingDescription": "Estamos confirmando seu pagamento. Isso pode levar alguns segundos.",
     "paymentTimeout": "O pagamento está sendo processado. Se você recebeu o e-mail de confirmação, ignore esta tela. Caso contrário, aguarde alguns minutos antes de tentar novamente — não recarregue a página agora pra evitar cobrança duplicada. Em caso de dúvida, contate suporte@scrapjobs.com.br.",
+    "timeoutGoHome": "Voltar para o início",
     "cardError": "Erro no cartão. Verifique os dados e tente novamente.",
     "nextStep": "Próximo",
     "prevStep": "Voltar para o passo anterior",
@@ -108,6 +109,9 @@
     "free": "Grátis",
     "currencySymbol": "R$",
     "perMonth": "/mês",
-    "popular": "Mais popular"
+    "popular": "Mais popular",
+    "emptyTitle": "Nenhum plano disponível no momento",
+    "emptyDescription": "Estamos com instabilidade pra carregar os planos. Se persistir, contate suporte@scrapjobs.com.br.",
+    "emptyRetry": "Tentar novamente"
   }
 }
