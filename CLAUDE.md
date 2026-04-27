@@ -37,7 +37,7 @@ Path alias `@/` → `src/` (configured in `vite.config.ts`, `components.json`, a
 Data router via `createBrowserRouter(queryClient)` in `routes.tsx`. **Every page is `lazy()`-imported** — preserve this when adding pages. Two layouts:
 
 - `PublicLayout` — landing, auth, terms, privacy, checkout, payment-confirmation.
-- `MainLayout` (prefix `/app`) — everything behind auth; uses `authLoader(queryClient)` which calls `queryClient.fetchQuery(['me'])` and redirects to `/login` on 401.
+- `MainLayout` (prefix `/app`) — everything behind auth; uses `authLoader(queryClient)` which calls `queryClient.fetchQuery(['user'])` and redirects to `/login` on 401.
 
 `guestLoader` guards login/forgot/reset so an authed user can't see them.
 `AdminGuard` wraps `/app/admin-dashboard` and `/app/add-new-site` — checks `user.is_admin` after auth.
@@ -79,7 +79,7 @@ Vite manual chunks in `vite.config.ts` split vendor bundles: `vendor-react / rou
 
 ### Auth-adjacent patterns
 
-- `useUser()` is the canonical hook for the current user; it wraps the same `['me']` query the loader primes.
+- `useUser()` is the canonical hook for the current user; it wraps the same `['user']` query the loader primes.
 - `history.scrollRestoration = 'manual'` is set in `main.tsx` so the router controls scroll.
 
 ## Testing

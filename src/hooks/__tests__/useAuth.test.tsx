@@ -41,6 +41,18 @@ function createWrapper() {
   )
 }
 
+// Variante que expõe o queryClient pra testes que precisam inspecionar/setar
+// cache (ex: regressão do vazamento entre sessões).
+function createWrapperWithClient() {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } }
+  })
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  )
+  return { wrapper, queryClient }
+}
+
 describe('useAuth', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -334,6 +346,78 @@ describe('useAuth', () => {
       })
 
       expect(result.current.loading).toBe(false)
+    })
+  })
+
+  // Regressão: invalidate(['user']) ou removeQueries(['user']) sozinhos
+  // deixavam ['dashboardData'], ['latestJobs'], ['applications'] etc. em
+  // cache do user anterior, vazando dados entre sessões no mesmo browser
+  // (caso real: signup de conta nova com outro user logado).
+  // Esses testes asseguram que clear() de fato limpa caches não-['user'].
+  describe('cross-session cache leak protection', () => {
+    it('login clears non-user query caches from previous session', async () => {
+      const { wrapper, queryClient } = createWrapperWithClient()
+      queryClient.setQueryData(['dashboardData'], { urls: 99, jobs: 99 })
+      queryClient.setQueryData(['latestJobs', { page: 1 }], [{ id: 1 }])
+      queryClient.setQueryData(['applications'], [{ id: 1 }])
+
+      vi.mocked(authService.login).mockResolvedValue({
+        id: 1,
+        user_name: 'X',
+        email: 'x@y.com',
+        is_admin: false
+      })
+
+      const { result } = renderHook(() => useAuth(), { wrapper })
+      await act(async () => {
+        await result.current.login({ email: 'x@y.com', password: '12345678' })
+      })
+
+      expect(queryClient.getQueryData(['dashboardData'])).toBeUndefined()
+      expect(queryClient.getQueryData(['latestJobs', { page: 1 }])).toBeUndefined()
+      expect(queryClient.getQueryData(['applications'])).toBeUndefined()
+    })
+
+    it('signup clears non-user query caches from previous session', async () => {
+      const { wrapper, queryClient } = createWrapperWithClient()
+      queryClient.setQueryData(['dashboardData'], { urls: 99 })
+      queryClient.setQueryData(['curriculumList'], [{ id: 1 }])
+
+      vi.mocked(authService.signup).mockResolvedValue({
+        id: 1,
+        user_name: 'X',
+        email: 'x@y.com'
+      })
+
+      const { result } = renderHook(() => useAuth(), { wrapper })
+      await act(async () => {
+        await result.current.signup({
+          email: 'x@y.com',
+          password: '12345678',
+          confirmPassword: '12345678'
+        })
+      })
+
+      expect(queryClient.getQueryData(['dashboardData'])).toBeUndefined()
+      expect(queryClient.getQueryData(['curriculumList'])).toBeUndefined()
+    })
+
+    it('logout clears non-user query caches', async () => {
+      const { wrapper, queryClient } = createWrapperWithClient()
+      queryClient.setQueryData(['dashboardData'], { urls: 99 })
+      queryClient.setQueryData(['applications'], [{ id: 1 }])
+      queryClient.setQueryData(['user'], { id: 1, email: 'x@y.com' })
+
+      vi.mocked(authService.logout).mockResolvedValue(undefined)
+
+      const { result } = renderHook(() => useAuth(), { wrapper })
+      await act(async () => {
+        await result.current.logout()
+      })
+
+      expect(queryClient.getQueryData(['dashboardData'])).toBeUndefined()
+      expect(queryClient.getQueryData(['applications'])).toBeUndefined()
+      expect(queryClient.getQueryData(['user'])).toBeUndefined()
     })
   })
 })

@@ -20,7 +20,11 @@ export function useAuth() {
       setError(null)
       try {
         await authService.login(data)
-        await queryClient.invalidateQueries({ queryKey: ['user'] })
+        // clear() wipa TUDO: ['dashboardData'], ['latestJobs'], ['applications']
+        // etc. Sem isso, dashboard mostra dados do user anterior em cache até o
+        // refetch responder — abre janela pra vazamento entre sessões no mesmo
+        // browser. authLoader faz fetchQuery(['user']) na navegação seguinte.
+        queryClient.clear()
         const redirectTo = searchParams.get('from')
         navigate(redirectTo && redirectTo.startsWith('/app') ? redirectTo : PATHS.app.home)
         return true
@@ -46,10 +50,11 @@ export function useAuth() {
       setError(null)
       try {
         await authService.signup({ email: data.email, password: data.password })
-        // invalidate ANTES do trackTrial pra garantir que /api/me ja foi refetched
-        // quando o evento dispara — sem isso, signup_complete pode disparar enquanto
-        // /api/me ainda esta loading e o interceptor de 401 pode redirect pra /login.
-        await queryClient.invalidateQueries({ queryKey: ['user'] })
+        // clear() wipa cache do user anterior (caso alguém crie conta nova com
+        // outro user logado no mesmo browser — cenário comum: dev/QA testando).
+        // authLoader vai fetchQuery(['user']) na navegação pra /app, então o
+        // /api/me da conta nova ja entra sem race com o cache antigo.
+        queryClient.clear()
         trackTrial('signup_complete')
         navigate(PATHS.app.home)
         return true
@@ -89,9 +94,11 @@ export function useAuth() {
       // pra nao deixar user preso na UI authed se a chamada falhou.
       console.error('Erro ao fazer logout', e)
     } finally {
-      // Sempre limpa cache + redireciona — frontend nao deve ficar em estado
-      // inconsistente (tela autenticada com cookie talvez ja invalidado).
-      queryClient.removeQueries({ queryKey: ['user'] })
+      // clear() (não removeQueries(['user'])) — ['user'] sozinho deixava
+      // ['dashboardData'], ['latestJobs'], ['applications'] etc. em cache,
+      // que vazavam pro próximo login no mesmo browser. Frontend não deve
+      // ficar em estado inconsistente (tela authed com cookie já invalidado).
+      queryClient.clear()
       navigate(PATHS.login)
     }
   }, [queryClient, navigate])
