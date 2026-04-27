@@ -6,13 +6,15 @@ import type { User } from '@/models/user'
 const mockNavigate = vi.fn()
 const mockUseUser = { data: undefined as User | undefined }
 const mockTrackTrial = vi.fn()
+let mockPathname = '/app'
 
 vi.mock('@/hooks/useUser', () => ({
   useUser: () => mockUseUser
 }))
 
 vi.mock('react-router', () => ({
-  useNavigate: () => mockNavigate
+  useNavigate: () => mockNavigate,
+  useLocation: () => ({ pathname: mockPathname })
 }))
 
 vi.mock('@/router/paths', () => ({
@@ -37,6 +39,7 @@ describe('TrialBanner', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockUseUser.data = undefined
+    mockPathname = '/app'
     window.sessionStorage.clear()
   })
 
@@ -142,5 +145,16 @@ describe('TrialBanner', () => {
 
     render(<TrialBanner />)
     expect(mockTrackTrial).not.toHaveBeenCalled()
+  })
+
+  it('returns null on /app/renew (evita banner duplicado com o card da pagina)', () => {
+    mockPathname = '/app/renew'
+    mockUseUser.data = makeUser({
+      is_trial_active: false,
+      expires_at: new Date(Date.now() - 1000).toISOString()
+    })
+
+    const { container } = render(<TrialBanner />)
+    expect(container.firstChild).toBeNull()
   })
 })

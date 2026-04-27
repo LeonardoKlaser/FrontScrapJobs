@@ -107,6 +107,7 @@
     "subscribe": "Assinar Plano",
     "free": "Grátis",
     "currencySymbol": "R$",
-    "perMonth": "/mês"
+    "perMonth": "/mês",
+    "popular": "Mais popular"
   }
 }

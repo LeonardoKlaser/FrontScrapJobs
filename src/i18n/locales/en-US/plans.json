@@ -107,6 +107,7 @@
     "subscribe": "Subscribe",
     "free": "Free",
     "currencySymbol": "$",
-    "perMonth": "/mo"
+    "perMonth": "/mo",
+    "popular": "Most popular"
   }
 }

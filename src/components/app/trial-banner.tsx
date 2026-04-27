@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useUser } from '@/hooks/useUser'
-import { useNavigate } from 'react-router'
+import { useNavigate, useLocation } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { Clock, AlertCircle } from 'lucide-react'
 import { PATHS } from '@/router/paths'
@@ -31,6 +31,7 @@ function writePaywallFlag(): void {
 export function TrialBanner() {
   const { data: user } = useUser()
   const navigate = useNavigate()
+  const { pathname } = useLocation()
 
   // Calcula msLeft do lado FE pra que clock skew nao deixe banner travado em
   // "0 dias" — se trial_ends_at ja passou, FE renderiza paywall mesmo que
@@ -56,6 +57,10 @@ export function TrialBanner() {
 
   if (!user) return null
   if (user.payment_method) return null
+  // Esconde na pagina de renew — la o card "Sua assinatura expirou" ja
+  // comunica o mesmo, e o botao "Assinar agora" do banner navega pra ca
+  // (vira um clique no-op visualmente confuso).
+  if (pathname === PATHS.app.renew) return null
 
   if (trialStillActive) {
     const daysLeft = Math.ceil(msLeft / (1000 * 60 * 60 * 24))
