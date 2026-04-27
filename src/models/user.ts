@@ -15,4 +15,7 @@ export interface User {
   monthly_pdf_generation_count?: number
   weekdays_only?: boolean
   subscription_canceled?: boolean
+  trial_ends_at?: string
+  payment_method?: 'credit_card' | 'pix' | null
+  is_trial_active?: boolean
 }

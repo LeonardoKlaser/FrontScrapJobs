@@ -1,10 +1,11 @@
-import { AuthForm } from '@/components/forms/Auth'
+import { SignupForm } from '@/components/forms/Signup'
 import { Logo } from '@/components/common/logo'
+import { ShieldCheck } from 'lucide-react'
 import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { PATHS } from '@/router/paths'
 
-export default function Login() {
+export default function Signup() {
   const { t } = useTranslation('auth')
 
   return (
@@ -16,28 +17,29 @@ export default function Login() {
         <div className="relative z-10">
           <Logo size={80} showText className="mb-8" />
           <h1 className="font-display text-3xl font-bold tracking-tight text-foreground mb-4">
-            {t('hero.title', 'Encontre as vagas certas, automaticamente.')}
+            {t('signup.heroTitle', 'Comece grátis. Sem cartão.')}
           </h1>
-          <p className="text-lg text-muted-foreground mb-8 max-w-md">
+          <p className="text-lg text-muted-foreground mb-6 max-w-md">
             {t(
-              'hero.subtitle',
-              'O ScrapJobs monitora páginas de carreiras e analisa compatibilidade com seu currículo usando IA.'
+              'signup.heroSubtitle',
+              '7 dias de acesso Premium completo. Configure seus alertas, ' +
+                'suba seu currículo, veja vagas relevantes — depois decide se assina.'
             )}
           </p>
-          <div className="flex gap-8">
-            <div>
-              <p className="font-display text-2xl font-bold text-primary">500+</p>
-              <p className="text-sm text-muted-foreground">
-                {t('hero.jobsMonitored', 'vagas monitoradas')}
-              </p>
-            </div>
-            <div>
-              <p className="font-display text-2xl font-bold text-primary">50+</p>
-              <p className="text-sm text-muted-foreground">
-                {t('hero.companiesTracked', 'empresas rastreadas')}
-              </p>
-            </div>
-          </div>
+          <ul className="space-y-3 text-sm text-muted-foreground">
+            <li className="flex items-start gap-2">
+              <ShieldCheck className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+              {t('signup.bullet1', 'Sem cartão de crédito')}
+            </li>
+            <li className="flex items-start gap-2">
+              <ShieldCheck className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+              {t('signup.bullet2', 'Cancele quando quiser')}
+            </li>
+            <li className="flex items-start gap-2">
+              <ShieldCheck className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+              {t('signup.bullet3', 'Acesso completo às features Premium')}
+            </li>
+          </ul>
         </div>
       </div>
 
@@ -48,18 +50,18 @@ export default function Login() {
             <Logo size={80} showText />
           </div>
           <h2 className="text-xl font-semibold text-foreground mb-1 lg:mb-2">
-            {t('login.welcome', 'Bem-vindo de volta')}
+            {t('signup.title', 'Crie sua conta grátis')}
           </h2>
           <p className="text-sm text-muted-foreground mb-8">
-            {t('login.subtitle', 'Entre na sua conta para continuar')}
+            {t('signup.subtitle', '7 dias grátis. Sem cartão. Sem compromisso.')}
           </p>
 
-          <AuthForm />
+          <SignupForm />
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            {t('login.noAccount', 'Primeira missão por aqui?')}{' '}
-            <Link to={PATHS.signup} className="font-medium text-primary hover:underline">
-              {t('login.startTrial', 'Comece grátis por 7 dias')}
+            {t('signup.hasAccount', 'Já tem uma conta?')}{' '}
+            <Link to={PATHS.login} className="font-medium text-primary hover:underline">
+              {t('signup.login', 'Fazer login')}
             </Link>
           </p>
         </div>

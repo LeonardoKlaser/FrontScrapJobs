@@ -5,10 +5,10 @@
     "heading1": "Todas as vagas das empresas que você quer.",
     "heading2": "Em primeira mão.",
     "subheading": "Você escolhe as empresas. A gente monitora 24/7. Você recebe a vaga no email minutos depois que ela sai — antes da concorrência aparecer.",
-    "cta": "Quero receber primeiro",
+    "cta": "Teste grátis por 7 dias",
     "loginPrompt": "Já tem uma conta?",
     "loginLink": "Fazer login",
-    "microcopy": "Liberação imediata • Cancele a qualquer momento",
+    "microcopy": "Sem cartão. Sem compromisso. Cancele quando quiser.",
     "mockupDisclaimer": "Visualização ilustrativa. Empresas exibidas pertencem a seus respectivos proprietários."
   },
   "navbar": {
@@ -174,19 +174,20 @@
     "title": "Pronto para encontrar sua",
     "titleHighlight": "próxima vaga?",
     "subtitle": "Automatize sua busca e ganhe tempo para o que realmente importa: as entrevistas.",
-    "cta": "Comece agora"
+    "cta": "Comece seu trial grátis"
   },
   "pricing": {
-    "title": "Sua maior vantagem competitiva por menos de R$ 10",
-    "subtitle": "Garantia de 7 dias. Cancele quando quiser.",
+    "title": "Teste grátis por 7 dias. Depois, escolha seu plano.",
+    "subtitle": "Sem cartão pra testar. Cancele quando quiser.",
     "loading": "Carregando planos...",
     "monthly": "Mensal",
     "popular": "Mais Popular",
     "planName": "Plano {{name}}",
     "perMonth": "/mês",
-    "cta": "Começar a Automatizar",
+    "cta": "Testar grátis por 7 dias",
+    "badge": "Teste qualquer plano grátis por 7 dias. Escolha o seu depois.",
     "savingsAnchor": "Economize até {{hours}} horas de busca maçante por mês",
-    "guarantee": "Satisfação garantida nos primeiros 7 dias ou devolvemos seu dinheiro integralmente"
+    "guarantee": "7 dias grátis pra você decidir. Sem cartão, sem risco."
   },
   "lgpd": {
     "badge": "Em conformidade com LGPD e GDPR",

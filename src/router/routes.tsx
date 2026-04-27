@@ -15,6 +15,7 @@ import { LoadingSection } from '@/components/common/loading-section'
 
 const Landing = lazy(() => import('@/pages/Landing').then((m) => ({ default: m.Landing })))
 const Login = lazy(() => import('@/pages/Login'))
+const Signup = lazy(() => import('@/pages/Signup'))
 const Home = lazy(() => import('@/pages/Home').then((m) => ({ default: m.Home })))
 const NotFound = lazy(() => import('@/pages/NotFound').then((m) => ({ default: m.NotFound })))
 const EmpresasPage = lazy(() => import('@/pages/ListSites'))
@@ -53,6 +54,7 @@ export const createRouter = (queryClient: QueryClient) =>
       children: [
         { index: true, element: <Landing /> },
         { path: PATHS.login, element: <Login />, loader: guestLoader(queryClient) },
+        { path: PATHS.signup, element: <Signup />, loader: guestLoader(queryClient) },
         { path: 'forgot-password', element: <ForgotPassword />, loader: guestLoader(queryClient) },
         { path: 'reset-password', element: <ResetPassword />, loader: guestLoader(queryClient) },
         { path: 'terms', element: <TermsOfService /> },

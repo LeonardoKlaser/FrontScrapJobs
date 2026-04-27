@@ -5,10 +5,10 @@
     "heading1": "All the jobs from the companies you care about.",
     "heading2": "Hot off the press.",
     "subheading": "You pick the companies. We monitor 24/7. You get the job in your inbox minutes after it's posted — before the competition shows up.",
-    "cta": "I want it first",
+    "cta": "Try free for 7 days",
     "loginPrompt": "Already have an account?",
     "loginLink": "Sign in",
-    "microcopy": "Instant access • Cancel anytime",
+    "microcopy": "No credit card. No commitment. Cancel anytime.",
     "mockupDisclaimer": "Illustrative. Companies shown belong to their respective owners."
   },
   "navbar": {
@@ -174,19 +174,20 @@
     "title": "Ready to find your",
     "titleHighlight": "next job?",
     "subtitle": "Automate your search and free up time for what really matters: the interviews.",
-    "cta": "Get started"
+    "cta": "Start your free trial"
   },
   "pricing": {
-    "title": "Simple and Transparent Pricing",
-    "subtitle": "Simple and transparent. Cancel anytime.",
+    "title": "Try free for 7 days. Then pick your plan.",
+    "subtitle": "No card to try. Cancel anytime.",
     "loading": "Loading plans...",
     "monthly": "Monthly",
     "popular": "Popular",
     "planName": "{{name}} Plan",
     "perMonth": "/mo",
-    "cta": "Start Automating",
+    "cta": "Try free for 7 days",
+    "badge": "Try any plan free for 7 days. Pick yours later.",
     "savingsAnchor": "Save up to {{hours}} hours of tedious job searching per month",
-    "guarantee": "Satisfaction guaranteed in the first 7 days or we refund your money in full"
+    "guarantee": "7 days free for you to decide. No card, no risk."
   },
   "lgpd": {
     "badge": "LGPD and GDPR Compliant",

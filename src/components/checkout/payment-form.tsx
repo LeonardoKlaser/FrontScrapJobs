@@ -20,8 +20,9 @@ import type { PersonalFormData } from './personal-data-step'
 import { CardPaymentStep } from './card-payment-step'
 import type { AddressData, DocumentData } from './card-payment-step'
 import { AddressStep } from './address-step'
-import { trackCheckout } from '@/lib/analytics'
+import { trackCheckout, trackTrial } from '@/lib/analytics'
 import { useSaveLead } from '@/hooks/useSaveLead'
+import { useUser } from '@/hooks/useUser'
 
 interface PaymentFormProps {
   plan: Plan
@@ -33,6 +34,10 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
   const { t } = useTranslation('plans')
   const { t: tCommon } = useTranslation('common')
   const navigate = useNavigate()
+  // user data eh undefined em fluxo anonimo (landing → /checkout); presente quando
+  // user vem de /app/renew apos trial expirar. from_trial separa metricas de
+  // conversao do trial vs checkout direto.
+  const { data: currentUser } = useUser()
 
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1)
   const [cardError, setCardError] = useState('')
@@ -81,6 +86,8 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
           if (pollingTimeoutRef.current) clearTimeout(pollingTimeoutRef.current)
           setIsLoading(false)
           trackCheckout('checkout_payment_confirmed', { plan_id: plan.id })
+          const fromTrial = !!currentUser?.trial_ends_at && !currentUser?.payment_method
+          trackTrial('payment_complete', { plan_id: plan.id, from_trial: fromTrial })
           navigate(`${PATHS.paymentConfirmation}?plan=${encodeURIComponent(plan.name)}`)
         }
         // not_found e processing: continua polling até o timeout de 2 min

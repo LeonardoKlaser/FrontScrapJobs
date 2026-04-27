@@ -23,6 +23,7 @@ api.interceptors.response.use(
       const publicPaths = [
         '/',
         '/login',
+        '/signup',
         '/forgot-password',
         '/reset-password',
         '/terms',

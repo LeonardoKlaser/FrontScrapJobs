@@ -22,8 +22,8 @@ export function PricingSection() {
     }
   }, [plans])
 
-  const handleChoosePlan = (planId: number) => {
-    navigate(PATHS.checkout(planId.toString()))
+  const handleStartTrial = () => {
+    navigate(PATHS.signup)
   }
 
   if (isLoading) {
@@ -51,6 +51,8 @@ export function PricingSection() {
             </h2>
             <p className="text-base text-zinc-500 mt-3">{t('pricing.subtitle')}</p>
           </div>
+
+          <p className="text-sm font-medium text-emerald-600 mb-8">{t('pricing.badge')}</p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {sortedPlans.map((plan, index) => {
@@ -111,7 +113,7 @@ export function PricingSection() {
                         variant="glow"
                         size="lg"
                         className="w-full h-auto py-4 text-base font-semibold rounded-lg"
-                        onClick={() => handleChoosePlan(plan.id)}
+                        onClick={handleStartTrial}
                       >
                         {t('pricing.cta')}
                       </Button>

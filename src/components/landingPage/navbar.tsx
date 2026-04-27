@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/common/logo'
 import logotipo01 from '@/assets/Logotipo ScrapJobs 01.png'
+import { PATHS } from '@/router/paths'
 
 export function LandingNavbar() {
   const { t } = useTranslation('landing')
+  const navigate = useNavigate()
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
@@ -17,7 +20,7 @@ export function LandingNavbar() {
   }, [])
 
   const handleCtaClick = () => {
-    document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
+    navigate(PATHS.signup)
   }
 
   return (

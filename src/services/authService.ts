@@ -16,6 +16,18 @@ export const authService = {
     return data
   },
 
+  signup: async (data: {
+    email: string
+    password: string
+  }): Promise<{
+    id: number
+    user_name: string
+    email: string
+  }> => {
+    const { data: response } = await api.post('/signup', data)
+    return response
+  },
+
   getMe: async (): Promise<User> => {
     const { data } = await api.get('/api/me')
     return data
