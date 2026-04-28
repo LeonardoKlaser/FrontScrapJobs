@@ -1,15 +1,19 @@
 import type React from 'react'
 import { useState, useRef, useEffect, useCallback } from 'react'
+import axios from 'axios'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Spinner } from '@/components/ui/spinner'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { AlertCircle, Lock, ShieldCheck, FileTextIcon } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 import type { CardData } from '@/services/paymentService'
 import { useValidateCheckout } from '@/hooks/useValidateCheckout'
 import { trackCheckout } from '@/lib/analytics'
+import { formatCpfCnpj } from '@/lib/format'
+import { PATHS } from '@/router/paths'
 import { CardPreview } from './card-preview'
 
 interface CardFormState {
@@ -38,6 +42,9 @@ interface CardPaymentStepProps {
   error: string
   userName: string
   userEmail: string
+  userTax?: string
+  isAuthenticated: boolean
+  planId: number
   onSubmit: (cardData: CardData, docData: DocumentData) => void
 }
 
@@ -62,26 +69,14 @@ function parseExpDate(expDate: string): { month: number; year: number } {
   }
 }
 
-function formatCpfCnpj(value: string): string {
-  const digits = value.replace(/\D/g, '').slice(0, 14)
-  if (digits.length <= 11) {
-    return digits
-      .replace(/(\d{3})(\d)/, '$1.$2')
-      .replace(/(\d{3})(\d)/, '$1.$2')
-      .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
-  }
-  return digits
-    .replace(/(\d{2})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d)/, '$1/$2')
-    .replace(/(\d{4})(\d{1,2})$/, '$1-$2')
-}
-
 export function CardPaymentStep({
   isLoading,
   error,
   userName,
   userEmail,
+  userTax = '',
+  isAuthenticated,
+  planId,
   onSubmit
 }: CardPaymentStepProps) {
   const { t } = useTranslation('plans')
@@ -149,6 +144,7 @@ export function CardPaymentStep({
         if (inFlightCpfRef.current !== key) return
         setCpfExistsOnServer(data.tax_exists)
       } catch (err) {
+        if (axios.isCancel(err)) return
         // Não bloqueia o submit; o backend ainda valida no createPayment.
         // Limpa flag stale (mesma justificativa do validateEmailOnServer).
         if (inFlightCpfRef.current === key) {
@@ -188,13 +184,16 @@ export function CardPaymentStep({
     }
   }
 
+  const taxBlocked = !userTax && !isAuthenticated && cpfExistsOnServer
+
   const validateForm = (): boolean => {
     const errors: Partial<Record<keyof CardFormState, string>> = {}
 
-    const cpfDigits = cardForm.cpfCnpj.replace(/\D/g, '')
-    if (!cardForm.cpfCnpj.trim()) errors.cpfCnpj = tAuth('validation.cpfRequired')
-    else if (cpfDigits.length !== 11 && cpfDigits.length !== 14)
-      errors.cpfCnpj = tAuth('validation.cpfInvalid')
+    if (!userTax) {
+      const cpfDigits = cardForm.cpfCnpj.replace(/\D/g, '')
+      if (!cardForm.cpfCnpj.trim()) errors.cpfCnpj = tAuth('validation.cpfRequired')
+      else if (cpfDigits.length !== 11) errors.cpfCnpj = tAuth('validation.cpfInvalid')
+    }
 
     const cardDigits = cardForm.cardNumber.replace(/\s/g, '')
     if (!cardForm.holderName.trim()) errors.holderName = t('paymentForm.fieldRequired')
@@ -223,7 +222,7 @@ export function CardPaymentStep({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!validateForm()) return
+    if (!validateForm() || taxBlocked) return
 
     trackCheckout('checkout_step3_submit')
 
@@ -237,7 +236,11 @@ export function CardPaymentStep({
         cvv: cardForm.cvv
       },
       {
-        cpfCnpj: cardForm.cpfCnpj
+        // Quando user logado tem tax na conta, usamos o tax do account holder.
+        // Pagar.me aceita customer.document mesmo se o cartão for de outra pessoa
+        // (titular do cartão pode ser cônjuge, parente). Nenhuma validação extra é
+        // necessária aqui.
+        cpfCnpj: userTax || cardForm.cpfCnpj
       }
     )
   }
@@ -351,39 +354,59 @@ export function CardPaymentStep({
         </div>
       </div>
 
-      <div className="space-y-4 animate-fade-in-up">
-        <div className="space-y-2">
-          <Label htmlFor="cpfCnpj" className="text-muted-foreground">
-            {t('paymentForm.cpfLabel')}
-          </Label>
-          <div className="relative">
-            <FileTextIcon
-              className={
-                'pointer-events-none absolute left-3 top-1/2 h-4 w-4' +
-                ' -translate-y-1/2 text-muted-foreground'
-              }
-            />
-            <Input
-              id="cpfCnpj"
-              name="cpfCnpj"
-              type="text"
-              inputMode="numeric"
-              placeholder={t('paymentForm.cpfPlaceholder')}
-              value={cardForm.cpfCnpj}
-              onChange={handleChange}
-              onBlur={handleCpfBlur}
-              disabled={isLoading}
-              className={`pl-10 font-mono ${validationErrors.cpfCnpj ? 'border-destructive' : ''}`}
-            />
+      {!userTax && (
+        <div className="space-y-4 animate-fade-in-up">
+          <div className="space-y-2">
+            <Label htmlFor="cpfCnpj" className="text-muted-foreground">
+              {t('paymentForm.cpfLabel')}
+            </Label>
+            <div className="relative">
+              <FileTextIcon
+                className={
+                  'pointer-events-none absolute left-3 top-1/2 h-4 w-4' +
+                  ' -translate-y-1/2 text-muted-foreground'
+                }
+              />
+              <Input
+                id="cpfCnpj"
+                name="cpfCnpj"
+                type="text"
+                inputMode="numeric"
+                placeholder={t('paymentForm.cpfPlaceholder')}
+                value={cardForm.cpfCnpj}
+                onChange={handleChange}
+                onBlur={handleCpfBlur}
+                disabled={isLoading}
+                className={`pl-10 font-mono ${
+                  validationErrors.cpfCnpj ? 'border-destructive' : ''
+                }`}
+              />
+            </div>
+            {validationErrors.cpfCnpj && (
+              <p className="text-xs text-destructive">{validationErrors.cpfCnpj}</p>
+            )}
+            {taxBlocked && (
+              <p className="text-xs text-destructive">
+                <Trans
+                  i18nKey="paymentForm.cpfExistsBlocked"
+                  t={t}
+                  components={{
+                    login: (
+                      <Link
+                        to={`${PATHS.login}?from=${encodeURIComponent(`/checkout/${planId}`)}`}
+                        className="font-medium underline text-destructive"
+                      />
+                    )
+                  }}
+                />
+              </p>
+            )}
+            {isAuthenticated && cpfExistsOnServer && (
+              <p className="text-xs text-muted-foreground">{t('paymentForm.cpfExists')}</p>
+            )}
           </div>
-          {validationErrors.cpfCnpj && (
-            <p className="text-xs text-destructive">{validationErrors.cpfCnpj}</p>
-          )}
-          {cpfExistsOnServer && (
-            <p className="text-xs text-muted-foreground">{t('paymentForm.cpfExists')}</p>
-          )}
         </div>
-      </div>
+      )}
 
       <div className="space-y-4 border-t border-border/50 pt-6">
         <Button type="submit" variant="glow" disabled={isLoading} size="lg" className="w-full">

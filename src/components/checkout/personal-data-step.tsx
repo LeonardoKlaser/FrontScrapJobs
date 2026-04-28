@@ -1,5 +1,6 @@
 import type React from 'react'
 import { useState, useRef, useCallback, useEffect } from 'react'
+import axios from 'axios'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -8,6 +9,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { PATHS } from '@/router/paths'
 import { trackCheckout } from '@/lib/analytics'
+import { formatPhoneBR } from '@/lib/format'
 import { useValidateCheckout } from '@/hooks/useValidateCheckout'
 
 export interface PersonalFormData {
@@ -15,17 +17,6 @@ export interface PersonalFormData {
   email: string
   password: string
   phone: string
-}
-
-function formatPhone(value: string): string {
-  const digits = value.replace(/\D/g, '').slice(0, 11)
-  if (digits.length <= 2) return digits.length === 0 ? '' : `(${digits}`
-  if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`
-  // Landline (10 dig): (XX) XXXX-XXXX. Cell (11 dig): (XX) XXXXX-XXXX.
-  if (digits.length <= 10) {
-    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`
-  }
-  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`
 }
 
 interface FormErrors {
@@ -37,6 +28,7 @@ interface PersonalDataStepProps {
   setFormData: React.Dispatch<React.SetStateAction<PersonalFormData>>
   isLoading: boolean
   planId: number
+  isAuthenticated: boolean
   onNext: () => void
 }
 
@@ -45,6 +37,7 @@ export function PersonalDataStep({
   setFormData,
   isLoading,
   planId,
+  isAuthenticated,
   onNext
 }: PersonalDataStepProps) {
   const { t } = useTranslation('plans')
@@ -75,6 +68,7 @@ export function PersonalDataStep({
         if (inFlightEmailRef.current !== email) return
         setEmailExistsOnServer(data.email_exists)
       } catch (err) {
+        if (axios.isCancel(err)) return
         // Não bloqueia o usuário; o gate final é o createPayment.
         // Limpa flag stale: se a request anterior tinha email_exists=true e
         // agora a request falha pra um email diferente, o aviso fica errado.
@@ -100,13 +94,15 @@ export function PersonalDataStep({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    const formatted = name === 'phone' ? formatPhone(value) : value
+    const formatted = name === 'phone' ? formatPhoneBR(value) : value
     setFormData((prev) => ({ ...prev, [name]: formatted }))
     if (name === 'email') setEmailExistsOnServer(false)
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }))
     }
   }
+
+  const emailBlocked = !isAuthenticated && emailExistsOnServer
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {}
@@ -139,7 +135,7 @@ export function PersonalDataStep({
   }
 
   const handleNext = () => {
-    if (validateForm()) {
+    if (validateForm() && !emailBlocked) {
       trackCheckout('checkout_step1_submit')
       onNext()
     }
@@ -188,16 +184,16 @@ export function PersonalDataStep({
             />
           </div>
           {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
-          {emailExistsOnServer && (
-            <p className="text-xs text-muted-foreground">
+          {emailBlocked && (
+            <p className="text-xs text-destructive">
               <Trans
-                i18nKey="paymentForm.emailExists"
+                i18nKey="paymentForm.emailExistsBlocked"
                 t={t}
                 components={{
                   login: (
                     <Link
                       to={`${PATHS.login}?from=${encodeURIComponent(`/checkout/${planId}`)}`}
-                      className="font-medium underline text-primary"
+                      className="font-medium underline text-destructive"
                     />
                   )
                 }}

@@ -41,52 +41,53 @@ describe('loginSchema', () => {
 })
 
 describe('signupSchema', () => {
-  it('accepts valid signup data', () => {
-    const result = signupSchema.safeParse({
-      email: 'user@example.com',
-      password: '12345678',
-      confirmPassword: '12345678'
-    })
-    expect(result.success).toBe(true)
+  const valid = {
+    name: 'Fulano de Tal',
+    email: 'a@b.com',
+    phone: '(11) 91234-5678',
+    tax: '529.982.247-25',
+    password: '12345678'
+  }
+
+  it('aceita payload completo', () => {
+    expect(signupSchema.safeParse(valid).success).toBe(true)
   })
 
-  it('rejects mismatched passwords', () => {
-    const result = signupSchema.safeParse({
-      email: 'user@example.com',
-      password: '12345678',
-      confirmPassword: 'different'
-    })
-    expect(result.success).toBe(false)
-    if (!result.success) {
-      const issue = result.error.issues.find((i) => i.path[0] === 'confirmPassword')
-      expect(issue?.message).toBe('As senhas não coincidem')
-    }
+  it('rejeita CPF invalido', () => {
+    const r = signupSchema.safeParse({ ...valid, tax: '11111111111' })
+    expect(r.success).toBe(false)
   })
 
-  it('rejects invalid email', () => {
-    const result = signupSchema.safeParse({
-      email: 'not-an-email',
-      password: '12345678',
-      confirmPassword: '12345678'
-    })
-    expect(result.success).toBe(false)
+  it('rejeita celular invalido (10 digitos)', () => {
+    const r = signupSchema.safeParse({ ...valid, phone: '(11) 1234-5678' })
+    expect(r.success).toBe(false)
   })
 
-  it('rejects short password', () => {
-    const result = signupSchema.safeParse({
-      email: 'user@example.com',
-      password: '1234567',
-      confirmPassword: '1234567'
-    })
-    expect(result.success).toBe(false)
+  it('rejeita celular sem 9 inicial', () => {
+    const r = signupSchema.safeParse({ ...valid, phone: '(11) 81234-5678' })
+    expect(r.success).toBe(false)
   })
 
-  it('rejects empty confirmPassword', () => {
-    const result = signupSchema.safeParse({
-      email: 'user@example.com',
-      password: '12345678',
-      confirmPassword: ''
-    })
-    expect(result.success).toBe(false)
+  it('rejeita senha curta', () => {
+    const r = signupSchema.safeParse({ ...valid, password: 'short' })
+    expect(r.success).toBe(false)
+  })
+
+  it('rejeita nome vazio (so espacos)', () => {
+    const r = signupSchema.safeParse({ ...valid, name: '   ' })
+    expect(r.success).toBe(false)
+  })
+
+  it('rejeita email invalido', () => {
+    const r = signupSchema.safeParse({ ...valid, email: 'not-an-email' })
+    expect(r.success).toBe(false)
+  })
+
+  it('aceita CPF sem mascara', () => {
+    expect(signupSchema.safeParse({ ...valid, tax: '52998224725' }).success).toBe(true)
+  })
+
+  it('aceita celular sem mascara', () => {
+    expect(signupSchema.safeParse({ ...valid, phone: '11912345678' }).success).toBe(true)
   })
 })

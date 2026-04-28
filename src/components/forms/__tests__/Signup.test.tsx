@@ -1,6 +1,8 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { SignupForm } from '@/components/forms/Signup'
+import { MemoryRouter } from 'react-router'
 
 const mockSignup = vi.fn()
 const mockUseAuth = {
@@ -13,12 +15,24 @@ vi.mock('@/hooks/useAuth', () => ({
   useAuth: () => mockUseAuth
 }))
 
+const validateMock = vi.fn().mockResolvedValue({ email_exists: false, tax_exists: false })
+vi.mock('@/hooks/useValidateCheckout', () => ({
+  useValidateCheckout: () => ({ mutateAsync: validateMock })
+}))
+
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    // Retorna o fallback (segundo arg) — facilita assertions sem montar i18n
     t: (_key: string, fallback?: string) => fallback ?? _key
-  })
+  }),
+  Trans: ({ defaults }: { defaults: string }) => <>{defaults}</>
 }))
+
+const renderForm = () =>
+  render(
+    <MemoryRouter>
+      <SignupForm />
+    </MemoryRouter>
+  )
 
 describe('SignupForm', () => {
   beforeEach(() => {
@@ -26,90 +40,99 @@ describe('SignupForm', () => {
     mockUseAuth.signup = mockSignup
     mockUseAuth.loading = false
     mockUseAuth.error = null
+    validateMock.mockResolvedValue({ email_exists: false, tax_exists: false })
   })
 
-  it('renders email, password and confirmPassword fields', () => {
-    render(<SignupForm />)
+  it('renderiza 5 campos: nome, email, telefone, CPF, senha', () => {
+    renderForm()
+    expect(screen.getByLabelText('Nome completo')).toBeInTheDocument()
     expect(screen.getByPlaceholderText('seu@email.com')).toBeInTheDocument()
+    expect(screen.getByLabelText('Celular')).toBeInTheDocument()
+    expect(screen.getByLabelText('CPF')).toBeInTheDocument()
     expect(screen.getByPlaceholderText('Mínimo 8 caracteres')).toBeInTheDocument()
-    expect(screen.getByPlaceholderText('Repita a senha')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Criar conta grátis/i })).toBeInTheDocument()
+    expect(screen.queryByPlaceholderText('Repita a senha')).not.toBeInTheDocument()
   })
 
-  it('shows validation error for invalid email', async () => {
+  it('chama signup com payload completo no submit', async () => {
     const user = userEvent.setup()
-    render(<SignupForm />)
+    renderForm()
 
-    await user.type(screen.getByPlaceholderText('seu@email.com'), 'not-an-email')
-    await user.type(screen.getByPlaceholderText('Mínimo 8 caracteres'), '12345678')
-    fireEvent.submit(screen.getByRole('button', { name: /Criar conta grátis/i }))
-
-    await waitFor(() => {
-      expect(screen.getByText(/E-mail inválido/i)).toBeInTheDocument()
-    })
-    expect(mockSignup).not.toHaveBeenCalled()
-  })
-
-  it('shows validation error for short password', async () => {
-    const user = userEvent.setup()
-    render(<SignupForm />)
-
+    await user.type(screen.getByLabelText('Nome completo'), 'Fulano')
     await user.type(screen.getByPlaceholderText('seu@email.com'), 'a@b.com')
-    await user.type(screen.getByPlaceholderText('Mínimo 8 caracteres'), 'short')
-    fireEvent.submit(screen.getByRole('button', { name: /Criar conta grátis/i }))
-
-    await waitFor(() => {
-      expect(screen.getByText(/Mínimo 8 caracteres/i)).toBeInTheDocument()
-    })
-    expect(mockSignup).not.toHaveBeenCalled()
-  })
-
-  it('shows validation error when passwords do not match', async () => {
-    const user = userEvent.setup()
-    render(<SignupForm />)
-
-    await user.type(screen.getByPlaceholderText('seu@email.com'), 'a@b.com')
+    await user.type(screen.getByLabelText('Celular'), '11912345678')
+    await user.type(screen.getByLabelText('CPF'), '52998224725')
     await user.type(screen.getByPlaceholderText('Mínimo 8 caracteres'), '12345678')
-    await user.type(screen.getByPlaceholderText('Repita a senha'), 'different')
-    fireEvent.submit(screen.getByRole('button', { name: /Criar conta grátis/i }))
 
-    await waitFor(() => {
-      expect(screen.getByText(/As senhas não coincidem/i)).toBeInTheDocument()
-    })
-    expect(mockSignup).not.toHaveBeenCalled()
-  })
+    await user.click(screen.getByRole('button', { name: /Criar conta grátis/i }))
 
-  it('calls signup with form data when valid', async () => {
-    const user = userEvent.setup()
-    render(<SignupForm />)
-
-    await user.type(screen.getByPlaceholderText('seu@email.com'), 'valid@test.com')
-    await user.type(screen.getByPlaceholderText('Mínimo 8 caracteres'), '12345678')
-    await user.type(screen.getByPlaceholderText('Repita a senha'), '12345678')
-    fireEvent.submit(screen.getByRole('button', { name: /Criar conta grátis/i }))
-
-    await waitFor(() => {
+    await waitFor(() =>
       expect(mockSignup).toHaveBeenCalledWith({
-        email: 'valid@test.com',
-        password: '12345678',
-        confirmPassword: '12345678'
+        name: 'Fulano',
+        email: 'a@b.com',
+        phone: '(11) 91234-5678',
+        tax: '529.982.247-25',
+        password: '12345678'
       })
+    )
+  })
+
+  it('bloqueia submit quando email_exists = true', async () => {
+    validateMock.mockResolvedValue({ email_exists: true, tax_exists: false })
+    const user = userEvent.setup()
+    renderForm()
+
+    await user.type(screen.getByPlaceholderText('seu@email.com'), 'taken@b.com')
+    await user.tab()
+
+    await waitFor(() => {
+      expect(screen.getByText(/Este e-mail já tem conta/)).toBeInTheDocument()
+    })
+
+    expect(screen.getByRole('button', { name: /Criar conta grátis/i })).toBeDisabled()
+  })
+
+  it('bloqueia submit quando tax_exists = true', async () => {
+    validateMock.mockResolvedValue({ email_exists: false, tax_exists: true })
+    const user = userEvent.setup()
+    renderForm()
+
+    await user.type(screen.getByLabelText('CPF'), '52998224725')
+    await user.tab()
+
+    await waitFor(() => {
+      expect(screen.getByText(/Este CPF já tem conta/)).toBeInTheDocument()
+    })
+
+    expect(screen.getByRole('button', { name: /Criar conta grátis/i })).toBeDisabled()
+  })
+
+  it('mostra erro de validação pra CPF inválido', async () => {
+    const user = userEvent.setup()
+    renderForm()
+
+    await user.type(screen.getByLabelText('CPF'), '11111111111')
+    await user.tab()
+
+    await waitFor(() => {
+      expect(screen.getByText(/CPF inválido/i)).toBeInTheDocument()
     })
   })
 
-  it('shows API error message when present', () => {
-    mockUseAuth.error = 'Este e-mail já está cadastrado.'
-    render(<SignupForm />)
-    expect(screen.getByText('Este e-mail já está cadastrado.')).toBeInTheDocument()
+  it('mostra erro de validação pra celular inválido', async () => {
+    const user = userEvent.setup()
+    renderForm()
+
+    await user.type(screen.getByLabelText('Celular'), '1112345678')
+    await user.tab()
+
+    await waitFor(() => {
+      expect(screen.getByText(/Celular inválido/i)).toBeInTheDocument()
+    })
   })
 
-  it('shows spinner when loading', () => {
-    mockUseAuth.loading = true
-    const { container } = render(<SignupForm />)
-    // Loader2Icon renderiza um SVG animado em vez do CTA text.
-    // O submit button e o ultimo (button[type=submit]); os outros sao toggles do password.
-    const submitButton = container.querySelector('button[type="submit"]')
-    expect(submitButton).toBeDisabled()
-    expect(container.querySelector('.animate-spin')).toBeInTheDocument()
+  it('exibe erro do useAuth', () => {
+    mockUseAuth.error = 'Erro do servidor'
+    renderForm()
+    expect(screen.getByText('Erro do servidor')).toBeInTheDocument()
   })
 })

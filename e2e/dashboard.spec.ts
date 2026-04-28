@@ -12,7 +12,7 @@ test.describe('Dashboard', () => {
     const statsSection = page.locator('.grid').first()
     await expect(statsSection.getByText('URLs monitoradas')).toBeVisible()
     await expect(statsSection.getByText('Vagas novas (24h)')).toBeVisible()
-    await expect(statsSection.getByText('Alertas enviados')).toBeVisible()
+    await expect(statsSection.getByText('Notificações enviadas')).toBeVisible()
 
     // Check values inside the stats cards using the bold text selector
     const boldValues = statsSection.locator('p.font-display')
@@ -49,10 +49,10 @@ test.describe('Dashboard', () => {
   })
 
   test('URLs monitoradas exibem na tabela', async ({ page }) => {
-    await expect(page.getByText('Suas URLs monitoradas')).toBeVisible()
+    await expect(page.getByText('Empresas monitoradas')).toBeVisible()
 
     // Use role-based selectors to avoid strict mode violations
     await expect(page.getByRole('cell', { name: 'Google', exact: true })).toBeVisible()
-    await expect(page.getByRole('link', { name: /careers\.google\.com/ })).toBeVisible()
+    await expect(page.getByRole('cell', { name: 'Amazon', exact: true })).toBeVisible()
   })
 })

@@ -17,14 +17,26 @@ export const authService = {
   },
 
   signup: async (data: {
+    name: string
     email: string
+    phone: string
+    tax: string
     password: string
   }): Promise<{
     id: number
     user_name: string
     email: string
   }> => {
-    const { data: response } = await api.post('/signup', data)
+    // Backend SignUp espera `user_name` (não `name`) e CPF/celular só com
+    // dígitos. O backend já normaliza defensivamente, mas mandamos limpo
+    // pra evitar surpresa em logs e validações intermediárias.
+    const { data: response } = await api.post('/signup', {
+      user_name: data.name,
+      email: data.email,
+      phone: data.phone.replace(/\D/g, ''),
+      tax: data.tax.replace(/\D/g, ''),
+      password: data.password
+    })
     return response
   },
 

@@ -10,6 +10,10 @@ test.describe('Sites / Empresas', () => {
   test('lista de empresas carrega corretamente', async ({ page }) => {
     await expect(page.getByText('Empresas Monitoradas')).toBeVisible()
 
+    // Page defaults to "Inscritas" when user has subscribed sites — switch to
+    // "Todas" so non-subscribed companies (Microsoft, Apple) become visible.
+    await page.getByRole('tab', { name: 'Todas' }).click()
+
     // All 4 mock companies should appear
     await expect(page.getByText('Google')).toBeVisible()
     await expect(page.getByText('Microsoft')).toBeVisible()
@@ -48,6 +52,10 @@ test.describe('Sites / Empresas', () => {
   })
 
   test('clicar em empresa abre modal de inscricao', async ({ page }) => {
+    // Page defaults to "Inscritas" when user has subscribed sites — switch to
+    // "Todas" so Microsoft (not subscribed) is visible.
+    await page.getByRole('tab', { name: 'Todas' }).click()
+
     // Click on Microsoft (not subscribed)
     await page.getByText('Microsoft').click()
 

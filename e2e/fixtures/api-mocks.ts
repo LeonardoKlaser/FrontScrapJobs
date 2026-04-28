@@ -7,6 +7,13 @@ export const mockUser = {
   user_name: 'Joao Silva',
   email: 'joao@test.com',
   is_admin: false,
+  // Paid subscriber — TrialBanner hides early when payment_method is set,
+  // so this is the field that actually suppresses both the active-trial and
+  // paywall variants. Other trial fields kept consistent for completeness.
+  expires_at: '2099-12-31T00:00:00Z',
+  payment_method: 'credit_card' as const,
+  is_trial_active: false,
+  subscription_canceled: false,
   plan: {
     id: 1,
     name: 'Profissional',
@@ -163,11 +170,13 @@ function makeJobs(count: number, offset = 0) {
   }))
 }
 
+// Dashboard now paginates client-side, so a single response carries all jobs.
+// Total of 15 jobs exercises pagination (LIMIT=10 → 2 pages).
 export const mockJobsPage1 = {
-  jobs: makeJobs(10),
+  jobs: makeJobs(15),
   total_count: 15,
   page: 1,
-  limit: 10
+  limit: 15
 }
 
 export const mockJobsPage2 = {
@@ -206,6 +215,26 @@ async function setupMocks(page: Page, opts: MockAPIOptions = {}) {
     return route.fulfill({ status: 401, json: { error: 'E-mail ou senha invalidos' } })
   })
 
+  // Signup: POST /signup
+  await page.route(`${apiBase}/signup`, async (route) => {
+    const body = route.request().postDataJSON()
+    // Validate the 5 expected fields are present
+    if (!body?.email || !body?.password || !body?.user_name || !body?.phone || !body?.tax) {
+      return route.fulfill({ status: 400, json: { error: 'Campos obrigatórios faltando' } })
+    }
+    if (body.email === 'taken@test.com') {
+      return route.fulfill({
+        status: 409,
+        json: { error: 'Email ou CPF já cadastrado' }
+      })
+    }
+    return route.fulfill({
+      status: 201,
+      headers: { 'Set-Cookie': 'Authorization=fake-jwt-cookie; Path=/; HttpOnly' },
+      json: { ...mockUser, email: body.email, user_name: body.user_name }
+    })
+  })
+
   // Logout: POST /api/logout
   await page.route(`${apiBase}/api/logout`, (route) =>
     route.fulfill({ status: 200, json: { message: 'ok' } })
@@ -221,6 +250,7 @@ async function setupMocks(page: Page, opts: MockAPIOptions = {}) {
     const url = new URL(route.request().url())
     const page = parseInt(url.searchParams.get('page') || '1')
     const search = url.searchParams.get('search') || ''
+    const days = parseInt(url.searchParams.get('days') || '0')
 
     if (search) {
       const filtered = mockJobsPage1.jobs.filter((j) =>
@@ -229,6 +259,14 @@ async function setupMocks(page: Page, opts: MockAPIOptions = {}) {
       return route.fulfill({
         status: 200,
         json: { jobs: filtered, total_count: filtered.length, page: 1, limit: 10 }
+      })
+    }
+    // 24h-only window: smaller subset, used by the dashboard "new jobs (24h)" stat.
+    if (days === 1) {
+      const recent = mockJobsPage1.jobs.slice(0, mockDashboard.new_jobs_today_count)
+      return route.fulfill({
+        status: 200,
+        json: { jobs: recent, total_count: recent.length, page: 1, limit: 10 }
       })
     }
     return route.fulfill({ status: 200, json: page === 2 ? mockJobsPage2 : mockJobsPage1 })

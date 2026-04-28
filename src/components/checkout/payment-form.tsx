@@ -46,10 +46,9 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
   const [formData, setFormData] = useState<PersonalFormData>(() => ({
     name: currentUser?.user_name ?? '',
     email: currentUser?.email ?? '',
-    // RENEWAL_PLACEHOLDER_PWD: backend ignora senha em renewal (CompleteRegistration
-    // detecta user existente e renova sem tocar password). Manda valido (>=8 chars)
-    // pro binding do payload nao falhar.
-    password: isAuthenticated ? 'RENEWAL_PLACEHOLDER_PWD' : '',
+    // Backend aceita password vazio em renewal (binding omitempty); CompleteRegistration
+    // detecta user existente e renova sem tocar password. Anônimos preenchem na step 1.
+    password: '',
     phone: currentUser?.cellphone ?? ''
   }))
   const [addressData, setAddressData] = useState<AddressData>({
@@ -89,7 +88,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
       return {
         name: currentUser.user_name,
         email: currentUser.email,
-        password: 'RENEWAL_PLACEHOLDER_PWD',
+        password: '',
         phone: currentUser.cellphone ?? ''
       }
     })
@@ -173,8 +172,24 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
       let message: string
       if (err instanceof TokenizationError) {
         message = err.message
-      } else if (axios.isAxiosError(err) && err.response?.data?.error) {
-        message = err.response.data.error
+      } else if (axios.isAxiosError(err) && err.response) {
+        const errorCode = err.response.data?.error
+        const backendMessage = err.response.data?.message
+        switch (errorCode) {
+          case 'email_already_registered':
+          case 'tax_already_registered':
+            message = backendMessage ?? 'Faça login para renovar sua assinatura'
+            break
+          case 'email_mismatch':
+            message = backendMessage ?? 'O email não bate com a conta logada'
+            break
+          case 'session_expired':
+            // Redirect to login preserving the from path
+            navigate(`/login?from=${encodeURIComponent(`/checkout/${plan.id}`)}`)
+            return
+          default:
+            message = backendMessage ?? errorCode ?? tCommon('status.error')
+        }
       } else if (err instanceof Error) {
         message = err.message
       } else {
@@ -278,6 +293,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
             setFormData={setFormData}
             isLoading={isLoading}
             planId={plan.id}
+            isAuthenticated={isAuthenticated}
             onNext={() => {
               // Fire-and-forget — falha de save NAO pode bloquear o checkout.
               const leadKey = `${formData.name}|${formData.email}|${formData.phone}|${plan.id}`
@@ -326,6 +342,9 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
             error={cardError}
             userName={formData.name}
             userEmail={formData.email}
+            userTax={currentUser?.tax ?? ''}
+            isAuthenticated={isAuthenticated}
+            planId={plan.id}
             onSubmit={handleCardSubmit}
           />
         )}

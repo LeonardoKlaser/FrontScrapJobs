@@ -73,7 +73,7 @@ export function useAuth() {
       setLoading(true)
       setError(null)
       try {
-        await authService.signup({ email: data.email, password: data.password })
+        await authService.signup(data)
         // clear() wipa cache do user anterior (caso alguém crie conta nova com
         // outro user logado no mesmo browser — cenário comum: dev/QA testando).
         // authLoader vai fetchQuery(['user']) na navegação pra /app, então o
@@ -86,7 +86,10 @@ export function useAuth() {
         let reason = 'unknown'
         if (axios.isAxiosError(e)) {
           if (e.response?.status === 409) {
-            setError('Este e-mail já está cadastrado. Faça login ou use outro e-mail.')
+            // Mensagem genérica (anti-enumeration): backend retorna o mesmo
+            // texto pra email OU CPF duplicado, então repassamos sem inferir
+            // qual campo colidiu. Fallback caso o body venha sem `error`.
+            setError(e.response?.data?.error ?? 'Email ou CPF já cadastrado')
             reason = 'duplicate_email'
           } else {
             setError(e.response?.data?.error ?? 'Erro ao criar conta')

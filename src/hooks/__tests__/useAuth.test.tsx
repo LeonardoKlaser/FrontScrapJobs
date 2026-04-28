@@ -198,7 +198,7 @@ describe('useAuth', () => {
   })
 
   describe('signup', () => {
-    it('calls authService.signup with email/password and navigates to /app', async () => {
+    it('calls authService.signup with all 5 fields and navigates to /app', async () => {
       const mockSignupResponse = {
         id: 42,
         user_name: 'NewUser',
@@ -211,15 +211,19 @@ describe('useAuth', () => {
       let signupResult: boolean | undefined
       await act(async () => {
         signupResult = await result.current.signup({
+          name: 'Test User',
           email: 'new@trial.com',
-          password: '12345678',
-          confirmPassword: '12345678'
+          phone: '11912345678',
+          tax: '52998224725',
+          password: '12345678'
         })
       })
 
-      // confirmPassword nao deve ser enviado pra API
       expect(authService.signup).toHaveBeenCalledWith({
+        name: 'Test User',
         email: 'new@trial.com',
+        phone: '11912345678',
+        tax: '52998224725',
         password: '12345678'
       })
       expect(signupResult).toBe(true)
@@ -238,19 +242,21 @@ describe('useAuth', () => {
 
       await act(async () => {
         await result.current.signup({
+          name: 'Test User',
           email: 'x@y.com',
-          password: '12345678',
-          confirmPassword: '12345678'
+          phone: '11912345678',
+          tax: '52998224725',
+          password: '12345678'
         })
       })
 
       expect(vi.mocked(trackTrial)).toHaveBeenCalledWith('signup_complete')
     })
 
-    it('sets specific error on 409 conflict (duplicate email)', async () => {
+    it('sets generic error on 409 conflict (duplicate email or CPF)', async () => {
       const axiosError = Object.assign(new Error(), {
         isAxiosError: true,
-        response: { status: 409, data: { error: 'Este email ja esta cadastrado' } }
+        response: { status: 409, data: { error: 'Email ou CPF já cadastrado' } }
       })
       const axios = await import('axios')
       vi.spyOn(axios.default, 'isAxiosError').mockReturnValue(true)
@@ -262,16 +268,16 @@ describe('useAuth', () => {
       let signupResult: boolean | undefined
       await act(async () => {
         signupResult = await result.current.signup({
+          name: 'Test User',
           email: 'exists@test.com',
-          password: '12345678',
-          confirmPassword: '12345678'
+          phone: '11912345678',
+          tax: '52998224725',
+          password: '12345678'
         })
       })
 
       expect(signupResult).toBe(false)
-      expect(result.current.error).toBe(
-        'Este e-mail já está cadastrado. Faça login ou use outro e-mail.'
-      )
+      expect(result.current.error).toBe('Email ou CPF já cadastrado')
     })
 
     it('sets generic error on non-409 axios error', async () => {
@@ -288,9 +294,11 @@ describe('useAuth', () => {
 
       await act(async () => {
         await result.current.signup({
+          name: 'Test User',
           email: 'x@y.com',
-          password: '12345678',
-          confirmPassword: '12345678'
+          phone: '11912345678',
+          tax: '52998224725',
+          password: '12345678'
         })
       })
 
@@ -307,9 +315,11 @@ describe('useAuth', () => {
 
       await act(async () => {
         await result.current.signup({
+          name: 'Test User',
           email: 'x@y.com',
-          password: '12345678',
-          confirmPassword: '12345678'
+          phone: '11912345678',
+          tax: '52998224725',
+          password: '12345678'
         })
       })
 
@@ -332,9 +342,11 @@ describe('useAuth', () => {
       let signupPromiseResult: Promise<boolean>
       act(() => {
         signupPromiseResult = result.current.signup({
+          name: 'Test User',
           email: 'x@y.com',
-          password: '12345678',
-          confirmPassword: '12345678'
+          phone: '11912345678',
+          tax: '52998224725',
+          password: '12345678'
         })
       })
 
@@ -392,9 +404,11 @@ describe('useAuth', () => {
       const { result } = renderHook(() => useAuth(), { wrapper })
       await act(async () => {
         await result.current.signup({
+          name: 'Test User',
           email: 'x@y.com',
-          password: '12345678',
-          confirmPassword: '12345678'
+          phone: '11912345678',
+          tax: '52998224725',
+          password: '12345678'
         })
       })
 
