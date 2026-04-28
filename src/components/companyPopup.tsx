@@ -6,6 +6,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
+import { previewFilters, FilterPreviewResult } from '@/services/filterPreviewService'
 
 // Espelha a ordem do backend Tokenize: ToLower → NFD → strip Mn → NFC.
 // Ordem importa pra edge cases (Turkish dotless-i, eszett). Divergência
@@ -32,6 +33,7 @@ const splitIntoTags = (input: string): string[] => {
 interface RegistrationModalProps {
   isOpen: boolean
   onClose: () => void
+  siteId?: number
   companyName: string | undefined
   companyLogo: string | null | undefined
   remainingSlots: number
@@ -47,6 +49,7 @@ interface RegistrationModalProps {
 export function RegistrationModal({
   isOpen,
   onClose,
+  siteId,
   companyName,
   companyLogo,
   remainingSlots,
@@ -62,6 +65,9 @@ export function RegistrationModal({
   const [keywords, setKeywords] = useState('')
   const [editKeywords, setEditKeywords] = useState<string[]>([])
   const [keywordInput, setKeywordInput] = useState('')
+  const [previewResult, setPreviewResult] = useState<FilterPreviewResult | null>(null)
+  const [previewLoading, setPreviewLoading] = useState(false)
+  const [showSample, setShowSample] = useState(false)
   const hasNoSlots = remainingSlots === 0 && !isAlreadyRegistered
 
   useEffect(() => {
@@ -70,6 +76,8 @@ export function RegistrationModal({
       const hydrated = (currentTargetWords ?? []).flatMap(splitIntoTags)
       setEditKeywords(Array.from(new Set(hydrated)))
       setKeywordInput('')
+      setPreviewResult(null)
+      setShowSample(false)
     }
   }, [isOpen, currentTargetWords])
 
@@ -82,9 +90,26 @@ export function RegistrationModal({
       return additions.length === 0 ? prev : [...prev, ...additions]
     })
     setKeywordInput('')
+    setPreviewResult(null)
+    setShowSample(false)
   }, [keywordInput])
 
   const previewTags = splitIntoTags(keywords)
+
+  const handlePreviewFilters = async () => {
+    if (editKeywords.length === 0 || !siteId) return
+    setPreviewLoading(true)
+    setPreviewResult(null)
+    setShowSample(false)
+    try {
+      const result = await previewFilters(siteId, editKeywords)
+      setPreviewResult(result)
+    } catch {
+      // Silent fail — preview is non-critical
+    } finally {
+      setPreviewLoading(false)
+    }
+  }
 
   const isRegisterButtonDisabled =
     hasNoSlots || isLoading || (previewTags.length === 0 && !isAlreadyRegistered)
@@ -143,7 +168,11 @@ export function RegistrationModal({
                         {tag}
                         <button
                           type="button"
-                          onClick={() => setEditKeywords((prev) => prev.filter((k) => k !== tag))}
+                          onClick={() => {
+                            setEditKeywords((prev) => prev.filter((k) => k !== tag))
+                            setPreviewResult(null)
+                            setShowSample(false)
+                          }}
                           className="ml-0.5 hover:text-destructive"
                         >
                           <X className="h-3 w-3" />
@@ -177,6 +206,54 @@ export function RegistrationModal({
                 </div>
                 <p className="text-xs text-muted-foreground">{t('popup.keywordsHelp')}</p>
               </div>
+              {editKeywords.length > 0 && (
+                <div className="mt-3">
+                  <button
+                    type="button"
+                    onClick={handlePreviewFilters}
+                    disabled={previewLoading}
+                    className="text-sm text-emerald-600 hover:text-emerald-700 font-medium disabled:opacity-50"
+                  >
+                    {previewLoading ? 'Testando...' : 'Testar filtros'}
+                  </button>
+
+                  {previewResult && (
+                    <div className="mt-2 p-3 bg-gray-50 rounded-lg text-sm">
+                      {previewResult.matched_jobs > 0 ? (
+                        <>
+                          <p className="text-gray-700">
+                            <span className="font-semibold text-emerald-600">
+                              {previewResult.matched_jobs} de {previewResult.total_jobs} vagas
+                            </span>
+                            {' '}correspondem aos seus filtros
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => setShowSample(!showSample)}
+                            className="text-xs text-emerald-600 hover:underline mt-1"
+                          >
+                            {showSample ? 'Ocultar vagas' : 'Ver vagas encontradas'}
+                          </button>
+                          {showSample && (
+                            <div className="mt-2 space-y-1.5">
+                              {previewResult.sample.map((job, i) => (
+                                <div key={i} className="flex items-center justify-between text-xs">
+                                  <span className="text-gray-700 truncate">{job.title}</span>
+                                  <span className="text-gray-400 ml-2 shrink-0">{job.location}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <p className="text-amber-600">
+                          Nenhuma vaga encontrada com esses filtros. Tente filtros mais amplos.
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
               <div className="flex flex-col gap-2 pt-2">
                 <Button
                   variant="glow"

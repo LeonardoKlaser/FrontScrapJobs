@@ -273,6 +273,7 @@ export default function EmpresasPage() {
         key={selectedCompany?.site_id}
         isOpen={isPopupOpen}
         onClose={() => setPopupOpen(false)}
+        siteId={selectedCompany?.site_id}
         companyName={selectedCompany?.site_name}
         companyLogo={selectedCompany?.logo_url}
         remainingSlots={remainingSlots}
