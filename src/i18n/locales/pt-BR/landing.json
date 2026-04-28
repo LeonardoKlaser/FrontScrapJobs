@@ -5,10 +5,10 @@
     "heading1": "Todas as vagas das empresas que você quer.",
     "heading2": "Em primeira mão.",
     "subheading": "Você escolhe as empresas. A gente monitora 24/7. Você recebe a vaga no email minutos depois que ela sai — antes da concorrência aparecer.",
-    "cta": "Teste grátis por 7 dias",
+    "cta": "Receba vagas antes de todo mundo",
     "loginPrompt": "Já tem uma conta?",
     "loginLink": "Fazer login",
-    "microcopy": "Sem cartão. Sem compromisso. Cancele quando quiser.",
+    "microcopy": "Configure em 2 min. Inclui 7 dias grátis.",
     "mockupDisclaimer": "Visualização ilustrativa. Empresas exibidas pertencem a seus respectivos proprietários."
   },
   "navbar": {
@@ -59,7 +59,8 @@
     "step3": {
       "title": "3. Receba e Otimize",
       "description": "Vagas novas chegam no seu email. Clique para ver a análise de IA e aplique as sugestões direto no seu currículo."
-    }
+    },
+    "cta": "Começar a monitorar vagas"
   },
   "problem": {
     "headline": "A realidade de quem busca emprego hoje",
@@ -171,14 +172,14 @@
     "hoursUnit": "50h"
   },
   "ctaFinal": {
-    "title": "Pronto para encontrar sua",
+    "title": "Descubra vagas que ninguém viu",
     "titleHighlight": "próxima vaga?",
-    "subtitle": "Automatize sua busca e ganhe tempo para o que realmente importa: as entrevistas.",
-    "cta": "Comece seu trial grátis"
+    "subtitle": "7 dias grátis. Sem cartão.",
+    "cta": "Começar agora"
   },
   "pricing": {
-    "title": "Teste grátis por 7 dias. Depois, escolha seu plano.",
-    "subtitle": "Sem cartão pra testar. Cancele quando quiser.",
+    "title": "Monitoramento de vagas que trabalha por você",
+    "subtitle": "Escolha o plano ideal. Todos incluem 7 dias grátis.",
     "loading": "Carregando planos...",
     "monthly": "Mensal",
     "popular": "Mais Popular",
@@ -186,11 +187,11 @@
     "perMonth": "/mês",
     "badge": "Teste qualquer plano grátis por 7 dias. Escolha o seu depois.",
     "savingsAnchor": "Economize até {{hours}} horas de busca maçante por mês",
-    "guarantee": "7 dias grátis pra você decidir. Sem cartão, sem risco.",
-    "trialBadge": "GRÁTIS POR 7 DIAS",
-    "trialTitle": "Teste antes de assinar",
-    "trialSubtitle": "Trial restrito pra você experimentar — sem cartão.",
-    "trialCta": "Começar grátis 7 dias",
+    "guarantee": "Teste qualquer plano. 7 dias grátis, sem cartão.",
+    "trialBadge": "Comece Aqui",
+    "trialTitle": "Trial",
+    "trialSubtitle": "7 dias grátis",
+    "trialCta": "Criar minha conta",
     "trialFeatures": {
       "sites": "1 site monitorado",
       "analyses": "3 análises de IA",
@@ -198,7 +199,8 @@
       "suggestions": "2 sugestões aplicadas",
       "pdfs": "1 PDF gerado"
     },
-    "paidCta": "Assinar agora — sem trial",
+    "paidCta": "Assinar agora",
+    "subscribeCta": "Assinar agora",
     "paidSubtext": "Pulando o trial, vai direto pro pagamento."
   },
   "lgpd": {
