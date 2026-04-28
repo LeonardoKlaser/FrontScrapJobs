@@ -44,6 +44,16 @@ export function TrialBanner() {
   // mas msLeft<=0 sobrepoe pra cobrir clock skew + race com refetch.
   const isPaywallShowing = !!user && !user.payment_method && !trialStillActive
 
+  // PIX: calcula dias restantes do plano para exibir banner de renovacao.
+  // Usuarios PIX nao tem renovacao automatica — banner aparece nos 5 dias finais.
+  const isPixUser = user?.payment_method === 'pix'
+  const pixExpiresAt = user?.expires_at ? new Date(user.expires_at) : null
+  const pixMsLeft = pixExpiresAt ? pixExpiresAt.getTime() - Date.now() : null
+  const pixDaysLeft =
+    pixMsLeft !== null ? Math.ceil(pixMsLeft / (1000 * 60 * 60 * 24)) : null
+  const showPixBanner =
+    isPixUser && pixDaysLeft !== null && pixDaysLeft <= 5 && pixDaysLeft > 0
+
   // Dispara paywall_view uma unica vez por sessao do navegador.
   // sessionStorage protege contra: StrictMode dev mount duplo, refetch on focus,
   // re-mount do MainLayout em navegacao.
@@ -56,11 +66,37 @@ export function TrialBanner() {
   }, [isPaywallShowing])
 
   if (!user) return null
-  if (user.payment_method) return null
-  // Esconde na pagina de renew — la o card "Sua assinatura expirou" ja
-  // comunica o mesmo, e o botao "Assinar agora" do banner navega pra ca
-  // (vira um clique no-op visualmente confuso).
+  // Esconde na pagina de renew — la o card ja comunica o estado e o botao
+  // do banner navega pra ca (vira um clique no-op visualmente confuso).
   if (pathname === PATHS.app.renew) return null
+
+  // Banner PIX: usuario pagante cuja assinatura vence em ate 5 dias.
+  // Exibido ANTES do guard de payment_method porque PIX e um metodo de
+  // pagamento valido — sem esse bloco, o guard abaixo descartaria o banner.
+  if (showPixBanner) {
+    return (
+      <div className="flex items-center justify-center gap-3 border-b border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-700">
+        <Clock className="h-4 w-4 flex-shrink-0" />
+        <span>
+          Seu plano PIX vence em{' '}
+          <strong>
+            {pixDaysLeft} {pixDaysLeft === 1 ? 'dia' : 'dias'}
+          </strong>
+          .
+        </span>
+        <Button
+          onClick={() => navigate(PATHS.app.renew)}
+          size="sm"
+          variant="outline"
+          className="border-indigo-400 text-indigo-700 hover:bg-indigo-100"
+        >
+          Renovar agora
+        </Button>
+      </div>
+    )
+  }
+
+  if (user.payment_method) return null
 
   if (trialStillActive) {
     const daysLeft = Math.ceil(msLeft / (1000 * 60 * 60 * 24))
