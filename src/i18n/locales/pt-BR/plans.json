@@ -123,9 +123,9 @@
     "paymentMethod": {
       "title": "Forma de pagamento",
       "pix": "PIX",
-      "card": "Cartao de credito",
+      "card": "Cartão de crédito",
       "pixDescription": "Pague agora via QR Code",
-      "cardDescription": "Renovacao automatica"
+      "cardDescription": "Renovação automática"
     },
     "fields": {
       "name": "Nome completo",
@@ -133,9 +133,9 @@
       "cpfPlaceholder": "000.000.000-00",
       "phone": "Telefone",
       "phonePlaceholder": "(11) 99999-9999",
-      "required": "Campo obrigatorio"
+      "required": "Campo obrigatório"
     },
-    "pixCta": "Gerar QR Code PIX",
+    "pixCta": "Assinar com PIX",
     "cardCta": "Assinar com cartao",
     "pixError": "Erro ao gerar QR Code. Tente novamente.",
     "generating": "Gerando QR Code..."

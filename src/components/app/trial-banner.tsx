@@ -78,7 +78,7 @@ export function TrialBanner() {
       <div className="flex items-center justify-center gap-3 border-b border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-700">
         <Clock className="h-4 w-4 flex-shrink-0" />
         <span>
-          Seu plano PIX vence em{' '}
+          Sua assinatura vence em{' '}
           <strong>
             {pixDaysLeft} {pixDaysLeft === 1 ? 'dia' : 'dias'}
           </strong>

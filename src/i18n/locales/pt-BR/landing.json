@@ -172,8 +172,8 @@
     "hoursUnit": "50h"
   },
   "ctaFinal": {
-    "title": "Descubra vagas que ninguém viu",
-    "titleHighlight": "próxima vaga?",
+    "title": "Descubra vagas que",
+    "titleHighlight": "ninguém viu",
     "subtitle": "7 dias grátis. Sem cartão.",
     "cta": "Começar agora"
   },
@@ -201,7 +201,7 @@
     },
     "paidCta": "Assinar agora",
     "subscribeCta": "Assinar agora",
-    "paidSubtext": "Pulando o trial, vai direto pro pagamento."
+    "paidSubtext": "Acesso imediato a todas as funcionalidades."
   },
   "lgpd": {
     "badge": "Em conformidade com LGPD e GDPR",

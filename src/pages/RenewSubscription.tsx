@@ -70,7 +70,7 @@ export default function RenewSubscription() {
 
   // Form fields
   const [name, setName] = useState(user?.user_name ?? '')
-  const [cpf, setCpf] = useState('')
+  const [cpf, setCpf] = useState(user?.tax ? formatCpf(user.tax) : '')
   const [phone, setPhone] = useState(user?.cellphone ?? '')
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
 
