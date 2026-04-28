@@ -51,6 +51,8 @@ import {
 } from '@/components/ui/table'
 import { useDashboard, useLatestJobs } from '@/hooks/useDashboard'
 import { useUnregisterUserSite } from '@/hooks/useRegisterUserSite'
+import { useUser } from '@/hooks/useUser'
+import { OnboardingWizard } from '@/components/app/onboarding-wizard'
 import { AnalysisDialog } from '@/components/analysis/analysis-dialog'
 import { PATHS } from '@/router/paths'
 import { safeHref } from '@/utils/url'
@@ -147,6 +149,7 @@ export function Home() {
     isError: isDashboardError,
     error: dashboardError
   } = useDashboard()
+  const { data: user } = useUser()
   const [selectedJobId, setSelectedJobId] = useState<number | null>(null)
   const navigate = useNavigate()
 
@@ -366,8 +369,12 @@ export function Home() {
 
   const monitoredUrls = data?.user_monitored_urls || []
 
+  const showOnboarding = !!user?.is_trial_active && monitoredUrls.length === 0
+
   return (
     <div className="space-y-10">
+      {/* Onboarding wizard for new trial users */}
+      {showOnboarding && <OnboardingWizard />}
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {stats.map((s, i) => (

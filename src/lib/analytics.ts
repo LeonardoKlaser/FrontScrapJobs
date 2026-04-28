@@ -37,7 +37,14 @@ export function trackCheckout(event: CheckoutEvent, payload: Record<string, unkn
 //
 // signup_failed da denominador pra calcular taxa de conversao do form. Sem ele,
 // queda no signup_complete fica ambigua entre "API down" e "form com bug".
-export type TrialEvent = 'signup_complete' | 'signup_failed' | 'paywall_view' | 'payment_complete'
+export type TrialEvent =
+  | 'signup_complete'
+  | 'signup_failed'
+  | 'paywall_view'
+  | 'payment_complete'
+  | 'onboarding_step_1'
+  | 'onboarding_step_2'
+  | 'onboarding_step_3'
 
 export function trackTrial(event: TrialEvent, payload: Record<string, unknown> = {}): void {
   if (typeof window === 'undefined') return
