@@ -30,9 +30,9 @@ type PaymentMethod = 'pix' | 'card'
 // Fixed quarterly prices per plan name (backend calculates actual charge amounts).
 // Keys must match the plan names returned by the API (case-insensitive lookup).
 const QUARTERLY_PRICES: Record<string, number> = {
-  basic: 39.90,
-  pro: 52.90,
-  premium: 59.90
+  basic: 37.90,
+  pro: 48.90,
+  premium: 57.90
 }
 
 function formatCpf(value: string): string {
