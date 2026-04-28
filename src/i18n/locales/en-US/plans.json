@@ -101,7 +101,7 @@
   },
   "renew": {
     "loading": "Loading plans...",
-    "title": "Your subscription has expired",
+    "title": "Choose your plan",
     "description": "Renew your plan to continue accessing all ScrapJobs features.",
     "sites": "{{count}} monitored companies",
     "analyses": "{{count}} AI analyses/month",
@@ -110,9 +110,34 @@
     "free": "Free",
     "currencySymbol": "$",
     "perMonth": "/mo",
+    "perMonthAbbrev": "~${{price}}/mo",
     "popular": "Most popular",
     "emptyTitle": "No plans available right now",
     "emptyDescription": "We're having trouble loading plans. If the issue persists, contact suporte@scrapjobs.com.br.",
-    "emptyRetry": "Try again"
+    "emptyRetry": "Try again",
+    "period": {
+      "monthly": "Monthly",
+      "quarterly": "Quarterly",
+      "discount": "Save {{percent}}%"
+    },
+    "paymentMethod": {
+      "title": "Payment method",
+      "pix": "PIX",
+      "card": "Credit card",
+      "pixDescription": "Pay now via QR Code",
+      "cardDescription": "Auto-renewal"
+    },
+    "fields": {
+      "name": "Full name",
+      "cpf": "Tax ID (CPF)",
+      "cpfPlaceholder": "000.000.000-00",
+      "phone": "Phone",
+      "phonePlaceholder": "(11) 99999-9999",
+      "required": "Required field"
+    },
+    "pixCta": "Generate PIX QR Code",
+    "cardCta": "Subscribe with card",
+    "pixError": "Error generating QR Code. Please try again.",
+    "generating": "Generating QR Code..."
   }
 }

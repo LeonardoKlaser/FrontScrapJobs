@@ -101,7 +101,7 @@
   },
   "renew": {
     "loading": "Carregando planos...",
-    "title": "Sua assinatura expirou",
+    "title": "Escolha seu plano",
     "description": "Renove seu plano para continuar acessando todas as funcionalidades do ScrapJobs.",
     "sites": "{{count}} empresas monitoradas",
     "analyses": "{{count}} análises de IA/mês",
@@ -110,9 +110,34 @@
     "free": "Grátis",
     "currencySymbol": "R$",
     "perMonth": "/mês",
+    "perMonthAbbrev": "~R${{price}}/mês",
     "popular": "Mais popular",
     "emptyTitle": "Nenhum plano disponível no momento",
     "emptyDescription": "Estamos com instabilidade pra carregar os planos. Se persistir, contate suporte@scrapjobs.com.br.",
-    "emptyRetry": "Tentar novamente"
+    "emptyRetry": "Tentar novamente",
+    "period": {
+      "monthly": "Mensal",
+      "quarterly": "Trimestral",
+      "discount": "Economize {{percent}}%"
+    },
+    "paymentMethod": {
+      "title": "Forma de pagamento",
+      "pix": "PIX",
+      "card": "Cartao de credito",
+      "pixDescription": "Pague agora via QR Code",
+      "cardDescription": "Renovacao automatica"
+    },
+    "fields": {
+      "name": "Nome completo",
+      "cpf": "CPF",
+      "cpfPlaceholder": "000.000.000-00",
+      "phone": "Telefone",
+      "phonePlaceholder": "(11) 99999-9999",
+      "required": "Campo obrigatorio"
+    },
+    "pixCta": "Gerar QR Code PIX",
+    "cardCta": "Assinar com cartao",
+    "pixError": "Erro ao gerar QR Code. Tente novamente.",
+    "generating": "Gerando QR Code..."
   }
 }
