@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { toast } from 'sonner'
 import i18next from 'i18next'
+import { setRedirectToast } from '@/lib/redirect-toast'
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080',
@@ -8,11 +8,6 @@ export const api = axios.create({
 })
 
 let isRedirecting = false
-
-// Atraso curto entre toast e redirect — 401 imediato fazia mutations em flight
-// (filter preview, PIX submit) sumirem sem feedback. Tempo suficiente pro
-// usuario ler o toast antes da pagina trocar.
-const REDIRECT_DELAY_MS = 700
 
 api.interceptors.response.use(
   (response) => response,
@@ -49,10 +44,11 @@ api.interceptors.response.use(
         const msg = i18next.isInitialized
           ? i18next.t('auth:sessionExpired')
           : 'Sessão expirada. Redirecionando para o login...'
-        toast.error(msg)
-        setTimeout(() => {
-          window.location.href = `/login?from=${encodeURIComponent(path)}`
-        }, REDIRECT_DELAY_MS)
+        // Toast persistido em sessionStorage — Login.tsx consome ao montar.
+        // Pattern anterior (toast.error + setTimeout 700ms + redirect) deixava
+        // o Toaster ser destruido antes do usuario ler em redes lentas.
+        setRedirectToast({ type: 'error', msg })
+        window.location.href = `/login?from=${encodeURIComponent(path)}`
         setTimeout(() => {
           isRedirecting = false
         }, 10000)

@@ -118,6 +118,11 @@ export function PixPaymentStep({
   const pollingRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const graceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // Guard pra que startGraceWindow seja chamada exatamente 1x quando o timer
+  // chega a 0. Sem isso, re-runs do useEffect (causados por mudanca de
+  // identidade de startGraceWindow via handleConfirmed deps) poderiam disparar
+  // grace duas vezes se o secondsLeft permanecesse em 0 entre re-runs.
+  const graceStartedRef = useRef(false)
   const isMountedRef = useRef(true)
   // useRef pra persistir consecutiveErrors entre invocacoes de startPolling.
   // Antes era `let` dentro do callback — manual retry resetava o breaker, fazendo
@@ -258,17 +263,13 @@ export function PixPaymentStep({
 
     timerRef.current = setInterval(() => {
       if (!isMountedRef.current) return
-      setSecondsLeft((prev) => {
-        if (prev <= 1) {
-          if (timerRef.current) {
-            clearInterval(timerRef.current)
-            timerRef.current = null
-          }
-          startGraceWindow()
-          return 0
-        }
-        return prev - 1
-      })
+      // Updater PURO: side effects (clearInterval, startGraceWindow) movidos
+      // pro useEffect abaixo que observa secondsLeft===0. React chama
+      // updaters 2x em StrictMode (e podera em concurrent rendering retries
+      // futuros) — fazer side effect aqui causaria 2 chamadas de
+      // startGraceWindow, gerando 2 fetches paralelos de checkPaymentStatus
+      // e vazando o 1o graceTimeoutRef.
+      setSecondsLeft((prev) => (prev <= 1 ? 0 : prev - 1))
     }, 1000)
 
     startPolling()
@@ -277,7 +278,20 @@ export function PixPaymentStep({
       isMountedRef.current = false
       stopAll()
     }
-  }, [stopAll, startPolling, startGraceWindow])
+  }, [stopAll, startPolling])
+
+  // Dispara grace window quando o timer chega a 0. graceStartedRef garante
+  // chamada unica mesmo se este effect re-rodar (startGraceWindow muda
+  // identidade quando handleConfirmed deps mudam).
+  useEffect(() => {
+    if (secondsLeft !== 0 || graceStartedRef.current) return
+    graceStartedRef.current = true
+    if (timerRef.current) {
+      clearInterval(timerRef.current)
+      timerRef.current = null
+    }
+    startGraceWindow()
+  }, [secondsLeft, startGraceWindow])
 
   const handleManualCheck = async () => {
     if (manualCheckLoading) return

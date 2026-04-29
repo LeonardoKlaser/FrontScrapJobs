@@ -1,12 +1,25 @@
+import { useEffect } from 'react'
 import { AuthForm } from '@/components/forms/Auth'
 import { Logo } from '@/components/common/logo'
 import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import { PATHS } from '@/router/paths'
 import { AuthBackLink } from '@/components/common/AuthBackLink'
+import { consumeRedirectToast } from '@/lib/redirect-toast'
 
 export default function Login() {
   const { t } = useTranslation('auth')
+
+  // Consome toast persistido pelo interceptor 401 do axios. Sem isso, mensagens
+  // de "sessao expirou" disparadas em api.ts antes de window.location.href ficavam
+  // perdidas no destrute do Toaster durante o reload. Helper retorna null se nao
+  // houver intent valido (ou se ja tiver sido consumido).
+  useEffect(() => {
+    const pending = consumeRedirectToast()
+    if (!pending) return
+    toast[pending.type](pending.msg)
+  }, [])
 
   return (
     <div className="flex min-h-screen">
