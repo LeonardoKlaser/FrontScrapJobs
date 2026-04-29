@@ -78,6 +78,7 @@ export function PricingSection() {
                   ))}
                 </ul>
                 <Button
+                  id="cta-plan-trial"
                   variant="glow"
                   size="lg"
                   className="rounded-lg px-8 py-4 text-base font-semibold"
