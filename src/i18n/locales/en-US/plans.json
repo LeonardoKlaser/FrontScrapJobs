@@ -8,7 +8,16 @@
     "description": "Choose your payment method and start using ScrapJobs",
     "stepData": "Your Details",
     "stepAddress": "Address",
-    "stepPayment": "Payment"
+    "stepPayment": "Payment",
+    "paymentMethod": "Payment method",
+    "pixOption": "PIX",
+    "pixDescription": "One-time payment, no auto-renewal",
+    "cardOption": "Credit Card",
+    "cardDescription": "Monthly auto-renewal. Cancel anytime.",
+    "pixPeriodLabel": "Period",
+    "pixMonthly": "Monthly — {{price}}/mo",
+    "pixQuarterly": "Quarterly — {{price}} (save {{discount}}%)",
+    "generateQR": "Generate PIX QR Code"
   },
   "pixQrCode": {
     "title": "Scan the QR Code",
@@ -48,6 +57,7 @@
     "passwordLabel": "Password",
     "cpfLabel": "Tax ID",
     "cpfPlaceholder": "000.000.000-00",
+    "cpfInvalid": "Invalid Tax ID. Must be 11 digits.",
     "phoneLabel": "Phone",
     "phonePlaceholder": "(11) 99999-9999",
     "paymentMethod": "Payment Method",
@@ -59,6 +69,7 @@
     "securityMessage": "Your data is protected with SSL encryption",
     "lgpdBadge": "LGPD and GDPR Compliant",
     "emailExistsBlocked": "This e-mail is already registered. <login>Log in to continue</login>",
+    "userExistsRedirect": "You already have an account. Redirecting you to log in.",
     "renewalBanner": "Renewing subscription for {{email}} — fill in address and card to continue.",
     "cpfExists": "Tax ID already registered — continuing will resubscribe the existing account.",
     "cpfExistsBlocked": "Tax ID already registered. <login>Sign in</login> to continue.",

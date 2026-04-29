@@ -11,7 +11,9 @@ import {
   TokenizationError
 } from '@/services/paymentService'
 import type { CardData } from '@/services/paymentService'
+import type { PixPaymentResult } from '@/services/pixService'
 import axios from 'axios'
+import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 import { PATHS } from '@/router/paths'
 import { CheckoutStepper } from './checkout-stepper'
@@ -20,9 +22,11 @@ import type { PersonalFormData } from './personal-data-step'
 import { CardPaymentStep } from './card-payment-step'
 import type { AddressData, DocumentData } from './card-payment-step'
 import { AddressStep } from './address-step'
+import { PixPaymentStep } from './pix-payment-step'
 import { trackCheckout, trackTrial } from '@/lib/analytics'
 import { useSaveLead } from '@/hooks/useSaveLead'
 import { useUser } from '@/hooks/useUser'
+import { usePixAnonymous } from '@/hooks/usePixAnonymous'
 
 interface PaymentFormProps {
   plan: Plan
@@ -43,13 +47,21 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(isAuthenticated ? 2 : 1)
   const [cardError, setCardError] = useState('')
   const [pollingStatus, setPollingStatus] = useState<'idle' | 'polling' | 'timeout'>('idle')
+  // Default 'card' preserva fluxo existente. Toggle aparece so quando user
+  // anonimo — autenticado renovando ja tem PaymentMethod no DB e fluxo
+  // proprio (nao usa este componente pra renovar PIX).
+  const [paymentMethod, setPaymentMethod] = useState<'pix' | 'card'>('card')
+  const [pixMonths, setPixMonths] = useState<1 | 3>(1)
+  const [pixResult, setPixResult] = useState<PixPaymentResult | null>(null)
+  const pixMutation = usePixAnonymous()
   const [formData, setFormData] = useState<PersonalFormData>(() => ({
     name: currentUser?.user_name ?? '',
     email: currentUser?.email ?? '',
     // Backend aceita password vazio em renewal (binding omitempty); CompleteRegistration
     // detecta user existente e renova sem tocar password. Anônimos preenchem na step 1.
     password: '',
-    phone: currentUser?.cellphone ?? ''
+    phone: currentUser?.cellphone ?? '',
+    tax: ''
   }))
   const [addressData, setAddressData] = useState<AddressData>({
     zipCode: '',
@@ -137,6 +149,69 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
       setPollingStatus('timeout')
       setIsLoading(false)
     }, 120000)
+  }
+
+  const handlePixSubmit = async () => {
+    // Lowercase + trim aqui pra que o que enviamos pro backend bata com o que
+    // o backend grava em reg_completed:{email}. Sem isso, polling fica preso
+    // pra users que digitaram email com maiusculas.
+    const normalizedEmail = formData.email.trim().toLowerCase()
+
+    // saveLead com mesmo dedup-key do path de cartao — anônimos que geram QR
+    // mas nao pagam ficam visiveis pra recovery emails. Fire-and-forget.
+    const leadKey = `${formData.name}|${normalizedEmail}|${formData.phone}|${plan.id}`
+    if (leadKey !== lastLeadKeyRef.current) {
+      lastLeadKeyRef.current = leadKey
+      saveLead(
+        {
+          name: formData.name,
+          email: normalizedEmail,
+          phone: formData.phone,
+          plan_id: plan.id
+        },
+        {
+          onError: (err) => {
+            console.error('saveLead failed (pix path)', err)
+            trackCheckout('checkout_lead_save_failed', {
+              message: err instanceof Error ? err.message : 'unknown'
+            })
+          }
+        }
+      )
+    }
+
+    try {
+      const result = await pixMutation.mutateAsync({
+        name: formData.name,
+        email: normalizedEmail,
+        password: formData.password,
+        tax: (formData.tax || '').replace(/\D/g, ''),
+        cellphone: formData.phone.replace(/\D/g, ''),
+        plan_id: plan.id,
+        months: pixMonths
+      })
+      setPixResult(result)
+      trackCheckout('checkout_pix_qr_generated', { plan_id: plan.id, months: pixMonths })
+    } catch (err) {
+      // Backend retorna 409 com error code pra duplicatas; em vez de toast
+      // generico, redireciona pra /login preservando o checkout no from — UX
+      // espelha o fluxo de cartao em handleCardSubmit.
+      const isAxiosErr = axios.isAxiosError(err)
+      const errorCode = isAxiosErr ? err.response?.data?.error : undefined
+      const errorMessage = isAxiosErr ? err.response?.data?.message : undefined
+      const status = isAxiosErr ? (err.response?.status ?? 0) : 0
+      trackCheckout('checkout_pix_create_failed', {
+        plan_id: plan.id,
+        error_code: errorCode ?? 'unknown',
+        status
+      })
+      if (errorCode === 'email_already_registered' || errorCode === 'tax_already_registered') {
+        toast.info(errorMessage || t('paymentForm.userExistsRedirect'))
+        navigate(`${PATHS.login}?from=${encodeURIComponent(`/checkout/${plan.id}`)}`)
+        return
+      }
+      toast.error(errorMessage || tCommon('status.error'))
+    }
   }
 
   const handleCardSubmit = async (cardData: CardData, docData: DocumentData) => {
@@ -252,7 +327,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
   return (
     <Card className="w-full border-border/50">
       <CardHeader className="flex flex-row items-start gap-3 space-y-0">
-        {currentStep > 1 && !(isAuthenticated && currentStep === 2) && (
+        {!pixResult && currentStep > 1 && !(isAuthenticated && currentStep === 2) && (
           <button
             type="button"
             onClick={handleBack}
@@ -282,27 +357,68 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
           </div>
         )}
 
-        <CheckoutStepper
-          currentStep={currentStep}
-          labels={[t('checkout.stepData'), t('checkout.stepAddress'), t('checkout.stepPayment')]}
-        />
+        {!pixResult && (
+          <CheckoutStepper
+            currentStep={currentStep}
+            labels={
+              paymentMethod === 'pix'
+                ? [t('checkout.stepData')]
+                : [t('checkout.stepData'), t('checkout.stepAddress'), t('checkout.stepPayment')]
+            }
+          />
+        )}
 
-        {currentStep === 1 && (
+        {pixResult && (
+          <PixPaymentStep
+            pixResult={pixResult}
+            planId={plan.id}
+            // Lowercased pra bater com a chave reg_completed gravada pelo
+            // webhook (CreatePixPaymentAnonymous normaliza no backend).
+            userEmail={formData.email.trim().toLowerCase()}
+            onExpired={() => {
+              // Reset do mutation pra que isPending/error nao carreguem state
+              // stale do submit anterior caso user re-submeta com QR expirado.
+              pixMutation.reset()
+              setPixResult(null)
+            }}
+            redirectAfterConfirm={
+              isAuthenticated
+                ? PATHS.app.home
+                : `${PATHS.paymentConfirmation}?plan=${encodeURIComponent(plan.name)}`
+            }
+          />
+        )}
+
+        {!pixResult && currentStep === 1 && (
           <PersonalDataStep
             formData={formData}
             setFormData={setFormData}
-            isLoading={isLoading}
+            isLoading={isLoading || pixMutation.isPending}
             planId={plan.id}
             isAuthenticated={isAuthenticated}
+            paymentMethod={paymentMethod}
+            onPaymentMethodChange={setPaymentMethod}
+            pixMonths={pixMonths}
+            onPixMonthsChange={setPixMonths}
+            plan={plan}
             onNext={() => {
+              // Fluxo PIX: dispara mutation e troca pra PixPaymentStep ao
+              // receber QR code. Cartao: avanca pra step 2 (endereco).
+              if (paymentMethod === 'pix') {
+                handlePixSubmit()
+                return
+              }
               // Fire-and-forget — falha de save NAO pode bloquear o checkout.
-              const leadKey = `${formData.name}|${formData.email}|${formData.phone}|${plan.id}`
+              // Email normalizado (lower+trim) pra simetria com PIX path —
+              // dedup do leads store fica consistente entre fluxos.
+              const normalizedEmail = formData.email.trim().toLowerCase()
+              const leadKey = `${formData.name}|${normalizedEmail}|${formData.phone}|${plan.id}`
               if (leadKey !== lastLeadKeyRef.current) {
                 lastLeadKeyRef.current = leadKey
                 saveLead(
                   {
                     name: formData.name,
-                    email: formData.email,
+                    email: normalizedEmail,
                     phone: formData.phone,
                     plan_id: plan.id
                   },
@@ -324,7 +440,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
           />
         )}
 
-        {currentStep === 2 && (
+        {!pixResult && currentStep === 2 && (
           <AddressStep
             addressData={addressData}
             setAddressData={setAddressData}
@@ -336,7 +452,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
           />
         )}
 
-        {currentStep === 3 && (
+        {!pixResult && currentStep === 3 && (
           <CardPaymentStep
             isLoading={isLoading}
             error={cardError}

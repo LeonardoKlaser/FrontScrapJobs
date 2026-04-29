@@ -20,6 +20,16 @@ interface PixPaymentStepProps {
   // Chamado antes do redirect quando pagamento confirma — parent usa pra limpar
   // o snapshot de PIX persistido em localStorage (recovery pos-tab-close).
   onConfirmed?: () => void
+  // Override do destino pos-confirmacao. Default eh PATHS.app.home (renovacao
+  // de user autenticado). Checkout anonimo passa PATHS.paymentConfirmation
+  // pra evitar redirect-loop no /login (user ainda nao tem JWT — conta foi
+  // criada pelo webhook backend mas o frontend nao fez login automatico).
+  //
+  // CAUTION: callers chamando este componente em fluxo anonimo DEVEM passar
+  // este prop apontando pra rota publica — caso contrario o fallback
+  // PATHS.app.home dispara o authLoader, retorna 401, e o user e' redirecionado
+  // pra /login com perda do feedback de pagamento confirmado.
+  redirectAfterConfirm?: string
 }
 
 const FALLBACK_EXPIRY_SECONDS = 1800
@@ -50,7 +60,8 @@ export function PixPaymentStep({
   planId,
   userEmail,
   onExpired,
-  onConfirmed
+  onConfirmed,
+  redirectAfterConfirm
 }: PixPaymentStepProps) {
   const { t } = useTranslation('plans')
   const navigate = useNavigate()
@@ -167,9 +178,9 @@ export function PixPaymentStep({
     queryClient.invalidateQueries({ queryKey: ['user'] })
     setTimeout(() => {
       if (!isMountedRef.current) return
-      navigate(PATHS.app.home)
+      navigate(redirectAfterConfirm ?? PATHS.app.home)
     }, 2000)
-  }, [stopAll, onConfirmed, planId, t, queryClient, navigate])
+  }, [stopAll, onConfirmed, planId, t, queryClient, navigate, redirectAfterConfirm])
 
   // Fire pix_qr_generated once when this component mounts with a result.
   // Intentional: empty deps — fire-once on mount of this rendered QR step.
@@ -182,53 +193,58 @@ export function PixPaymentStep({
 
   // Extraída em useCallback pra poder reiniciar o polling a partir do manual check
   // depois que o circuit breaker (5 erros consecutivos) parou o intervalo.
-  const startPolling = useCallback(() => {
-    stopPolling()
-    pollAttemptRef.current = 0
-    const computeDelay = () => {
-      const n = pollAttemptRef.current
-      // Backoff suave: 3s nos primeiros 10 polls (~30s), depois cresce
-      // exponencialmente ate teto de 10s. Mantem responsividade na janela
-      // tipica de pagamento (<60s) e evita gastar quota se levar 30min.
-      if (n < 10) return 3000
-      const grown = 3000 * Math.pow(1.25, n - 10)
-      return Math.min(grown, 10000)
-    }
-    const tick = async () => {
-      pollingRef.current = null
-      if (!isMountedRef.current) return
-      const email = userEmailRef.current
-      if (!email) {
+  // resetAttempts=false preserva o backoff acumulado quando manual check chama —
+  // evita que cliques repetidos de "verificar agora" bypassem o backoff exponencial.
+  const startPolling = useCallback(
+    (resetAttempts: boolean = true) => {
+      stopPolling()
+      if (resetAttempts) pollAttemptRef.current = 0
+      const computeDelay = () => {
+        const n = pollAttemptRef.current
+        // Backoff suave: 3s nos primeiros 10 polls (~30s), depois cresce
+        // exponencialmente ate teto de 10s. Mantem responsividade na janela
+        // tipica de pagamento (<60s) e evita gastar quota se levar 30min.
+        if (n < 10) return 3000
+        const grown = 3000 * Math.pow(1.25, n - 10)
+        return Math.min(grown, 10000)
+      }
+      const tick = async () => {
+        pollingRef.current = null
+        if (!isMountedRef.current) return
+        const email = userEmailRef.current
+        if (!email) {
+          pollingRef.current = setTimeout(tick, computeDelay())
+          return
+        }
+        try {
+          const result = await checkPaymentStatus(email)
+          if (!isMountedRef.current) return
+          consecutiveErrorsRef.current = 0
+          pollAttemptRef.current++
+          if (result.status === 'confirmed') {
+            handleConfirmed()
+            return
+          }
+        } catch (err) {
+          if (!isMountedRef.current) return
+          consecutiveErrorsRef.current++
+          console.error('pix payment status check failed', err)
+          if (consecutiveErrorsRef.current >= 5) {
+            setPollingFailed(true)
+            if (stuckTimeoutRef.current) clearTimeout(stuckTimeoutRef.current)
+            stuckTimeoutRef.current = setTimeout(() => {
+              if (isMountedRef.current) setStuck(true)
+            }, POLLING_STUCK_THRESHOLD_MS)
+            return
+          }
+        }
+        if (!isMountedRef.current) return
         pollingRef.current = setTimeout(tick, computeDelay())
-        return
       }
-      try {
-        const result = await checkPaymentStatus(email)
-        if (!isMountedRef.current) return
-        consecutiveErrorsRef.current = 0
-        pollAttemptRef.current++
-        if (result.status === 'confirmed') {
-          handleConfirmed()
-          return
-        }
-      } catch (err) {
-        if (!isMountedRef.current) return
-        consecutiveErrorsRef.current++
-        console.error('pix payment status check failed', err)
-        if (consecutiveErrorsRef.current >= 5) {
-          setPollingFailed(true)
-          if (stuckTimeoutRef.current) clearTimeout(stuckTimeoutRef.current)
-          stuckTimeoutRef.current = setTimeout(() => {
-            if (isMountedRef.current) setStuck(true)
-          }, POLLING_STUCK_THRESHOLD_MS)
-          return
-        }
-      }
-      if (!isMountedRef.current) return
       pollingRef.current = setTimeout(tick, computeDelay())
-    }
-    pollingRef.current = setTimeout(tick, computeDelay())
-  }, [stopPolling, handleConfirmed])
+    },
+    [stopPolling, handleConfirmed]
+  )
 
   // Quando o timer chega a 0, em vez de flipar expired=true imediatamente,
   // entra em "verifying" e da uma janela de 5s pra polling pegar confirmacao
@@ -305,16 +321,19 @@ export function PixPaymentStep({
         handleConfirmed()
       } else {
         // Manual retry recupera de pollingFailed: cancela timeout pra stuck
-        // e reinicia polling com counter zerado. Se ainda assim falhar 5 vezes
-        // consecutivas, o ciclo recomeca (incluindo nova janela pra stuck).
+        // e reinicia polling preservando o backoff (resetAttempts=false).
+        // Importante: NAO resetar consecutiveErrorsRef — caso contrario, com
+        // backend down + cliques manuais repetidos, o counter fica em 0
+        // permanentemente e o circuit breaker (5 erros) nunca trip. Manter
+        // os erros prévios; reset so acontece em handleConfirmed (sucesso real)
+        // ou em ticks de polling bem-sucedidos.
         if (stuckTimeoutRef.current) {
           clearTimeout(stuckTimeoutRef.current)
           stuckTimeoutRef.current = null
         }
         setPollingFailed(false)
         setStuck(false)
-        consecutiveErrorsRef.current = 0
-        startPolling()
+        startPolling(false)
       }
     } catch (err) {
       console.error('manual pix status check failed', err)

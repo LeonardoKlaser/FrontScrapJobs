@@ -19,6 +19,8 @@ export type CheckoutEvent =
   | 'checkout_payment_confirmed'
   | 'checkout_lead_save_failed'
   | 'checkout_validate_failed'
+  | 'checkout_pix_qr_generated'
+  | 'checkout_pix_create_failed'
 
 export function trackCheckout(event: CheckoutEvent, payload: Record<string, unknown> = {}): void {
   if (typeof window === 'undefined') return

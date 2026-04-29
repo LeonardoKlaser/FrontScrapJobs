@@ -14,8 +14,31 @@ vi.mock('@/hooks/useValidateCheckout', () => ({
 }))
 
 import { PersonalDataStep, type PersonalFormData } from '../personal-data-step'
+import type { Plan } from '@/models/plan'
 
-function renderStep(formData: Partial<PersonalFormData> = {}, isAuthenticated = false) {
+const mockPlan: Plan = {
+  id: 2,
+  name: 'Pro',
+  price: 29.9,
+  max_sites: 3,
+  max_ai_analyses: 10,
+  max_pdf_extractions: 10,
+  max_suggestion_applies: 10,
+  max_pdf_generations: 10,
+  is_trial: false,
+  features: [],
+  quarterly_price_cents: 7490
+}
+
+interface RenderOptions {
+  formData?: Partial<PersonalFormData>
+  isAuthenticated?: boolean
+  paymentMethod?: 'pix' | 'card'
+  pixMonths?: 1 | 3
+}
+
+function renderStep(opts: RenderOptions = {}) {
+  const { formData = {}, isAuthenticated = false, paymentMethod = 'card', pixMonths = 1 } = opts
   const data: PersonalFormData = {
     name: 'Marcia',
     email: 'marcia@test.com',
@@ -26,6 +49,8 @@ function renderStep(formData: Partial<PersonalFormData> = {}, isAuthenticated = 
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
   const setFormData = vi.fn()
   const onNext = vi.fn()
+  const onPaymentMethodChange = vi.fn()
+  const onPixMonthsChange = vi.fn()
   render(
     <QueryClientProvider client={qc}>
       <MemoryRouter>
@@ -36,11 +61,16 @@ function renderStep(formData: Partial<PersonalFormData> = {}, isAuthenticated = 
           planId={2}
           isAuthenticated={isAuthenticated}
           onNext={onNext}
+          paymentMethod={paymentMethod}
+          onPaymentMethodChange={onPaymentMethodChange}
+          pixMonths={pixMonths}
+          onPixMonthsChange={onPixMonthsChange}
+          plan={mockPlan}
         />
       </MemoryRouter>
     </QueryClientProvider>
   )
-  return { setFormData, onNext }
+  return { setFormData, onNext, onPaymentMethodChange, onPixMonthsChange }
 }
 
 describe('PersonalDataStep', () => {
@@ -83,7 +113,7 @@ describe('PersonalDataStep', () => {
     mockValidate.mockResolvedValue({ email_exists: true, tax_exists: false })
 
     const user = userEvent.setup()
-    const { onNext } = renderStep({}, false)
+    const { onNext } = renderStep({ isAuthenticated: false })
 
     const emailInput = screen.getByLabelText(/e-?mail/i)
     // Dispara blur via tab pra rodar o debounce + validate
@@ -113,7 +143,7 @@ describe('PersonalDataStep', () => {
     mockValidate.mockResolvedValue({ email_exists: true, tax_exists: false })
 
     const user = userEvent.setup()
-    const { onNext } = renderStep({}, true)
+    const { onNext } = renderStep({ isAuthenticated: true })
 
     const emailInput = screen.getByLabelText(/e-?mail/i)
     emailInput.focus()
@@ -129,5 +159,108 @@ describe('PersonalDataStep', () => {
 
     // User autenticado com o próprio email não é bloqueado
     expect(onNext).toHaveBeenCalled()
+  })
+
+  it('NAO renderiza campo password quando isAuthenticated=true', () => {
+    renderStep({ isAuthenticated: true })
+    // Verifica via id do input — Label /senha|password/i tambem matchearia o
+    // aria-label do eye toggle button.
+    expect(document.getElementById('password')).toBeNull()
+  })
+
+  it('renderiza campo password quando isAuthenticated=false', () => {
+    renderStep({ isAuthenticated: false })
+    expect(document.getElementById('password')).toBeInTheDocument()
+  })
+})
+
+describe('PersonalDataStep — payment method selection', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockValidate.mockResolvedValue({ email_exists: false, tax_exists: false })
+  })
+
+  it('renderiza ambos PIX e Cartão como opções', () => {
+    renderStep()
+    // Strict: PIX option button must contain text "PIX" (matches existing i18n)
+    expect(screen.getByText(/^PIX$/)).toBeInTheDocument()
+    expect(screen.getByText(/Cartão de Crédito|Credit Card/)).toBeInTheDocument()
+  })
+
+  it('chama onPaymentMethodChange ao clicar em PIX', async () => {
+    const user = userEvent.setup()
+    const { onPaymentMethodChange } = renderStep({ paymentMethod: 'card' })
+
+    await user.click(screen.getByText(/^PIX$/))
+    expect(onPaymentMethodChange).toHaveBeenCalledWith('pix')
+  })
+
+  it('mostra seletor de período quando PIX é selecionado e plano tem trimestral', () => {
+    renderStep({ paymentMethod: 'pix' })
+    expect(screen.getByText(/Mensal/)).toBeInTheDocument()
+    expect(screen.getByText(/Trimestral/)).toBeInTheDocument()
+  })
+
+  it('esconde seletor de período quando Cartão é selecionado', () => {
+    renderStep({ paymentMethod: 'card' })
+    expect(screen.queryByText(/Trimestral/)).not.toBeInTheDocument()
+  })
+
+  it('mostra "Gerar QR Code PIX" como label do botão quando PIX selecionado', () => {
+    renderStep({ paymentMethod: 'pix' })
+    expect(
+      screen.getByRole('button', { name: /Gerar QR Code PIX|Generate PIX QR Code/ })
+    ).toBeInTheDocument()
+  })
+
+  it('mostra "Próximo" como label quando Cartão selecionado', () => {
+    renderStep({ paymentMethod: 'card' })
+    expect(screen.getByRole('button', { name: /Próximo|Next/ })).toBeInTheDocument()
+  })
+
+  it('mostra campo CPF quando PIX selecionado', () => {
+    renderStep({ paymentMethod: 'pix' })
+    // Label CPF/CNPJ existe no fluxo PIX
+    expect(screen.getByLabelText(/CPF/)).toBeInTheDocument()
+  })
+
+  it('NÃO mostra campo CPF quando Cartão selecionado', () => {
+    renderStep({ paymentMethod: 'card' })
+    expect(screen.queryByLabelText(/CPF/)).not.toBeInTheDocument()
+  })
+
+  it('bloqueia onNext em PIX se CPF inválido', async () => {
+    const user = userEvent.setup()
+    const { onNext } = renderStep({
+      paymentMethod: 'pix',
+      formData: { tax: '123' } // CPF muito curto
+    })
+
+    const submitBtn = screen.getByRole('button', { name: /Gerar QR Code PIX|Generate PIX QR Code/ })
+    await user.click(submitBtn)
+
+    expect(onNext).not.toHaveBeenCalled()
+    expect(screen.getByText(/CPF inválido|Invalid Tax ID/)).toBeInTheDocument()
+  })
+
+  it('chama onNext em PIX se CPF válido (11 dígitos)', async () => {
+    const user = userEvent.setup()
+    const { onNext } = renderStep({
+      paymentMethod: 'pix',
+      formData: { tax: '529.982.247-25' } // CPF valido mascarado
+    })
+
+    const submitBtn = screen.getByRole('button', { name: /Gerar QR Code PIX|Generate PIX QR Code/ })
+    await user.click(submitBtn)
+
+    expect(onNext).toHaveBeenCalled()
+  })
+
+  it('chama onPixMonthsChange ao clicar em Trimestral', async () => {
+    const user = userEvent.setup()
+    const { onPixMonthsChange } = renderStep({ paymentMethod: 'pix', pixMonths: 1 })
+
+    await user.click(screen.getByText(/Trimestral/))
+    expect(onPixMonthsChange).toHaveBeenCalledWith(3)
   })
 })

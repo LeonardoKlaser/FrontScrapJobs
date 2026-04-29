@@ -8,7 +8,16 @@
     "description": "Escolha seu método de pagamento e comece a usar o ScrapJobs",
     "stepData": "Seus Dados",
     "stepAddress": "Endereço",
-    "stepPayment": "Pagamento"
+    "stepPayment": "Pagamento",
+    "paymentMethod": "Método de pagamento",
+    "pixOption": "PIX",
+    "pixDescription": "Pagamento único, sem renovação automática",
+    "cardOption": "Cartão de Crédito",
+    "cardDescription": "Renovação automática mensal. Cancele quando quiser.",
+    "pixPeriodLabel": "Período",
+    "pixMonthly": "Mensal — {{price}}/mês",
+    "pixQuarterly": "Trimestral — {{price}} (economia de {{discount}}%)",
+    "generateQR": "Gerar QR Code PIX"
   },
   "pixQrCode": {
     "title": "Escaneie o QR Code",
@@ -48,6 +57,7 @@
     "passwordLabel": "Senha",
     "cpfLabel": "CPF/CNPJ",
     "cpfPlaceholder": "000.000.000-00",
+    "cpfInvalid": "CPF inválido. Use 11 dígitos.",
     "phoneLabel": "Telefone",
     "phonePlaceholder": "(11) 99999-9999",
     "paymentMethod": "Método de Pagamento",
@@ -59,6 +69,7 @@
     "securityMessage": "Seus dados são protegidos com criptografia SSL",
     "lgpdBadge": "Em conformidade com LGPD e GDPR",
     "emailExistsBlocked": "Este e-mail já tem conta. <login>Fazer login pra continuar</login>",
+    "userExistsRedirect": "Você já tem conta. Vamos te redirecionar pro login.",
     "renewalBanner": "Renovando assinatura de {{email}} — preencha endereço e cartão pra continuar.",
     "cpfExists": "CPF já cadastrado — continuar vai reassinar a conta existente.",
     "cpfExistsBlocked": "CPF já cadastrado. <login>Faça login</login> para continuar.",
