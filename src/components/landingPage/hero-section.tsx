@@ -1,17 +1,15 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useNavigate } from 'react-router'
+import { Link } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, ShieldCheck } from 'lucide-react'
 import { SectionWrapper } from './section-wrapper'
 import { HeroToastNotifications } from './ui-snippets/hero-toast-notifications'
-import { LANDING_CTA_CLASS } from './landing-cta'
+import { LANDING_CTA_CLASS, scrollToPricing } from './landing-cta'
 import { usePublicStats } from '@/hooks/usePublicStats'
-import { PATHS } from '@/router/paths'
 
 export function HeroSection() {
   const { t } = useTranslation('landing')
-  const navigate = useNavigate()
   const { data: stats, error: statsError } = usePublicStats()
   useEffect(() => {
     if (statsError) {
@@ -58,7 +56,7 @@ export function HeroSection() {
                 variant="glow"
                 size="lg"
                 className={`w-full sm:w-auto ${LANDING_CTA_CLASS}`}
-                onClick={() => navigate(PATHS.signup)}
+                onClick={scrollToPricing}
               >
                 {t('hero.cta')}
                 <ArrowRight className="w-5 h-5 ml-1" />

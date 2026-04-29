@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/common/logo'
 import logotipo01 from '@/assets/Logotipo ScrapJobs 01.png'
-import { PATHS } from '@/router/paths'
+import { scrollToPricing } from './landing-cta'
 
 export function LandingNavbar() {
   const { t } = useTranslation('landing')
-  const navigate = useNavigate()
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
@@ -18,10 +16,6 @@ export function LandingNavbar() {
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
-
-  const handleCtaClick = () => {
-    navigate(PATHS.signup)
-  }
 
   return (
     <nav
@@ -40,7 +34,7 @@ export function LandingNavbar() {
           className={`rounded-full px-5 py-2 text-sm font-semibold transition-colors duration-300 ${
             scrolled ? 'bg-white text-emerald-700 border-white hover:bg-white/90' : ''
           }`}
-          onClick={handleCtaClick}
+          onClick={scrollToPricing}
         >
           {t('navbar.cta')}
         </Button>

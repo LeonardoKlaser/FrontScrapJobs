@@ -1,4 +1,5 @@
 import React, { Suspense, lazy } from 'react'
+import type { ComponentType } from 'react'
 import { createBrowserRouter, Navigate } from 'react-router'
 
 import { MainLayout } from '@/layouts/MainLayout'
@@ -13,29 +14,65 @@ import { useTranslation } from 'react-i18next'
 import { useUser } from '@/hooks/useUser'
 import { LoadingSection } from '@/components/common/loading-section'
 
-const Landing = lazy(() => import('@/pages/Landing').then((m) => ({ default: m.Landing })))
-const Login = lazy(() => import('@/pages/Login'))
-const Signup = lazy(() => import('@/pages/Signup'))
-const Home = lazy(() => import('@/pages/Home').then((m) => ({ default: m.Home })))
-const NotFound = lazy(() => import('@/pages/NotFound').then((m) => ({ default: m.NotFound })))
-const EmpresasPage = lazy(() => import('@/pages/ListSites'))
-const AdicionarSitePage = lazy(() => import('@/pages/addNewSite'))
-const AdminSitesListPage = lazy(() => import('@/pages/adminSitesList'))
-const AdminLeadsPage = lazy(() => import('@/pages/adminLeads'))
-const EditSitePage = lazy(() => import('@/pages/editSite'))
-const AccountPage = lazy(() => import('@/pages/accountPage'))
-const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'))
-const ResetPassword = lazy(() => import('@/pages/ResetPassword'))
-const CheckoutPage = lazy(() => import('@/pages/checkout'))
-const PaymentConfirmationPage = lazy(() => import('@/pages/paymentConfirmation'))
-const Feedback = lazy(() => import('@/pages/Feedback'))
-const RenewSubscription = lazy(() => import('@/pages/RenewSubscription'))
-const AdminDashboard = lazy(() => import('@/pages/adminDashboard'))
-const TermsOfService = lazy(() => import('@/pages/TermsOfService'))
-const PrivacyPolicy = lazy(() => import('@/pages/PrivacyPolicy'))
-const Applications = lazy(() => import('@/pages/Applications'))
+// Apos um deploy, o index.html cacheado pelo browser ainda referencia chunks
+// antigos cujos arquivos sumiram do CDN, e o lazy() quebra com "Failed to fetch
+// dynamically imported module". Em vez de mostrar o ErrorBoundary, recarrega
+// a pagina uma vez pra puxar o index.html novo (com os novos hashes). A flag
+// em sessionStorage evita loop caso o erro persista por outro motivo.
+const CHUNK_RELOAD_KEY = 'chunk-reload-attempted'
+const CHUNK_ERROR_PATTERNS = [
+  'Failed to fetch dynamically imported module',
+  'Importing a module script failed',
+  'error loading dynamically imported module'
+]
 
-const CurriculumPage = lazy(() =>
+function isChunkLoadError(err: unknown): boolean {
+  if (!(err instanceof Error)) return false
+  return CHUNK_ERROR_PATTERNS.some((pattern) => err.message.includes(pattern))
+}
+
+function lazyWithRetry<T extends ComponentType<unknown>>(factory: () => Promise<{ default: T }>) {
+  return lazy(async () => {
+    try {
+      const mod = await factory()
+      sessionStorage.removeItem(CHUNK_RELOAD_KEY)
+      return mod
+    } catch (err) {
+      if (isChunkLoadError(err) && sessionStorage.getItem(CHUNK_RELOAD_KEY) !== 'true') {
+        sessionStorage.setItem(CHUNK_RELOAD_KEY, 'true')
+        window.location.reload()
+        return new Promise<{ default: T }>(() => {})
+      }
+      throw err
+    }
+  })
+}
+
+const Landing = lazyWithRetry(() => import('@/pages/Landing').then((m) => ({ default: m.Landing })))
+const Login = lazyWithRetry(() => import('@/pages/Login'))
+const Signup = lazyWithRetry(() => import('@/pages/Signup'))
+const Home = lazyWithRetry(() => import('@/pages/Home').then((m) => ({ default: m.Home })))
+const NotFound = lazyWithRetry(() =>
+  import('@/pages/NotFound').then((m) => ({ default: m.NotFound }))
+)
+const EmpresasPage = lazyWithRetry(() => import('@/pages/ListSites'))
+const AdicionarSitePage = lazyWithRetry(() => import('@/pages/addNewSite'))
+const AdminSitesListPage = lazyWithRetry(() => import('@/pages/adminSitesList'))
+const AdminLeadsPage = lazyWithRetry(() => import('@/pages/adminLeads'))
+const EditSitePage = lazyWithRetry(() => import('@/pages/editSite'))
+const AccountPage = lazyWithRetry(() => import('@/pages/accountPage'))
+const ForgotPassword = lazyWithRetry(() => import('@/pages/ForgotPassword'))
+const ResetPassword = lazyWithRetry(() => import('@/pages/ResetPassword'))
+const CheckoutPage = lazyWithRetry(() => import('@/pages/checkout'))
+const PaymentConfirmationPage = lazyWithRetry(() => import('@/pages/paymentConfirmation'))
+const Feedback = lazyWithRetry(() => import('@/pages/Feedback'))
+const RenewSubscription = lazyWithRetry(() => import('@/pages/RenewSubscription'))
+const AdminDashboard = lazyWithRetry(() => import('@/pages/adminDashboard'))
+const TermsOfService = lazyWithRetry(() => import('@/pages/TermsOfService'))
+const PrivacyPolicy = lazyWithRetry(() => import('@/pages/PrivacyPolicy'))
+const Applications = lazyWithRetry(() => import('@/pages/Applications'))
+
+const CurriculumPage = lazyWithRetry(() =>
   import('@/pages/Curriculum').then((m) => ({ default: m.Curriculum }))
 )
 

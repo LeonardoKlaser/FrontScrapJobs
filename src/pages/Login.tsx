@@ -5,7 +5,7 @@ import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { PATHS } from '@/router/paths'
-import { AuthBackLink } from '@/components/common/AuthBackLink'
+import { AuthBackLink, AuthBackLinkLeftPanel } from '@/components/common/AuthBackLink'
 import { consumeRedirectToast } from '@/lib/redirect-toast'
 
 export default function Login() {
@@ -25,6 +25,7 @@ export default function Login() {
     <div className="flex min-h-screen">
       {/* Left Panel — Brand Hero (hidden on mobile) */}
       <div className="hidden lg:flex lg:w-1/2 flex-col justify-center px-12 xl:px-20 bg-card border-r border-border/50 relative overflow-hidden">
+        <AuthBackLinkLeftPanel />
         <div className="pointer-events-none absolute -left-24 -top-24 h-[400px] w-[400px] rounded-full bg-primary/5 blur-[100px]" />
         <div className="pointer-events-none absolute right-0 bottom-0 h-[300px] w-[300px] rounded-full bg-primary/3 blur-[80px]" />
         <div className="relative z-10">
@@ -58,7 +59,7 @@ export default function Login() {
       {/* Right Panel — Form */}
       <div className="flex w-full lg:w-1/2 items-center justify-center px-4 bg-background">
         <div className="w-full max-w-sm animate-fade-in-up">
-          <AuthBackLink />
+          <AuthBackLink className="lg:hidden" />
           <div className="mb-8 flex flex-col items-center justify-center lg:hidden">
             <Logo size={80} showText />
           </div>

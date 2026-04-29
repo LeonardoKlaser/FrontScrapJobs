@@ -1,14 +1,11 @@
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 import { SectionWrapper } from './section-wrapper'
-import { LANDING_CTA_CLASS } from './landing-cta'
-import { PATHS } from '@/router/paths'
+import { LANDING_CTA_CLASS, scrollToPricing } from './landing-cta'
 
 export function CtaFinalSection() {
   const { t } = useTranslation('landing')
-  const navigate = useNavigate()
 
   return (
     <SectionWrapper className="py-16 lg:py-20 px-6 bg-emerald-50/30">
@@ -20,12 +17,7 @@ export function CtaFinalSection() {
 
         <p className="text-base text-zinc-500">{t('ctaFinal.subtitle')}</p>
 
-        <Button
-          variant="glow"
-          size="lg"
-          className={LANDING_CTA_CLASS}
-          onClick={() => navigate(PATHS.signup)}
-        >
+        <Button variant="glow" size="lg" className={LANDING_CTA_CLASS} onClick={scrollToPricing}>
           {t('ctaFinal.cta')}
           <ArrowRight className="w-5 h-5 ml-1" />
         </Button>
