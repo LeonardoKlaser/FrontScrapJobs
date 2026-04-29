@@ -6,7 +6,8 @@ import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
-import { previewFilters, FilterPreviewResult } from '@/services/filterPreviewService'
+import { previewFilters } from '@/services/filterPreviewService'
+import type { FilterPreviewResult } from '@/services/filterPreviewService'
 
 // Espelha a ordem do backend Tokenize: ToLower → NFD → strip Mn → NFC.
 // Ordem importa pra edge cases (Turkish dotless-i, eszett). Divergência
@@ -255,10 +256,15 @@ export function RegistrationModal({
                 </div>
               )}
               <div className="flex flex-col gap-2 pt-2">
+                {editKeywords.length === 0 && (
+                  <p className="text-xs text-amber-500/70">
+                    Adicione pelo menos uma palavra-chave
+                  </p>
+                )}
                 <Button
                   variant="glow"
                   className="w-full"
-                  disabled={isUpdatingFilters}
+                  disabled={isUpdatingFilters || editKeywords.length === 0}
                   onClick={() => onUpdateFilters?.(editKeywords)}
                 >
                   {isUpdatingFilters ? (
@@ -308,6 +314,16 @@ export function RegistrationModal({
                     </Badge>
                   ))}
                 </div>
+              )}
+              {previewTags.length === 0 && keywords.trim().length > 0 && (
+                <p className="text-xs text-amber-500">
+                  {t('popup.noValidKeywords', 'Nenhuma palavra-chave válida detectada')}
+                </p>
+              )}
+              {keywords.trim().length === 0 && (
+                <p className="text-xs text-amber-500/70">
+                  {t('popup.keywordsRequired', 'Adicione pelo menos uma palavra-chave para se inscrever')}
+                </p>
               )}
             </div>
           )}
