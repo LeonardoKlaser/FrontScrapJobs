@@ -90,8 +90,6 @@ export function PricingSection() {
             </div>
           )}
 
-          <p className="text-sm font-medium text-emerald-600 mb-8">{t('pricing.badge')}</p>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {paid.map((plan, index) => {
               const isPopular = index === midIndex
