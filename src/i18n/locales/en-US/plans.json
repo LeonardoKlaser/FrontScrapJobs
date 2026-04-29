@@ -15,12 +15,25 @@
     "subtitle": "Open your bank app and scan the QR Code below or copy the PIX code",
     "copyCode": "Copy PIX code",
     "codeCopied": "Code copied!",
+    "copyFailed": "Automatic copy unavailable — please select and copy the code manually.",
     "awaitingPayment": "Awaiting payment...",
     "paymentConfirmed": "Payment confirmed! Redirecting...",
     "qrExpired": "QR Code expired",
     "qrExpiredDescription": "The payment time has expired. Generate a new QR Code to continue.",
     "generateNewQr": "Generate new QR Code",
-    "expiresIn": "Expires in"
+    "expiresIn": "Expires in",
+    "pollingFailed": "We couldn't auto-confirm. If you already paid, tap 'Check now'.",
+    "checkNow": "Check now",
+    "expiredCheckCta": "Already paid? Check",
+    "paymentFailed": "Payment not completed. Generate a new QR Code to try again.",
+    "checkFailed": "We couldn't verify the status. Try again in a few seconds.",
+    "verifyingFinal": "Verifying payment...",
+    "checkRateLimited": "Too many checks in a short time. Wait a few seconds and try again.",
+    "stuckTitle": "We're having trouble confirming.",
+    "stuckDescription": "If you already paid, contact support with the payment time and your email.",
+    "emailMissingTitle": "We couldn't identify your account",
+    "emailMissingDescription": "We had a problem loading your data. Reload the page to keep tracking the payment.",
+    "reloadPage": "Reload page"
   },
   "paymentForm": {
     "title": "Create Account",
@@ -106,9 +119,6 @@
     "sites": "{{count}} monitored companies",
     "analyses": "{{count}} AI analyses/month",
     "unlimitedAnalyses": "Unlimited AI analyses",
-    "subscribe": "Subscribe",
-    "free": "Free",
-    "currencySymbol": "$",
     "perMonth": "/mo",
     "perMonthAbbrev": "~${{price}}/mo",
     "popular": "Most popular",
@@ -118,7 +128,8 @@
     "period": {
       "monthly": "Monthly",
       "quarterly": "Quarterly",
-      "discount": "Save {{percent}}%"
+      "discount": "Save {{percent}}%",
+      "quarterlyPixOnly": "Quarterly available via PIX only"
     },
     "paymentMethod": {
       "title": "Payment method",
@@ -137,7 +148,15 @@
     },
     "pixCta": "Generate PIX QR Code",
     "cardCta": "Subscribe with card",
-    "pixError": "Error generating QR Code. Please try again.",
-    "generating": "Generating QR Code..."
+    "generating": "Generating QR Code...",
+    "errors": {
+      "invalidCpf": "Invalid CPF. Please check and try again.",
+      "invalidPhone": "Invalid phone. Use 11 digits with area code (e.g. 11 99999-9999).",
+      "gatewayDown": "Payment unavailable right now. Please try again shortly.",
+      "alreadyActive": "Your subscription is already active. Refresh the page to see it.",
+      "network": "Connection failed. Check your internet and try again.",
+      "sessionExpired": "Session expired. Please sign in again to continue.",
+      "generic": "Error generating QR Code. Please try again."
+    }
   }
 }

@@ -45,6 +45,9 @@ export type TrialEvent =
   | 'onboarding_step_1'
   | 'onboarding_step_2'
   | 'onboarding_step_3'
+  | 'payment_method_selected'
+  | 'pix_qr_generated'
+  | 'pix_paid'
 
 export function trackTrial(event: TrialEvent, payload: Record<string, unknown> = {}): void {
   if (typeof window === 'undefined') return

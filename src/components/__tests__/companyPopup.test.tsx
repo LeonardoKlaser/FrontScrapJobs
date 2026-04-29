@@ -1,5 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import type { ReactElement } from 'react'
 import { RegistrationModal } from '../companyPopup'
 
 vi.mock('react-i18next', () => ({
@@ -8,9 +10,17 @@ vi.mock('react-i18next', () => ({
   })
 }))
 
+function renderWithClient(ui: ReactElement) {
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } }
+  })
+  return render(<QueryClientProvider client={client}>{ui}</QueryClientProvider>)
+}
+
 const baseProps = {
   isOpen: true,
   onClose: vi.fn(),
+  siteId: 1,
   companyName: 'Acme',
   companyLogo: null,
   remainingSlots: 3,
@@ -26,7 +36,7 @@ afterEach(() => {
 
 describe('RegistrationModal — splitIntoTags no fluxo de cadastro', () => {
   it('divide por vírgula', async () => {
-    render(<RegistrationModal {...baseProps} />)
+    renderWithClient(<RegistrationModal {...baseProps} />)
     fireEvent.change(screen.getByLabelText('popup.keywordsLabel'), {
       target: { value: 'react, senior' }
     })
@@ -37,7 +47,7 @@ describe('RegistrationModal — splitIntoTags no fluxo de cadastro', () => {
   })
 
   it('divide por espaço', async () => {
-    render(<RegistrationModal {...baseProps} />)
+    renderWithClient(<RegistrationModal {...baseProps} />)
     fireEvent.change(screen.getByLabelText('popup.keywordsLabel'), {
       target: { value: 'react senior' }
     })
@@ -48,7 +58,7 @@ describe('RegistrationModal — splitIntoTags no fluxo de cadastro', () => {
   })
 
   it('deduplica após fold', async () => {
-    render(<RegistrationModal {...baseProps} />)
+    renderWithClient(<RegistrationModal {...baseProps} />)
     fireEvent.change(screen.getByLabelText('popup.keywordsLabel'), {
       target: { value: 'React react' }
     })
@@ -58,7 +68,7 @@ describe('RegistrationModal — splitIntoTags no fluxo de cadastro', () => {
   })
 
   it('fold de acento: São Paulo → sao paulo', async () => {
-    render(<RegistrationModal {...baseProps} />)
+    renderWithClient(<RegistrationModal {...baseProps} />)
     fireEvent.change(screen.getByLabelText('popup.keywordsLabel'), {
       target: { value: 'São Paulo' }
     })
@@ -69,7 +79,7 @@ describe('RegistrationModal — splitIntoTags no fluxo de cadastro', () => {
   })
 
   it('divide em pontuação: Full-Stack', async () => {
-    render(<RegistrationModal {...baseProps} />)
+    renderWithClient(<RegistrationModal {...baseProps} />)
     fireEvent.change(screen.getByLabelText('popup.keywordsLabel'), {
       target: { value: 'Full-Stack' }
     })
@@ -81,7 +91,7 @@ describe('RegistrationModal — splitIntoTags no fluxo de cadastro', () => {
 
   it('onRegister recebe array split', async () => {
     const onRegister = vi.fn()
-    render(<RegistrationModal {...baseProps} onRegister={onRegister} />)
+    renderWithClient(<RegistrationModal {...baseProps} onRegister={onRegister} />)
     fireEvent.change(screen.getByLabelText('popup.keywordsLabel'), {
       target: { value: 'desenvolvedor senior, react' }
     })
@@ -90,7 +100,7 @@ describe('RegistrationModal — splitIntoTags no fluxo de cadastro', () => {
   })
 
   it('botão fica desabilitado quando input só tem pontuação', () => {
-    render(<RegistrationModal {...baseProps} />)
+    renderWithClient(<RegistrationModal {...baseProps} />)
     fireEvent.change(screen.getByLabelText('popup.keywordsLabel'), {
       target: { value: '---' }
     })
@@ -101,7 +111,7 @@ describe('RegistrationModal — splitIntoTags no fluxo de cadastro', () => {
   // Paridade backend/frontend: mesma ordem de transformação (ToLower → NFD
   // → strip Mn → NFC). Edge cases tomados do Tokenize do backend.
   it('fold Unicode: eszett mantém como single token', async () => {
-    render(<RegistrationModal {...baseProps} />)
+    renderWithClient(<RegistrationModal {...baseProps} />)
     fireEvent.change(screen.getByLabelText('popup.keywordsLabel'), {
       target: { value: 'Straße' }
     })
@@ -111,7 +121,7 @@ describe('RegistrationModal — splitIntoTags no fluxo de cadastro', () => {
   })
 
   it('fold Unicode: diacríticos múltiplos viram ASCII', async () => {
-    render(<RegistrationModal {...baseProps} />)
+    renderWithClient(<RegistrationModal {...baseProps} />)
     fireEvent.change(screen.getByLabelText('popup.keywordsLabel'), {
       target: { value: 'DESENVÖLVEDOR Sênior café' }
     })
@@ -133,7 +143,7 @@ describe('RegistrationModal — splitIntoTags no fluxo de edição', () => {
   }
 
   it('hydrate: legacy multi-palavra aparece já split', async () => {
-    render(<RegistrationModal {...editProps} />)
+    renderWithClient(<RegistrationModal {...editProps} />)
     await waitFor(() => {
       expect(screen.getByText('desenvolvedor')).toBeTruthy()
       expect(screen.getByText('senior')).toBeTruthy()
@@ -141,7 +151,7 @@ describe('RegistrationModal — splitIntoTags no fluxo de edição', () => {
   })
 
   it('Enter no input com espaço adiciona dois tokens', async () => {
-    render(<RegistrationModal {...editProps} currentTargetWords={[]} />)
+    renderWithClient(<RegistrationModal {...editProps} currentTargetWords={[]} />)
     const input = screen.getByPlaceholderText('popup.keywordsPlaceholder')
     fireEvent.change(input, { target: { value: 'a b' } })
     fireEvent.keyDown(input, { key: 'Enter' })

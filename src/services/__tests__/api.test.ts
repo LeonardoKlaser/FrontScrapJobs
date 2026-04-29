@@ -42,6 +42,8 @@ describe('api', () => {
 
     await expect(api.get('/api/test')).rejects.toThrow()
 
+    // Redirect e atrasado em ~700ms pra dar tempo do toast aparecer.
+    vi.advanceTimersByTime(800)
     expect(window.location.href).toBe('/login?from=%2Fapp%2Fhome')
   })
 
@@ -106,8 +108,9 @@ describe('api', () => {
     mock.onGet('/api/first').reply(401)
     mock.onGet('/api/second').reply(401)
 
-    // First 401 triggers redirect
+    // First 401 triggers redirect (atrasado pra deixar o toast aparecer)
     await expect(api.get('/api/first')).rejects.toThrow()
+    vi.advanceTimersByTime(800)
     expect(window.location.href).toBe('/login?from=%2Fapp%2Fhome')
 
     // Reset href to detect if second request triggers a new redirect
@@ -115,6 +118,7 @@ describe('api', () => {
 
     // Second 401 while isRedirecting=true should NOT redirect
     await expect(api.get('/api/second')).rejects.toThrow()
+    vi.advanceTimersByTime(800)
     expect(window.location.href).toBe('')
 
     // After timeout, isRedirecting resets -- next 401 should redirect again
@@ -122,6 +126,7 @@ describe('api', () => {
     window.location.href = ''
 
     await expect(api.get('/api/first')).rejects.toThrow()
+    vi.advanceTimersByTime(800)
     expect(window.location.href).toBe('/login?from=%2Fapp%2Fhome')
   })
 })

@@ -1,5 +1,15 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
-import { Building2, CheckCircle, Search, Upload, Loader2, X, ArrowRight } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import {
+  Building2,
+  CheckCircle,
+  Search,
+  Upload,
+  Loader2,
+  X,
+  ArrowRight,
+  ExternalLink
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -14,15 +24,19 @@ import {
 import { useUser } from '@/hooks/useUser'
 import { useLatestJobs } from '@/hooks/useDashboard'
 import { useExtractPdf } from '@/hooks/usePdf'
-import { useCreateCurriculum } from '@/hooks/useCurriculum'
+import { useCreateCurriculum, useCurriculum } from '@/hooks/useCurriculum'
 import { trackTrial } from '@/lib/analytics'
 import { safeHref } from '@/utils/url'
 import { toast } from 'sonner'
 import type { SiteCareer } from '@/models/siteCareer'
 import type { Curriculum } from '@/models/curriculum'
-import { ExternalLink } from 'lucide-react'
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024
+// Versionar a key permite re-mostrar o wizard pra users que ja dispensaram
+// quando o shape/copy mudar — bumpar pra v2 ao introduzir step novo etc.
+// Mantemos a key legada cleanup-only (sem leitura) pra usuarios antigos
+// converterem pro estado atual sem ver o wizard de novo no proximo bump.
+const ONBOARDING_DISMISSED_KEY = 'sj_onboarding_dismissed_v1'
 
 // --- Progress Bar ---
 
@@ -53,6 +67,7 @@ interface Step1Props {
 }
 
 function Step1Upload({ onNext, onSkip }: Step1Props) {
+  const { t } = useTranslation('onboarding')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { mutate: extractPdf, isPending: isExtracting } = useExtractPdf()
   const { mutate: createCurriculum, isPending: isSaving } = useCreateCurriculum()
@@ -63,11 +78,11 @@ function Step1Upload({ onNext, onSkip }: Step1Props) {
     if (!file) return
 
     if (file.type !== 'application/pdf') {
-      toast.error('Por favor, envie um arquivo PDF.')
+      toast.error(t('step1.errorPdfType'))
       return
     }
     if (file.size > MAX_FILE_SIZE) {
-      toast.error('Arquivo muito grande. O tamanho máximo é 5 MB.')
+      toast.error(t('step1.errorFileSize'))
       return
     }
 
@@ -75,17 +90,23 @@ function Step1Upload({ onNext, onSkip }: Step1Props) {
       onSuccess: (data: Omit<Curriculum, 'id'>) => {
         createCurriculum(data, {
           onSuccess: () => {
-            toast.success('Currículo importado com sucesso!')
+            toast.success(t('step1.successImport'))
             trackTrial('onboarding_step_1')
             onNext()
           },
           onError: (err) => {
-            toast.error(err.message)
+            // Backend errors carry implementation detail (ex: rate-limit codes,
+            // SQL constraint names). User-facing copy stays generic and
+            // actionable — log to console pra trilha de suporte sem expor pro
+            // usuario.
+            console.error('onboarding cv createCurriculum failed', err)
+            toast.error(t('step1.cvUploadError'))
           }
         })
       },
-      onError: (error) => {
-        toast.error(error.message)
+      onError: (err) => {
+        console.error('onboarding cv extractPdf failed', err)
+        toast.error(t('step1.cvUploadError'))
       }
     })
 
@@ -95,13 +116,8 @@ function Step1Upload({ onNext, onSkip }: Step1Props) {
   return (
     <div className="space-y-5">
       <div className="space-y-1.5">
-        <h2 className="text-xl font-bold text-foreground tracking-tight">
-          Envie seu currículo
-        </h2>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          Usamos IA para cruzar seu perfil com as vagas e mostrar seu nível de
-          compatibilidade + sugestões de melhoria.
-        </p>
+        <h2 className="text-xl font-bold text-foreground tracking-tight">{t('step1.title')}</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">{t('step1.description')}</p>
       </div>
 
       <div
@@ -114,7 +130,7 @@ function Step1Upload({ onNext, onSkip }: Step1Props) {
         }}
         role="button"
         tabIndex={0}
-        aria-label="Fazer upload do currículo em PDF"
+        aria-label={t('step1.uploadAria')}
       >
         <input
           ref={fileInputRef}
@@ -132,15 +148,21 @@ function Step1Upload({ onNext, onSkip }: Step1Props) {
         </div>
         <div className="space-y-1">
           <p className="text-sm font-medium text-foreground">
-            {isPending ? 'Processando currículo...' : 'Clique para selecionar seu PDF'}
+            {isPending ? t('step1.processing') : t('step1.selectPdf')}
           </p>
-          <p className="text-xs text-muted-foreground">PDF até 5 MB</p>
+          <p className="text-xs text-muted-foreground">{t('step1.fileSizeHint')}</p>
         </div>
       </div>
 
       <div className="flex flex-col gap-2 sm:flex-row sm:justify-between">
-        <Button variant="ghost" size="sm" onClick={onSkip} disabled={isPending} className="text-muted-foreground">
-          Pular por enquanto
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onSkip}
+          disabled={isPending}
+          className="text-muted-foreground"
+        >
+          {t('step1.skipForNow')}
         </Button>
         <Button
           variant="outline"
@@ -149,8 +171,12 @@ function Step1Upload({ onNext, onSkip }: Step1Props) {
           disabled={isPending}
           className="gap-1.5"
         >
-          {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-          {isPending ? 'Enviando...' : 'Selecionar PDF'}
+          {isPending ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Upload className="h-4 w-4" />
+          )}
+          {isPending ? t('step1.uploading') : t('step1.selectButton')}
         </Button>
       </div>
     </div>
@@ -165,10 +191,10 @@ interface Step2Props {
 }
 
 function Step2Companies({ onNext, onSkip }: Step2Props) {
+  const { t } = useTranslation('onboarding')
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCompany, setSelectedCompany] = useState<SiteCareer | undefined>()
   const [isPopupOpen, setPopupOpen] = useState(false)
-  const [addedCount, setAddedCount] = useState(0)
 
   const { data: sitesData } = useSiteCareer()
   const { data: user } = useUser()
@@ -176,6 +202,9 @@ function Step2Companies({ onNext, onSkip }: Step2Props) {
   const { mutate: unregisterUser } = useUnregisterUserSite()
   const { mutate: updateFilters, isPending: isUpdatingFilters } = useUpdateUserSiteFilters()
 
+  // Source of truth for "did they add anything?" is the server-rendered
+  // is_subscribed flag — invalidating useSiteCareer after register/unregister
+  // already keeps it fresh, so addedCount was double-counting.
   const subscribedCount = useMemo(
     () => sitesData?.filter((c) => c.is_subscribed).length ?? 0,
     [sitesData]
@@ -185,9 +214,7 @@ function Step2Companies({ onNext, onSkip }: Step2Props) {
 
   const filteredSites = useMemo(() => {
     if (!sitesData) return []
-    return sitesData.filter((c) =>
-      c.site_name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    return sitesData.filter((c) => c.site_name.toLowerCase().includes(searchTerm.toLowerCase()))
   }, [sitesData, searchTerm])
 
   const handleCompanyClick = (company: SiteCareer) => {
@@ -203,8 +230,6 @@ function Step2Companies({ onNext, onSkip }: Step2Props) {
         {
           onSuccess: () => {
             setPopupOpen(false)
-            setAddedCount((n) => n + 1)
-            trackTrial('onboarding_step_2')
           }
         }
       )
@@ -236,24 +261,25 @@ function Step2Companies({ onNext, onSkip }: Step2Props) {
     [selectedCompany, updateFilters]
   )
 
-  const totalAdded = subscribedCount + addedCount
+  // Step completion fires once on advance — moving past Step 2 is the
+  // conversion event, not each individual company-add.
+  const handleAdvance = () => {
+    trackTrial('onboarding_step_2')
+    onNext()
+  }
 
   return (
     <div className="space-y-5">
       <div className="space-y-1.5">
-        <h2 className="text-xl font-bold text-foreground tracking-tight">
-          Escolha empresas para monitorar
-        </h2>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          Selecione as empresas cujas vagas você quer acompanhar.
-        </p>
+        <h2 className="text-xl font-bold text-foreground tracking-tight">{t('step2.title')}</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">{t('step2.description')}</p>
       </div>
 
       {/* Search */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
         <Input
-          placeholder="Buscar empresa..."
+          placeholder={t('step2.searchPlaceholder')}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="pl-9 pr-9 h-9"
@@ -276,7 +302,7 @@ function Step2Companies({ onNext, onSkip }: Step2Props) {
             <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
           </div>
         ) : filteredSites.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-6">Nenhuma empresa encontrada.</p>
+          <p className="text-sm text-muted-foreground text-center py-6">{t('step2.noResults')}</p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {filteredSites.map((company) => (
@@ -313,36 +339,38 @@ function Step2Companies({ onNext, onSkip }: Step2Props) {
 
       <div className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
         <Button variant="ghost" size="sm" onClick={onSkip} className="text-muted-foreground">
-          Pular
+          {t('step2.skip')}
         </Button>
         <Button
           size="sm"
           variant="glow"
-          onClick={onNext}
-          disabled={totalAdded === 0}
+          onClick={handleAdvance}
+          disabled={subscribedCount === 0}
           className="gap-1.5"
         >
-          Continuar
+          {t('step2.continue')}
           <ArrowRight className="h-4 w-4" />
         </Button>
       </div>
 
-      <RegistrationModal
-        key={selectedCompany?.site_id}
-        isOpen={isPopupOpen}
-        onClose={() => setPopupOpen(false)}
-        siteId={selectedCompany?.site_id}
-        companyName={selectedCompany?.site_name}
-        companyLogo={selectedCompany?.logo_url}
-        remainingSlots={remainingSlots}
-        isAlreadyRegistered={selectedCompany?.is_subscribed}
-        isLoading={isRegistering}
-        onRegister={handleRegister}
-        onUnRegister={handleUnregister}
-        currentTargetWords={selectedCompany?.target_words}
-        onUpdateFilters={handleUpdateFilters}
-        isUpdatingFilters={isUpdatingFilters}
-      />
+      {selectedCompany && (
+        <RegistrationModal
+          key={selectedCompany.site_id}
+          isOpen={isPopupOpen}
+          onClose={() => setPopupOpen(false)}
+          siteId={selectedCompany.site_id}
+          companyName={selectedCompany.site_name}
+          companyLogo={selectedCompany.logo_url}
+          remainingSlots={remainingSlots}
+          isAlreadyRegistered={selectedCompany.is_subscribed}
+          isLoading={isRegistering}
+          onRegister={handleRegister}
+          onUnRegister={handleUnregister}
+          currentTargetWords={selectedCompany.target_words}
+          onUpdateFilters={handleUpdateFilters}
+          isUpdatingFilters={isUpdatingFilters}
+        />
+      )}
     </div>
   )
 }
@@ -354,27 +382,33 @@ interface Step3Props {
 }
 
 function Step3Jobs({ onDismiss }: Step3Props) {
-  const { data: jobsData, isLoading } = useLatestJobs({ days: 7 })
+  const { t } = useTranslation('onboarding')
+  const { data: jobsData, isLoading, isError } = useLatestJobs({ days: 7 })
   const jobs = jobsData?.jobs?.slice(0, 5) ?? []
   const totalCount = jobsData?.total_count ?? 0
+  const fired = useRef(false)
 
+  // Funil de conversao precisa do evento "step 3 viewed" só quando o user
+  // efetivamente VIU o conteudo (nao loading skeleton ou error state). Sem o
+  // gate, taxa de conclusao de step 3 ficava inflada por falhas de query.
   useEffect(() => {
+    if (fired.current) return
+    if (isLoading || isError) return
+    fired.current = true
     trackTrial('onboarding_step_3')
-  }, [])
+  }, [isLoading, isError])
+
+  const headlineCopy = isLoading
+    ? t('step3.loading')
+    : totalCount > 0
+      ? t('step3.found', { count: totalCount })
+      : t('step3.noJobs')
 
   return (
     <div className="space-y-5">
       <div className="space-y-1.5">
-        <h2 className="text-xl font-bold text-foreground tracking-tight">
-          Veja suas primeiras vagas
-        </h2>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          {isLoading
-            ? 'Buscando vagas...'
-            : totalCount > 0
-            ? `Encontramos ${totalCount} ${totalCount === 1 ? 'vaga' : 'vagas'} nas empresas que você escolheu!`
-            : 'Ainda não temos vagas das suas empresas, mas já estamos monitorando!'}
-        </p>
+        <h2 className="text-xl font-bold text-foreground tracking-tight">{t('step3.title')}</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">{headlineCopy}</p>
       </div>
 
       {isLoading ? (
@@ -400,7 +434,7 @@ function Step3Jobs({ onDismiss }: Step3Props) {
                 rel="noopener noreferrer"
                 className="shrink-0 inline-flex items-center gap-1 text-xs text-primary hover:underline underline-offset-4"
               >
-                Ver
+                {t('step3.viewJob')}
                 <ExternalLink className="h-3 w-3" />
               </a>
             </div>
@@ -410,7 +444,7 @@ function Step3Jobs({ onDismiss }: Step3Props) {
 
       <div className="flex justify-end">
         <Button size="sm" variant="glow" onClick={onDismiss} className="gap-1.5">
-          Ir para o dashboard
+          {t('step3.goToDashboard')}
           <ArrowRight className="h-4 w-4" />
         </Button>
       </div>
@@ -420,9 +454,41 @@ function Step3Jobs({ onDismiss }: Step3Props) {
 
 // --- Main Wizard ---
 
-export function OnboardingWizard() {
+interface OnboardingWizardProps {
+  onDismiss?: () => void
+}
+
+export function OnboardingWizard({ onDismiss }: OnboardingWizardProps = {}) {
   const [step, setStep] = useState(1)
   const [dismissed, setDismissed] = useState(false)
+  const { data: curriculumList, isLoading: curriculumLoading } = useCurriculum()
+  const reconciledRef = useRef(false)
+
+  // Avanca pra step 2 se o user ja tem curriculum cadastrado (refresh mid-wizard
+  // ou re-abertura). Sem isso, refresh apos upload bem-sucedido voltava pro
+  // step 1 e o user re-extraia o PDF (custa OpenAI quota + UX confuso).
+  // Roda 1x quando a query resolve — depois disso, navegacao do user controla.
+  useEffect(() => {
+    if (reconciledRef.current) return
+    if (curriculumLoading) return
+    reconciledRef.current = true
+    if (curriculumList && curriculumList.length > 0) {
+      setStep((prev) => (prev < 2 ? 2 : prev))
+    }
+  }, [curriculumList, curriculumLoading])
+
+  const handleDismiss = () => {
+    try {
+      window.localStorage.setItem(ONBOARDING_DISMISSED_KEY, '1')
+    } catch (err) {
+      // Safari private mode lança QuotaExceeded — não-fatal, a flag em memória
+      // ainda esconde o wizard nesta sessão. Loga pra ter visibilidade se outro
+      // path (não-Safari) começar a falhar (ex: storage real cheio = bug em outro lugar).
+      console.warn('onboarding wizard: localStorage.setItem failed', err)
+    }
+    setDismissed(true)
+    onDismiss?.()
+  }
 
   if (dismissed) return null
 
@@ -431,23 +497,9 @@ export function OnboardingWizard() {
       <CardContent className="space-y-5 pt-5">
         <ProgressBar step={step} total={3} />
 
-        {step === 1 && (
-          <Step1Upload
-            onNext={() => setStep(2)}
-            onSkip={() => setStep(2)}
-          />
-        )}
-        {step === 2 && (
-          <Step2Companies
-            onNext={() => setStep(3)}
-            onSkip={() => setStep(3)}
-          />
-        )}
-        {step === 3 && (
-          <Step3Jobs
-            onDismiss={() => setDismissed(true)}
-          />
-        )}
+        {step === 1 && <Step1Upload onNext={() => setStep(2)} onSkip={() => setStep(2)} />}
+        {step === 2 && <Step2Companies onNext={() => setStep(3)} onSkip={() => setStep(3)} />}
+        {step === 3 && <Step3Jobs onDismiss={handleDismiss} />}
       </CardContent>
     </Card>
   )

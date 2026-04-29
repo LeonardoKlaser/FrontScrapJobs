@@ -5,10 +5,10 @@
     "heading1": "All the jobs from the companies you care about.",
     "heading2": "Hot off the press.",
     "subheading": "You pick the companies. We monitor 24/7. You get the job in your inbox minutes after it's posted — before the competition shows up.",
-    "cta": "Try free for 7 days",
+    "cta": "Get jobs before everyone else",
     "loginPrompt": "Already have an account?",
     "loginLink": "Sign in",
-    "microcopy": "No credit card. No commitment. Cancel anytime.",
+    "microcopy": "Set up in 2 min. Includes 7 days free.",
     "mockupDisclaimer": "Illustrative. Companies shown belong to their respective owners."
   },
   "navbar": {
@@ -59,7 +59,8 @@
     "step3": {
       "title": "3. Receive & Optimize",
       "description": "New jobs land in your inbox. Click to see the AI analysis and apply suggestions directly to your resume."
-    }
+    },
+    "cta": "Start monitoring jobs"
   },
   "problem": {
     "headline": "The reality of job hunting today",
@@ -129,7 +130,7 @@
     },
     "limits": {
       "question": "How many companies can I monitor?",
-      "answer": "It depends on your plan! The Basic plan allows up to 3 sites, Professional up to 8, and Premium up to 30 sites."
+      "answer": "It depends on your plan — each tier has a different limit. Check the plans table above."
     },
     "ctaTitle": "Ready to Accelerate Your Career?",
     "ctaDescription": "Leave manual job searching in the past. Focus your energy on what really matters: preparing for interviews and landing your dream job.",
@@ -171,26 +172,26 @@
     "hoursUnit": "50h"
   },
   "ctaFinal": {
-    "title": "Ready to find your",
-    "titleHighlight": "next job?",
-    "subtitle": "Automate your search and free up time for what really matters: the interviews.",
-    "cta": "Start your free trial"
+    "title": "Discover jobs that",
+    "titleHighlight": "no one else has seen",
+    "subtitle": "Jobs from the companies you picked, in your inbox — minutes after they go live.",
+    "cta": "Get started"
   },
   "pricing": {
-    "title": "Try free for 7 days. Then pick your plan.",
-    "subtitle": "No card to try. Cancel anytime.",
+    "title": "Job monitoring that works for you",
+    "subtitle": "Pick the plan that fits your search. Cancel anytime.",
     "loading": "Loading plans...",
     "monthly": "Monthly",
     "popular": "Popular",
     "planName": "{{name}} Plan",
     "perMonth": "/mo",
-    "badge": "Try any plan free for 7 days. Pick yours later.",
+    "badge": "Fresh jobs straight to your inbox — pay only for the plan you use.",
     "savingsAnchor": "Save up to {{hours}} hours of tedious job searching per month",
-    "guarantee": "7 days free for you to decide. No card, no risk.",
-    "trialBadge": "FREE FOR 7 DAYS",
-    "trialTitle": "Try before you subscribe",
-    "trialSubtitle": "Restricted trial — no card required.",
-    "trialCta": "Start free 7-day trial",
+    "guarantee": "Cancel anytime. No lock-in, no fine print.",
+    "trialBadge": "Start Here",
+    "trialTitle": "Trial",
+    "trialSubtitle": "7 days free",
+    "trialCta": "Create my account",
     "trialFeatures": {
       "sites": "1 monitored site",
       "analyses": "3 AI analyses",
@@ -198,8 +199,8 @@
       "suggestions": "2 suggestions applied",
       "pdfs": "1 PDF generated"
     },
-    "paidCta": "Subscribe now — skip trial",
-    "paidSubtext": "Skip the trial and go straight to payment."
+    "paidCta": "Subscribe now",
+    "paidSubtext": "Immediate access to all features."
   },
   "lgpd": {
     "badge": "LGPD and GDPR Compliant",

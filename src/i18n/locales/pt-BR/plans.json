@@ -15,12 +15,25 @@
     "subtitle": "Abra o app do seu banco e escaneie o QR Code abaixo ou copie o código PIX",
     "copyCode": "Copiar código PIX",
     "codeCopied": "Código copiado!",
+    "copyFailed": "Cópia automática indisponível — selecione e copie o código manualmente.",
     "awaitingPayment": "Aguardando pagamento...",
     "paymentConfirmed": "Pagamento confirmado! Redirecionando...",
     "qrExpired": "QR Code expirado",
     "qrExpiredDescription": "O tempo para pagamento expirou. Gere um novo QR Code para continuar.",
     "generateNewQr": "Gerar novo QR Code",
-    "expiresIn": "Expira em"
+    "expiresIn": "Expira em",
+    "pollingFailed": "Não conseguimos confirmar automaticamente. Se você já pagou, clique em 'Verificar agora'.",
+    "checkNow": "Verificar agora",
+    "expiredCheckCta": "Já paguei? Verificar",
+    "paymentFailed": "Pagamento não concluído. Gere um novo QR Code para tentar novamente.",
+    "checkFailed": "Não conseguimos verificar o status. Tente novamente em alguns segundos.",
+    "checkRateLimited": "Muitas verificações em pouco tempo. Aguarde alguns segundos e tente novamente.",
+    "verifyingFinal": "Verificando pagamento...",
+    "stuckTitle": "Estamos com dificuldade para confirmar.",
+    "stuckDescription": "Se você já pagou, fale com o suporte com a hora do pagamento e seu e-mail.",
+    "emailMissingTitle": "Não conseguimos identificar sua conta",
+    "emailMissingDescription": "Tivemos um problema ao carregar seus dados. Recarregue a página pra continuar acompanhando o pagamento.",
+    "reloadPage": "Recarregar página"
   },
   "paymentForm": {
     "title": "Criar Conta",
@@ -106,9 +119,6 @@
     "sites": "{{count}} empresas monitoradas",
     "analyses": "{{count}} análises de IA/mês",
     "unlimitedAnalyses": "Análises de IA ilimitadas",
-    "subscribe": "Assinar Plano",
-    "free": "Grátis",
-    "currencySymbol": "R$",
     "perMonth": "/mês",
     "perMonthAbbrev": "~R${{price}}/mês",
     "popular": "Mais popular",
@@ -118,7 +128,8 @@
     "period": {
       "monthly": "Mensal",
       "quarterly": "Trimestral",
-      "discount": "Economize {{percent}}%"
+      "discount": "Economize {{percent}}%",
+      "quarterlyPixOnly": "Trimestral disponível apenas via PIX"
     },
     "paymentMethod": {
       "title": "Forma de pagamento",
@@ -136,8 +147,16 @@
       "required": "Campo obrigatório"
     },
     "pixCta": "Assinar com PIX",
-    "cardCta": "Assinar com cartao",
-    "pixError": "Erro ao gerar QR Code. Tente novamente.",
-    "generating": "Gerando QR Code..."
+    "cardCta": "Assinar com cartão",
+    "generating": "Gerando QR Code...",
+    "errors": {
+      "invalidCpf": "CPF inválido. Verifique e tente novamente.",
+      "invalidPhone": "Celular inválido. Use 11 dígitos com DDD (ex: 11 99999-9999).",
+      "gatewayDown": "Pagamento indisponível agora. Tente novamente em instantes.",
+      "alreadyActive": "Sua assinatura já está ativa. Recarregue a página para ver.",
+      "network": "Falha de conexão. Verifique sua internet e tente novamente.",
+      "sessionExpired": "Sessão expirada. Faça login novamente para continuar.",
+      "generic": "Erro ao gerar QR Code. Tente novamente."
+    }
   }
 }

@@ -1,0 +1,35 @@
+{
+  "step1": {
+    "title": "Upload your resume",
+    "description": "We use AI to match your profile with jobs and show your compatibility score + improvement suggestions.",
+    "uploadAria": "Upload resume PDF",
+    "selectPdf": "Click to select your PDF",
+    "fileSizeHint": "PDF up to 5 MB",
+    "processing": "Processing resume...",
+    "uploading": "Uploading...",
+    "selectButton": "Select PDF",
+    "skipForNow": "Skip for now",
+    "errorPdfType": "Please upload a PDF file.",
+    "errorFileSize": "File too large. Max size is 5 MB.",
+    "successImport": "Resume imported successfully!",
+    "cvUploadError": "We couldn't process your resume. Please try again or skip this step."
+  },
+  "step2": {
+    "title": "Pick companies to monitor",
+    "description": "Select the companies whose jobs you want to track.",
+    "searchPlaceholder": "Search company...",
+    "noResults": "No companies found.",
+    "skip": "Skip",
+    "continue": "Continue"
+  },
+  "step3": {
+    "title": "See your first jobs",
+    "loading": "Fetching jobs...",
+    "found": "We found {{count}} jobs at the companies you picked!",
+    "found_one": "We found {{count}} job at the companies you picked!",
+    "found_other": "We found {{count}} jobs at the companies you picked!",
+    "noJobs": "We don't have jobs from your companies yet, but we're already monitoring!",
+    "viewJob": "View",
+    "goToDashboard": "Go to dashboard"
+  }
+}

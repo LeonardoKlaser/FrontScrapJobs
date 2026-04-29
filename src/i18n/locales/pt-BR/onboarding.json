@@ -1,0 +1,35 @@
+{
+  "step1": {
+    "title": "Envie seu currículo",
+    "description": "Usamos IA para cruzar seu perfil com as vagas e mostrar seu nível de compatibilidade + sugestões de melhoria.",
+    "uploadAria": "Fazer upload do currículo em PDF",
+    "selectPdf": "Clique para selecionar seu PDF",
+    "fileSizeHint": "PDF até 5 MB",
+    "processing": "Processando currículo...",
+    "uploading": "Enviando...",
+    "selectButton": "Selecionar PDF",
+    "skipForNow": "Pular por enquanto",
+    "errorPdfType": "Por favor, envie um arquivo PDF.",
+    "errorFileSize": "Arquivo muito grande. O tamanho máximo é 5 MB.",
+    "successImport": "Currículo importado com sucesso!",
+    "cvUploadError": "Não conseguimos processar seu currículo. Tente novamente em alguns instantes ou pule esta etapa."
+  },
+  "step2": {
+    "title": "Escolha empresas para monitorar",
+    "description": "Selecione as empresas cujas vagas você quer acompanhar.",
+    "searchPlaceholder": "Buscar empresa...",
+    "noResults": "Nenhuma empresa encontrada.",
+    "skip": "Pular",
+    "continue": "Continuar"
+  },
+  "step3": {
+    "title": "Veja suas primeiras vagas",
+    "loading": "Buscando vagas...",
+    "found": "Encontramos {{count}} vagas nas empresas que você escolheu!",
+    "found_one": "Encontramos {{count}} vaga nas empresas que você escolheu!",
+    "found_other": "Encontramos {{count}} vagas nas empresas que você escolheu!",
+    "noJobs": "Ainda não temos vagas das suas empresas, mas já estamos monitorando!",
+    "viewJob": "Ver",
+    "goToDashboard": "Ir para o dashboard"
+  }
+}

@@ -130,7 +130,7 @@
     },
     "limits": {
       "question": "Quantas empresas posso monitorar?",
-      "answer": "Depende do seu plano! O plano Básico permite até 3 sites, o Profissional até 8 e o Premium até 30 sites."
+      "answer": "Depende do seu plano! Cada plano tem um limite diferente — confira a tabela de planos acima."
     },
     "ctaTitle": "Pronto para Acelerar sua Carreira?",
     "ctaDescription": "Deixe a busca de emprego manual no passado. Concentre sua energia no que realmente importa: preparar-se para as entrevistas e conseguir o emprego dos seus sonhos.",
@@ -174,20 +174,20 @@
   "ctaFinal": {
     "title": "Descubra vagas que",
     "titleHighlight": "ninguém viu",
-    "subtitle": "7 dias grátis. Sem cartão.",
+    "subtitle": "Vagas das empresas que você escolheu, no seu email — minutos depois de saírem.",
     "cta": "Começar agora"
   },
   "pricing": {
     "title": "Monitoramento de vagas que trabalha por você",
-    "subtitle": "Escolha o plano ideal. Todos incluem 7 dias grátis.",
+    "subtitle": "Escolha o plano que cabe na sua busca. Cancele quando quiser.",
     "loading": "Carregando planos...",
     "monthly": "Mensal",
     "popular": "Mais Popular",
     "planName": "Plano {{name}}",
     "perMonth": "/mês",
-    "badge": "Teste qualquer plano grátis por 7 dias. Escolha o seu depois.",
+    "badge": "Vagas em primeira mão direto no seu email — pague só pelo plano que você usa.",
     "savingsAnchor": "Economize até {{hours}} horas de busca maçante por mês",
-    "guarantee": "Teste qualquer plano. 7 dias grátis, sem cartão.",
+    "guarantee": "Cancele a qualquer momento. Sem fidelidade, sem letras miúdas.",
     "trialBadge": "Comece Aqui",
     "trialTitle": "Trial",
     "trialSubtitle": "7 dias grátis",
@@ -200,7 +200,6 @@
       "pdfs": "1 PDF gerado"
     },
     "paidCta": "Assinar agora",
-    "subscribeCta": "Assinar agora",
     "paidSubtext": "Acesso imediato a todas as funcionalidades."
   },
   "lgpd": {

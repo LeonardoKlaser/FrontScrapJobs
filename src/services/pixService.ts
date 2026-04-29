@@ -10,12 +10,13 @@ export interface PixPaymentRequest {
 }
 
 export interface PixPaymentResult {
-  order_id: string
-  charge_id: string
+  // PIX EMV string ("copia e cola"). Plain text — no encoding to apply.
   qr_code: string
+  // Either an external HTTPS URL (Pagar.me CDN) or a `data:image/png;base64,...`
+  // URI. Both are covered by nginx.conf's `img-src 'self' data: https:`. If
+  // backend ever switches to a different scheme, update CSP first.
   qr_code_url: string
   expires_at: string
-  status: string
 }
 
 export async function createPixPayment(data: PixPaymentRequest): Promise<PixPaymentResult> {

@@ -4,10 +4,11 @@ import { Badge } from '@/components/ui/badge'
 import { Building2, Loader2, X } from 'lucide-react'
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import axios from 'axios'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
-import { previewFilters } from '@/services/filterPreviewService'
 import type { FilterPreviewResult } from '@/services/filterPreviewService'
+import { useFilterPreview } from '@/hooks/useFilterPreview'
 
 // Espelha a ordem do backend Tokenize: ToLower → NFD → strip Mn → NFC.
 // Ordem importa pra edge cases (Turkish dotless-i, eszett). Divergência
@@ -34,7 +35,7 @@ const splitIntoTags = (input: string): string[] => {
 interface RegistrationModalProps {
   isOpen: boolean
   onClose: () => void
-  siteId?: number
+  siteId: number
   companyName: string | undefined
   companyLogo: string | null | undefined
   remainingSlots: number
@@ -63,12 +64,15 @@ export function RegistrationModal({
   isUpdatingFilters
 }: RegistrationModalProps) {
   const { t } = useTranslation('sites')
+  const { t: tDashboard } = useTranslation('dashboard')
   const [keywords, setKeywords] = useState('')
   const [editKeywords, setEditKeywords] = useState<string[]>([])
   const [keywordInput, setKeywordInput] = useState('')
   const [previewResult, setPreviewResult] = useState<FilterPreviewResult | null>(null)
-  const [previewLoading, setPreviewLoading] = useState(false)
+  const [previewError, setPreviewError] = useState<string | null>(null)
   const [showSample, setShowSample] = useState(false)
+  const filterPreview = useFilterPreview()
+  const previewLoading = filterPreview.isPending
   const hasNoSlots = remainingSlots === 0 && !isAlreadyRegistered
 
   useEffect(() => {
@@ -78,6 +82,7 @@ export function RegistrationModal({
       setEditKeywords(Array.from(new Set(hydrated)))
       setKeywordInput('')
       setPreviewResult(null)
+      setPreviewError(null)
       setShowSample(false)
     }
   }, [isOpen, currentTargetWords])
@@ -92,25 +97,41 @@ export function RegistrationModal({
     })
     setKeywordInput('')
     setPreviewResult(null)
+    setPreviewError(null)
     setShowSample(false)
   }, [keywordInput])
 
   const previewTags = splitIntoTags(keywords)
 
-  const handlePreviewFilters = async () => {
-    if (editKeywords.length === 0 || !siteId) return
-    setPreviewLoading(true)
+  const runPreview = (filters: string[]) => {
+    if (filters.length === 0) return
     setPreviewResult(null)
+    setPreviewError(null)
     setShowSample(false)
-    try {
-      const result = await previewFilters(siteId, editKeywords)
-      setPreviewResult(result)
-    } catch {
-      // Silent fail — preview is non-critical
-    } finally {
-      setPreviewLoading(false)
-    }
+    filterPreview.mutate(
+      { siteId, filters },
+      {
+        onSuccess: (result) => {
+          setPreviewResult(result)
+        },
+        onError: (err) => {
+          console.error('filter preview failed', err)
+          let key = 'preview.error'
+          if (axios.isAxiosError(err)) {
+            const status = err.response?.status
+            if (status === 429) key = 'preview.rateLimited'
+            // Distinguir gateway/upstream down de erro genérico — sem isso o
+            // user nao sabia se era a query dele ou um problema temporario do site.
+            else if (status === 503 || status === 504) key = 'preview.serviceUnavailable'
+          }
+          setPreviewError(tDashboard(key))
+        }
+      }
+    )
   }
+
+  const handlePreviewFilters = () => runPreview(editKeywords)
+  const handlePreviewRegistrationFilters = () => runPreview(previewTags)
 
   const isRegisterButtonDisabled =
     hasNoSlots || isLoading || (previewTags.length === 0 && !isAlreadyRegistered)
@@ -215,8 +236,12 @@ export function RegistrationModal({
                     disabled={previewLoading}
                     className="text-sm text-emerald-600 hover:text-emerald-700 font-medium disabled:opacity-50"
                   >
-                    {previewLoading ? 'Testando...' : 'Testar filtros'}
+                    {previewLoading
+                      ? tDashboard('preview.testing')
+                      : tDashboard('preview.testFilters')}
                   </button>
+
+                  {previewError && <p className="mt-2 text-sm text-destructive">{previewError}</p>}
 
                   {previewResult && (
                     <div className="mt-2 p-3 bg-gray-50 rounded-lg text-sm">
@@ -224,16 +249,21 @@ export function RegistrationModal({
                         <>
                           <p className="text-gray-700">
                             <span className="font-semibold text-emerald-600">
-                              {previewResult.matched_jobs} de {previewResult.total_jobs} vagas
-                            </span>{' '}
-                            correspondem aos seus filtros
+                              {tDashboard('preview.matchesFound', {
+                                matched: previewResult.matched_jobs,
+                                total: previewResult.total_jobs
+                              })}
+                            </span>
+                            {tDashboard('preview.matchesText')}
                           </p>
                           <button
                             type="button"
                             onClick={() => setShowSample(!showSample)}
                             className="text-xs text-emerald-600 hover:underline mt-1"
                           >
-                            {showSample ? 'Ocultar vagas' : 'Ver vagas encontradas'}
+                            {showSample
+                              ? tDashboard('preview.hideJobs')
+                              : tDashboard('preview.showJobs')}
                           </button>
                           {showSample && (
                             <div className="mt-2 space-y-1.5">
@@ -250,7 +280,9 @@ export function RegistrationModal({
                         </>
                       ) : (
                         <p className="text-amber-600">
-                          Nenhuma vaga encontrada com esses filtros. Tente filtros mais amplos.
+                          {previewResult.site_has_no_recent_jobs
+                            ? tDashboard('preview.noRecentJobs')
+                            : tDashboard('preview.noMatches')}
                         </p>
                       )}
                     </div>
@@ -306,7 +338,12 @@ export function RegistrationModal({
                   id="keywords"
                   placeholder={t('popup.keywordsPlaceholder')}
                   value={keywords}
-                  onChange={(e) => setKeywords(e.target.value)}
+                  onChange={(e) => {
+                    setKeywords(e.target.value)
+                    setPreviewResult(null)
+                    setPreviewError(null)
+                    setShowSample(false)
+                  }}
                   disabled={isLoading}
                 />
                 <p className="text-xs text-muted-foreground">{t('popup.keywordsHelp')}</p>
@@ -332,6 +369,67 @@ export function RegistrationModal({
                     'Adicione pelo menos uma palavra-chave para se inscrever'
                   )}
                 </p>
+              )}
+              {previewTags.length > 0 && (
+                <div className="mt-3">
+                  <button
+                    type="button"
+                    onClick={handlePreviewRegistrationFilters}
+                    disabled={previewLoading}
+                    className="text-sm text-emerald-600 hover:text-emerald-700 font-medium disabled:opacity-50"
+                  >
+                    {previewLoading
+                      ? tDashboard('preview.testing')
+                      : tDashboard('preview.testFilters')}
+                  </button>
+
+                  {previewError && <p className="mt-2 text-sm text-destructive">{previewError}</p>}
+
+                  {previewResult && (
+                    <div className="mt-2 p-3 bg-gray-50 rounded-lg text-sm">
+                      {previewResult.matched_jobs > 0 ? (
+                        <>
+                          <p className="text-gray-700">
+                            <span className="font-semibold text-emerald-600">
+                              {tDashboard('preview.matchesFound', {
+                                matched: previewResult.matched_jobs,
+                                total: previewResult.total_jobs
+                              })}
+                            </span>
+                            {tDashboard('preview.matchesText')}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => setShowSample(!showSample)}
+                            className="text-xs text-emerald-600 hover:underline mt-1"
+                          >
+                            {showSample
+                              ? tDashboard('preview.hideJobs')
+                              : tDashboard('preview.showJobs')}
+                          </button>
+                          {showSample && (
+                            <div className="mt-2 space-y-1.5">
+                              {previewResult.sample.map((job, i) => (
+                                <div key={i} className="flex items-center justify-between text-xs">
+                                  <span className="text-gray-700 truncate">{job.title}</span>
+                                  <span className="text-gray-400 ml-2 shrink-0">
+                                    {job.location}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <p className="text-amber-600">
+                          {previewResult.site_has_no_recent_jobs
+                            ? tDashboard('preview.noRecentJobs')
+                            : tDashboard('preview.noMatches')}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           )}

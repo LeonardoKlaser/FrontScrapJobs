@@ -25,6 +25,34 @@ vi.mock('@/lib/analytics', () => ({
   trackTrial: () => mockTrackTrial()
 }))
 
+// Stubs the i18n keys used by TrialBanner with the Portuguese copy the
+// tests assert against. Centralizing here keeps the component free of
+// hardcoded strings while preserving the existing test contract.
+const TRANSLATION_STUB: Record<string, string> = {
+  'banner.pixExpiresIn': 'Sua assinatura vence em ',
+  'banner.pixExpiresToday': 'Sua assinatura expira hoje. ',
+  'banner.renewNow': 'Renovar agora',
+  'banner.trialActive': 'Você está no trial gratuito. ',
+  'banner.trialExpired': 'Seu trial acabou. Assine pra continuar recebendo vagas.',
+  'banner.subscribeNow': 'Assinar agora'
+}
+
+function stubTranslate(key: string, opts?: { count?: number }): string {
+  if (key === 'banner.pixDays' || key === 'banner.pixDays_one') {
+    const count = opts?.count ?? 0
+    return `${count} ${count === 1 ? 'dia' : 'dias'}`
+  }
+  if (key === 'banner.trialDaysLeft') {
+    const count = opts?.count ?? 0
+    return `${count} ${count === 1 ? 'dia restante' : 'dias restantes'}`
+  }
+  return TRANSLATION_STUB[key] ?? key
+}
+
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: stubTranslate })
+}))
+
 function makeUser(overrides: Partial<User> = {}): User {
   return {
     user_name: 'Test',
@@ -74,16 +102,25 @@ describe('TrialBanner', () => {
   })
 
   it('uses singular "dia restante" when 1 day left', () => {
-    const trialEnd = new Date(Date.now() + 23 * 60 * 60 * 1000).toISOString() // ~1 day
-    mockUseUser.data = makeUser({
-      is_trial_active: true,
-      trial_ends_at: trialEnd,
-      expires_at: trialEnd
-    })
+    // daysBetweenLocal compara start-of-day, então +23h pode dar 0 ou 1
+    // dependendo da hora local em que o teste roda. Trava o clock pra garantir
+    // que o target cai exatamente no dia seguinte.
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-04-29T12:00:00.000Z'))
+    try {
+      const trialEnd = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+      mockUseUser.data = makeUser({
+        is_trial_active: true,
+        trial_ends_at: trialEnd,
+        expires_at: trialEnd
+      })
 
-    render(<TrialBanner />)
-    expect(screen.getByText(/1 dia restante/)).toBeInTheDocument()
-    expect(screen.queryByText(/dias restantes/)).not.toBeInTheDocument()
+      render(<TrialBanner />)
+      expect(screen.getByText(/1 dia restante/)).toBeInTheDocument()
+      expect(screen.queryByText(/dias restantes/)).not.toBeInTheDocument()
+    } finally {
+      vi.useRealTimers()
+    }
   })
 
   it('shows paywall banner when trial expired (no payment_method, expires_at past)', () => {

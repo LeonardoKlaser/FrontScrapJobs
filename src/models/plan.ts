@@ -9,4 +9,7 @@ export interface Plan {
   max_pdf_generations: number
   is_trial: boolean
   features: string[]
+  // Backend e fonte da verdade do preco trimestral. Ausente quando o plano
+  // nao tem opcao trimestral configurada — UI deve esconder o toggle nesse caso.
+  quarterly_price_cents?: number
 }
