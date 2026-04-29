@@ -18,4 +18,6 @@ export interface User {
   trial_ends_at?: string
   payment_method?: 'credit_card' | 'pix' | null
   is_trial_active?: boolean
+  feedback_modal_shown_count?: number
+  feedback_given?: boolean
 }
