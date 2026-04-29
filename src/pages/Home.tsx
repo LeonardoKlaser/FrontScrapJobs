@@ -319,6 +319,29 @@ export function Home() {
     })
   }
 
+  // Latch the wizard the FIRST time both `user` and dashboard `data` have
+  // resolved: if the user starts in the "needs onboarding" state, keep the
+  // wizard mounted until explicit dismiss (without this, monitoredUrls flips
+  // length>0 mid-flow at Step 2 and the wizard unmounts losing Step 3).
+  //
+  // Declared before the early returns below — otherwise hook count differs
+  // between the loading render and the resolved render (React error #310).
+  const [wizardLatched, setWizardLatched] = useState<boolean | null>(null)
+  const [wizardDismissed, setWizardDismissed] = useState(false)
+  useEffect(() => {
+    if (wizardLatched !== null) return
+    if (user === undefined || data === undefined) return
+    try {
+      if (window.localStorage.getItem('sj_onboarding_dismissed_v1') === '1') {
+        setWizardLatched(false)
+        return
+      }
+    } catch {
+      // Storage unavailable — proceed without persisted dismiss flag
+    }
+    setWizardLatched(!!user?.is_trial_active && (data.user_monitored_urls?.length ?? 0) === 0)
+  }, [user, data, wizardLatched])
+
   if (isDashboardLoading) {
     return (
       <div className="space-y-10">
@@ -369,30 +392,6 @@ export function Home() {
 
   const monitoredUrls = data?.user_monitored_urls || []
 
-  // Latch the wizard the FIRST time both `user` and dashboard `data` have
-  // resolved: if the user starts in the "needs onboarding" state, keep the
-  // wizard mounted until explicit dismiss (without this, monitoredUrls flips
-  // length>0 mid-flow at Step 2 and the wizard unmounts losing Step 3).
-  //
-  // Defer eval until both queries resolve: useState-initializer was checking
-  // on first render when `user` and `data` could still be undefined, latching
-  // to `false` and the wizard would NEVER appear for slow-network trial users.
-  const [wizardLatched, setWizardLatched] = useState<boolean | null>(null)
-  useEffect(() => {
-    if (wizardLatched !== null) return
-    if (user === undefined || data === undefined) return
-    try {
-      if (window.localStorage.getItem('sj_onboarding_dismissed_v1') === '1') {
-        setWizardLatched(false)
-        return
-      }
-    } catch {
-      // Storage unavailable — proceed without persisted dismiss flag
-    }
-    setWizardLatched(!!user?.is_trial_active && (data.user_monitored_urls?.length ?? 0) === 0)
-  }, [user, data, wizardLatched])
-
-  const [wizardDismissed, setWizardDismissed] = useState(false)
   const showOnboarding = wizardLatched === true && !wizardDismissed
 
   return (
