@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { AuthForm } from '@/components/forms/Auth'
+import { LoginHero } from '@/components/forms/LoginHero'
 import { Logo } from '@/components/common/logo'
 import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
@@ -24,36 +25,36 @@ export default function Login() {
   return (
     <div className="flex min-h-screen">
       {/* Left Panel — Brand Hero (hidden on mobile) */}
-      <div className="hidden lg:flex lg:w-1/2 flex-col justify-center px-12 xl:px-20 bg-card border-r border-border/50 relative overflow-hidden">
+      <div
+        className="relative hidden overflow-hidden border-r border-border/50 bg-card lg:flex
+          lg:w-1/2 flex-col justify-center px-12 xl:px-20"
+      >
         <AuthBackLinkLeftPanel />
-        <div className="pointer-events-none absolute -left-24 -top-24 h-[400px] w-[400px] rounded-full bg-primary/5 blur-[100px]" />
-        <div className="pointer-events-none absolute right-0 bottom-0 h-[300px] w-[300px] rounded-full bg-primary/3 blur-[80px]" />
-        <div className="relative z-10">
-          <Logo size={80} showText className="mb-8" />
-          <h1 className="font-display text-3xl font-bold tracking-tight text-foreground mb-4">
-            {t('hero.title', 'Encontre as vagas certas, automaticamente.')}
-          </h1>
-          <p className="text-lg text-muted-foreground mb-8 max-w-md">
-            {t(
-              'hero.subtitle',
-              'O ScrapJobs monitora páginas de carreiras e analisa compatibilidade com seu currículo usando IA.'
-            )}
-          </p>
-          <div className="flex gap-8">
-            <div>
-              <p className="font-display text-2xl font-bold text-primary">500+</p>
-              <p className="text-sm text-muted-foreground">
-                {t('hero.jobsMonitored', 'vagas monitoradas')}
-              </p>
-            </div>
-            <div>
-              <p className="font-display text-2xl font-bold text-primary">50+</p>
-              <p className="text-sm text-muted-foreground">
-                {t('hero.companiesTracked', 'empresas rastreadas')}
-              </p>
-            </div>
-          </div>
-        </div>
+
+        {/* Layered ambient glows */}
+        <div
+          className="pointer-events-none absolute -left-32 -top-32 h-[480px] w-[480px] rounded-full
+            bg-primary/10 blur-[120px] animate-glow-pulse"
+        />
+        <div
+          className="pointer-events-none absolute -right-24 bottom-0 h-[360px] w-[360px]
+            rounded-full bg-sky-500/5 blur-[100px]"
+        />
+
+        {/* Faint grid texture */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.18]"
+          style={{
+            backgroundImage:
+              'linear-gradient(to right, var(--border) 1px, transparent 1px),' +
+              ' linear-gradient(to bottom, var(--border) 1px, transparent 1px)',
+            backgroundSize: '32px 32px',
+            maskImage: 'radial-gradient(ellipse at center, black 30%, transparent 75%)',
+            WebkitMaskImage: 'radial-gradient(ellipse at center, black 30%, transparent 75%)'
+          }}
+        />
+
+        <LoginHero />
       </div>
 
       {/* Right Panel — Form */}
