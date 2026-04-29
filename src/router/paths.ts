@@ -9,6 +9,7 @@ export const PATHS = {
 
   checkout: (planId: string) => `/checkout/${planId}`,
   paymentConfirmation: '/payment-confirmation',
+  feedback: '/feedback',
   app: {
     home: '/app',
     curriculum: '/app/curriculum',

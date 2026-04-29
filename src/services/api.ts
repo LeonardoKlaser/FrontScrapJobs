@@ -27,7 +27,8 @@ api.interceptors.response.use(
         '/forgot-password',
         '/reset-password',
         '/terms',
-        '/privacy'
+        '/privacy',
+        '/feedback'
       ]
       const isPublic =
         publicPaths.some((p) => path === p) ||
