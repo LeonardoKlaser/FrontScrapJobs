@@ -4,6 +4,7 @@ import { ShieldCheck } from 'lucide-react'
 import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { PATHS } from '@/router/paths'
+import { AuthBackLink } from '@/components/common/AuthBackLink'
 
 export default function Signup() {
   const { t } = useTranslation('auth')
@@ -46,6 +47,7 @@ export default function Signup() {
       {/* Right Panel — Form */}
       <div className="flex w-full lg:w-1/2 items-center justify-center px-4 bg-background">
         <div className="w-full max-w-sm animate-fade-in-up">
+          <AuthBackLink />
           <div className="mb-8 flex flex-col items-center justify-center lg:hidden">
             <Logo size={80} showText />
           </div>

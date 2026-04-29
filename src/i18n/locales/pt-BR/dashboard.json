@@ -52,5 +52,30 @@
   },
   "error": {
     "loadDashboard": "Erro ao carregar o dashboard"
+  },
+  "banner": {
+    "pixExpiresIn": "Sua assinatura vence em ",
+    "pixExpiresToday": "Sua assinatura expira hoje. ",
+    "pixDays_one": "{{count}} dia",
+    "pixDays_other": "{{count}} dias",
+    "renewNow": "Renovar agora",
+    "trialActive": "Você está no trial gratuito. ",
+    "trialDaysLeft_one": "{{count}} dia restante",
+    "trialDaysLeft_other": "{{count}} dias restantes",
+    "trialExpired": "Seu trial acabou. Assine pra continuar recebendo vagas.",
+    "subscribeNow": "Assinar agora"
+  },
+  "preview": {
+    "testFilters": "Testar filtros",
+    "testing": "Testando...",
+    "matchesFound": "{{matched}} de {{total}} vagas",
+    "matchesText": " correspondem aos seus filtros",
+    "showJobs": "Ver vagas encontradas",
+    "hideJobs": "Ocultar vagas",
+    "noMatches": "Nenhuma vaga encontrada com esses filtros. Tente filtros mais amplos.",
+    "noRecentJobs": "Esse site não publicou vagas recentemente. Volte mais tarde.",
+    "error": "Erro ao testar filtros. Tente novamente.",
+    "rateLimited": "Muitas tentativas. Aguarde alguns segundos e tente novamente.",
+    "serviceUnavailable": "Site temporariamente indisponível. Tente novamente em alguns minutos."
   }
 }

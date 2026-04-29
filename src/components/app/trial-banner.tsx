@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useUser } from '@/hooks/useUser'
 import { useNavigate, useLocation } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Clock, AlertCircle } from 'lucide-react'
 import { PATHS } from '@/router/paths'
@@ -28,7 +29,18 @@ function writePaywallFlag(): void {
   }
 }
 
+// Calcula dias entre two timestamps usando o início do dia LOCAL (não UTC).
+// Sem isso, "expira em 1 dia" quase passando da meia-noite mostra "0 dias"
+// erradamente quando o relógio do usuário cruza a meia-noite local.
+function daysBetweenLocal(now: Date, target: Date): number {
+  const startOfNow = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const startOfTarget = new Date(target.getFullYear(), target.getMonth(), target.getDate())
+  const ms = startOfTarget.getTime() - startOfNow.getTime()
+  return Math.ceil(ms / (1000 * 60 * 60 * 24))
+}
+
 export function TrialBanner() {
+  const { t } = useTranslation('dashboard')
   const { data: user } = useUser()
   const navigate = useNavigate()
   const { pathname } = useLocation()
@@ -36,13 +48,26 @@ export function TrialBanner() {
   // Calcula msLeft do lado FE pra que clock skew nao deixe banner travado em
   // "0 dias" — se trial_ends_at ja passou, FE renderiza paywall mesmo que
   // is_trial_active ainda esteja true no /api/me cache.
-  const msLeft = user?.trial_ends_at ? new Date(user.trial_ends_at).getTime() - Date.now() : 0
+  const now = new Date()
+  const trialEndsAt = user?.trial_ends_at ? new Date(user.trial_ends_at) : null
+  const msLeft = trialEndsAt ? trialEndsAt.getTime() - now.getTime() : 0
   const trialStillActive = !!user && user.is_trial_active && msLeft > 0
 
-  // Paywall = user existe, ainda nao pagou, e trial expirou (BE flag OU msLeft<=0).
-  // Confiamos em is_trial_active vindo do backend pra nao duplicar logica BE/FE,
-  // mas msLeft<=0 sobrepoe pra cobrir clock skew + race com refetch.
-  const isPaywallShowing = !!user && !user.payment_method && !trialStillActive
+  // Defensive guard: se backend não migrou payment_method ainda mas o
+  // expires_at futuro indica que o usuário pagou, NÃO mostra paywall.
+  const hasFutureExpiry = !!user?.expires_at && new Date(user.expires_at).getTime() > Date.now()
+
+  // Paywall = user existe, ainda nao pagou, trial expirou (BE flag OU msLeft<=0),
+  // e não temos sinal de pagamento legado (expires_at futuro sem payment_method).
+  const isPaywallShowing = !!user && !user.payment_method && !trialStillActive && !hasFutureExpiry
+
+  // PIX: calcula dias restantes do plano para exibir banner de renovacao.
+  // Usuarios PIX nao tem renovacao automatica — banner aparece nos 5 dias finais.
+  const isPixUser = user?.payment_method === 'pix'
+  const pixExpiresAt = user?.expires_at ? new Date(user.expires_at) : null
+  const pixDaysLeft = pixExpiresAt ? daysBetweenLocal(now, pixExpiresAt) : null
+  const showPixBanner = isPixUser && pixDaysLeft !== null && pixDaysLeft <= 5 && pixDaysLeft >= 0
+  const pixExpiresToday = isPixUser && pixDaysLeft === 0 && hasFutureExpiry
 
   // Dispara paywall_view uma unica vez por sessao do navegador.
   // sessionStorage protege contra: StrictMode dev mount duplo, refetch on focus,
@@ -56,23 +81,47 @@ export function TrialBanner() {
   }, [isPaywallShowing])
 
   if (!user) return null
-  if (user.payment_method) return null
-  // Esconde na pagina de renew — la o card "Sua assinatura expirou" ja
-  // comunica o mesmo, e o botao "Assinar agora" do banner navega pra ca
-  // (vira um clique no-op visualmente confuso).
+  // Esconde na pagina de renew — la o card ja comunica o estado e o botao
+  // do banner navega pra ca (vira um clique no-op visualmente confuso).
   if (pathname === PATHS.app.renew) return null
 
-  if (trialStillActive) {
-    const daysLeft = Math.ceil(msLeft / (1000 * 60 * 60 * 24))
+  // Banner PIX: usuario pagante cuja assinatura vence em ate 5 dias.
+  // Exibido ANTES do guard de payment_method porque PIX e um metodo de
+  // pagamento valido — sem esse bloco, o guard abaixo descartaria o banner.
+  if (showPixBanner) {
+    // i18next resolves to pixDays_one or pixDays_other based on count.
+    const daysLabel = t('banner.pixDays', { count: pixDaysLeft ?? 0 })
+    return (
+      <div className="flex items-center justify-center gap-3 border-b border-indigo-200 bg-indigo-50 px-4 py-2 text-sm text-indigo-700">
+        <Clock className="h-4 w-4 flex-shrink-0" />
+        <span>
+          {pixExpiresToday ? t('banner.pixExpiresToday') : t('banner.pixExpiresIn')}
+          {!pixExpiresToday && <strong>{daysLabel}</strong>}
+          {!pixExpiresToday && '.'}
+        </span>
+        <Button
+          onClick={() => navigate(PATHS.app.renew)}
+          size="sm"
+          variant="outline"
+          className="border-indigo-400 text-indigo-700 hover:bg-indigo-100"
+        >
+          {t('banner.renewNow')}
+        </Button>
+      </div>
+    )
+  }
+
+  if (user.payment_method) return null
+
+  if (trialStillActive && trialEndsAt) {
+    const daysLeft = daysBetweenLocal(now, trialEndsAt)
     return (
       <div className="flex items-center justify-center gap-3 border-b border-emerald-200 bg-emerald-50 px-4 py-2 text-sm text-emerald-800">
         <Clock className="h-4 w-4 flex-shrink-0" />
         <span>
-          Você está no trial gratuito.{' '}
-          <strong>
-            {daysLeft} {daysLeft === 1 ? 'dia restante' : 'dias restantes'}
-          </strong>
-          .
+          {t('banner.trialActive')}
+          <strong>{t('banner.trialDaysLeft', { count: daysLeft })}</strong>
+          {'.'}
         </span>
       </div>
     )
@@ -81,13 +130,13 @@ export function TrialBanner() {
   return (
     <div className="flex flex-col items-center justify-center gap-3 border-b border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 sm:flex-row">
       <AlertCircle className="h-4 w-4 flex-shrink-0" />
-      <span>Seu trial acabou. Assine pra continuar recebendo vagas.</span>
+      <span>{t('banner.trialExpired')}</span>
       <Button
         onClick={() => navigate(PATHS.app.renew)}
         size="sm"
         className="bg-emerald-600 text-white hover:bg-emerald-700"
       >
-        Assinar agora
+        {t('banner.subscribeNow')}
       </Button>
     </div>
   )

@@ -20,6 +20,10 @@ export interface PaymentResult {
 }
 
 export interface PaymentStatusResult {
+  // Backend só emite confirmed/processing/not_found pra esse endpoint hoje
+  // (CheckPaymentStatus em payment_usecase.go). Estados terminais como
+  // 'expired'/'failed' nao sao retornados — o frontend deriva expirado do
+  // timer local + grace window em pix-payment-step.tsx.
   status: 'confirmed' | 'processing' | 'not_found'
 }
 

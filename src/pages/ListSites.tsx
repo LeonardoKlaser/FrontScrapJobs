@@ -269,21 +269,24 @@ export default function EmpresasPage() {
         </>
       )}
 
-      <RegistrationModal
-        key={selectedCompany?.site_id}
-        isOpen={isPopupOpen}
-        onClose={() => setPopupOpen(false)}
-        companyName={selectedCompany?.site_name}
-        companyLogo={selectedCompany?.logo_url}
-        remainingSlots={remainingSlots}
-        isAlreadyRegistered={selectedCompany?.is_subscribed}
-        isLoading={isRegisteringUser}
-        onRegister={handleRegister}
-        onUnRegister={handleUnregister}
-        currentTargetWords={selectedCompany?.target_words}
-        onUpdateFilters={handleUpdateFilters}
-        isUpdatingFilters={isUpdatingFilters}
-      />
+      {selectedCompany && (
+        <RegistrationModal
+          key={selectedCompany.site_id}
+          isOpen={isPopupOpen}
+          onClose={() => setPopupOpen(false)}
+          siteId={selectedCompany.site_id}
+          companyName={selectedCompany.site_name}
+          companyLogo={selectedCompany.logo_url}
+          remainingSlots={remainingSlots}
+          isAlreadyRegistered={selectedCompany.is_subscribed}
+          isLoading={isRegisteringUser}
+          onRegister={handleRegister}
+          onUnRegister={handleUnregister}
+          currentTargetWords={selectedCompany.target_words}
+          onUpdateFilters={handleUpdateFilters}
+          isUpdatingFilters={isUpdatingFilters}
+        />
+      )}
     </div>
   )
 }

@@ -1,4 +1,6 @@
 import axios from 'axios'
+import { toast } from 'sonner'
+import i18next from 'i18next'
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080',
@@ -6,6 +8,11 @@ export const api = axios.create({
 })
 
 let isRedirecting = false
+
+// Atraso curto entre toast e redirect — 401 imediato fazia mutations em flight
+// (filter preview, PIX submit) sumirem sem feedback. Tempo suficiente pro
+// usuario ler o toast antes da pagina trocar.
+const REDIRECT_DELAY_MS = 700
 
 api.interceptors.response.use(
   (response) => response,
@@ -27,7 +34,8 @@ api.interceptors.response.use(
         '/forgot-password',
         '/reset-password',
         '/terms',
-        '/privacy'
+        '/privacy',
+        '/feedback'
       ]
       const isPublic =
         publicPaths.some((p) => path === p) ||
@@ -35,7 +43,16 @@ api.interceptors.response.use(
         path === '/payment-confirmation'
       if (!isPublic) {
         isRedirecting = true
-        window.location.href = `/login?from=${encodeURIComponent(path)}`
+        // i18next eh um singleton — pegamos a instancia global em vez de
+        // importar de '@/i18n', que dispararia inicializacao top-level e
+        // quebraria mocks parciais de react-i18next nos testes.
+        const msg = i18next.isInitialized
+          ? i18next.t('auth:sessionExpired')
+          : 'Sessão expirada. Redirecionando para o login...'
+        toast.error(msg)
+        setTimeout(() => {
+          window.location.href = `/login?from=${encodeURIComponent(path)}`
+        }, REDIRECT_DELAY_MS)
         setTimeout(() => {
           isRedirecting = false
         }, 10000)

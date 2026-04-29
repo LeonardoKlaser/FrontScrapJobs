@@ -52,5 +52,30 @@
   },
   "error": {
     "loadDashboard": "Failed to load dashboard"
+  },
+  "banner": {
+    "pixExpiresIn": "Your subscription expires in ",
+    "pixExpiresToday": "Your subscription expires today. ",
+    "pixDays_one": "{{count}} day",
+    "pixDays_other": "{{count}} days",
+    "renewNow": "Renew now",
+    "trialActive": "You're on the free trial. ",
+    "trialDaysLeft_one": "{{count}} day left",
+    "trialDaysLeft_other": "{{count}} days left",
+    "trialExpired": "Your trial has ended. Subscribe to keep receiving jobs.",
+    "subscribeNow": "Subscribe now"
+  },
+  "preview": {
+    "testFilters": "Test filters",
+    "testing": "Testing...",
+    "matchesFound": "{{matched}} of {{total}} jobs",
+    "matchesText": " match your filters",
+    "showJobs": "View matched jobs",
+    "hideJobs": "Hide jobs",
+    "noMatches": "No jobs match these filters. Try broader filters.",
+    "noRecentJobs": "This site hasn't posted jobs recently. Check back later.",
+    "error": "Filter preview failed. Please try again.",
+    "rateLimited": "Too many attempts. Wait a few seconds and try again.",
+    "serviceUnavailable": "Site temporarily unavailable. Try again in a few minutes."
   }
 }

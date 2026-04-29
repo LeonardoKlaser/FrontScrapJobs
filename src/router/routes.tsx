@@ -28,6 +28,7 @@ const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'))
 const ResetPassword = lazy(() => import('@/pages/ResetPassword'))
 const CheckoutPage = lazy(() => import('@/pages/checkout'))
 const PaymentConfirmationPage = lazy(() => import('@/pages/paymentConfirmation'))
+const Feedback = lazy(() => import('@/pages/Feedback'))
 const RenewSubscription = lazy(() => import('@/pages/RenewSubscription'))
 const AdminDashboard = lazy(() => import('@/pages/adminDashboard'))
 const TermsOfService = lazy(() => import('@/pages/TermsOfService'))
@@ -66,6 +67,10 @@ export const createRouter = (queryClient: QueryClient) =>
         {
           path: 'payment-confirmation',
           element: <PaymentConfirmationPage />
+        },
+        {
+          path: 'feedback',
+          element: <Feedback />
         }
       ]
     },
