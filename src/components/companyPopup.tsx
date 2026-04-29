@@ -225,8 +225,8 @@ export function RegistrationModal({
                           <p className="text-gray-700">
                             <span className="font-semibold text-emerald-600">
                               {previewResult.matched_jobs} de {previewResult.total_jobs} vagas
-                            </span>
-                            {' '}correspondem aos seus filtros
+                            </span>{' '}
+                            correspondem aos seus filtros
                           </p>
                           <button
                             type="button"
@@ -240,7 +240,9 @@ export function RegistrationModal({
                               {previewResult.sample.map((job, i) => (
                                 <div key={i} className="flex items-center justify-between text-xs">
                                   <span className="text-gray-700 truncate">{job.title}</span>
-                                  <span className="text-gray-400 ml-2 shrink-0">{job.location}</span>
+                                  <span className="text-gray-400 ml-2 shrink-0">
+                                    {job.location}
+                                  </span>
                                 </div>
                               ))}
                             </div>
@@ -258,7 +260,10 @@ export function RegistrationModal({
               <div className="flex flex-col gap-2 pt-2">
                 {editKeywords.length === 0 && (
                   <p className="text-xs text-amber-500/70">
-                    Adicione pelo menos uma palavra-chave
+                    {t(
+                      'popup.keywordsRequired',
+                      'Adicione pelo menos uma palavra-chave para se inscrever'
+                    )}
                   </p>
                 )}
                 <Button
@@ -322,7 +327,10 @@ export function RegistrationModal({
               )}
               {keywords.trim().length === 0 && (
                 <p className="text-xs text-amber-500/70">
-                  {t('popup.keywordsRequired', 'Adicione pelo menos uma palavra-chave para se inscrever')}
+                  {t(
+                    'popup.keywordsRequired',
+                    'Adicione pelo menos uma palavra-chave para se inscrever'
+                  )}
                 </p>
               )}
             </div>

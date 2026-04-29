@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { StarRating } from './StarRating'
 import { useSubmitFeedback, useIncrementModalShown } from '@/hooks/useFeedback'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
@@ -26,7 +26,7 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
     }
   }, [open])
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = () => {
     if (rating === 0) return
     submitFeedback.mutate(
       { rating, comment: comment.trim() || undefined },
@@ -40,7 +40,7 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
         }
       }
     )
-  }, [rating, comment, submitFeedback, onClose, t])
+  }
 
   const handleDismiss = () => {
     setRating(0)
@@ -50,10 +50,7 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={handleDismiss}>
-      <DialogContent
-        aria-describedby={undefined}
-        className="sm:max-w-[400px] text-center"
-      >
+      <DialogContent aria-describedby={undefined} className="sm:max-w-[400px] text-center">
         <DialogTitle className="text-xl font-bold">
           {t('feedback.title', 'Como está sendo sua experiência?')}
         </DialogTitle>
@@ -62,11 +59,7 @@ export function FeedbackModal({ open, onClose }: FeedbackModalProps) {
         </p>
 
         <div className="flex justify-center py-4">
-          <StarRating
-            value={rating}
-            onChange={setRating}
-            disabled={submitFeedback.isPending}
-          />
+          <StarRating value={rating} onChange={setRating} disabled={submitFeedback.isPending} />
         </div>
 
         <Textarea

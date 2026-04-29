@@ -6,10 +6,13 @@ import { Textarea } from '@/components/ui/textarea'
 import { Logo } from '@/components/common/logo'
 import { feedbackService } from '@/services/feedbackService'
 import { Loader2, CheckCircle2, XCircle } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import axios from 'axios'
 
 type PageState = 'loading' | 'form' | 'success' | 'error' | 'invalid'
 
 export default function Feedback() {
+  const { t } = useTranslation('common')
   const [searchParams] = useSearchParams()
   const token = searchParams.get('token') || ''
   const [state, setState] = useState<PageState>('loading')
@@ -23,7 +26,8 @@ export default function Feedback() {
       setState('invalid')
       return
     }
-    feedbackService.validateToken(token)
+    feedbackService
+      .validateToken(token)
       .then((res) => {
         setUserName(res.user_name)
         setState('form')
@@ -37,8 +41,8 @@ export default function Feedback() {
     try {
       await feedbackService.submit({ rating, comment: comment.trim() || undefined, token })
       setState('success')
-    } catch (err: any) {
-      if (err?.response?.status === 409) {
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err) && err.response?.status === 409) {
         setState('success')
       } else {
         setState('error')
@@ -62,9 +66,14 @@ export default function Feedback() {
         {state === 'invalid' && (
           <div className="space-y-3">
             <XCircle className="h-12 w-12 text-destructive mx-auto" />
-            <h2 className="text-lg font-semibold">Link inválido ou expirado</h2>
+            <h2 className="text-lg font-semibold">
+              {t('feedbackPage.invalidTitle', 'Link inválido ou expirado')}
+            </h2>
             <p className="text-sm text-muted-foreground">
-              Este link de feedback não é mais válido. Caso já tenha enviado seu feedback, obrigado!
+              {t(
+                'feedbackPage.invalidDesc',
+                'Este link de feedback não é mais válido. Caso já tenha enviado seu feedback, obrigado!'
+              )}
             </p>
           </div>
         )}
@@ -73,10 +82,15 @@ export default function Feedback() {
           <div className="space-y-5">
             <div>
               <h2 className="text-xl font-bold">
-                Como foi sua experiência, {userName.split(' ')[0]}?
+                {t('feedbackPage.title', 'Como foi sua experiência, {{name}}?', {
+                  name: userName.split(' ')[0]
+                })}
               </h2>
               <p className="text-sm text-muted-foreground mt-1">
-                Sua opinião nos ajuda a melhorar. Em troca, ganha +3 dias grátis!
+                {t(
+                  'feedbackPage.subtitle',
+                  'Sua opinião nos ajuda a melhorar. Em troca, ganha +3 dias grátis!'
+                )}
               </p>
             </div>
 
@@ -85,7 +99,7 @@ export default function Feedback() {
             </div>
 
             <Textarea
-              placeholder="Conte mais sobre sua experiência (opcional)"
+              placeholder={t('feedback.placeholder', 'Conte mais sobre sua experiência (opcional)')}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               disabled={submitting}
@@ -101,7 +115,7 @@ export default function Feedback() {
               {submitting ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                'Enviar feedback'
+                t('feedback.submit', 'Enviar feedback')
               )}
             </Button>
           </div>
@@ -110,9 +124,11 @@ export default function Feedback() {
         {state === 'success' && (
           <div className="space-y-3">
             <CheckCircle2 className="h-12 w-12 text-emerald-500 mx-auto" />
-            <h2 className="text-lg font-semibold">Obrigado pelo feedback!</h2>
+            <h2 className="text-lg font-semibold">
+              {t('feedbackPage.successTitle', 'Obrigado pelo feedback!')}
+            </h2>
             <p className="text-sm text-muted-foreground">
-              +3 dias foram adicionados à sua conta. Aproveite!
+              {t('feedbackPage.successDesc', '+3 dias foram adicionados à sua conta. Aproveite!')}
             </p>
           </div>
         )}
@@ -120,9 +136,14 @@ export default function Feedback() {
         {state === 'error' && (
           <div className="space-y-3">
             <XCircle className="h-12 w-12 text-destructive mx-auto" />
-            <h2 className="text-lg font-semibold">Algo deu errado</h2>
+            <h2 className="text-lg font-semibold">
+              {t('feedbackPage.errorTitle', 'Algo deu errado')}
+            </h2>
             <p className="text-sm text-muted-foreground">
-              Não foi possível enviar seu feedback. Tente novamente mais tarde.
+              {t(
+                'feedbackPage.errorDesc',
+                'Não foi possível enviar seu feedback. Tente novamente mais tarde.'
+              )}
             </p>
           </div>
         )}
