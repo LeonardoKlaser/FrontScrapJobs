@@ -57,9 +57,13 @@ export function TrialBanner() {
   // expires_at futuro indica que o usuário pagou, NÃO mostra paywall.
   const hasFutureExpiry = !!user?.expires_at && new Date(user.expires_at).getTime() > Date.now()
 
-  // Paywall = user existe, ainda nao pagou, trial expirou (BE flag OU msLeft<=0),
-  // e não temos sinal de pagamento legado (expires_at futuro sem payment_method).
-  const isPaywallShowing = !!user && !user.payment_method && !trialStillActive && !hasFutureExpiry
+  // Paywall = user existe, esteve em trial (trial_ends_at preenchido), ainda
+  // nao pagou, trial expirou (BE flag OU msLeft<=0), e não temos sinal de
+  // pagamento legado (expires_at futuro sem payment_method). Sem o guard de
+  // trial_ends_at, contas legacy/admin com expires_at NULL caem no paywall
+  // sem nunca terem sido trial.
+  const isPaywallShowing =
+    !!user && !!trialEndsAt && !user.payment_method && !trialStillActive && !hasFutureExpiry
 
   // PIX: calcula dias restantes do plano para exibir banner de renovacao.
   // Usuarios PIX nao tem renovacao automatica — banner aparece nos 5 dias finais.
@@ -126,6 +130,13 @@ export function TrialBanner() {
       </div>
     )
   }
+
+  // Banner "trial acabou" só faz sentido pra quem (1) esteve em trial
+  // (trial_ends_at preenchido) e (2) não tem acesso vigente. Sem trial_ends_at
+  // o user nunca foi trial — provavelmente extensão manual de admin ou conta
+  // legacy pre-Phase 1. hasFutureExpiry cobre quem teve trial mas ganhou
+  // extensão posterior sem payment_method.
+  if (!trialEndsAt || hasFutureExpiry) return null
 
   return (
     <div className="flex flex-col items-center justify-center gap-3 border-b border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 sm:flex-row">

@@ -124,9 +124,11 @@ describe('TrialBanner', () => {
   })
 
   it('shows paywall banner when trial expired (no payment_method, expires_at past)', () => {
+    const past = new Date(Date.now() - 1000).toISOString()
     mockUseUser.data = makeUser({
       is_trial_active: false,
-      expires_at: new Date(Date.now() - 1000).toISOString() // 1s no passado
+      trial_ends_at: past,
+      expires_at: past
     })
 
     render(<TrialBanner />)
@@ -135,9 +137,11 @@ describe('TrialBanner', () => {
   })
 
   it('navigates to /app/renew when "Assinar agora" clicked', async () => {
+    const past = new Date(Date.now() - 1000).toISOString()
     mockUseUser.data = makeUser({
       is_trial_active: false,
-      expires_at: new Date(Date.now() - 1000).toISOString()
+      trial_ends_at: past,
+      expires_at: past
     })
 
     const user = userEvent.setup()
@@ -148,9 +152,11 @@ describe('TrialBanner', () => {
   })
 
   it('fires paywall_view trackTrial event once when paywall appears', () => {
+    const past = new Date(Date.now() - 1000).toISOString()
     mockUseUser.data = makeUser({
       is_trial_active: false,
-      expires_at: new Date(Date.now() - 1000).toISOString()
+      trial_ends_at: past,
+      expires_at: past
     })
 
     render(<TrialBanner />)
@@ -158,9 +164,11 @@ describe('TrialBanner', () => {
   })
 
   it('does NOT fire paywall_view a second time within same session (sessionStorage flag)', () => {
+    const past = new Date(Date.now() - 1000).toISOString()
     mockUseUser.data = makeUser({
       is_trial_active: false,
-      expires_at: new Date(Date.now() - 1000).toISOString()
+      trial_ends_at: past,
+      expires_at: past
     })
 
     const { unmount } = render(<TrialBanner />)
@@ -170,6 +178,47 @@ describe('TrialBanner', () => {
     // Re-mount na mesma sessao — sessionStorage flag impede segundo fire
     render(<TrialBanner />)
     expect(mockTrackTrial).toHaveBeenCalledTimes(1)
+  })
+
+  it('returns null when user never had trial (trial_ends_at NULL) even with expires_at future', () => {
+    // Caso real: admin extension / conta legacy pre-Phase 1 — expires_at no
+    // futuro mas trial_ends_at NULL. Antes do fix, banner amber renderizava
+    // erradamente "Seu trial acabou".
+    mockUseUser.data = makeUser({
+      is_trial_active: false,
+      trial_ends_at: undefined,
+      expires_at: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString()
+    })
+
+    const { container } = render(<TrialBanner />)
+    expect(container.firstChild).toBeNull()
+    expect(mockTrackTrial).not.toHaveBeenCalled()
+  })
+
+  it('returns null when user never had trial and no expires_at', () => {
+    // Estado totalmente vazio (legacy raro): sem trial e sem acesso vigente.
+    // Banner de trial não se aplica — outro fluxo cuida desse user.
+    mockUseUser.data = makeUser({
+      is_trial_active: false,
+      trial_ends_at: undefined,
+      expires_at: undefined
+    })
+
+    const { container } = render(<TrialBanner />)
+    expect(container.firstChild).toBeNull()
+  })
+
+  it('returns null when trial expired but expires_at extended into future', () => {
+    // Trial expirou mas admin estendeu expires_at sem setar payment_method.
+    // hasFutureExpiry suprime o paywall — user tem acesso vigente.
+    mockUseUser.data = makeUser({
+      is_trial_active: false,
+      trial_ends_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+      expires_at: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString()
+    })
+
+    const { container } = render(<TrialBanner />)
+    expect(container.firstChild).toBeNull()
   })
 
   it('does not fire paywall_view when only trial countdown is showing', () => {
@@ -186,9 +235,11 @@ describe('TrialBanner', () => {
 
   it('returns null on /app/renew (evita banner duplicado com o card da pagina)', () => {
     mockPathname = '/app/renew'
+    const past = new Date(Date.now() - 1000).toISOString()
     mockUseUser.data = makeUser({
       is_trial_active: false,
-      expires_at: new Date(Date.now() - 1000).toISOString()
+      trial_ends_at: past,
+      expires_at: past
     })
 
     const { container } = render(<TrialBanner />)
