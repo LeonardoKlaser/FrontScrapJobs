@@ -65,26 +65,50 @@ export function StatsCounterSection() {
   if (!stats) return null
 
   return (
-    <SectionWrapper variant="dark">
-      <div className="py-16 lg:py-20 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-around gap-10">
+    <SectionWrapper className="bg-gradient-to-b from-emerald-50/60 via-white to-white">
+      <div className="relative py-16 lg:py-20 px-6 overflow-hidden">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[420px]
+            -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400/10 blur-[120px]"
+        />
+        <div
+          className="relative max-w-6xl mx-auto flex flex-col sm:flex-row items-center
+            justify-around gap-12 sm:gap-10"
+        >
           <div ref={sites.ref} className="flex flex-col items-center gap-3 animate-fade-in-up">
-            <Globe className="h-8 w-8 text-emerald-400" />
-            <span className="font-display text-5xl font-semibold text-white tabular-nums">
+            <div
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10
+                ring-1 ring-emerald-500/20"
+            >
+              <Globe className="h-6 w-6 text-emerald-600" />
+            </div>
+            <span className="font-display text-5xl font-bold text-zinc-900 tabular-nums">
               {formatNumber(sites.count)}
             </span>
-            <span className="text-base text-white/60">{t('stats.sitesAnalyzed')}</span>
+            <span className="text-base font-medium text-zinc-600">{t('stats.sitesAnalyzed')}</span>
           </div>
+
+          <div
+            aria-hidden="true"
+            className="hidden sm:block h-20 w-px bg-gradient-to-b from-transparent
+              via-emerald-500/30 to-transparent"
+          />
 
           <div
             ref={jobs.ref}
             className="flex flex-col items-center gap-3 animate-fade-in-up [animation-delay:150ms]"
           >
-            <Briefcase className="h-8 w-8 text-emerald-400" />
-            <span className="font-display text-5xl font-semibold text-white tabular-nums">
+            <div
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10
+                ring-1 ring-emerald-500/20"
+            >
+              <Briefcase className="h-6 w-6 text-emerald-600" />
+            </div>
+            <span className="font-display text-5xl font-bold text-zinc-900 tabular-nums">
               {formatNumber(jobs.count)}
             </span>
-            <span className="text-base text-white/60">{t('stats.jobsCollected')}</span>
+            <span className="text-base font-medium text-zinc-600">{t('stats.jobsCollected')}</span>
           </div>
         </div>
       </div>

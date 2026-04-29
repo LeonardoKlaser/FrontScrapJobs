@@ -158,7 +158,7 @@ export function SignupForm() {
             id="phone"
             type="text"
             inputMode="tel"
-            placeholder={t('signup.phonePlaceholder', '(11) 91234-5678')}
+            placeholder={t('signup.phonePlaceholder', '(11) 99999-9999')}
             className="pl-10 font-mono"
             {...register('phone')}
             value={phone}
