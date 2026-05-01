@@ -183,22 +183,29 @@ function ScalarInput({ fieldType, value, onChange, placeholder }: ScalarInputPro
   if (fieldType === 'int') {
     const display =
       typeof value === 'number' ? String(value) : typeof value === 'string' ? value : ''
+    // Backend rejeita string em campo int — mostra inline pra admin saber qual
+    // row tem o problema antes do toast genérico do preview.
+    const invalid = display !== '' && !Number.isFinite(Number(display))
     return (
-      <Input
-        type="number"
-        value={display}
-        onChange={(e) => {
-          const raw = e.target.value
-          if (raw === '') {
-            onChange('')
-            return
-          }
-          const n = Number(raw)
-          onChange(Number.isFinite(n) ? n : raw)
-        }}
-        className="w-32"
-        placeholder={placeholder ?? 'valor'}
-      />
+      <div className="flex flex-col gap-1">
+        <Input
+          type="number"
+          value={display}
+          aria-invalid={invalid || undefined}
+          onChange={(e) => {
+            const raw = e.target.value
+            if (raw === '') {
+              onChange('')
+              return
+            }
+            const n = Number(raw)
+            onChange(Number.isFinite(n) ? n : raw)
+          }}
+          className="w-32"
+          placeholder={placeholder ?? 'valor'}
+        />
+        {invalid && <p className="text-xs text-destructive">Valor numérico inválido</p>}
+      </div>
     )
   }
 

@@ -21,6 +21,7 @@ import { Switch } from '@/components/ui/switch'
 import { useEmailTemplates } from '@/hooks/useEmailTemplates'
 import { useCreateSubscriber, useUpdateSubscriber } from '@/hooks/useEmailEvents'
 import { subscriberFormSchema, type SubscriberFormInput } from '@/validators/email'
+import { extractApiError } from '@/lib/extractApiError'
 import type { EmailEventSubscriber, SegmentFilter } from '@/models/email'
 
 interface Props {
@@ -65,13 +66,19 @@ export function SubscriberFormDialog({ open, onOpenChange, eventId, existing, on
       is_active: data.is_active,
       filter_dsl: (data.filter_dsl ?? null) as SegmentFilter | null
     }
-    if (existing) {
-      await updateMut.mutateAsync({ id: existing.id, input: payload })
-    } else {
-      await createMut.mutateAsync(payload)
+    try {
+      if (existing) {
+        await updateMut.mutateAsync({ id: existing.id, input: payload })
+      } else {
+        await createMut.mutateAsync(payload)
+      }
+      onSuccess?.()
+      onOpenChange(false)
+    } catch (err: unknown) {
+      // Toast genérico do hook é insuficiente: admin não sabe qual campo
+      // causou 422. setError('root') fixa a mensagem no body do dialog.
+      form.setError('root', { message: extractApiError(err, 'Erro ao salvar subscriber') })
     }
-    onSuccess?.()
-    onOpenChange(false)
   }
 
   return (
@@ -127,6 +134,9 @@ export function SubscriberFormDialog({ open, onOpenChange, eventId, existing, on
             />
             <Label>Ativo</Label>
           </div>
+          {form.formState.errors.root && (
+            <p className="text-sm text-destructive">{form.formState.errors.root.message}</p>
+          )}
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
               Cancelar

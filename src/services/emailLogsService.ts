@@ -28,29 +28,31 @@ export const emailLogsService = {
       return response.data as Blob
     } catch (err) {
       // Quando responseType=blob, axios entrega err.response.data como Blob
-      // tambem nos 4xx/5xx. extractApiError espera object com `error` em string,
-      // entao falha silenciosamente e o admin so ve o fallback. Convertemos o
-      // Blob de volta pro shape esperado antes de propagar pro hook.
-      const axiosErr = err as { response?: { data?: unknown } } | null | undefined
+      // tambem nos 4xx/5xx. extractApiError espera object com `error` em string.
+      // Em vez de mutar response.data in place (interceptors de retry podiam re-ler),
+      // construímos um Error fresh e propagamos. HTML de error pages é truncado
+      // pra evitar despejar markup inteiro no toast.
+      const axiosErr = err as { response?: { data?: unknown; status?: number } } | null | undefined
       const data = axiosErr?.response?.data
       if (data instanceof Blob) {
         try {
           const text = await data.text()
           if (text) {
+            let parsedData: unknown
             try {
-              const parsed = JSON.parse(text)
-              if (axiosErr?.response) {
-                ;(axiosErr.response as { data?: unknown }).data = parsed
-              }
+              parsedData = JSON.parse(text)
             } catch {
-              if (axiosErr?.response) {
-                ;(axiosErr.response as { data?: unknown }).data = { error: text }
-              }
+              const truncated = text.length > 500 ? text.slice(0, 500) + '...' : text
+              parsedData = { error: truncated }
             }
+            const enriched = new Error('email log export failed') as Error & {
+              response?: { data: unknown; status?: number }
+            }
+            enriched.response = { data: parsedData, status: axiosErr?.response?.status }
+            throw enriched
           }
         } catch (blobErr) {
-          // Falha ao ler o Blob — segue com o erro original (fallback localizado).
-          // Loga em console pra debug em dev sem quebrar o fluxo do usuário.
+          if (blobErr instanceof Error && 'response' in blobErr) throw blobErr
           console.error('[emailLogsService] failed to read error blob', blobErr)
         }
       }

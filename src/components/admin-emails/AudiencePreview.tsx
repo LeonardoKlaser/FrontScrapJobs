@@ -10,12 +10,18 @@ interface Props {
   debounceMs?: number
 }
 
+function formatRelative(ts: number): string {
+  const sec = Math.floor((Date.now() - ts) / 1000)
+  if (sec < 5) return 'agora'
+  if (sec < 60) return `${sec}s atrás`
+  const min = Math.floor(sec / 60)
+  if (min < 60) return `${min}min atrás`
+  return `${Math.floor(min / 60)}h atrás`
+}
+
 export function AudiencePreview({ filter, debounceMs = 800 }: Props) {
-  const { count, truncated, error, isLoading, refresh } = useDebouncedAudiencePreview(
-    filter,
-    normalizeFilter,
-    debounceMs
-  )
+  const { count, truncated, error, isLoading, refresh, lastSuccessAt } =
+    useDebouncedAudiencePreview(filter, normalizeFilter, debounceMs)
 
   return (
     <Card>
@@ -24,7 +30,12 @@ export function AudiencePreview({ filter, debounceMs = 800 }: Props) {
           {isLoading ? (
             <p className="text-muted-foreground">Calculando...</p>
           ) : error ? (
-            <p className="text-destructive text-sm">{error}</p>
+            <div>
+              <p className="text-destructive text-sm">{error}</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Preview falhou — corrija o filtro ou clique em Atualizar.
+              </p>
+            </div>
           ) : count !== null ? (
             <div>
               <p className="text-2xl font-semibold">
@@ -33,6 +44,11 @@ export function AudiencePreview({ filter, debounceMs = 800 }: Props) {
               {truncated && (
                 <p className="text-xs text-muted-foreground">
                   ⚠️ Resultado truncado — segmento ≥ 100k users. Quebre o filtro pra ver o total.
+                </p>
+              )}
+              {lastSuccessAt && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  Atualizado {formatRelative(lastSuccessAt)}
                 </p>
               )}
             </div>

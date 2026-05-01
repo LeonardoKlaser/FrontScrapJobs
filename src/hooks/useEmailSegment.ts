@@ -24,6 +24,9 @@ interface DebouncedAudiencePreviewState {
   error: string | null
   isLoading: boolean
   refresh: () => void
+  // unix-ms da última resposta com sucesso. Permite UI mostrar "atualizado há Xs"
+  // e diferenciar "preview nunca rodou" de "preview rodou e falhou".
+  lastSuccessAt: number | null
 }
 
 /**
@@ -50,6 +53,7 @@ export const useDebouncedAudiencePreview = (
   const [count, setCount] = useState<number | null>(null)
   const [truncated, setTruncated] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [lastSuccessAt, setLastSuccessAt] = useState<number | null>(null)
 
   const seqRef = useRef(0)
   const isMountedRef = useRef(true)
@@ -79,6 +83,7 @@ export const useDebouncedAudiencePreview = (
         setCount(data.count)
         setTruncated(Boolean(data.truncated))
         setError(null)
+        setLastSuccessAt(Date.now())
       },
       onError: (err: unknown) => {
         if (!isMountedRef.current || seq !== seqRef.current) return
@@ -103,6 +108,7 @@ export const useDebouncedAudiencePreview = (
     truncated,
     error,
     isLoading: previewMut.isPending,
-    refresh: run
+    refresh: run,
+    lastSuccessAt
   }
 }

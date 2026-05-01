@@ -41,6 +41,15 @@ export default function TemplateEditor() {
   const bodyEditorRef = useRef<MonacoEditor.IStandaloneCodeEditor | null>(null)
   const [activeEditor, setActiveEditor] = useState<'subject' | 'body'>('body')
 
+  // Monaco mantém DOM nodes + state interno; sem dispose(), cada navegação
+  // entre templates vaza ~5-10MB. Cleanup no unmount do componente.
+  useEffect(() => {
+    return () => {
+      subjectEditorRef.current?.dispose()
+      bodyEditorRef.current?.dispose()
+    }
+  }, [])
+
   const form = useForm<EmailTemplateFormInput>({
     resolver: zodResolver(emailTemplateFormSchema) as unknown as Resolver<EmailTemplateFormInput>,
     defaultValues: {

@@ -11,6 +11,7 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { PATHS } from '@/router/paths'
 import { extractApiError } from '@/lib/extractApiError'
+import { DeleteConfirmDialog } from '@/components/admin-emails/DeleteConfirmDialog'
 
 export default function TemplatesList() {
   const { data, isLoading, isError, error, refetch } = useEmailTemplates()
@@ -19,6 +20,7 @@ export default function TemplatesList() {
   const [search, setSearch] = useState('')
   // statusFilter cobre o gap do spec §6.2 (filtro de status). 'all' default.
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all')
+  const [pendingDelete, setPendingDelete] = useState<{ id: number; key: string } | null>(null)
 
   const filtered = (data ?? []).filter((t) => {
     const q = search.toLowerCase()
@@ -33,9 +35,14 @@ export default function TemplatesList() {
     return matchesText && matchesStatus
   })
 
-  const handleDelete = (id: number, key: string) => {
-    if (!confirm(`Deletar template "${key}"?`)) return
-    deleteMut.mutate(id)
+  const confirmDelete = async () => {
+    if (!pendingDelete) return
+    try {
+      await deleteMut.mutateAsync(pendingDelete.id)
+      setPendingDelete(null)
+    } catch {
+      // Hook propaga toast; mantém dialog aberto pra admin tentar de novo.
+    }
   }
 
   // toggleActive permite admin ativar/desativar inline sem abrir o editor —
@@ -131,7 +138,7 @@ export default function TemplatesList() {
                     <Button
                       variant="destructive"
                       size="sm"
-                      onClick={() => handleDelete(tpl.id, tpl.key)}
+                      onClick={() => setPendingDelete({ id: tpl.id, key: tpl.key })}
                       disabled={deleteMut.isPending}
                     >
                       Deletar
@@ -150,6 +157,14 @@ export default function TemplatesList() {
           </table>
         )}
       </Card>
+      <DeleteConfirmDialog
+        open={pendingDelete !== null}
+        onOpenChange={(o) => !o && setPendingDelete(null)}
+        title={`Deletar template "${pendingDelete?.key ?? ''}"?`}
+        description="Esta ação não pode ser desfeita. Subscribers/lifecycles que usam este template precisam ser desativados primeiro."
+        loading={deleteMut.isPending}
+        onConfirm={confirmDelete}
+      />
     </div>
   )
 }

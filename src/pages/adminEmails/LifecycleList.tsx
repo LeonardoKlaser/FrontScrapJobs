@@ -12,6 +12,7 @@ import {
 import { PATHS } from '@/router/paths'
 import type { EmailLifecycleJob, LifecycleKind } from '@/models/email'
 import { extractApiError } from '@/lib/extractApiError'
+import { DeleteConfirmDialog } from '@/components/admin-emails/DeleteConfirmDialog'
 
 interface LifecycleTableProps {
   jobs: EmailLifecycleJob[]
@@ -24,10 +25,16 @@ interface LifecycleTableProps {
 function LifecycleTable({ jobs, isLoading, isError, error, onRetry }: LifecycleTableProps) {
   const deleteMut = useDeleteLifecycle()
   const runMut = useRunLifecycleNow()
+  const [pendingDelete, setPendingDelete] = useState<EmailLifecycleJob | null>(null)
 
-  const handleDelete = (job: EmailLifecycleJob) => {
-    if (!confirm(`Deletar lifecycle "${job.name}"?`)) return
-    deleteMut.mutate(job.id)
+  const confirmDelete = async () => {
+    if (!pendingDelete) return
+    try {
+      await deleteMut.mutateAsync(pendingDelete.id)
+      setPendingDelete(null)
+    } catch {
+      // Hook propaga toast — mantém dialog aberto pra retry.
+    }
   }
 
   const handleRunNow = (job: EmailLifecycleJob) => {
@@ -61,6 +68,7 @@ function LifecycleTable({ jobs, isLoading, isError, error, onRetry }: LifecycleT
   }
 
   return (
+    <>
     <table className="w-full">
       <thead className="border-b">
         <tr className="text-left">
@@ -103,7 +111,7 @@ function LifecycleTable({ jobs, isLoading, isError, error, onRetry }: LifecycleT
               <Button
                 variant="destructive"
                 size="sm"
-                onClick={() => handleDelete(job)}
+                onClick={() => setPendingDelete(job)}
                 disabled={deleteMut.isPending}
               >
                 Deletar
@@ -112,7 +120,16 @@ function LifecycleTable({ jobs, isLoading, isError, error, onRetry }: LifecycleT
           </tr>
         ))}
       </tbody>
-    </table>
+      </table>
+      <DeleteConfirmDialog
+        open={pendingDelete !== null}
+        onOpenChange={(o) => !o && setPendingDelete(null)}
+        title={`Deletar lifecycle "${pendingDelete?.name ?? ''}"?`}
+        description="Esta ação não pode ser desfeita. O cron entry será removido no próximo refresh do scheduler."
+        loading={deleteMut.isPending}
+        onConfirm={confirmDelete}
+      />
+    </>
   )
 }
 

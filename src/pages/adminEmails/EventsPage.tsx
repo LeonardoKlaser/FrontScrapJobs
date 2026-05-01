@@ -10,6 +10,7 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useEmailEvents, useSubscribers, useDeleteSubscriber } from '@/hooks/useEmailEvents'
 import { SubscriberFormDialog } from '@/components/admin-emails/SubscriberFormDialog'
+import { DeleteConfirmDialog } from '@/components/admin-emails/DeleteConfirmDialog'
 import type { EmailEvent, EmailEventSubscriber } from '@/models/email'
 import { extractApiError } from '@/lib/extractApiError'
 
@@ -22,6 +23,7 @@ function SubscribersList({ event }: SubscribersListProps) {
   const deleteMut = useDeleteSubscriber()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editing, setEditing] = useState<EmailEventSubscriber | undefined>(undefined)
+  const [pendingDelete, setPendingDelete] = useState<EmailEventSubscriber | null>(null)
 
   const handleNew = () => {
     setEditing(undefined)
@@ -33,9 +35,14 @@ function SubscribersList({ event }: SubscribersListProps) {
     setDialogOpen(true)
   }
 
-  const handleDelete = (sub: EmailEventSubscriber) => {
-    if (!confirm(`Deletar subscriber "${sub.name}"?`)) return
-    deleteMut.mutate(sub.id)
+  const confirmDelete = async () => {
+    if (!pendingDelete) return
+    try {
+      await deleteMut.mutateAsync(pendingDelete.id)
+      setPendingDelete(null)
+    } catch {
+      // Hook propaga toast — mantém dialog aberto pra retry.
+    }
   }
 
   return (
@@ -105,7 +112,7 @@ function SubscribersList({ event }: SubscribersListProps) {
                     <Button
                       variant="destructive"
                       size="sm"
-                      onClick={() => handleDelete(sub)}
+                      onClick={() => setPendingDelete(sub)}
                       disabled={deleteMut.isPending}
                     >
                       Deletar
@@ -125,6 +132,14 @@ function SubscribersList({ event }: SubscribersListProps) {
           existing={editing}
         />
       )}
+      <DeleteConfirmDialog
+        open={pendingDelete !== null}
+        onOpenChange={(o) => !o && setPendingDelete(null)}
+        title={`Deletar subscriber "${pendingDelete?.name ?? ''}"?`}
+        description="Esta ação não pode ser desfeita. O subscriber não receberá mais este evento."
+        loading={deleteMut.isPending}
+        onConfirm={confirmDelete}
+      />
     </div>
   )
 }
