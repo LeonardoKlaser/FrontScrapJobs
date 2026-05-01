@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Loader2 } from 'lucide-react'
 import {
   Select,
   SelectContent,
@@ -32,6 +33,17 @@ function statusVariant(status: EmailLogStatus): 'default' | 'secondary' | 'destr
   return 'secondary'
 }
 
+// localToIso converte o valor de <Input type="datetime-local"> ('2026-04-30T15:00')
+// pra ISO com Z, formato que o backend `time.Parse(time.RFC3339, v)` aceita.
+// Sem isso, o filtro era silenciosamente dropado (parse error engolido + WHERE
+// não aplicado). Trata o input como horário local do navegador → Date → toISOString.
+function localToIso(local: string): string | undefined {
+  if (!local) return undefined
+  const d = new Date(local)
+  if (Number.isNaN(d.getTime())) return undefined
+  return d.toISOString()
+}
+
 export default function LogsViewer() {
   const [filters, setFilters] = useState<EmailLogFilters>({
     limit: PAGE_SIZE,
@@ -39,9 +51,14 @@ export default function LogsViewer() {
   })
   const [recipientInput, setRecipientInput] = useState('')
   const [templateKeyInput, setTemplateKeyInput] = useState('')
+  // fromInput / toInput guardam o valor cru de <Input type="datetime-local">
+  // (formato '2026-04-30T15:00'). Convertemos pra ISO com Z só no apply pra
+  // que o input continue editável sem o display flickar entre formatos.
+  const [fromInput, setFromInput] = useState('')
+  const [toInput, setToInput] = useState('')
   const [selectedLogId, setSelectedLogId] = useState<number | null>(null)
 
-  const { data, isLoading } = useEmailLogs(filters)
+  const { data, isLoading, isError, error, refetch } = useEmailLogs(filters)
   const detail = useEmailLog(selectedLogId)
   const exportCSV = useExportEmailLogsCSV()
 
@@ -56,6 +73,8 @@ export default function LogsViewer() {
       ...prev,
       recipient: recipientInput || undefined,
       template_key: templateKeyInput || undefined,
+      from: localToIso(fromInput),
+      to: localToIso(toInput),
       offset: 0
     }))
   }
@@ -63,6 +82,8 @@ export default function LogsViewer() {
   const clearFilters = () => {
     setRecipientInput('')
     setTemplateKeyInput('')
+    setFromInput('')
+    setToInput('')
     setFilters({ limit: PAGE_SIZE, offset: 0 })
   }
 
@@ -111,16 +132,16 @@ export default function LogsViewer() {
             <Label>De</Label>
             <Input
               type="datetime-local"
-              value={filters.from ?? ''}
-              onChange={(e) => setFilters((p) => ({ ...p, from: e.target.value || undefined }))}
+              value={fromInput}
+              onChange={(e) => setFromInput(e.target.value)}
             />
           </div>
           <div>
             <Label>Até</Label>
             <Input
               type="datetime-local"
-              value={filters.to ?? ''}
-              onChange={(e) => setFilters((p) => ({ ...p, to: e.target.value || undefined }))}
+              value={toInput}
+              onChange={(e) => setToInput(e.target.value)}
             />
           </div>
           <div>
@@ -195,7 +216,18 @@ export default function LogsViewer() {
 
       <Card>
         {isLoading ? (
-          <div className="p-6 text-muted-foreground">Carregando...</div>
+          <div className="flex items-center gap-2 p-6 text-muted-foreground">
+            <Loader2 className="h-4 w-4 animate-spin" /> Carregando...
+          </div>
+        ) : isError ? (
+          <div className="p-6 space-y-3">
+            <p className="text-sm text-destructive">
+              {extractApiError(error, 'Erro ao carregar logs')}
+            </p>
+            <Button variant="outline" size="sm" onClick={() => refetch()}>
+              Tentar novamente
+            </Button>
+          </div>
         ) : (
           <table className="w-full">
             <thead className="border-b">

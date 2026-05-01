@@ -16,9 +16,12 @@ import { extractApiError } from '@/lib/extractApiError'
 interface LifecycleTableProps {
   jobs: EmailLifecycleJob[]
   isLoading: boolean
+  isError: boolean
+  error: unknown
+  onRetry: () => void
 }
 
-function LifecycleTable({ jobs, isLoading }: LifecycleTableProps) {
+function LifecycleTable({ jobs, isLoading, isError, error, onRetry }: LifecycleTableProps) {
   const deleteMut = useDeleteLifecycle()
   const runMut = useRunLifecycleNow()
 
@@ -36,6 +39,19 @@ function LifecycleTable({ jobs, isLoading }: LifecycleTableProps) {
 
   if (isLoading) {
     return <div className="p-6 text-muted-foreground">Carregando...</div>
+  }
+
+  if (isError) {
+    return (
+      <div className="p-6 space-y-3">
+        <p className="text-sm text-destructive">
+          {extractApiError(error, 'Erro ao carregar lifecycles')}
+        </p>
+        <Button variant="outline" size="sm" onClick={onRetry}>
+          Tentar novamente
+        </Button>
+      </div>
+    )
   }
 
   if (jobs.length === 0) {
@@ -101,7 +117,7 @@ function LifecycleTable({ jobs, isLoading }: LifecycleTableProps) {
 }
 
 export default function LifecycleList() {
-  const { data, isLoading } = useEmailLifecycleJobs()
+  const { data, isLoading, isError, error, refetch } = useEmailLifecycleJobs()
   const [activeTab, setActiveTab] = useState<LifecycleKind>('simple_segment')
 
   const all = data ?? []
@@ -144,6 +160,9 @@ export default function LifecycleList() {
         <LifecycleTable
           jobs={activeTab === 'simple_segment' ? configurable : specialized}
           isLoading={isLoading}
+          isError={isError}
+          error={error}
+          onRetry={refetch}
         />
       </Card>
     </div>

@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useAudiencePreview } from '@/hooks/useEmailSegment'
 import { normalizeFilter } from './FilterBuilder'
+import { extractApiError } from '@/lib/extractApiError'
 import type { SegmentFilter } from '@/models/email'
 
 interface Props {
@@ -15,6 +16,11 @@ export function AudiencePreview({ filter, debounceMs = 800 }: Props) {
   const previewMut = useAudiencePreview()
   const [count, setCount] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
+
+  // filterKey memoiza o JSON do filtro pra que o useEffect não dispare em cada
+  // render (anteriormente JSON.stringify rodava per-render mesmo sem mudança
+  // semântica). previewMut é estável (useMutation), não precisa em deps.
+  const filterKey = useMemo(() => JSON.stringify(filter), [filter])
 
   useEffect(() => {
     if (!debounceMs) return
@@ -32,12 +38,14 @@ export function AudiencePreview({ filter, debounceMs = 800 }: Props) {
         },
         onError: (err: unknown) => {
           setCount(null)
-          setError(err instanceof Error ? err.message : 'Erro ao avaliar filtro')
+          setError(extractApiError(err, 'Erro ao avaliar filtro'))
         }
       })
     }, debounceMs)
     return () => clearTimeout(handle)
-  }, [JSON.stringify(filter), debounceMs])
+    // filterKey é o gatilho semântico (filter mudou); previewMut é estável e
+    // adicioná-lo dispararia loop infinito quando mutate atualiza state do hook.
+  }, [filterKey, debounceMs])
 
   const handleRefresh = () => {
     const normalized = normalizeFilter(filter)
@@ -51,7 +59,7 @@ export function AudiencePreview({ filter, debounceMs = 800 }: Props) {
         setError(null)
       },
       onError: (err: unknown) => {
-        setError(err instanceof Error ? err.message : 'Erro ao avaliar filtro')
+        setError(extractApiError(err, 'Erro ao avaliar filtro'))
       }
     })
   }

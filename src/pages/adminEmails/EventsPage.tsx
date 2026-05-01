@@ -11,13 +11,14 @@ import { Badge } from '@/components/ui/badge'
 import { useEmailEvents, useSubscribers, useDeleteSubscriber } from '@/hooks/useEmailEvents'
 import { SubscriberFormDialog } from '@/components/admin-emails/SubscriberFormDialog'
 import type { EmailEvent, EmailEventSubscriber } from '@/models/email'
+import { extractApiError } from '@/lib/extractApiError'
 
 interface SubscribersListProps {
   event: EmailEvent
 }
 
 function SubscribersList({ event }: SubscribersListProps) {
-  const { data, isLoading } = useSubscribers(event.name)
+  const { data, isLoading, isError, error, refetch } = useSubscribers(event.name)
   const deleteMut = useDeleteSubscriber()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editing, setEditing] = useState<EmailEventSubscriber | undefined>(undefined)
@@ -63,6 +64,15 @@ function SubscribersList({ event }: SubscribersListProps) {
       </div>
       {isLoading ? (
         <p className="text-muted-foreground text-sm">Carregando...</p>
+      ) : isError ? (
+        <div className="space-y-2">
+          <p className="text-sm text-destructive">
+            {extractApiError(error, 'Erro ao carregar subscribers')}
+          </p>
+          <Button variant="outline" size="sm" onClick={() => refetch()}>
+            Tentar novamente
+          </Button>
+        </div>
       ) : (data?.length ?? 0) === 0 ? (
         <p className="text-muted-foreground text-sm">Nenhum subscriber configurado</p>
       ) : (
@@ -120,7 +130,7 @@ function SubscribersList({ event }: SubscribersListProps) {
 }
 
 export default function EventsPage() {
-  const { data, isLoading } = useEmailEvents()
+  const { data, isLoading, isError, error, refetch } = useEmailEvents()
 
   return (
     <div className="p-6 space-y-4">
@@ -132,6 +142,15 @@ export default function EventsPage() {
       </div>
       {isLoading ? (
         <p className="text-muted-foreground">Carregando...</p>
+      ) : isError ? (
+        <div className="space-y-3">
+          <p className="text-sm text-destructive">
+            {extractApiError(error, 'Erro ao carregar eventos')}
+          </p>
+          <Button variant="outline" size="sm" onClick={() => refetch()}>
+            Tentar novamente
+          </Button>
+        </div>
       ) : (data?.length ?? 0) === 0 ? (
         <p className="text-muted-foreground">Nenhum evento registrado</p>
       ) : (

@@ -121,6 +121,24 @@ export default function LifecycleEditor() {
     return <div className="p-6 text-muted-foreground">Carregando...</div>
   }
 
+  if (isEdit && jobQuery.isError) {
+    return (
+      <div className="p-6 space-y-3">
+        <p className="text-sm text-destructive">
+          {extractApiError(jobQuery.error, 'Erro ao carregar lifecycle')}
+        </p>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => jobQuery.refetch()}>
+            Tentar novamente
+          </Button>
+          <Button variant="ghost" onClick={() => navigate(PATHS.app.adminEmails.lifecycle)}>
+            Voltar
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="p-6 space-y-4">
       <div className="flex items-center justify-between">

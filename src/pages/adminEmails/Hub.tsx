@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useEmailTemplates } from '@/hooks/useEmailTemplates'
 import { useEmailEvents } from '@/hooks/useEmailEvents'
 import { useEmailLifecycleJobs } from '@/hooks/useEmailLifecycle'
+import { useEmailLogs } from '@/hooks/useEmailLogs'
 import { PATHS } from '@/router/paths'
 
 interface KpiCardProps {
@@ -39,6 +40,9 @@ export default function Hub() {
   const tpls = useEmailTemplates()
   const events = useEmailEvents()
   const lifecycle = useEmailLifecycleJobs()
+  // Pede só limit=1 — backend retorna total separado do array, então 1 row já
+  // basta pra preencher o KPI sem buscar a página inteira.
+  const logs = useEmailLogs({ limit: 1, offset: 0 })
 
   return (
     <div className="p-6 space-y-6">
@@ -67,8 +71,8 @@ export default function Hub() {
         />
         <KpiCard
           title="Logs"
-          count={null}
-          loading={false}
+          count={logs.data?.total ?? null}
+          loading={logs.isLoading}
           href={PATHS.app.adminEmails.logs}
           description="Histórico de envios"
         />

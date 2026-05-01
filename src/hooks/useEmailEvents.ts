@@ -5,8 +5,7 @@ import { extractApiError } from '@/lib/extractApiError'
 import type { EmailEventSubscriber } from '@/models/email'
 
 export const emailEventsKey = ['emailEvents'] as const
-export const emailSubscribersKey = (eventName: string) =>
-  ['emailEventSubscribers', eventName] as const
+const emailSubscribersKey = (eventName: string) => ['emailEventSubscribers', eventName] as const
 
 // toastError emite toast pra errors que callers não trataram. React-query
 // chama tanto o onError default quanto o do call site — call site que já trata

@@ -3,7 +3,7 @@ import { emailLogsService } from '@/services/emailLogsService'
 import type { EmailLogFilters } from '@/models/email'
 
 export const emailLogsKey = ['emailLogs'] as const
-export const emailLogKey = (id: number) => ['emailLog', id] as const
+const emailLogKey = (id: number) => ['emailLog', id] as const
 
 export const useEmailLogs = (filters: EmailLogFilters = {}) =>
   useQuery({
