@@ -82,8 +82,9 @@ export default function TemplateEditor() {
     if (sampleJson.trim() && sampleJson.trim() !== '{}') {
       try {
         sample = JSON.parse(sampleJson)
-      } catch {
-        toast.error('Sample JSON inválido')
+      } catch (e) {
+        const detail = e instanceof Error ? e.message : 'erro desconhecido'
+        toast.error(`Sample JSON inválido: ${detail}`)
         return
       }
     }

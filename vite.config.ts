@@ -32,7 +32,8 @@ export default defineConfig({
           ],
           'vendor-form': ['react-hook-form', '@hookform/resolvers', 'zod'],
           'vendor-axios': ['axios'],
-          'vendor-monaco': ['@monaco-editor/react', 'monaco-editor']
+          'vendor-monaco': ['@monaco-editor/react', 'monaco-editor'],
+          'vendor-cron': ['cron-parser']
         }
       }
     }

@@ -25,11 +25,14 @@ import type { EmailLog, EmailLogFilters, EmailLogStatus } from '@/models/email'
 import { extractApiError } from '@/lib/extractApiError'
 
 const PAGE_SIZE = 50
-const STATUS_OPTIONS: EmailLogStatus[] = ['queued', 'sent', 'failed', 'bounced', 'suppressed']
+// Phase 1 só persiste queued|sent|failed. bounced/suppressed dependem de webhook
+// + opt-out pipeline (Phase 2) — adicionar aqui antes da hora geraria filtros
+// que sempre retornam 0 sem feedback ao admin.
+const STATUS_OPTIONS: EmailLogStatus[] = ['queued', 'sent', 'failed']
 
 function statusVariant(status: EmailLogStatus): 'default' | 'secondary' | 'destructive' {
   if (status === 'sent') return 'default'
-  if (status === 'failed' || status === 'bounced') return 'destructive'
+  if (status === 'failed') return 'destructive'
   return 'secondary'
 }
 
