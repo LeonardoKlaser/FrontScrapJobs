@@ -25,9 +25,10 @@ import type { EmailLog, EmailLogFilters, EmailLogStatus } from '@/models/email'
 import { extractApiError } from '@/lib/extractApiError'
 
 const PAGE_SIZE = 50
-// Phase 1 só persiste queued|sent|failed. bounced/suppressed dependem de webhook
-// + opt-out pipeline (Phase 2) — adicionar aqui antes da hora geraria filtros
-// que sempre retornam 0 sem feedback ao admin.
+// Statuses limitados ao que o código realmente grava em email_logs (queued/sent/failed).
+// bounced/suppressed virão na Phase 2 quando o webhook SES/Resend estiver wirado;
+// expor antes geraria silent failure (admin filtra bounced → recebe lista vazia →
+// assume zero bounces). Backend `validLogStatuses` segue o mesmo conjunto.
 const STATUS_OPTIONS: EmailLogStatus[] = ['queued', 'sent', 'failed']
 
 function statusVariant(status: EmailLogStatus): 'default' | 'secondary' | 'destructive' {
@@ -38,13 +39,18 @@ function statusVariant(status: EmailLogStatus): 'default' | 'secondary' | 'destr
 
 // localToIso converte o valor de <Input type="datetime-local"> ('2026-04-30T15:00')
 // pra ISO com Z, formato que o backend `time.Parse(time.RFC3339, v)` aceita.
-// Sem isso, o filtro era silenciosamente dropado (parse error engolido + WHERE
-// não aplicado). Trata o input como horário local do navegador → Date → toISOString.
-function localToIso(local: string): string | undefined {
-  if (!local) return undefined
+// Trata o input como horário local do navegador → Date → toISOString.
+//
+// Retorno discrimina três casos pra que callers possam distinguir input vazio
+// (filtro não-aplicado, intencional) de input inválido (precisa de feedback ao
+// admin). Sem essa distinção o filtro era silenciosamente dropado.
+type IsoParse = { kind: 'empty' } | { kind: 'valid'; iso: string } | { kind: 'invalid' }
+
+function localToIso(local: string): IsoParse {
+  if (!local) return { kind: 'empty' }
   const d = new Date(local)
-  if (Number.isNaN(d.getTime())) return undefined
-  return d.toISOString()
+  if (Number.isNaN(d.getTime())) return { kind: 'invalid' }
+  return { kind: 'valid', iso: d.toISOString() }
 }
 
 export default function LogsViewer() {
@@ -71,13 +77,18 @@ export default function LogsViewer() {
   const totalPages = Math.max(1, Math.ceil(total / limit))
   const currentPage = Math.floor(offset / limit) + 1
 
+  const fromParsed = localToIso(fromInput)
+  const toParsed = localToIso(toInput)
+  const dateInputsInvalid = fromParsed.kind === 'invalid' || toParsed.kind === 'invalid'
+
   const applyFilters = () => {
+    if (dateInputsInvalid) return
     setFilters((prev) => ({
       ...prev,
       recipient: recipientInput || undefined,
       template_key: templateKeyInput || undefined,
-      from: localToIso(fromInput),
-      to: localToIso(toInput),
+      from: fromParsed.kind === 'valid' ? fromParsed.iso : undefined,
+      to: toParsed.kind === 'valid' ? toParsed.iso : undefined,
       offset: 0
     }))
   }
@@ -137,7 +148,11 @@ export default function LogsViewer() {
               type="datetime-local"
               value={fromInput}
               onChange={(e) => setFromInput(e.target.value)}
+              aria-invalid={fromParsed.kind === 'invalid'}
             />
+            {fromParsed.kind === 'invalid' && (
+              <p className="text-xs text-destructive mt-1">Data inválida</p>
+            )}
           </div>
           <div>
             <Label>Até</Label>
@@ -145,7 +160,11 @@ export default function LogsViewer() {
               type="datetime-local"
               value={toInput}
               onChange={(e) => setToInput(e.target.value)}
+              aria-invalid={toParsed.kind === 'invalid'}
             />
+            {toParsed.kind === 'invalid' && (
+              <p className="text-xs text-destructive mt-1">Data inválida</p>
+            )}
           </div>
           <div>
             <Label>Status</Label>
@@ -210,7 +229,9 @@ export default function LogsViewer() {
           </div>
         </div>
         <div className="flex gap-2">
-          <Button onClick={applyFilters}>Aplicar filtros</Button>
+          <Button onClick={applyFilters} disabled={dateInputsInvalid}>
+            Aplicar filtros
+          </Button>
           <Button variant="ghost" onClick={clearFilters}>
             Limpar
           </Button>

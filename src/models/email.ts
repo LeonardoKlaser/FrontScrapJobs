@@ -70,7 +70,10 @@ export interface EmailLifecycleJob {
   updated_at: string
 }
 
-export type EmailLogStatus = 'queued' | 'sent' | 'failed' | 'bounced' | 'suppressed'
+// bounced/suppressed só entram quando o webhook SES/Resend (Phase 2) estiver wirado.
+// Mantemos o tipo alinhado ao que o backend realmente grava pra evitar silent
+// failure no LogsViewer (filtro por status inexistente → lista vazia).
+export type EmailLogStatus = 'queued' | 'sent' | 'failed'
 
 export interface EmailLog {
   id: number

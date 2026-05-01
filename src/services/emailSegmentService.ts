@@ -13,10 +13,11 @@ export const emailSegmentService = {
     })
     return data.fields
   },
-  previewCount: async (filter: SegmentFilter): Promise<{ count: number }> => {
-    const { data } = await api.post<{ count: number }>('/api/admin/email-segment/preview-count', {
-      filter
-    })
+  previewCount: async (filter: SegmentFilter): Promise<{ count: number; truncated?: boolean }> => {
+    const { data } = await api.post<{ count: number; truncated?: boolean }>(
+      '/api/admin/email-segment/preview-count',
+      { filter }
+    )
     return data
   }
 }

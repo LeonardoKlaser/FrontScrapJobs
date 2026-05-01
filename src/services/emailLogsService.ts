@@ -48,8 +48,10 @@ export const emailLogsService = {
               }
             }
           }
-        } catch {
+        } catch (blobErr) {
           // Falha ao ler o Blob — segue com o erro original (fallback localizado).
+          // Loga em console pra debug em dev sem quebrar o fluxo do usuário.
+          console.error('[emailLogsService] failed to read error blob', blobErr)
         }
       }
       throw err
