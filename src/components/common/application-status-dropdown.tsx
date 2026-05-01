@@ -8,14 +8,18 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import { APPLICATION_STATUSES, STATUS_COLORS } from '@/models/application'
 import type { ApplicationStatus } from '@/models/application'
+import { cn } from '@/lib/utils'
 
 interface Props {
   currentStatus: ApplicationStatus
   interviewRound?: number | null
   onStatusChange: (status: ApplicationStatus, interviewRound?: number) => void
 }
+
+const PRESET_ROUNDS = [1, 2, 3] as const
 
 export function ApplicationStatusDropdown({
   currentStatus,
@@ -24,7 +28,9 @@ export function ApplicationStatusDropdown({
 }: Props) {
   const { t } = useTranslation('applications')
   const [showRoundInput, setShowRoundInput] = useState(false)
-  const [roundValue, setRoundValue] = useState('')
+  const [selectedRound, setSelectedRound] = useState<number | null>(null)
+  const [showCustom, setShowCustom] = useState(false)
+  const [customValue, setCustomValue] = useState('')
 
   const displayLabel =
     currentStatus === 'interview' && interviewRound
@@ -34,20 +40,39 @@ export function ApplicationStatusDropdown({
   const handleSelect = (status: ApplicationStatus) => {
     if (status === 'interview') {
       setShowRoundInput(true)
-      setRoundValue('')
+      setSelectedRound(null)
+      setShowCustom(false)
+      setCustomValue('')
       return
     }
     onStatusChange(status)
   }
 
-  const handleRoundConfirm = () => {
-    const round = parseInt(roundValue, 10)
-    if (round > 0) {
-      onStatusChange('interview', round)
+  const handlePresetClick = (round: number) => {
+    setSelectedRound(round)
+    setShowCustom(false)
+    setCustomValue('')
+  }
+
+  const handleCustomClick = () => {
+    setShowCustom(true)
+    setSelectedRound(null)
+  }
+
+  const handleConfirm = () => {
+    if (showCustom) {
+      const round = parseInt(customValue, 10)
+      if (round >= 4) {
+        onStatusChange('interview', round)
+        setShowRoundInput(false)
+      }
+    } else if (selectedRound) {
+      onStatusChange('interview', selectedRound)
       setShowRoundInput(false)
-      setRoundValue('')
     }
   }
+
+  const isValid = selectedRound !== null || (showCustom && parseInt(customValue, 10) >= 4)
 
   const activeStatuses = APPLICATION_STATUSES.filter((s) => s !== 'rejected' && s !== 'withdrawn')
   const terminalStatuses: ApplicationStatus[] = ['rejected', 'withdrawn']
@@ -55,7 +80,11 @@ export function ApplicationStatusDropdown({
   return (
     <DropdownMenu
       onOpenChange={(open) => {
-        if (!open) setShowRoundInput(false)
+        if (!open) {
+          setShowRoundInput(false)
+          setShowCustom(false)
+          setSelectedRound(null)
+        }
       }}
     >
       <DropdownMenuTrigger asChild>
@@ -66,22 +95,62 @@ export function ApplicationStatusDropdown({
           {displayLabel} ▾
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
+      <DropdownMenuContent align="end" className="w-52">
         {showRoundInput ? (
           <div className="p-2 space-y-2">
-            <p className="text-xs text-muted-foreground">{t('kanban.interviewPrompt')}</p>
-            <Input
-              type="number"
-              min={1}
-              placeholder={t('kanban.interviewRoundPlaceholder')}
-              value={roundValue}
-              onChange={(e) => setRoundValue(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleRoundConfirm()
-              }}
-              autoFocus
-              className="h-8 text-sm"
-            />
+            <p className="text-xs text-muted-foreground font-medium">
+              {t('kanban.interviewPrompt')}
+            </p>
+            <div className="grid grid-cols-2 gap-1.5">
+              {PRESET_ROUNDS.map((round) => (
+                <Button
+                  key={round}
+                  type="button"
+                  variant={selectedRound === round ? 'default' : 'outline'}
+                  size="sm"
+                  className={cn(
+                    'h-7 text-xs w-full',
+                    selectedRound === round && 'ring-2 ring-primary/50'
+                  )}
+                  onClick={() => handlePresetClick(round)}
+                >
+                  {t(`kanban.interviewStage${round}`)}
+                </Button>
+              ))}
+              <Button
+                type="button"
+                variant={showCustom ? 'default' : 'outline'}
+                size="sm"
+                className={cn(
+                  'h-7 text-xs w-full',
+                  showCustom && 'ring-2 ring-primary/50'
+                )}
+                onClick={handleCustomClick}
+              >
+                {t('kanban.interviewStage4Plus')}
+              </Button>
+            </div>
+            {showCustom && (
+              <Input
+                type="number"
+                min={4}
+                placeholder={t('kanban.interviewRoundPlaceholder')}
+                value={customValue}
+                onChange={(e) => setCustomValue(e.target.value)}
+                autoFocus
+                className="h-7 text-xs"
+              />
+            )}
+            <Button
+              type="button"
+              variant="glow"
+              size="sm"
+              className="w-full h-7 text-xs"
+              disabled={!isValid}
+              onClick={handleConfirm}
+            >
+              {t('common:actions.confirm', { defaultValue: 'Confirmar' })}
+            </Button>
           </div>
         ) : (
           <>

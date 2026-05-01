@@ -14,14 +14,18 @@
     "title": "Minhas Candidaturas",
     "emptyColumn": "Nenhuma vaga",
     "emptyState": "Ainda não registrou nenhuma candidatura.",
-    "emptyStateHint": "Vá ao Dashboard e clique em \"Apliquei\" numa vaga para começar.",
+    "emptyStateHint": "Vá ao Dashboard e clique em \"Me candidatei\" numa vaga para começar.",
     "roundLabel": "Rodada {{round}}",
     "daysAgo": "{{count}} dia(s)",
     "today": "hoje",
     "confirmReject": "Tem certeza que deseja marcar como rejeitado?",
     "confirmWithdraw": "Tem certeza que deseja marcar como desistência?",
-    "interviewPrompt": "Qual é o número da entrevista?",
-    "interviewRoundPlaceholder": "Ex: 1, 2, 3...",
+    "interviewPrompt": "Em qual etapa você está?",
+    "interviewStage1": "1ª Entrevista",
+    "interviewStage2": "2ª Entrevista",
+    "interviewStage3": "3ª Entrevista",
+    "interviewStage4Plus": "4ª+ Entrevista",
+    "interviewRoundPlaceholder": "Ex: 4, 5, 6...",
     "errorState": "Erro ao carregar candidaturas. Tente novamente."
   },
   "drawer": {
@@ -35,7 +39,7 @@
     "viewJob": "Ver vaga"
   },
   "dashboard": {
-    "applied": "Apliquei",
+    "applied": "Me candidatei",
     "changeStatus": "Alterar status",
     "statusUpdated": "Status atualizado"
   },
