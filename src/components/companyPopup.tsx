@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Building2, Loader2, X } from 'lucide-react'
+import { Building2, Loader2, Search, X } from 'lucide-react'
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import axios from 'axios'
@@ -229,17 +229,27 @@ export function RegistrationModal({
                 <p className="text-xs text-muted-foreground">{t('popup.keywordsHelp')}</p>
               </div>
               {editKeywords.length > 0 && (
-                <div className="mt-3">
-                  <button
+                <div className="mt-3 space-y-1.5">
+                  <Button
                     type="button"
+                    variant="outline"
+                    size="sm"
                     onClick={handlePreviewFilters}
                     disabled={previewLoading}
-                    className="text-sm text-emerald-600 hover:text-emerald-700 font-medium disabled:opacity-50"
+                    className="w-full gap-2"
                   >
+                    {previewLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Search className="h-4 w-4" />
+                    )}
                     {previewLoading
                       ? tDashboard('preview.testing')
                       : tDashboard('preview.testFilters')}
-                  </button>
+                  </Button>
+                  <p className="text-xs text-muted-foreground text-center">
+                    {tDashboard('preview.testFiltersDescription')}
+                  </p>
 
                   {previewError && <p className="mt-2 text-sm text-destructive">{previewError}</p>}
 
@@ -371,17 +381,27 @@ export function RegistrationModal({
                 </p>
               )}
               {previewTags.length > 0 && (
-                <div className="mt-3">
-                  <button
+                <div className="mt-3 space-y-1.5">
+                  <Button
                     type="button"
+                    variant="outline"
+                    size="sm"
                     onClick={handlePreviewRegistrationFilters}
                     disabled={previewLoading}
-                    className="text-sm text-emerald-600 hover:text-emerald-700 font-medium disabled:opacity-50"
+                    className="w-full gap-2"
                   >
+                    {previewLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Search className="h-4 w-4" />
+                    )}
                     {previewLoading
                       ? tDashboard('preview.testing')
                       : tDashboard('preview.testFilters')}
-                  </button>
+                  </Button>
+                  <p className="text-xs text-muted-foreground text-center">
+                    {tDashboard('preview.testFiltersDescription')}
+                  </p>
 
                   {previewError && <p className="mt-2 text-sm text-destructive">{previewError}</p>}
 

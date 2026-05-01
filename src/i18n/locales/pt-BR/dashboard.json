@@ -67,6 +67,7 @@
   },
   "preview": {
     "testFilters": "Testar filtros",
+    "testFiltersDescription": "Veja quantas vagas recentes combinam com seus filtros antes de se inscrever",
     "testing": "Testando...",
     "matchesFound": "{{matched}} de {{total}} vagas",
     "matchesText": " correspondem aos seus filtros",

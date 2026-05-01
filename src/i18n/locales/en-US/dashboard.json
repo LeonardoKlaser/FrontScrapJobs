@@ -67,6 +67,7 @@
   },
   "preview": {
     "testFilters": "Test filters",
+    "testFiltersDescription": "See how many recent jobs match your filters before subscribing",
     "testing": "Testing...",
     "matchesFound": "{{matched}} of {{total}} jobs",
     "matchesText": " match your filters",
