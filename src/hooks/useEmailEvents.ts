@@ -1,10 +1,18 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import { emailEventsService } from '@/services/emailEventsService'
+import { extractApiError } from '@/lib/extractApiError'
 import type { EmailEventSubscriber } from '@/models/email'
 
 export const emailEventsKey = ['emailEvents'] as const
 export const emailSubscribersKey = (eventName: string) =>
   ['emailEventSubscribers', eventName] as const
+
+// toastError emite toast pra errors que callers não trataram. React-query
+// chama tanto o onError default quanto o do call site — call site que já trata
+// passa a flag implicitamente sobrescrevendo este via tryCatch + mutateAsync.
+const toastError = (fallback: string) => (err: unknown) =>
+  toast.error(extractApiError(err, fallback))
 
 export const useEmailEvents = () =>
   useQuery({
@@ -28,7 +36,8 @@ export const useCreateSubscriber = () => {
       emailEventsService.createSubscriber(input),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['emailEventSubscribers'] })
-    }
+    },
+    onError: toastError('Erro ao criar subscriber')
   })
 }
 
@@ -39,7 +48,8 @@ export const useUpdateSubscriber = () => {
       emailEventsService.updateSubscriber(id, input),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['emailEventSubscribers'] })
-    }
+    },
+    onError: toastError('Erro ao atualizar subscriber')
   })
 }
 
@@ -49,6 +59,7 @@ export const useDeleteSubscriber = () => {
     mutationFn: (id: number) => emailEventsService.deleteSubscriber(id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['emailEventSubscribers'] })
-    }
+    },
+    onError: toastError('Erro ao deletar subscriber')
   })
 }

@@ -11,6 +11,7 @@ import {
 } from '@/hooks/useEmailLifecycle'
 import { PATHS } from '@/router/paths'
 import type { EmailLifecycleJob, LifecycleKind } from '@/models/email'
+import { extractApiError } from '@/lib/extractApiError'
 
 interface LifecycleTableProps {
   jobs: EmailLifecycleJob[]
@@ -29,7 +30,7 @@ function LifecycleTable({ jobs, isLoading }: LifecycleTableProps) {
   const handleRunNow = (job: EmailLifecycleJob) => {
     runMut.mutate(job.id, {
       onSuccess: () => toast.success(`Lifecycle "${job.name}" enfileirado`),
-      onError: (err) => toast.error(`Erro: ${(err as Error).message}`)
+      onError: (err) => toast.error(extractApiError(err, `Erro ao executar "${job.name}"`))
     })
   }
 

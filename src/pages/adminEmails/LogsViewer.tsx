@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/sheet'
 import { useEmailLogs, useEmailLog, useExportEmailLogsCSV } from '@/hooks/useEmailLogs'
 import type { EmailLog, EmailLogFilters, EmailLogStatus } from '@/models/email'
+import { extractApiError } from '@/lib/extractApiError'
 
 const PAGE_SIZE = 50
 const STATUS_OPTIONS: EmailLogStatus[] = ['queued', 'sent', 'failed', 'bounced', 'suppressed']
@@ -89,7 +90,7 @@ export default function LogsViewer() {
       a.click()
       URL.revokeObjectURL(url)
     } catch (err) {
-      toast.error(`Erro ao exportar: ${(err as Error).message}`)
+      toast.error(extractApiError(err, 'Erro ao exportar logs'))
     }
   }
 

@@ -31,6 +31,14 @@ function isChunkLoadError(err: unknown): boolean {
   return CHUNK_ERROR_PATTERNS.some((pattern) => err.message.includes(pattern))
 }
 
+// relativeTo strips o prefixo do parent path pra derivar o segmento relativo
+// que React Router espera em rotas filhas. Mantém routes.tsx em sync com PATHS
+// sem hardcode de strings duplicadas. Se child não começa com parent, retorna
+// child intocado (caller fica visível em teste de unidade ou inspeção).
+function relativeTo(parent: string, child: string): string {
+  return child.startsWith(parent + '/') ? child.slice(parent.length + 1) : child
+}
+
 function lazyWithRetry<T extends ComponentType<unknown>>(factory: () => Promise<{ default: T }>) {
   return lazy(async () => {
     try {
@@ -195,7 +203,10 @@ export const createRouter = (queryClient: QueryClient) =>
           )
         },
         {
-          path: 'admin-emails',
+          // relativeTo deriva o segmento relativo de cada path em PATHS pra
+          // que rename/move em paths.ts atualize o router automaticamente. Sem
+          // isso, strings hardcoded ('templates'/'events'/...) divergiriam silenciosamente.
+          path: relativeTo(PATHS.app.home, PATHS.app.adminEmails.hub),
           element: (
             <AdminGuard>
               <Suspense
@@ -207,14 +218,44 @@ export const createRouter = (queryClient: QueryClient) =>
           ),
           children: [
             { index: true, element: <AdminEmailsHub /> },
-            { path: 'templates', element: <AdminEmailsTemplatesList /> },
-            { path: 'templates/new', element: <AdminEmailsTemplateEditor /> },
-            { path: 'templates/:id', element: <AdminEmailsTemplateEditor /> },
-            { path: 'events', element: <AdminEmailsEvents /> },
-            { path: 'lifecycle', element: <AdminEmailsLifecycleList /> },
-            { path: 'lifecycle/new', element: <AdminEmailsLifecycleEditor /> },
-            { path: 'lifecycle/:id', element: <AdminEmailsLifecycleEditor /> },
-            { path: 'logs', element: <AdminEmailsLogs /> }
+            {
+              path: relativeTo(PATHS.app.adminEmails.hub, PATHS.app.adminEmails.templates),
+              element: <AdminEmailsTemplatesList />
+            },
+            {
+              path: relativeTo(PATHS.app.adminEmails.hub, PATHS.app.adminEmails.templateNew),
+              element: <AdminEmailsTemplateEditor />
+            },
+            {
+              path: relativeTo(
+                PATHS.app.adminEmails.hub,
+                PATHS.app.adminEmails.templateEdit(':id')
+              ),
+              element: <AdminEmailsTemplateEditor />
+            },
+            {
+              path: relativeTo(PATHS.app.adminEmails.hub, PATHS.app.adminEmails.events),
+              element: <AdminEmailsEvents />
+            },
+            {
+              path: relativeTo(PATHS.app.adminEmails.hub, PATHS.app.adminEmails.lifecycle),
+              element: <AdminEmailsLifecycleList />
+            },
+            {
+              path: relativeTo(PATHS.app.adminEmails.hub, PATHS.app.adminEmails.lifecycleNew),
+              element: <AdminEmailsLifecycleEditor />
+            },
+            {
+              path: relativeTo(
+                PATHS.app.adminEmails.hub,
+                PATHS.app.adminEmails.lifecycleEdit(':id')
+              ),
+              element: <AdminEmailsLifecycleEditor />
+            },
+            {
+              path: relativeTo(PATHS.app.adminEmails.hub, PATHS.app.adminEmails.logs),
+              element: <AdminEmailsLogs />
+            }
           ]
         },
         {
