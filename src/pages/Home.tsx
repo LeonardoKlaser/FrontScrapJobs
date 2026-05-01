@@ -339,7 +339,7 @@ export function Home() {
     } catch {
       // Storage unavailable — proceed without persisted dismiss flag
     }
-    setWizardLatched(!!user?.is_trial_active && (data.user_monitored_urls?.length ?? 0) === 0)
+    setWizardLatched((data.user_monitored_urls?.length ?? 0) === 0)
   }, [user, data, wizardLatched])
 
   if (isDashboardLoading) {
