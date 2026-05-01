@@ -26,14 +26,5 @@
   "logs": {
     "title": "Email Logs",
     "exportButton": "Exportar CSV"
-  },
-  "common": {
-    "save": "Salvar",
-    "cancel": "Cancelar",
-    "edit": "Editar",
-    "delete": "Deletar",
-    "loading": "Carregando...",
-    "retry": "Tentar novamente",
-    "errorLoading": "Erro ao carregar"
   }
 }

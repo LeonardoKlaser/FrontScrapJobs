@@ -71,9 +71,11 @@ export interface EmailLifecycleJob {
 }
 
 // bounced/suppressed só entram quando o webhook SES/Resend (Phase 2) estiver wirado.
+// unknown_post_send é gravado pelo reconciler hourly em rows que ficaram queued
+// mas nunca atingiram sent/failed — preserva o status no painel admin.
 // Mantemos o tipo alinhado ao que o backend realmente grava pra evitar silent
 // failure no LogsViewer (filtro por status inexistente → lista vazia).
-export type EmailLogStatus = 'queued' | 'sent' | 'failed'
+export type EmailLogStatus = 'queued' | 'sent' | 'failed' | 'unknown_post_send'
 
 export interface EmailLog {
   id: number

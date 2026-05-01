@@ -26,11 +26,11 @@ import type { EmailLog, EmailLogFilters, EmailLogStatus } from '@/models/email'
 import { extractApiError } from '@/lib/extractApiError'
 
 const PAGE_SIZE = 50
-// Statuses limitados ao que o código realmente grava em email_logs (queued/sent/failed).
+// Statuses limitados ao que o código realmente grava em email_logs.
 // bounced/suppressed virão na Phase 2 quando o webhook SES/Resend estiver wirado;
 // expor antes geraria silent failure (admin filtra bounced → recebe lista vazia →
 // assume zero bounces). Backend `validLogStatuses` segue o mesmo conjunto.
-const STATUS_OPTIONS: EmailLogStatus[] = ['queued', 'sent', 'failed']
+const STATUS_OPTIONS: EmailLogStatus[] = ['queued', 'sent', 'failed', 'unknown_post_send']
 
 function statusVariant(status: EmailLogStatus): 'default' | 'secondary' | 'destructive' {
   if (status === 'sent') return 'default'
