@@ -13,6 +13,7 @@ import {
   useTestSendTemplate
 } from '@/hooks/useEmailTemplates'
 import { emailTemplateFormSchema, type EmailTemplateFormInput } from '@/validators/email'
+import { extractApiError } from '@/lib/extractApiError'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -121,8 +122,7 @@ export default function TemplateEditor() {
       }
       navigate(PATHS.app.adminEmails.templateEdit(saved.id))
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Erro ao salvar'
-      toast.error(msg)
+      toast.error(extractApiError(err, 'Erro ao salvar'))
     }
   }
 

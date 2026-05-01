@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { emailLogsService } from '@/services/emailLogsService'
 import type { EmailLogFilters } from '@/models/email'
 
@@ -16,4 +16,9 @@ export const useEmailLog = (id: number | null) =>
     queryKey: id ? emailLogKey(id) : ['emailLog', null],
     queryFn: () => emailLogsService.get(id as number),
     enabled: id !== null && id > 0
+  })
+
+export const useExportEmailLogsCSV = () =>
+  useMutation({
+    mutationFn: (filters: EmailLogFilters = {}) => emailLogsService.exportCSV(filters)
   })

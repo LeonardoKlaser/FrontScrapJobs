@@ -28,6 +28,7 @@ import { CronExpressionInput } from '@/components/admin-emails/CronExpressionInp
 import { AudiencePreview } from '@/components/admin-emails/AudiencePreview'
 import { FilterBuilder, normalizeFilter } from '@/components/admin-emails/FilterBuilder'
 import { PATHS } from '@/router/paths'
+import { extractApiError } from '@/lib/extractApiError'
 import type { SegmentFilter } from '@/models/email'
 
 export default function LifecycleEditor() {
@@ -102,8 +103,7 @@ export default function LifecycleEditor() {
       toast.success('Lifecycle salvo')
       navigate(PATHS.app.adminEmails.lifecycle)
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Erro ao salvar'
-      toast.error(msg)
+      toast.error(extractApiError(err, 'Erro ao salvar'))
     }
   }
 
@@ -113,8 +113,7 @@ export default function LifecycleEditor() {
       await runNowMut.mutateAsync(idNum)
       toast.success('Lifecycle enfileirado pra execução imediata')
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Erro ao enfileirar'
-      toast.error(msg)
+      toast.error(extractApiError(err, 'Erro ao enfileirar'))
     }
   }
 

@@ -243,20 +243,27 @@ function parseList(raw: string, fieldType: FieldType): unknown[] {
   return parts
 }
 
+// Convert ISO timestamp to UTC datetime-local string for the <input>.
+// Uses UTC components (getUTC*) so a filter built in São Paulo (UTC-3) writes
+// the same instant when round-tripped — sem isso, o admin via "08:00" mas o
+// backend recebia 11:00, alterando a janela do segment silenciosamente.
 function isoToLocal(iso: string): string {
   if (!iso) return ''
   const d = new Date(iso)
   if (isNaN(d.getTime())) return ''
   const pad = (n: number) => String(n).padStart(2, '0')
   return (
-    `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}` +
-    `T${pad(d.getHours())}:${pad(d.getMinutes())}`
+    `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}` +
+    `T${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`
   )
 }
 
+// localToIso interpreta o datetime-local como UTC explicitamente (suffix Z)
+// pra casar com isoToLocal acima. Sem o "Z" o `new Date(local)` aplicaria o
+// offset do browser, gerando o bug oposto na ida.
 function localToIso(local: string): string {
   if (!local) return ''
-  const d = new Date(local)
+  const d = new Date(local + 'Z')
   if (isNaN(d.getTime())) return ''
   return d.toISOString()
 }

@@ -19,8 +19,7 @@ import {
   SheetTitle,
   SheetDescription
 } from '@/components/ui/sheet'
-import { useEmailLogs, useEmailLog } from '@/hooks/useEmailLogs'
-import { emailLogsService } from '@/services/emailLogsService'
+import { useEmailLogs, useEmailLog, useExportEmailLogsCSV } from '@/hooks/useEmailLogs'
 import type { EmailLog, EmailLogFilters, EmailLogStatus } from '@/models/email'
 
 const PAGE_SIZE = 50
@@ -43,6 +42,7 @@ export default function LogsViewer() {
 
   const { data, isLoading } = useEmailLogs(filters)
   const detail = useEmailLog(selectedLogId)
+  const exportCSV = useExportEmailLogsCSV()
 
   const total = data?.total ?? 0
   const offset = filters.offset ?? 0
@@ -81,7 +81,7 @@ export default function LogsViewer() {
 
   const handleExport = async () => {
     try {
-      const blob = await emailLogsService.exportCSV(filters)
+      const blob = await exportCSV.mutateAsync(filters)
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
