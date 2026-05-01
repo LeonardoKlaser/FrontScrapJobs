@@ -58,7 +58,7 @@ export function TemplatePreviewPane({
           <p className="text-sm font-medium mb-3">{subject}</p>
           <iframe
             srcDoc={bodyHtml}
-            sandbox=""
+            sandbox="allow-same-origin"
             className="w-full h-96 border-0 bg-white"
             title="Email preview"
           />

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -54,6 +55,7 @@ function localToIso(local: string): IsoParse {
 }
 
 export default function LogsViewer() {
+  const { t } = useTranslation('admin-emails')
   const [filters, setFilters] = useState<EmailLogFilters>({
     limit: PAGE_SIZE,
     offset: 0
@@ -134,9 +136,9 @@ export default function LogsViewer() {
   return (
     <div className="p-6 space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Logs de Email</h1>
+        <h1 className="text-2xl font-bold">{t('logs.title')}</h1>
         <Button variant="outline" onClick={handleExport}>
-          Exportar CSV
+          {t('logs.exportButton')}
         </Button>
       </div>
 

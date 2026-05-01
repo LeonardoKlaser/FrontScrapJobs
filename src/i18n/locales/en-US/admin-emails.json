@@ -1,0 +1,39 @@
+{
+  "hub": {
+    "title": "Email Management",
+    "subtitle": "Manage templates, events, lifecycles and logs",
+    "loading": "Loading...",
+    "manage": "Manage",
+    "kpi": {
+      "templates": "Templates",
+      "events": "Events",
+      "lifecycle": "Lifecycle Jobs",
+      "logs": "Logs",
+      "logsDescription": "Send history"
+    }
+  },
+  "templates": {
+    "title": "Templates",
+    "createButton": "Create template"
+  },
+  "events": {
+    "title": "Events & Subscribers"
+  },
+  "lifecycle": {
+    "title": "Lifecycle Jobs",
+    "createButton": "Create lifecycle"
+  },
+  "logs": {
+    "title": "Email Logs",
+    "exportButton": "Export CSV"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "loading": "Loading...",
+    "retry": "Retry",
+    "errorLoading": "Failed to load"
+  }
+}

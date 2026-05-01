@@ -81,19 +81,32 @@ export function FilterBuilder({
             </Button>
           </div>
         ))}
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
           <Button size="sm" variant="secondary" onClick={addLeaf}>
             + Filtro
           </Button>
-          {depth < maxDepth && (
-            <>
-              <Button size="sm" variant="secondary" onClick={() => addGroup('AND')}>
-                + Grupo AND
-              </Button>
-              <Button size="sm" variant="secondary" onClick={() => addGroup('OR')}>
-                + Grupo OR
-              </Button>
-            </>
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => addGroup('AND')}
+            disabled={depth >= maxDepth}
+            title={depth >= maxDepth ? `Limite de aninhamento (${maxDepth}) atingido` : undefined}
+          >
+            + Grupo AND
+          </Button>
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => addGroup('OR')}
+            disabled={depth >= maxDepth}
+            title={depth >= maxDepth ? `Limite de aninhamento (${maxDepth}) atingido` : undefined}
+          >
+            + Grupo OR
+          </Button>
+          {depth >= maxDepth && (
+            <span className="text-xs text-muted-foreground">
+              Limite de aninhamento ({maxDepth}) atingido
+            </span>
           )}
         </div>
       </CardContent>

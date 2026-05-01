@@ -1,11 +1,16 @@
 import { test, expect } from '@playwright/test'
 
-// Pre-condicao: admin user logado. Usa cookie/session do setup global ou
-// faz login manual nesta spec se um fixture existir.
+// Os 3 cenários abaixo (criar lifecycle, editar template, pausar subscriber)
+// estão SKIPPED por design — exigem fixture de admin login + seed data
+// (template ID, lifecycle ID, evento staging) que não existe no harness atual.
+// Implementação fica como follow-up quando o teste e2e infra ganhar:
+//   1. fixture `loginAs('admin')` que injeta cookie httponly
+//   2. seed determinístico no docker-compose.test.yml
+//   3. mailbox de staging consultável via API (Mailpit ou equivalente)
 //
-// Estes 3 cenarios sao scaffold — alguns passos sao placeholder (TODO)
-// porque dependem de seed data especifico (template ID, lifecycle ID) que
-// varia por env. Adapte conforme staging tem dados reais.
+// Pre-merge checklist do plano marca esses 3 como manual smoke até lá.
+// O smoke de redirect (sem auth, no fim do arquivo) RODA e bloqueia merge se
+// a rota /app/admin-emails sumir do router ou perder o AdminGuard.
 
 test.describe.skip('Admin emails — manual smoke (requires admin login + seed data)', () => {
   test.beforeEach(async ({ page }) => {
@@ -67,7 +72,8 @@ test.describe.skip('Admin emails — manual smoke (requires admin login + seed d
   })
 })
 
-// Smoke test sem auth pra confirmar que routes estao wired e redirects funcionam
+// Smoke test sem auth — RODA em CI. Valida que /app/admin-emails está wired e
+// AdminGuard está aplicado (redirect pra /login quando não autenticado).
 test('admin-emails routes redireciona pra login sem auth', async ({ page }) => {
   await page.goto('/app/admin-emails')
   await expect(page).toHaveURL(/\/login/)

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import {
   useEmailTemplates,
   useDeleteEmailTemplate,
@@ -14,6 +15,7 @@ import { extractApiError } from '@/lib/extractApiError'
 import { DeleteConfirmDialog } from '@/components/admin-emails/DeleteConfirmDialog'
 
 export default function TemplatesList() {
+  const { t } = useTranslation('admin-emails')
   const { data, isLoading, isError, error, refetch } = useEmailTemplates()
   const deleteMut = useDeleteEmailTemplate()
   const updateMut = useUpdateEmailTemplate()
@@ -56,9 +58,9 @@ export default function TemplatesList() {
   return (
     <div className="p-6 space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Templates</h1>
+        <h1 className="text-2xl font-bold">{t('templates.title')}</h1>
         <Button asChild>
-          <Link to={PATHS.app.adminEmails.templateNew}>Criar template</Link>
+          <Link to={PATHS.app.adminEmails.templateNew}>{t('templates.createButton')}</Link>
         </Button>
       </div>
       <div className="flex flex-wrap items-center gap-2">

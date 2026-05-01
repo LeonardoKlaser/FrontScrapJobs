@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -69,57 +70,57 @@ function LifecycleTable({ jobs, isLoading, isError, error, onRetry }: LifecycleT
 
   return (
     <>
-    <table className="w-full">
-      <thead className="border-b">
-        <tr className="text-left">
-          <th className="p-3 font-medium">Nome</th>
-          <th className="p-3 font-medium">Handler/Kind</th>
-          <th className="p-3 font-medium">Cron</th>
-          <th className="p-3 font-medium">Última execução</th>
-          <th className="p-3 font-medium">Count</th>
-          <th className="p-3 font-medium">Ativo</th>
-          <th className="p-3 font-medium">Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        {jobs.map((job) => (
-          <tr key={job.id} className="border-b hover:bg-muted/50">
-            <td className="p-3">{job.name}</td>
-            <td className="p-3 font-mono text-sm">{job.handler_key ?? job.kind}</td>
-            <td className="p-3 font-mono text-sm">{job.cron_expression}</td>
-            <td className="p-3 text-sm text-muted-foreground">
-              {job.last_run_at ? new Date(job.last_run_at).toLocaleString('pt-BR') : '—'}
-            </td>
-            <td className="p-3 text-sm">{job.last_run_count ?? '—'}</td>
-            <td className="p-3">
-              <Badge variant={job.is_active ? 'default' : 'secondary'}>
-                {job.is_active ? 'Ativo' : 'Inativo'}
-              </Badge>
-            </td>
-            <td className="p-3 space-x-2">
-              <Button variant="outline" size="sm" asChild>
-                <Link to={PATHS.app.adminEmails.lifecycleEdit(job.id)}>Editar</Link>
-              </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => handleRunNow(job)}
-                disabled={runMut.isPending}
-              >
-                Run now
-              </Button>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => setPendingDelete(job)}
-                disabled={deleteMut.isPending}
-              >
-                Deletar
-              </Button>
-            </td>
+      <table className="w-full">
+        <thead className="border-b">
+          <tr className="text-left">
+            <th className="p-3 font-medium">Nome</th>
+            <th className="p-3 font-medium">Handler/Kind</th>
+            <th className="p-3 font-medium">Cron</th>
+            <th className="p-3 font-medium">Última execução</th>
+            <th className="p-3 font-medium">Count</th>
+            <th className="p-3 font-medium">Ativo</th>
+            <th className="p-3 font-medium">Ações</th>
           </tr>
-        ))}
-      </tbody>
+        </thead>
+        <tbody>
+          {jobs.map((job) => (
+            <tr key={job.id} className="border-b hover:bg-muted/50">
+              <td className="p-3">{job.name}</td>
+              <td className="p-3 font-mono text-sm">{job.handler_key ?? job.kind}</td>
+              <td className="p-3 font-mono text-sm">{job.cron_expression}</td>
+              <td className="p-3 text-sm text-muted-foreground">
+                {job.last_run_at ? new Date(job.last_run_at).toLocaleString('pt-BR') : '—'}
+              </td>
+              <td className="p-3 text-sm">{job.last_run_count ?? '—'}</td>
+              <td className="p-3">
+                <Badge variant={job.is_active ? 'default' : 'secondary'}>
+                  {job.is_active ? 'Ativo' : 'Inativo'}
+                </Badge>
+              </td>
+              <td className="p-3 space-x-2">
+                <Button variant="outline" size="sm" asChild>
+                  <Link to={PATHS.app.adminEmails.lifecycleEdit(job.id)}>Editar</Link>
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => handleRunNow(job)}
+                  disabled={runMut.isPending}
+                >
+                  Run now
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => setPendingDelete(job)}
+                  disabled={deleteMut.isPending}
+                >
+                  Deletar
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
       </table>
       <DeleteConfirmDialog
         open={pendingDelete !== null}
@@ -134,6 +135,7 @@ function LifecycleTable({ jobs, isLoading, isError, error, onRetry }: LifecycleT
 }
 
 export default function LifecycleList() {
+  const { t } = useTranslation('admin-emails')
   const { data, isLoading, isError, error, refetch } = useEmailLifecycleJobs()
   const [activeTab, setActiveTab] = useState<LifecycleKind>('simple_segment')
 
@@ -149,10 +151,10 @@ export default function LifecycleList() {
   return (
     <div className="p-6 space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Lifecycle Jobs</h1>
+        <h1 className="text-2xl font-bold">{t('lifecycle.title')}</h1>
         {activeTab === 'simple_segment' && (
           <Button asChild>
-            <Link to={PATHS.app.adminEmails.lifecycleNew}>Criar lifecycle</Link>
+            <Link to={PATHS.app.adminEmails.lifecycleNew}>{t('lifecycle.createButton')}</Link>
           </Button>
         )}
       </div>

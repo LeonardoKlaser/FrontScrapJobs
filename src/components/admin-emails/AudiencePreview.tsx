@@ -19,7 +19,7 @@ function formatRelative(ts: number): string {
   return `${Math.floor(min / 60)}h atrás`
 }
 
-export function AudiencePreview({ filter, debounceMs = 800 }: Props) {
+export function AudiencePreview({ filter, debounceMs = 500 }: Props) {
   const { count, truncated, error, isLoading, refresh, lastSuccessAt } =
     useDebouncedAudiencePreview(filter, normalizeFilter, debounceMs)
 

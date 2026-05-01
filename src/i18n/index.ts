@@ -13,6 +13,7 @@ import ptBRAccount from './locales/pt-BR/account.json'
 import ptBRApplications from './locales/pt-BR/applications.json'
 import ptBRPrivacy from './locales/pt-BR/privacy.json'
 import ptBROnboarding from './locales/pt-BR/onboarding.json'
+import ptBRAdminEmails from './locales/pt-BR/admin-emails.json'
 
 import enUSCommon from './locales/en-US/common.json'
 import enUSAuth from './locales/en-US/auth.json'
@@ -26,6 +27,7 @@ import enUSAccount from './locales/en-US/account.json'
 import enUSApplications from './locales/en-US/applications.json'
 import enUSPrivacy from './locales/en-US/privacy.json'
 import enUSOnboarding from './locales/en-US/onboarding.json'
+import enUSAdminEmails from './locales/en-US/admin-emails.json'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -41,7 +43,8 @@ i18n.use(initReactI18next).init({
       account: ptBRAccount,
       applications: ptBRApplications,
       privacy: ptBRPrivacy,
-      onboarding: ptBROnboarding
+      onboarding: ptBROnboarding,
+      'admin-emails': ptBRAdminEmails
     },
     'en-US': {
       common: enUSCommon,
@@ -55,7 +58,8 @@ i18n.use(initReactI18next).init({
       account: enUSAccount,
       applications: enUSApplications,
       privacy: enUSPrivacy,
-      onboarding: enUSOnboarding
+      onboarding: enUSOnboarding,
+      'admin-emails': enUSAdminEmails
     }
   },
   lng: typeof window !== 'undefined' ? localStorage.getItem('i18n-lng') || 'pt-BR' : 'pt-BR',

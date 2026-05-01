@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   Accordion,
   AccordionItem,
@@ -145,12 +146,13 @@ function SubscribersList({ event }: SubscribersListProps) {
 }
 
 export default function EventsPage() {
+  const { t } = useTranslation('admin-emails')
   const { data, isLoading, isError, error, refetch } = useEmailEvents()
 
   return (
     <div className="p-6 space-y-4">
       <div>
-        <h1 className="text-2xl font-bold">Eventos</h1>
+        <h1 className="text-2xl font-bold">{t('events.title')}</h1>
         <p className="text-muted-foreground">
           Configure subscribers para cada evento publicado pelo sistema
         </p>

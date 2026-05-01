@@ -26,13 +26,18 @@ describe('FilterBuilder', () => {
     expect(onChange).toHaveBeenCalledWith({ op: 'OR', filters: [] })
   })
 
-  it('respeita maxDepth — não renderiza "+ Grupo" no nível máximo', () => {
+  it('respeita maxDepth — botões "+ Grupo" ficam disabled no nível máximo', () => {
     const value: SegmentFilter = { op: 'AND', filters: [] }
     render(
       <FilterBuilder fields={fields} value={value} onChange={() => {}} depth={3} maxDepth={3} />
     )
-    expect(screen.queryByText('+ Grupo AND')).toBeNull()
-    expect(screen.queryByText('+ Grupo OR')).toBeNull()
+    // M8 fix: render disabled em vez de remover, pra dar feedback visual
+    // (admin não fica clicando em "+ Grupo" se perguntando por que nada acontece).
+    const andBtn = screen.getByRole('button', { name: '+ Grupo AND' })
+    const orBtn = screen.getByRole('button', { name: '+ Grupo OR' })
+    expect(andBtn).toBeDisabled()
+    expect(orBtn).toBeDisabled()
+    expect(screen.getByText(/Limite de aninhamento.*atingido/)).toBeInTheDocument()
   })
 
   it('+ Filtro adiciona leaf com primeiro field e op = (value default por type)', () => {
