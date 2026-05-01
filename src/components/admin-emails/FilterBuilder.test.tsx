@@ -35,14 +35,14 @@ describe('FilterBuilder', () => {
     expect(screen.queryByText('+ Grupo OR')).toBeNull()
   })
 
-  it('+ Filtro adiciona leaf com primeiro field e op =', () => {
+  it('+ Filtro adiciona leaf com primeiro field e op = (value default por type)', () => {
     const onChange = vi.fn()
     const value: SegmentFilter = { op: 'AND', filters: [] }
     render(<FilterBuilder fields={fields} value={value} onChange={onChange} />)
     fireEvent.click(screen.getByText('+ Filtro'))
     expect(onChange).toHaveBeenCalledWith({
       op: 'AND',
-      filters: [{ field: 'plan_id', op: '=', value: '' }]
+      filters: [{ field: 'plan_id', op: '=', value: 0 }]
     })
   })
 

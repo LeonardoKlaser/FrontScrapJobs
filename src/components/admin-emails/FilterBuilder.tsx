@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import type { SegmentFilter, SegmentField, SegmentGroup, SegmentLeaf } from '@/models/email'
-import { FilterRow } from './FilterRow'
+import { FilterRow, defaultValueFor } from './FilterRow'
 
 interface FilterBuilderProps {
   fields: SegmentField[]
@@ -40,10 +40,11 @@ export function FilterBuilder({
   }
   const addLeaf = () => {
     if (fields.length === 0) return
+    const f = fields[0]
     const newLeaf: SegmentLeaf = {
-      field: fields[0].name,
+      field: f.name,
       op: '=',
-      value: ''
+      value: defaultValueFor('=', f.type)
     }
     onChange({ ...group, filters: [...group.filters, newLeaf] })
   }
