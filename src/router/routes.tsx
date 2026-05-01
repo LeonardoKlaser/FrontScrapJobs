@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from 'react'
 import type { ComponentType } from 'react'
-import { createBrowserRouter, Navigate } from 'react-router'
+import { createBrowserRouter, Navigate, Outlet } from 'react-router'
 
 import { MainLayout } from '@/layouts/MainLayout'
 import { PublicLayout } from '@/layouts/PublicLayout'
@@ -71,6 +71,15 @@ const AdminDashboard = lazyWithRetry(() => import('@/pages/adminDashboard'))
 const TermsOfService = lazyWithRetry(() => import('@/pages/TermsOfService'))
 const PrivacyPolicy = lazyWithRetry(() => import('@/pages/PrivacyPolicy'))
 const Applications = lazyWithRetry(() => import('@/pages/Applications'))
+const AdminEmailsHub = lazyWithRetry(() => import('@/pages/adminEmails/Hub'))
+const AdminEmailsTemplatesList = lazyWithRetry(() => import('@/pages/adminEmails/TemplatesList'))
+const AdminEmailsTemplateEditor = lazyWithRetry(() => import('@/pages/adminEmails/TemplateEditor'))
+const AdminEmailsEvents = lazyWithRetry(() => import('@/pages/adminEmails/EventsPage'))
+const AdminEmailsLifecycleList = lazyWithRetry(() => import('@/pages/adminEmails/LifecycleList'))
+const AdminEmailsLifecycleEditor = lazyWithRetry(
+  () => import('@/pages/adminEmails/LifecycleEditor')
+)
+const AdminEmailsLogs = lazyWithRetry(() => import('@/pages/adminEmails/LogsViewer'))
 
 const CurriculumPage = lazyWithRetry(() =>
   import('@/pages/Curriculum').then((m) => ({ default: m.Curriculum }))
@@ -184,6 +193,29 @@ export const createRouter = (queryClient: QueryClient) =>
               </Suspense>
             </AdminGuard>
           )
+        },
+        {
+          path: 'admin-emails',
+          element: (
+            <AdminGuard>
+              <Suspense
+                fallback={<LoadingSection variant="section" label={i18n.t('loadingPanel')} />}
+              >
+                <Outlet />
+              </Suspense>
+            </AdminGuard>
+          ),
+          children: [
+            { index: true, element: <AdminEmailsHub /> },
+            { path: 'templates', element: <AdminEmailsTemplatesList /> },
+            { path: 'templates/new', element: <AdminEmailsTemplateEditor /> },
+            { path: 'templates/:id', element: <AdminEmailsTemplateEditor /> },
+            { path: 'events', element: <AdminEmailsEvents /> },
+            { path: 'lifecycle', element: <AdminEmailsLifecycleList /> },
+            { path: 'lifecycle/new', element: <AdminEmailsLifecycleEditor /> },
+            { path: 'lifecycle/:id', element: <AdminEmailsLifecycleEditor /> },
+            { path: 'logs', element: <AdminEmailsLogs /> }
+          ]
         },
         {
           path: PATHS.app.applications,
