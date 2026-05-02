@@ -33,7 +33,8 @@ export function AppHeader() {
   const adminItems = [
     { title: t('nav.admin'), href: PATHS.app.adminDashboard },
     { title: t('nav.manageSites'), href: PATHS.app.adminSites },
-    { title: t('nav.leads'), href: PATHS.app.adminLeads }
+    { title: t('nav.leads'), href: PATHS.app.adminLeads },
+    { title: t('nav.adminEmails'), href: PATHS.app.adminEmails.hub }
   ]
 
   const items = user?.is_admin ? [...baseItems, ...adminItems] : baseItems
