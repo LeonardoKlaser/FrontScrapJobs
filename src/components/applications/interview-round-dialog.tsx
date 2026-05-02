@@ -66,10 +66,7 @@ export function InterviewRoundDialog({ open, onConfirm, onCancel }: Props) {
                 type="button"
                 variant={selected === round ? 'default' : 'outline'}
                 size="sm"
-                className={cn(
-                  'w-full',
-                  selected === round && 'ring-2 ring-primary/50'
-                )}
+                className={cn('w-full', selected === round && 'ring-2 ring-primary/50')}
                 onClick={() => handlePresetClick(round)}
               >
                 {t(`kanban.interviewStage${round}`)}
@@ -79,10 +76,7 @@ export function InterviewRoundDialog({ open, onConfirm, onCancel }: Props) {
               type="button"
               variant={showCustom ? 'default' : 'outline'}
               size="sm"
-              className={cn(
-                'w-full',
-                showCustom && 'ring-2 ring-primary/50'
-              )}
+              className={cn('w-full', showCustom && 'ring-2 ring-primary/50')}
               onClick={handleCustomClick}
             >
               {t('kanban.interviewStage4Plus')}

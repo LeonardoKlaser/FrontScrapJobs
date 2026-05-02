@@ -121,10 +121,7 @@ export function ApplicationStatusDropdown({
                 type="button"
                 variant={showCustom ? 'default' : 'outline'}
                 size="sm"
-                className={cn(
-                  'h-7 text-xs w-full',
-                  showCustom && 'ring-2 ring-primary/50'
-                )}
+                className={cn('h-7 text-xs w-full', showCustom && 'ring-2 ring-primary/50')}
                 onClick={handleCustomClick}
               >
                 {t('kanban.interviewStage4Plus')}
