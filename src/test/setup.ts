@@ -1,5 +1,10 @@
 import '@testing-library/jest-dom'
 
+// Inicializa i18n pra que componentes que usam useTranslation rendam strings
+// reais (pt-BR default) em vez de keys cruas. Antes, StatusBadge / etc usavam
+// strings hardcoded e o setup nao precisava de i18n; agora todos passam por t().
+import '@/i18n'
+
 // Polyfill ResizeObserver for Radix UI components under jsdom.
 class ResizeObserverPolyfill {
   observe() {}

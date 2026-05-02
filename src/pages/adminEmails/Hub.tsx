@@ -5,6 +5,7 @@ import { useEmailTemplates } from '@/hooks/useEmailTemplates'
 import { useEmailEvents } from '@/hooks/useEmailEvents'
 import { useEmailLifecycleJobs } from '@/hooks/useEmailLifecycle'
 import { useEmailLogs } from '@/hooks/useEmailLogs'
+import { useEmailCampaigns } from '@/hooks/useEmailCampaigns'
 import { PATHS } from '@/router/paths'
 
 interface KpiCardProps {
@@ -46,6 +47,7 @@ export default function Hub() {
   // Pede só limit=1 — backend retorna total separado do array, então 1 row já
   // basta pra preencher o KPI sem buscar a página inteira.
   const logs = useEmailLogs({ limit: 1, offset: 0 })
+  const campaigns = useEmailCampaigns({ limit: 1, offset: 0 })
 
   return (
     <div className="p-6 space-y-6">
@@ -53,7 +55,7 @@ export default function Hub() {
         <h1 className="text-2xl font-bold">{t('hub.title')}</h1>
         <p className="text-muted-foreground">{t('hub.subtitle')}</p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <KpiCard
           title={t('hub.kpi.templates')}
           count={tpls.data?.length ?? 0}
@@ -78,6 +80,13 @@ export default function Hub() {
           loading={logs.isLoading}
           href={PATHS.app.adminEmails.logs}
           description={t('hub.kpi.logsDescription')}
+        />
+        <KpiCard
+          title={t('hub.kpi.campaigns')}
+          count={campaigns.data?.total ?? null}
+          loading={campaigns.isLoading}
+          href={PATHS.app.adminEmails.campaigns}
+          description={t('hub.kpi.campaignsDescription')}
         />
       </div>
     </div>

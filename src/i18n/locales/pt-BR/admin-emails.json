@@ -9,7 +9,9 @@
       "events": "Eventos",
       "lifecycle": "Lifecycle Jobs",
       "logs": "Logs",
-      "logsDescription": "Histórico de envios"
+      "logsDescription": "Histórico de envios",
+      "campaigns": "Campanhas",
+      "campaignsDescription": "Crie campanhas pontuais ou agendadas"
     }
   },
   "templates": {
@@ -23,8 +25,82 @@
     "title": "Lifecycle Jobs",
     "createButton": "Criar lifecycle"
   },
+  "campaigns": {
+    "title": "Campanhas",
+    "new": "Nova campanha",
+    "status": {
+      "draft": "Rascunho",
+      "scheduled": "Agendada",
+      "sending": "Enviando",
+      "sent": "Enviada",
+      "failed": "Falhou",
+      "canceled": "Cancelada"
+    },
+    "progress": {
+      "waiting": "Aguardando início…",
+      "empty": "Segmento vazio — nenhum destinatário",
+      "failuresCount": "{{count}} falharam"
+    },
+    "list": {
+      "empty": "Nenhuma campanha ainda",
+      "loading": "Carregando…",
+      "prev": "Anterior",
+      "next": "Próximo",
+      "page": "Página {{current}} de {{total}}",
+      "columns": {
+        "name": "Nome",
+        "status": "Status",
+        "sendAt": "Envio",
+        "progress": "Progresso"
+      },
+      "filters": {
+        "all": "Todas",
+        "draft": "Rascunho",
+        "scheduled": "Agendadas",
+        "sending": "Enviando",
+        "sent": "Enviadas",
+        "failed": "Falharam",
+        "canceled": "Canceladas"
+      }
+    },
+    "editor": {
+      "name": "Nome interno",
+      "namePlaceholder": "Ex: Promoção Black Friday 2026",
+      "template": "Template",
+      "templatePlaceholder": "Selecione um template ativo",
+      "audience": "Audiência (segment filter)",
+      "saveDraft": "Salvar rascunho",
+      "schedule": "Agendar",
+      "scheduleAt": "Enviar em",
+      "sendNow": "Enviar agora",
+      "cancel": "Cancelar",
+      "duplicate": "Duplicar",
+      "delete": "Excluir",
+      "lastError": "Último erro",
+      "confirmClearFilter": "O filtro atual será removido (campanha enviada para TODOS os usuários). Continuar?"
+    },
+    "errors": {
+      "statusConflict": "O status mudou — recarregando…",
+      "notEditable": "Este campo não pode ser alterado neste status",
+      "templateInvalid": "Template inválido ou inativo",
+      "sendAtPast": "A data deve estar no futuro",
+      "generic": "Erro ao processar requisição"
+    },
+    "feedback": {
+      "saved": "Rascunho salvo",
+      "scheduled": "Campanha agendada",
+      "sending": "Campanha enviada para a fila",
+      "canceled": "Campanha cancelada",
+      "duplicated": "Cópia criada",
+      "deleted": "Campanha excluída"
+    }
+  },
   "logs": {
     "title": "Email Logs",
-    "exportButton": "Exportar CSV"
+    "exportButton": "Exportar CSV",
+    "filters": {
+      "campaignId": "ID da campanha",
+      "campaignIdPlaceholder": "Ex: 42"
+    }
   }
 }

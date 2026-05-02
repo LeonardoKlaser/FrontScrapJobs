@@ -62,6 +62,7 @@ export default function LogsViewer() {
   })
   const [recipientInput, setRecipientInput] = useState('')
   const [templateKeyInput, setTemplateKeyInput] = useState('')
+  const [campaignIdInput, setCampaignIdInput] = useState('')
   // fromInput / toInput guardam o valor cru de <Input type="datetime-local">
   // (formato '2026-04-30T15:00'). Convertemos pra ISO com Z só no apply pra
   // que o input continue editável sem o display flickar entre formatos.
@@ -85,12 +86,17 @@ export default function LogsViewer() {
 
   const applyFilters = () => {
     if (dateInputsInvalid) return
+    const campaignIdParsed = campaignIdInput.trim() ? Number(campaignIdInput.trim()) : undefined
     setFilters((prev) => ({
       ...prev,
       recipient: recipientInput || undefined,
       template_key: templateKeyInput || undefined,
       from: fromParsed.kind === 'valid' ? fromParsed.iso : undefined,
       to: toParsed.kind === 'valid' ? toParsed.iso : undefined,
+      campaign_id:
+        Number.isFinite(campaignIdParsed) && campaignIdParsed && campaignIdParsed > 0
+          ? campaignIdParsed
+          : undefined,
       offset: 0
     }))
   }
@@ -98,6 +104,7 @@ export default function LogsViewer() {
   const clearFilters = () => {
     setRecipientInput('')
     setTemplateKeyInput('')
+    setCampaignIdInput('')
     setFromInput('')
     setToInput('')
     setFilters({ limit: PAGE_SIZE, offset: 0 })
@@ -143,7 +150,7 @@ export default function LogsViewer() {
       </div>
 
       <Card className="p-4 space-y-3">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
           <div>
             <Label>De</Label>
             <Input
@@ -227,6 +234,17 @@ export default function LogsViewer() {
               value={recipientInput}
               onChange={(e) => setRecipientInput(e.target.value)}
               placeholder="email..."
+            />
+          </div>
+          <div>
+            <Label>{t('logs.filters.campaignId')}</Label>
+            <Input
+              type="number"
+              inputMode="numeric"
+              value={campaignIdInput}
+              onChange={(e) => setCampaignIdInput(e.target.value)}
+              placeholder={t('logs.filters.campaignIdPlaceholder')}
+              min="1"
             />
           </div>
         </div>

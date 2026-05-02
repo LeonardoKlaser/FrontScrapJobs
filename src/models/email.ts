@@ -83,6 +83,7 @@ export interface EmailLog {
   template_key_snapshot: string
   subscriber_id?: number | null
   lifecycle_job_id?: number | null
+  campaign_id?: number | null // NEW — populado quando o log foi gerado por campaign:send
   user_id?: number | null
   recipient_email: string
   status: EmailLogStatus
@@ -144,6 +145,7 @@ export interface EmailLogFilters {
   to?: string
   recipient?: string
   source?: 'event' | 'lifecycle'
+  campaign_id?: number // NEW — Phase 9 filtra logs por campanha
   limit?: number
   offset?: number
 }

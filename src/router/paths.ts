@@ -34,6 +34,9 @@ export const PATHS = {
       lifecycle: '/app/admin-emails/lifecycle',
       lifecycleNew: '/app/admin-emails/lifecycle/new',
       lifecycleEdit: (id: number | string) => `/app/admin-emails/lifecycle/${id}`,
+      campaigns: '/app/admin-emails/campaigns',
+      campaignNew: '/app/admin-emails/campaigns/new',
+      campaignEdit: (id: number | string) => `/app/admin-emails/campaigns/${id}`,
       logs: '/app/admin-emails/logs'
     }
   },

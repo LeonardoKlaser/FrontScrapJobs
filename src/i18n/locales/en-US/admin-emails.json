@@ -9,7 +9,9 @@
       "events": "Events",
       "lifecycle": "Lifecycle Jobs",
       "logs": "Logs",
-      "logsDescription": "Send history"
+      "logsDescription": "Send history",
+      "campaigns": "Campaigns",
+      "campaignsDescription": "Create one-off or scheduled campaigns"
     }
   },
   "templates": {
@@ -23,8 +25,82 @@
     "title": "Lifecycle Jobs",
     "createButton": "Create lifecycle"
   },
+  "campaigns": {
+    "title": "Campaigns",
+    "new": "New campaign",
+    "status": {
+      "draft": "Draft",
+      "scheduled": "Scheduled",
+      "sending": "Sending",
+      "sent": "Sent",
+      "failed": "Failed",
+      "canceled": "Canceled"
+    },
+    "progress": {
+      "waiting": "Waiting to start…",
+      "empty": "Empty segment — no recipients",
+      "failuresCount": "{{count}} failed"
+    },
+    "list": {
+      "empty": "No campaigns yet",
+      "loading": "Loading…",
+      "prev": "Previous",
+      "next": "Next",
+      "page": "Page {{current}} of {{total}}",
+      "columns": {
+        "name": "Name",
+        "status": "Status",
+        "sendAt": "Send at",
+        "progress": "Progress"
+      },
+      "filters": {
+        "all": "All",
+        "draft": "Draft",
+        "scheduled": "Scheduled",
+        "sending": "Sending",
+        "sent": "Sent",
+        "failed": "Failed",
+        "canceled": "Canceled"
+      }
+    },
+    "editor": {
+      "name": "Internal name",
+      "namePlaceholder": "Ex: Black Friday Promo 2026",
+      "template": "Template",
+      "templatePlaceholder": "Pick an active template",
+      "audience": "Audience (segment filter)",
+      "saveDraft": "Save draft",
+      "schedule": "Schedule",
+      "scheduleAt": "Send at",
+      "sendNow": "Send now",
+      "cancel": "Cancel",
+      "duplicate": "Duplicate",
+      "delete": "Delete",
+      "lastError": "Last error",
+      "confirmClearFilter": "The current filter will be removed (campaign sent to ALL users). Continue?"
+    },
+    "errors": {
+      "statusConflict": "Status changed — reloading…",
+      "notEditable": "This field cannot be changed in the current status",
+      "templateInvalid": "Invalid or inactive template",
+      "sendAtPast": "Date must be in the future",
+      "generic": "Error processing request"
+    },
+    "feedback": {
+      "saved": "Draft saved",
+      "scheduled": "Campaign scheduled",
+      "sending": "Campaign queued",
+      "canceled": "Campaign canceled",
+      "duplicated": "Copy created",
+      "deleted": "Campaign deleted"
+    }
+  },
   "logs": {
     "title": "Email Logs",
-    "exportButton": "Export CSV"
+    "exportButton": "Export CSV",
+    "filters": {
+      "campaignId": "Campaign ID",
+      "campaignIdPlaceholder": "Ex: 42"
+    }
   }
 }

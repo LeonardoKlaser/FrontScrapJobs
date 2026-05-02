@@ -88,6 +88,8 @@ const AdminEmailsLifecycleEditor = lazyWithRetry(
   () => import('@/pages/adminEmails/LifecycleEditor')
 )
 const AdminEmailsLogs = lazyWithRetry(() => import('@/pages/adminEmails/LogsViewer'))
+const AdminEmailsCampaignsList = lazyWithRetry(() => import('@/pages/adminEmails/CampaignsList'))
+const AdminEmailsCampaignEditor = lazyWithRetry(() => import('@/pages/adminEmails/CampaignEditor'))
 
 const CurriculumPage = lazyWithRetry(() =>
   import('@/pages/Curriculum').then((m) => ({ default: m.Curriculum }))
@@ -251,6 +253,21 @@ export const createRouter = (queryClient: QueryClient) =>
                 PATHS.app.adminEmails.lifecycleEdit(':id')
               ),
               element: <AdminEmailsLifecycleEditor />
+            },
+            {
+              path: relativeTo(PATHS.app.adminEmails.hub, PATHS.app.adminEmails.campaigns),
+              element: <AdminEmailsCampaignsList />
+            },
+            {
+              path: relativeTo(PATHS.app.adminEmails.hub, PATHS.app.adminEmails.campaignNew),
+              element: <AdminEmailsCampaignEditor />
+            },
+            {
+              path: relativeTo(
+                PATHS.app.adminEmails.hub,
+                PATHS.app.adminEmails.campaignEdit(':id')
+              ),
+              element: <AdminEmailsCampaignEditor />
             },
             {
               path: relativeTo(PATHS.app.adminEmails.hub, PATHS.app.adminEmails.logs),
