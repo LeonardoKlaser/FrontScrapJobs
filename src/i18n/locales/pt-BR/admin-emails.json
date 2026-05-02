@@ -1,0 +1,30 @@
+{
+  "hub": {
+    "title": "Email Management",
+    "subtitle": "Gerencie templates, eventos, lifecycles e logs",
+    "loading": "Carregando...",
+    "manage": "Gerenciar",
+    "kpi": {
+      "templates": "Templates",
+      "events": "Eventos",
+      "lifecycle": "Lifecycle Jobs",
+      "logs": "Logs",
+      "logsDescription": "Histórico de envios"
+    }
+  },
+  "templates": {
+    "title": "Templates",
+    "createButton": "Criar template"
+  },
+  "events": {
+    "title": "Eventos & Subscribers"
+  },
+  "lifecycle": {
+    "title": "Lifecycle Jobs",
+    "createButton": "Criar lifecycle"
+  },
+  "logs": {
+    "title": "Email Logs",
+    "exportButton": "Exportar CSV"
+  }
+}

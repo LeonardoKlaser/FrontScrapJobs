@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from 'react'
 import type { ComponentType } from 'react'
-import { createBrowserRouter, Navigate } from 'react-router'
+import { createBrowserRouter, Navigate, Outlet } from 'react-router'
 
 import { MainLayout } from '@/layouts/MainLayout'
 import { PublicLayout } from '@/layouts/PublicLayout'
@@ -29,6 +29,14 @@ const CHUNK_ERROR_PATTERNS = [
 function isChunkLoadError(err: unknown): boolean {
   if (!(err instanceof Error)) return false
   return CHUNK_ERROR_PATTERNS.some((pattern) => err.message.includes(pattern))
+}
+
+// relativeTo strips o prefixo do parent path pra derivar o segmento relativo
+// que React Router espera em rotas filhas. Mantém routes.tsx em sync com PATHS
+// sem hardcode de strings duplicadas. Se child não começa com parent, retorna
+// child intocado (caller fica visível em teste de unidade ou inspeção).
+function relativeTo(parent: string, child: string): string {
+  return child.startsWith(parent + '/') ? child.slice(parent.length + 1) : child
 }
 
 function lazyWithRetry<T extends ComponentType<unknown>>(factory: () => Promise<{ default: T }>) {
@@ -71,6 +79,15 @@ const AdminDashboard = lazyWithRetry(() => import('@/pages/adminDashboard'))
 const TermsOfService = lazyWithRetry(() => import('@/pages/TermsOfService'))
 const PrivacyPolicy = lazyWithRetry(() => import('@/pages/PrivacyPolicy'))
 const Applications = lazyWithRetry(() => import('@/pages/Applications'))
+const AdminEmailsHub = lazyWithRetry(() => import('@/pages/adminEmails/Hub'))
+const AdminEmailsTemplatesList = lazyWithRetry(() => import('@/pages/adminEmails/TemplatesList'))
+const AdminEmailsTemplateEditor = lazyWithRetry(() => import('@/pages/adminEmails/TemplateEditor'))
+const AdminEmailsEvents = lazyWithRetry(() => import('@/pages/adminEmails/EventsPage'))
+const AdminEmailsLifecycleList = lazyWithRetry(() => import('@/pages/adminEmails/LifecycleList'))
+const AdminEmailsLifecycleEditor = lazyWithRetry(
+  () => import('@/pages/adminEmails/LifecycleEditor')
+)
+const AdminEmailsLogs = lazyWithRetry(() => import('@/pages/adminEmails/LogsViewer'))
 
 const CurriculumPage = lazyWithRetry(() =>
   import('@/pages/Curriculum').then((m) => ({ default: m.Curriculum }))
@@ -184,6 +201,62 @@ export const createRouter = (queryClient: QueryClient) =>
               </Suspense>
             </AdminGuard>
           )
+        },
+        {
+          // relativeTo deriva o segmento relativo de cada path em PATHS pra
+          // que rename/move em paths.ts atualize o router automaticamente. Sem
+          // isso, strings hardcoded ('templates'/'events'/...) divergiriam silenciosamente.
+          path: relativeTo(PATHS.app.home, PATHS.app.adminEmails.hub),
+          element: (
+            <AdminGuard>
+              <Suspense
+                fallback={<LoadingSection variant="section" label={i18n.t('loadingPanel')} />}
+              >
+                <Outlet />
+              </Suspense>
+            </AdminGuard>
+          ),
+          children: [
+            { index: true, element: <AdminEmailsHub /> },
+            {
+              path: relativeTo(PATHS.app.adminEmails.hub, PATHS.app.adminEmails.templates),
+              element: <AdminEmailsTemplatesList />
+            },
+            {
+              path: relativeTo(PATHS.app.adminEmails.hub, PATHS.app.adminEmails.templateNew),
+              element: <AdminEmailsTemplateEditor />
+            },
+            {
+              path: relativeTo(
+                PATHS.app.adminEmails.hub,
+                PATHS.app.adminEmails.templateEdit(':id')
+              ),
+              element: <AdminEmailsTemplateEditor />
+            },
+            {
+              path: relativeTo(PATHS.app.adminEmails.hub, PATHS.app.adminEmails.events),
+              element: <AdminEmailsEvents />
+            },
+            {
+              path: relativeTo(PATHS.app.adminEmails.hub, PATHS.app.adminEmails.lifecycle),
+              element: <AdminEmailsLifecycleList />
+            },
+            {
+              path: relativeTo(PATHS.app.adminEmails.hub, PATHS.app.adminEmails.lifecycleNew),
+              element: <AdminEmailsLifecycleEditor />
+            },
+            {
+              path: relativeTo(
+                PATHS.app.adminEmails.hub,
+                PATHS.app.adminEmails.lifecycleEdit(':id')
+              ),
+              element: <AdminEmailsLifecycleEditor />
+            },
+            {
+              path: relativeTo(PATHS.app.adminEmails.hub, PATHS.app.adminEmails.logs),
+              element: <AdminEmailsLogs />
+            }
+          ]
         },
         {
           path: PATHS.app.applications,

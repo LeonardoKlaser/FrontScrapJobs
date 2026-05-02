@@ -24,7 +24,18 @@ export const PATHS = {
     editSite: (id: number) => `/app/admin-sites/${id}/edit`,
     account: '/app/account',
     renew: '/app/renew',
-    applications: '/app/applications'
+    applications: '/app/applications',
+    adminEmails: {
+      hub: '/app/admin-emails',
+      templates: '/app/admin-emails/templates',
+      templateNew: '/app/admin-emails/templates/new',
+      templateEdit: (id: number | string) => `/app/admin-emails/templates/${id}`,
+      events: '/app/admin-emails/events',
+      lifecycle: '/app/admin-emails/lifecycle',
+      lifecycleNew: '/app/admin-emails/lifecycle/new',
+      lifecycleEdit: (id: number | string) => `/app/admin-emails/lifecycle/${id}`,
+      logs: '/app/admin-emails/logs'
+    }
   },
   notFound: '*'
 } as const

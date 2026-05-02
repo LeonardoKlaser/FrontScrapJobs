@@ -31,7 +31,9 @@ export default defineConfig({
             '@radix-ui/react-tooltip'
           ],
           'vendor-form': ['react-hook-form', '@hookform/resolvers', 'zod'],
-          'vendor-axios': ['axios']
+          'vendor-axios': ['axios'],
+          'vendor-monaco': ['@monaco-editor/react', 'monaco-editor'],
+          'vendor-cron': ['cron-parser']
         }
       }
     }
