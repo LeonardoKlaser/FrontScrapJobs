@@ -203,7 +203,10 @@ export function RegistrationModal({
   const handlePreviewRegistrationFilters = () => runPreview(previewTags)
 
   const isRegisterButtonDisabled =
-    hasNoSlots || isLoading || (previewTags.length === 0 && !isAlreadyRegistered)
+    hasNoSlots ||
+    isLoading ||
+    previewLoading ||
+    (previewTags.length === 0 && !isAlreadyRegistered)
 
   const handleClose = () => {
     setKeywords('')
@@ -451,7 +454,7 @@ export function RegistrationModal({
                 <Button
                   variant="glow"
                   className="w-full"
-                  disabled={isUpdatingFilters || editKeywords.length === 0}
+                  disabled={isUpdatingFilters || editKeywords.length === 0 || previewLoading}
                   onClick={handleSaveWithValidation}
                 >
                   {isUpdatingFilters ? (
