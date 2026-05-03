@@ -10,7 +10,7 @@ export function SavingsCalculatorSection() {
   const { data: plans, isLoading } = usePlans()
   const locale = i18n.language === 'pt-BR' ? 'pt-BR' : 'en-US'
 
-  const defaultSalary = locale === 'pt-BR' ? 1412 : 3000
+  const defaultSalary = locale === 'pt-BR' ? 8000 : 6000
   const [rawSalary, setRawSalary] = useState(defaultSalary)
   const [displayValue, setDisplayValue] = useState(defaultSalary.toLocaleString(locale))
 
