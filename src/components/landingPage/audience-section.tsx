@@ -13,17 +13,19 @@ export function AudienceSection() {
     <SectionWrapper className="py-16 lg:py-20 px-6" id="audience">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-10">
-          <span className="font-mono text-xs tracking-[0.15em] uppercase
-            text-emerald-500 font-semibold">
+          <span
+            className="font-mono text-xs tracking-[0.15em] uppercase
+            text-emerald-500 font-semibold"
+          >
             {t('audience.eyebrow')}
           </span>
-          <h2 className="font-display text-3xl lg:text-4xl font-bold
-            text-zinc-900 mt-3">
+          <h2
+            className="font-display text-3xl lg:text-4xl font-bold
+            text-zinc-900 mt-3"
+          >
             {t('audience.title')}
           </h2>
-          <p className="mt-3 text-base text-zinc-500">
-            {t('audience.subtitle')}
-          </p>
+          <p className="mt-3 text-base text-zinc-500">{t('audience.subtitle')}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -36,23 +38,19 @@ export function AudienceSection() {
               shadow-sm"
           >
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-emerald-100 rounded-lg flex
-                items-center justify-center">
-                <span className="text-emerald-600 text-sm font-bold">
-                  ✓
-                </span>
+              <div
+                className="w-8 h-8 bg-emerald-100 rounded-lg flex
+                items-center justify-center"
+              >
+                <span className="text-emerald-600 text-sm font-bold">✓</span>
               </div>
-              <h3 className="text-base font-bold text-zinc-900">
-                {t('audience.forTitle')}
-              </h3>
+              <h3 className="text-base font-bold text-zinc-900">{t('audience.forTitle')}</h3>
             </div>
             <ul className="space-y-3">
               {forItems.map((item, i) => (
                 <li key={i} className="flex items-start gap-2">
                   <span className="text-emerald-500 mt-1 text-sm">●</span>
-                  <span className="text-sm text-zinc-700 leading-relaxed">
-                    {item}
-                  </span>
+                  <span className="text-sm text-zinc-700 leading-relaxed">{item}</span>
                 </li>
               ))}
             </ul>
@@ -67,30 +65,26 @@ export function AudienceSection() {
               shadow-sm"
           >
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-red-100 rounded-lg flex
-                items-center justify-center">
+              <div
+                className="w-8 h-8 bg-red-100 rounded-lg flex
+                items-center justify-center"
+              >
                 <span className="text-red-600 text-sm font-bold">✗</span>
               </div>
-              <h3 className="text-base font-bold text-zinc-900">
-                {t('audience.notForTitle')}
-              </h3>
+              <h3 className="text-base font-bold text-zinc-900">{t('audience.notForTitle')}</h3>
             </div>
             <ul className="space-y-3">
               {notForItems.map((item, i) => (
                 <li key={i} className="flex items-start gap-2">
                   <span className="text-red-500 mt-1 text-sm">●</span>
-                  <span className="text-sm text-zinc-700 leading-relaxed">
-                    {item}
-                  </span>
+                  <span className="text-sm text-zinc-700 leading-relaxed">{item}</span>
                 </li>
               ))}
             </ul>
           </motion.div>
         </div>
 
-        <p className="text-center mt-6 text-xs text-zinc-400">
-          {t('audience.note')}
-        </p>
+        <p className="text-center mt-6 text-xs text-zinc-400">{t('audience.note')}</p>
       </div>
     </SectionWrapper>
   )

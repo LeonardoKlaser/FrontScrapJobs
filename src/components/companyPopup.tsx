@@ -111,9 +111,9 @@ export function RegistrationModal({
 
   const handleAddSuggestion = (keyword: string) => {
     if (isAlreadyRegistered) {
-      setEditKeywords(prev => prev.includes(keyword) ? prev : [...prev, keyword])
+      setEditKeywords((prev) => (prev.includes(keyword) ? prev : [...prev, keyword]))
     } else {
-      setKeywords(prev => prev ? `${prev} ${keyword}` : keyword)
+      setKeywords((prev) => (prev ? `${prev} ${keyword}` : keyword))
     }
     setShowZeroMatchWarning(false)
     setPreviewResult(null)
@@ -121,14 +121,16 @@ export function RegistrationModal({
 
   const getRelevantSuggestions = () => {
     if (!siteKeywords) return []
-    const userTokens = currentFilters.map(f => f.toLowerCase())
-    const relevant = siteKeywords.filter(sk =>
-      !currentFilters.includes(sk.keyword) &&
-      userTokens.some(ut => sk.keyword.includes(ut) || ut.includes(sk.keyword))
+    const userTokens = currentFilters.map((f) => f.toLowerCase())
+    const relevant = siteKeywords.filter(
+      (sk) =>
+        !currentFilters.includes(sk.keyword) &&
+        userTokens.some((ut) => sk.keyword.includes(ut) || ut.includes(sk.keyword))
     )
-    const suggestions = relevant.length > 0
-      ? relevant
-      : siteKeywords.filter(sk => !currentFilters.includes(sk.keyword))
+    const suggestions =
+      relevant.length > 0
+        ? relevant
+        : siteKeywords.filter((sk) => !currentFilters.includes(sk.keyword))
     return suggestions.slice(0, 8)
   }
 
@@ -299,9 +301,9 @@ export function RegistrationModal({
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {siteKeywords
-                      .filter(sk => !editKeywords.includes(sk.keyword))
+                      .filter((sk) => !editKeywords.includes(sk.keyword))
                       .slice(0, 12)
-                      .map(sk => (
+                      .map((sk) => (
                         <button
                           key={sk.keyword}
                           type="button"
@@ -401,7 +403,7 @@ export function RegistrationModal({
                     {t('popup.suggestions.warningText')}
                   </p>
                   <div className="flex flex-wrap gap-1.5">
-                    {getRelevantSuggestions().map(sk => (
+                    {getRelevantSuggestions().map((sk) => (
                       <button
                         key={sk.keyword}
                         type="button"
@@ -505,9 +507,9 @@ export function RegistrationModal({
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {siteKeywords
-                      .filter(sk => !previewTags.includes(sk.keyword))
+                      .filter((sk) => !previewTags.includes(sk.keyword))
                       .slice(0, 12)
-                      .map(sk => (
+                      .map((sk) => (
                         <button
                           key={sk.keyword}
                           type="button"
@@ -641,7 +643,7 @@ export function RegistrationModal({
                 {t('popup.suggestions.warningText')}
               </p>
               <div className="flex flex-wrap gap-1.5">
-                {getRelevantSuggestions().map(sk => (
+                {getRelevantSuggestions().map((sk) => (
                   <button
                     key={sk.keyword}
                     type="button"
@@ -658,12 +660,7 @@ export function RegistrationModal({
                 {t('popup.suggestions.warningHint')}
               </p>
               <div className="flex gap-2 mt-3">
-                <Button
-                  variant="default"
-                  size="sm"
-                  className="flex-1"
-                  onClick={handleSaveAnyway}
-                >
+                <Button variant="default" size="sm" className="flex-1" onClick={handleSaveAnyway}>
                   {t('popup.suggestions.saveAnyway')}
                 </Button>
                 <Button
