@@ -2,9 +2,9 @@
   "hero": {
     "eyebrow": "MONITORING +{{sites}} COMPANIES · 24/7",
     "eyebrowFallback": "MONITORING · 24/7",
-    "heading1": "Tech jobs straight from the companies shaping the future.",
+    "heading1": "The best remote tech jobs at global giants. Without the legwork.",
     "heading2": "Before everyone else.",
-    "subheading": "You pick the companies. We monitor 24/7. You get the job in your inbox minutes after it's posted — before the competition shows up.",
+    "subheading": "Auto-radar for devs, PMs, designers and data engineers. Google, Stripe, AWS, Nubank — +60 career pages monitored, jobs straight to your inbox.",
     "cta": "Get jobs before everyone else",
     "loginPrompt": "Already have an account?",
     "loginLink": "Sign in",
@@ -215,8 +215,8 @@
       "sites": "1 monitored site",
       "analyses": "3 AI analyses",
       "extractions": "3 CV extractions",
-      "suggestions": "2 suggestions applied",
-      "pdfs": "1 PDF generated"
+      "suggestions": "3 suggestions applied",
+      "pdfs": "3 PDFs generated"
     },
     "paidCta": "Subscribe now",
     "paidSubtext": "Immediate access to all features."

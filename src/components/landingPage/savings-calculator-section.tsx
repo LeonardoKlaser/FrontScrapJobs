@@ -41,7 +41,8 @@ export function SavingsCalculatorSection() {
     const hoursPerMonth = Number(t('calculator.hoursPerMonth'))
     const valorHora = rawSalary / hoursPerMonth
     const economia = valorHora * 50
-    const custoPlano = plans && plans.length > 0 ? Math.min(...plans.map((p) => p.price)) : 19.9
+    const paidPlans = plans?.filter((p) => !p.is_trial) ?? []
+    const custoPlano = paidPlans.length > 0 ? Math.min(...paidPlans.map((p) => p.price)) : 14.9
     const roi = custoPlano > 0 ? Math.floor(economia / custoPlano) : 0
 
     return { valorHora, economia, custoPlano, roi }

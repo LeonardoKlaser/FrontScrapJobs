@@ -2,9 +2,9 @@
   "hero": {
     "eyebrow": "MONITORANDO +{{sites}} EMPRESAS · 24/7",
     "eyebrowFallback": "MONITORANDO · 24/7",
-    "heading1": "Vagas em tech direto das empresas que estão moldando o futuro.",
+    "heading1": "As melhores vagas remotas de tech nas gigantes globais. Sem o trabalho de procurar.",
     "heading2": "Antes de todo mundo.",
-    "subheading": "Você escolhe as empresas. A gente monitora 24/7. Você recebe a vaga no email minutos depois que ela sai — antes da concorrência aparecer.",
+    "subheading": "Radar automático para devs, PMs, designers e data engineers. Google, Stripe, AWS, Nubank — +60 career pages monitoradas, vagas direto no seu inbox.",
     "cta": "Receba vagas antes de todo mundo",
     "loginPrompt": "Já tem uma conta?",
     "loginLink": "Fazer login",
@@ -215,8 +215,8 @@
       "sites": "1 site monitorado",
       "analyses": "3 análises de IA",
       "extractions": "3 currículos extraídos",
-      "suggestions": "2 sugestões aplicadas",
-      "pdfs": "1 PDF gerado"
+      "suggestions": "3 sugestões aplicadas",
+      "pdfs": "3 PDFs gerados"
     },
     "paidCta": "Assinar agora",
     "paidSubtext": "Acesso imediato a todas as funcionalidades."
