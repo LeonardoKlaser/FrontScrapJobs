@@ -1,4 +1,5 @@
 import { useLayoutEffect } from 'react'
+import { AudienceSection } from '@/components/landingPage/audience-section'
 import { CtaFinalSection } from '@/components/landingPage/cta-final-section'
 import { FaqSection } from '@/components/landingPage/faq-section'
 import { Footer } from '@/components/landingPage/footer'
@@ -27,6 +28,7 @@ export function Landing() {
     <div className="bg-emerald-100/30">
       <LandingNavbar />
       <HeroSection />
+      <AudienceSection />
       <ProblemSection />
       <HowItWorksSection />
       <ValueFeaturesSection />

@@ -11,6 +11,26 @@
     "microcopy": "Set up in 2 min. Includes 7 days free.",
     "mockupDisclaimer": "Illustrative. Companies shown belong to their respective owners."
   },
+  "audience": {
+    "eyebrow": "IS IT FOR YOU?",
+    "title": "Transparency first",
+    "subtitle": "ScrapJobs isn't for everyone — and that's by design.",
+    "forTitle": "Who it's for",
+    "forItems": [
+      "Devs, SREs, and Data Engineers looking for jobs at innovative companies",
+      "Product Managers, Designers, and B2B Sales in the tech ecosystem",
+      "Those who want to monitor career pages from companies like Google, Nubank, iFood, Mercado Livre",
+      "Professionals who value being the first to know about a job opening"
+    ],
+    "notForTitle": "Who it's NOT for",
+    "notForItems": [
+      "Those looking for jobs in retail, logistics, healthcare, or public sector",
+      "Those seeking operational positions or customer service roles",
+      "Those who want a generic aggregator like LinkedIn or Indeed",
+      "Those expecting to find any company — we only monitor selected tech companies"
+    ],
+    "note": "We focus on quality, not quantity. Less noise, more of the right opportunities."
+  },
   "navbar": {
     "features": "Features",
     "howItWorks": "How it works",
