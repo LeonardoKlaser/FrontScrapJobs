@@ -28,7 +28,7 @@ export function HeroSection() {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center lg:items-start">
           {/* Left column — Text */}
-          <div className="lg:w-[420px] lg:shrink-0 space-y-6 text-center lg:text-left max-w-xl lg:max-w-none lg:pt-8">
+          <div className="lg:w-[520px] lg:shrink-0 space-y-6 text-center lg:text-left max-w-xl lg:max-w-none lg:pt-8">
             {/* Eyebrow — live monitoring badge */}
             <span className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.15em] uppercase text-emerald-600 font-semibold animate-fade-in-up">
               <span className="relative flex h-2 w-2">
