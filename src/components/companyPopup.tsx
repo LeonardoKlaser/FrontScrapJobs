@@ -9,6 +9,7 @@ import { Input } from './ui/input'
 import { Label } from './ui/label'
 import type { FilterPreviewResult } from '@/services/filterPreviewService'
 import { useFilterPreview } from '@/hooks/useFilterPreview'
+import { useSiteKeywords } from '@/hooks/useSiteKeywords'
 
 // Espelha a ordem do backend Tokenize: ToLower → NFD → strip Mn → NFC.
 // Ordem importa pra edge cases (Turkish dotless-i, eszett). Divergência
@@ -74,6 +75,8 @@ export function RegistrationModal({
   const filterPreview = useFilterPreview()
   const previewLoading = filterPreview.isPending
   const hasNoSlots = remainingSlots === 0 && !isAlreadyRegistered
+  const { data: siteKeywords } = useSiteKeywords(siteId, isOpen)
+  const [showZeroMatchWarning, setShowZeroMatchWarning] = useState(false)
 
   useEffect(() => {
     if (isOpen) {
@@ -84,6 +87,7 @@ export function RegistrationModal({
       setPreviewResult(null)
       setPreviewError(null)
       setShowSample(false)
+      setShowZeroMatchWarning(false)
     }
   }, [isOpen, currentTargetWords])
 
@@ -102,6 +106,69 @@ export function RegistrationModal({
   }, [keywordInput])
 
   const previewTags = splitIntoTags(keywords)
+
+  const currentFilters = isAlreadyRegistered ? editKeywords : previewTags
+
+  const handleAddSuggestion = (keyword: string) => {
+    if (isAlreadyRegistered) {
+      setEditKeywords(prev => prev.includes(keyword) ? prev : [...prev, keyword])
+    } else {
+      setKeywords(prev => prev ? `${prev} ${keyword}` : keyword)
+    }
+    setShowZeroMatchWarning(false)
+    setPreviewResult(null)
+  }
+
+  const getRelevantSuggestions = () => {
+    if (!siteKeywords) return []
+    const userTokens = currentFilters.map(f => f.toLowerCase())
+    const relevant = siteKeywords.filter(sk =>
+      !currentFilters.includes(sk.keyword) &&
+      userTokens.some(ut => sk.keyword.includes(ut) || ut.includes(sk.keyword))
+    )
+    const suggestions = relevant.length > 0
+      ? relevant
+      : siteKeywords.filter(sk => !currentFilters.includes(sk.keyword))
+    return suggestions.slice(0, 8)
+  }
+
+  const handleSaveWithValidation = () => {
+    const filters = isAlreadyRegistered ? editKeywords : previewTags
+    if (filters.length === 0) return
+
+    filterPreview.mutate(
+      { siteId, filters },
+      {
+        onSuccess: (result) => {
+          if (result.matched_jobs > 0) {
+            if (isAlreadyRegistered) {
+              onUpdateFilters?.(editKeywords)
+            } else {
+              onRegister(previewTags)
+            }
+          } else {
+            setShowZeroMatchWarning(true)
+          }
+        },
+        onError: () => {
+          if (isAlreadyRegistered) {
+            onUpdateFilters?.(editKeywords)
+          } else {
+            onRegister(previewTags)
+          }
+        }
+      }
+    )
+  }
+
+  const handleSaveAnyway = () => {
+    setShowZeroMatchWarning(false)
+    if (isAlreadyRegistered) {
+      onUpdateFilters?.(editKeywords)
+    } else {
+      onRegister(previewTags)
+    }
+  }
 
   const runPreview = (filters: string[]) => {
     if (filters.length === 0) return
@@ -135,11 +202,6 @@ export function RegistrationModal({
 
   const isRegisterButtonDisabled =
     hasNoSlots || isLoading || (previewTags.length === 0 && !isAlreadyRegistered)
-
-  const handleRegisterClick = () => {
-    if (previewTags.length === 0) return
-    onRegister(previewTags)
-  }
 
   const handleClose = () => {
     setKeywords('')
@@ -228,6 +290,35 @@ export function RegistrationModal({
                 </div>
                 <p className="text-xs text-muted-foreground">{t('popup.keywordsHelp')}</p>
               </div>
+              {siteKeywords && siteKeywords.length > 0 && (
+                <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <span className="text-xs font-semibold text-emerald-800">
+                      {t('popup.suggestions.popular')}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {siteKeywords
+                      .filter(sk => !editKeywords.includes(sk.keyword))
+                      .slice(0, 12)
+                      .map(sk => (
+                        <button
+                          key={sk.keyword}
+                          type="button"
+                          onClick={() => handleAddSuggestion(sk.keyword)}
+                          className="bg-emerald-100 text-emerald-800 border border-emerald-200
+                            px-2.5 py-1 rounded-full text-xs cursor-pointer
+                            hover:bg-emerald-200 transition-colors"
+                        >
+                          {sk.keyword} <span className="opacity-70">({sk.job_count})</span>
+                        </button>
+                      ))}
+                  </div>
+                  <p className="text-[10px] text-emerald-700 mt-2 opacity-80">
+                    {t('popup.suggestions.popularHint')}
+                  </p>
+                </div>
+              )}
               {editKeywords.length > 0 && (
                 <div className="mt-3 space-y-1.5">
                   <Button
@@ -299,6 +390,53 @@ export function RegistrationModal({
                   )}
                 </div>
               )}
+              {showZeroMatchWarning && (
+                <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
+                  <div className="flex items-center gap-1.5 mb-1.5">
+                    <span className="text-xs font-semibold text-amber-900">
+                      {t('popup.suggestions.warningTitle')}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-amber-900 mb-2.5">
+                    {t('popup.suggestions.warningText')}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {getRelevantSuggestions().map(sk => (
+                      <button
+                        key={sk.keyword}
+                        type="button"
+                        onClick={() => handleAddSuggestion(sk.keyword)}
+                        className="bg-amber-100 text-amber-900 border border-amber-200
+                          px-2.5 py-1 rounded-full text-xs cursor-pointer
+                          hover:bg-amber-200 transition-colors font-medium"
+                      >
+                        + {sk.keyword} <span className="opacity-70">({sk.job_count})</span>
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-amber-800 mt-2 opacity-80">
+                    {t('popup.suggestions.warningHint')}
+                  </p>
+                  <div className="flex gap-2 mt-3">
+                    <Button
+                      variant="default"
+                      size="sm"
+                      className="flex-1"
+                      onClick={handleSaveAnyway}
+                    >
+                      {t('popup.suggestions.saveAnyway')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => setShowZeroMatchWarning(false)}
+                    >
+                      {t('popup.suggestions.cancel')}
+                    </Button>
+                  </div>
+                </div>
+              )}
               <div className="flex flex-col gap-2 pt-2">
                 {editKeywords.length === 0 && (
                   <p className="text-xs text-amber-500/70">
@@ -312,7 +450,7 @@ export function RegistrationModal({
                   variant="glow"
                   className="w-full"
                   disabled={isUpdatingFilters || editKeywords.length === 0}
-                  onClick={() => onUpdateFilters?.(editKeywords)}
+                  onClick={handleSaveWithValidation}
                 >
                   {isUpdatingFilters ? (
                     <>
@@ -358,6 +496,35 @@ export function RegistrationModal({
                 />
                 <p className="text-xs text-muted-foreground">{t('popup.keywordsHelp')}</p>
               </div>
+              {siteKeywords && siteKeywords.length > 0 && (
+                <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <span className="text-xs font-semibold text-emerald-800">
+                      {t('popup.suggestions.popular')}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {siteKeywords
+                      .filter(sk => !previewTags.includes(sk.keyword))
+                      .slice(0, 12)
+                      .map(sk => (
+                        <button
+                          key={sk.keyword}
+                          type="button"
+                          onClick={() => handleAddSuggestion(sk.keyword)}
+                          className="bg-emerald-100 text-emerald-800 border border-emerald-200
+                            px-2.5 py-1 rounded-full text-xs cursor-pointer
+                            hover:bg-emerald-200 transition-colors"
+                        >
+                          {sk.keyword} <span className="opacity-70">({sk.job_count})</span>
+                        </button>
+                      ))}
+                  </div>
+                  <p className="text-[10px] text-emerald-700 mt-2 opacity-80">
+                    {t('popup.suggestions.popularHint')}
+                  </p>
+                </div>
+              )}
               {previewTags.length > 0 && (
                 <div className="flex flex-wrap gap-1.5">
                   {previewTags.map((tag) => (
@@ -463,11 +630,59 @@ export function RegistrationModal({
             </div>
           )}
 
+          {showZeroMatchWarning && !isAlreadyRegistered && (
+            <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <span className="text-xs font-semibold text-amber-900">
+                  {t('popup.suggestions.warningTitle')}
+                </span>
+              </div>
+              <p className="text-[11px] text-amber-900 mb-2.5">
+                {t('popup.suggestions.warningText')}
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {getRelevantSuggestions().map(sk => (
+                  <button
+                    key={sk.keyword}
+                    type="button"
+                    onClick={() => handleAddSuggestion(sk.keyword)}
+                    className="bg-amber-100 text-amber-900 border border-amber-200
+                      px-2.5 py-1 rounded-full text-xs cursor-pointer
+                      hover:bg-amber-200 transition-colors font-medium"
+                  >
+                    + {sk.keyword} <span className="opacity-70">({sk.job_count})</span>
+                  </button>
+                ))}
+              </div>
+              <p className="text-[10px] text-amber-800 mt-2 opacity-80">
+                {t('popup.suggestions.warningHint')}
+              </p>
+              <div className="flex gap-2 mt-3">
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="flex-1"
+                  onClick={handleSaveAnyway}
+                >
+                  {t('popup.suggestions.saveAnyway')}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1"
+                  onClick={() => setShowZeroMatchWarning(false)}
+                >
+                  {t('popup.suggestions.cancel')}
+                </Button>
+              </div>
+            </div>
+          )}
+
           {/* Actions */}
           {!isAlreadyRegistered && (
             <div className="flex flex-col gap-2 pt-1">
               <Button
-                onClick={handleRegisterClick}
+                onClick={handleSaveWithValidation}
                 disabled={isRegisterButtonDisabled}
                 variant="glow"
                 className="w-full"

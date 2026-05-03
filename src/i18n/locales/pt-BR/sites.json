@@ -49,7 +49,16 @@
     "keywordsHelp": "Uma palavra por tag. Separe com vírgula ou espaço.",
     "addKeyword": "Adicionar",
     "saveFilters": "Salvar alterações",
-    "saving": "Salvando..."
+    "saving": "Salvando...",
+    "suggestions": {
+      "popular": "Populares neste site",
+      "popularHint": "Clique para adicionar · baseado nas vagas dos últimos 30 dias",
+      "warningTitle": "Nenhuma vaga compatível encontrada",
+      "warningText": "Seus filtros não correspondem a vagas recentes deste site. Considere estes termos:",
+      "warningHint": "Clique para adicionar aos seus filtros",
+      "saveAnyway": "Salvar mesmo assim",
+      "cancel": "Cancelar"
+    }
   },
   "analysis": {
     "title": "Análise de Compatibilidade com IA",

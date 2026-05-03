@@ -49,7 +49,16 @@
     "keywordsHelp": "One word per tag. Separate with comma or space.",
     "addKeyword": "Add",
     "saveFilters": "Save changes",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "suggestions": {
+      "popular": "Popular on this site",
+      "popularHint": "Click to add · based on jobs from the last 30 days",
+      "warningTitle": "No matching jobs found",
+      "warningText": "Your filters don't match recent jobs on this site. Consider these terms:",
+      "warningHint": "Click to add to your filters",
+      "saveAnyway": "Save anyway",
+      "cancel": "Cancel"
+    }
   },
   "analysis": {
     "title": "AI Compatibility Analysis",
