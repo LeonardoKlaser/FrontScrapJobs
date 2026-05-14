@@ -85,7 +85,9 @@ const DEFAULT_FORM_DATA: SiteConfigFormData = {
   api_headers_json: '',
   api_payload_template: '',
   json_data_mappings: '',
-  headless_actions_json: ''
+  headless_actions_json: '',
+  embedded_json_selector: '',
+  pagination_url_template: ''
 }
 
 // Converte os campos nullable do SiteConfig (edit) pra strings vazias
@@ -110,7 +112,9 @@ function siteConfigToFormData(site: SiteConfig): SiteConfigFormData {
     api_headers_json: site.api_headers_json ?? '',
     api_payload_template: site.api_payload_template ?? '',
     json_data_mappings: site.json_data_mappings ?? '',
-    headless_actions_json: site.headless_actions_json ?? ''
+    headless_actions_json: site.headless_actions_json ?? '',
+    embedded_json_selector: site.embedded_json_selector ?? '',
+    pagination_url_template: site.pagination_url_template ?? ''
   }
 }
 
@@ -564,6 +568,44 @@ export default function SiteConfigForm({
 
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
+                      <Label htmlFor="pagination_url_template">
+                        URL Template (Pagination)
+                      </Label>
+                      <Tooltip content="URL com {page} ou {offset} para paginar. Ex: https://site.com/jobs?page={page}">
+                        <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                      </Tooltip>
+                    </div>
+                    <Input
+                      id="pagination_url_template"
+                      placeholder="https://site.com/jobs/{offset}/"
+                      value={formData.pagination_url_template}
+                      onChange={(e) =>
+                        handleInputChange('pagination_url_template', e.target.value)
+                      }
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Label htmlFor="embedded_json_selector">
+                        Embedded JSON Selector
+                      </Label>
+                      <Tooltip content="Selector CSS para extrair JSON embutido no HTML (ex: script#__NEXT_DATA__ para sites Gupy/Next.js)">
+                        <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                      </Tooltip>
+                    </div>
+                    <Input
+                      id="embedded_json_selector"
+                      placeholder="script#__NEXT_DATA__"
+                      value={formData.embedded_json_selector}
+                      onChange={(e) =>
+                        handleInputChange('embedded_json_selector', e.target.value)
+                      }
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
                       <Label htmlFor="job_description_selector">
                         {t('addSite.cssConfig.jobDescription')}
                       </Label>
@@ -619,6 +661,55 @@ export default function SiteConfigForm({
                     />
                   </div>
                 </div>
+
+                {/* Campos extras para Embedded JSON mode */}
+                {formData.embedded_json_selector.trim() && (
+                  <div className="space-y-6 border-t pt-6">
+                    <p className="text-sm text-muted-foreground">
+                      Campos para extração de JSON embutido (modo Gupy/Next.js):
+                    </p>
+                    <div className="grid grid-cols-1 gap-6">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <Label htmlFor="css_api_endpoint_template">
+                            API Endpoint Template (base para links)
+                          </Label>
+                          <Tooltip content="Base URL para construir links das vagas. Ex: https://empresa.gupy.io/jobs">
+                            <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                          </Tooltip>
+                        </div>
+                        <Input
+                          id="css_api_endpoint_template"
+                          placeholder="https://empresa.gupy.io/jobs"
+                          value={formData.api_endpoint_template}
+                          onChange={(e) =>
+                            handleInputChange('api_endpoint_template', e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <Label htmlFor="css_json_data_mappings">
+                            JSON Data Mappings
+                          </Label>
+                          <Tooltip content="Mapeamento gjson dos campos no JSON embutido. Ex: jobs_array_path, title_path, link_path...">
+                            <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                          </Tooltip>
+                        </div>
+                        <Textarea
+                          id="css_json_data_mappings"
+                          className="font-mono text-sm"
+                          placeholder='{"jobs_array_path":"props.pageProps.jobs","title_path":"title","link_path":"id","location_path":"workplace.address.city","description_path":"","requisition_id_path":"id","skip_link_slug":true}'
+                          value={formData.json_data_mappings}
+                          onChange={(e) =>
+                            handleInputChange('json_data_mappings', e.target.value)
+                          }
+                          rows={4}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>

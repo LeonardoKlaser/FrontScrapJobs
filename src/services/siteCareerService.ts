@@ -27,6 +27,9 @@ export interface SiteConfigFormData {
   // Headless actions (opcional): lista JSON de acoes chromedp executadas
   // entre Navigate e WaitVisible. Ver docs/headless-actions-spec.md no backend.
   headless_actions_json: string
+  // CSS pagination fields
+  embedded_json_selector: string
+  pagination_url_template: string
 }
 
 export const siteCareerService = {

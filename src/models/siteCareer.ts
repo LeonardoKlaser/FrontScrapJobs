@@ -38,5 +38,7 @@ export interface SiteConfig {
   api_payload_template: string | null
   json_data_mappings: string | null
   headless_actions_json: string | null
+  embedded_json_selector: string | null
+  pagination_url_template: string | null
   created_at: string
 }
