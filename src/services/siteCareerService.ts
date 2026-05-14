@@ -108,8 +108,15 @@ export const siteCareerService = {
     await api.delete(`/userSite/${siteId}`)
   },
 
-  updateUserSiteFilters: async (siteId: number, targetWords: string[]): Promise<void> => {
-    await api.patch(`/userSite/${siteId}`, { target_words: targetWords })
+  updateUserSiteFilters: async (
+    siteId: number,
+    targetWords: string[],
+    locationFilters: string[]
+  ): Promise<void> => {
+    await api.patch(`/userSite/${siteId}`, {
+      target_words: targetWords,
+      location_filters: locationFilters
+    })
   },
 
   sandboxScrape: async (config: SiteConfigFormData) => {

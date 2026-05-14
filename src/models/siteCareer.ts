@@ -1,3 +1,9 @@
+export interface SiteLocation {
+  site_id: number
+  region: string
+  job_count: number
+}
+
 export interface SiteCareer {
   site_id: number
   site_name: string
@@ -5,12 +11,15 @@ export interface SiteCareer {
   logo_url: string | null
   is_subscribed: boolean
   target_words?: string[]
+  location_filters?: string[]
+  locations?: SiteLocation[]
   created_at: string
 }
 
 export interface UserSiteRequest {
   site_id: number
   target_words: string[]
+  location_filters?: string[]
 }
 
 // SiteConfig e o shape completo retornado por GET /siteCareer e

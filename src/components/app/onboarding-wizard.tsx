@@ -223,13 +223,20 @@ function Step2Companies({ onNext, onSkip }: Step2Props) {
   }
 
   const handleRegister = useCallback(
-    (targetWords: string[]) => {
+    (targetWords: string[], locationFilters: string[]) => {
       if (!selectedCompany) return
       registerUserToSite(
-        { site_id: selectedCompany.site_id, target_words: targetWords },
+        {
+          site_id: selectedCompany.site_id,
+          target_words: targetWords,
+          location_filters: locationFilters
+        },
         {
           onSuccess: () => {
             setPopupOpen(false)
+          },
+          onError: () => {
+            // Mantém modal aberto pra usuário corrigir; global MutationCache já mostrou o toast.
           }
         }
       )
@@ -247,13 +254,16 @@ function Step2Companies({ onNext, onSkip }: Step2Props) {
   }, [selectedCompany, unregisterUser])
 
   const handleUpdateFilters = useCallback(
-    (targetWords: string[]) => {
+    (targetWords: string[], locationFilters: string[]) => {
       if (!selectedCompany) return
       updateFilters(
-        { siteId: selectedCompany.site_id, targetWords },
+        { siteId: selectedCompany.site_id, targetWords, locationFilters },
         {
           onSuccess: () => {
             setPopupOpen(false)
+          },
+          onError: () => {
+            // Mantém modal aberto pra usuário corrigir; global MutationCache já mostrou o toast.
           }
         }
       )
@@ -367,6 +377,8 @@ function Step2Companies({ onNext, onSkip }: Step2Props) {
           onRegister={handleRegister}
           onUnRegister={handleUnregister}
           currentTargetWords={selectedCompany.target_words}
+          currentLocationFilters={selectedCompany.location_filters}
+          availableLocations={selectedCompany.locations}
           onUpdateFilters={handleUpdateFilters}
           isUpdatingFilters={isUpdatingFilters}
         />

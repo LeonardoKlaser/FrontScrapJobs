@@ -96,7 +96,7 @@ describe('RegistrationModal — splitIntoTags no fluxo de cadastro', () => {
       target: { value: 'desenvolvedor senior, react' }
     })
     fireEvent.click(screen.getByRole('button', { name: 'popup.confirmSubscription' }))
-    expect(onRegister).toHaveBeenCalledWith(['desenvolvedor', 'senior', 'react'])
+    expect(onRegister).toHaveBeenCalledWith(['desenvolvedor', 'senior', 'react'], [])
   })
 
   it('botão fica desabilitado quando input só tem pontuação', () => {
@@ -158,6 +158,33 @@ describe('RegistrationModal — splitIntoTags no fluxo de edição', () => {
     await waitFor(() => {
       expect(screen.getByText('a')).toBeTruthy()
       expect(screen.getByText('b')).toBeTruthy()
+    })
+  })
+})
+
+describe('RegistrationModal — selectedRegions hydration', () => {
+  it('hidrata selectedRegions de currentLocationFilters ao abrir', async () => {
+    const propsWithLocations = {
+      ...baseProps,
+      isAlreadyRegistered: true,
+      currentTargetWords: ['react'],
+      currentLocationFilters: ['BR', 'REMOTE'],
+      availableLocations: [
+        { site_id: 1, region: 'BR', job_count: 10 },
+        { site_id: 1, region: 'REMOTE', job_count: 5 },
+        { site_id: 1, region: 'EUROPE', job_count: 3 }
+      ],
+      onUpdateFilters: vi.fn(),
+      isUpdatingFilters: false
+    }
+    renderWithClient(<RegistrationModal {...propsWithLocations} />)
+    await waitFor(() => {
+      const brChip = screen.getByRole('button', { name: /regions\.BR \(10\)/ })
+      const remoteChip = screen.getByRole('button', { name: /regions\.REMOTE \(5\)/ })
+      const europeChip = screen.getByRole('button', { name: /regions\.EUROPE \(3\)/ })
+      expect(brChip.className).toContain('bg-primary')
+      expect(remoteChip.className).toContain('bg-primary')
+      expect(europeChip.className).not.toContain('bg-primary')
     })
   })
 })

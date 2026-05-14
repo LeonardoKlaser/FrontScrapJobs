@@ -16,6 +16,14 @@
     "newest": "Data de inclusão mais recente",
     "subscribedFirst": "Inscritas primeiro"
   },
+  "regions": {
+    "title": "Localização",
+    "BR": "Brasil",
+    "US_CA": "EUA/Canadá",
+    "EUROPE": "Europa",
+    "REMOTE": "Remoto",
+    "OTHER": "Outros"
+  },
   "emptySearch": "Nenhuma empresa encontrada para \"{{term}}\"",
   "requestBanner": {
     "text": "Não encontrou sua empresa?",
@@ -47,6 +55,8 @@
     "registering": "Registrando...",
     "keywordsEdit": "Palavras-chave para alertas",
     "keywordsHelp": "Uma palavra por tag. Separe com vírgula ou espaço.",
+    "locationTitle": "Localização das vagas",
+    "locationHelp": "Deixe vazio para receber vagas de todas as localizações",
     "addKeyword": "Adicionar",
     "saveFilters": "Salvar alterações",
     "saving": "Salvando...",

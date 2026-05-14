@@ -16,6 +16,14 @@
     "newest": "Most recently added",
     "subscribedFirst": "Subscribed first"
   },
+  "regions": {
+    "title": "Location",
+    "BR": "Brazil",
+    "US_CA": "USA/Canada",
+    "EUROPE": "Europe",
+    "REMOTE": "Remote",
+    "OTHER": "Other"
+  },
   "emptySearch": "No company found for \"{{term}}\"",
   "requestBanner": {
     "text": "Didn't find your company?",
@@ -47,6 +55,8 @@
     "registering": "Registering...",
     "keywordsEdit": "Alert keywords",
     "keywordsHelp": "One word per tag. Separate with comma or space.",
+    "locationTitle": "Job locations",
+    "locationHelp": "Leave empty to receive jobs from all locations",
     "addKeyword": "Add",
     "saveFilters": "Save changes",
     "saving": "Saving...",

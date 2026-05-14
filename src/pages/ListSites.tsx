@@ -24,6 +24,7 @@ import { EmptyState } from '@/components/common/empty-state'
 import { RequestSiteBanner } from '@/components/sites/request-site-banner'
 import { RequestSiteForm } from '@/components/sites/request-site-form'
 import { PageHeader } from '@/components/common/page-header'
+import { RegionChip } from '@/components/ui/region-chip'
 
 type SortKey = 'alphabetical' | 'newest' | 'subscribed_first'
 const SORT_STORAGE_KEY = 'sitesSortBy'
@@ -50,6 +51,7 @@ export default function EmpresasPage() {
   const { data } = useSiteCareer()
   const { data: user } = useUser()
   const [filter, setFilter] = useState('all')
+  const [activeRegions, setActiveRegions] = useState<string[]>([])
   const hasAutoSelected = useRef(false)
   const [sortBy, setSortBy] = useState<SortKey>(() => {
     if (typeof window === 'undefined') return 'alphabetical'
@@ -82,8 +84,8 @@ export default function EmpresasPage() {
     { key: 'not_subscribed', label: t('filterAvailable') }
   ] as const
 
-  const filteredCompanies = useMemo(() => {
-    if (!data) return undefined
+  const baseForRegionCounts = useMemo(() => {
+    if (!data) return []
     return data
       .filter((company) => company.site_name.toLowerCase().includes(searchTerm.toLowerCase()))
       .filter((company) => {
@@ -91,9 +93,38 @@ export default function EmpresasPage() {
         if (filter === 'not_subscribed') return !company.is_subscribed
         return true
       })
+  }, [data, searchTerm, filter])
+
+  const filteredCompanies = useMemo(() => {
+    if (!data) return undefined
+    return baseForRegionCounts
+      .filter((company) => {
+        if (activeRegions.length === 0) return true
+        return company.locations?.some((loc) => activeRegions.includes(loc.region)) ?? false
+      })
       .slice()
       .sort(sortFn[sortBy])
-  }, [searchTerm, data, filter, sortBy])
+  }, [baseForRegionCounts, data, sortBy, activeRegions])
+
+  const regionCounts = useMemo(() => {
+    const counts: Record<string, number> = { BR: 0, US_CA: 0, EUROPE: 0, REMOTE: 0, OTHER: 0 }
+    baseForRegionCounts.forEach((company) => {
+      const seen = new Set<string>()
+      company.locations?.forEach((loc) => {
+        if (counts[loc.region] !== undefined && !seen.has(loc.region)) {
+          counts[loc.region] += 1
+          seen.add(loc.region)
+        }
+      })
+    })
+    return counts
+  }, [baseForRegionCounts])
+
+  const toggleRegion = (region: string) => {
+    setActiveRegions((prev) =>
+      prev.includes(region) ? prev.filter((r) => r !== region) : [...prev, region]
+    )
+  }
 
   const subscribedCount = useMemo(() => {
     return data?.filter((company) => company.is_subscribed).length ?? 0
@@ -108,28 +139,35 @@ export default function EmpresasPage() {
     setPopupOpen(true)
   }
 
-  const handleRegister = (targetWords: string[]) => {
+  const handleRegister = (targetWords: string[], locationFilters: string[]) => {
     if (!selectedCompany) return
 
     const requestData = {
       site_id: selectedCompany.site_id,
-      target_words: targetWords
+      target_words: targetWords,
+      location_filters: locationFilters
     }
 
     registerUserToSite(requestData, {
       onSuccess: () => {
         setPopupOpen(false)
+      },
+      onError: () => {
+        // Mantém modal aberto pra usuário corrigir; global MutationCache já mostrou o toast.
       }
     })
   }
 
-  const handleUpdateFilters = (targetWords: string[]) => {
+  const handleUpdateFilters = (targetWords: string[], locationFilters: string[]) => {
     if (!selectedCompany) return
     updateFilters(
-      { siteId: selectedCompany.site_id, targetWords },
+      { siteId: selectedCompany.site_id, targetWords, locationFilters },
       {
         onSuccess: () => {
           setPopupOpen(false)
+        },
+        onError: () => {
+          // Mantém modal aberto pra usuário corrigir; global MutationCache já mostrou o toast.
         }
       }
     )
@@ -214,6 +252,21 @@ export default function EmpresasPage() {
             </SelectContent>
           </Select>
         </div>
+        {Object.entries(regionCounts).some(([, count]) => count > 0) && (
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-medium text-muted-foreground">{t('regions.title')}:</span>
+            {(['BR', 'US_CA', 'EUROPE', 'REMOTE', 'OTHER'] as const).map((region) => {
+              const count = regionCounts[region] ?? 0
+              if (count === 0) return null
+              const active = activeRegions.includes(region)
+              return (
+                <RegionChip key={region} active={active} onClick={() => toggleRegion(region)}>
+                  {t(`regions.${region}`)} ({count})
+                </RegionChip>
+              )
+            })}
+          </div>
+        )}
       </div>
 
       {/* Company grid */}
@@ -283,6 +336,8 @@ export default function EmpresasPage() {
           onRegister={handleRegister}
           onUnRegister={handleUnregister}
           currentTargetWords={selectedCompany.target_words}
+          currentLocationFilters={selectedCompany.location_filters}
+          availableLocations={selectedCompany.locations}
           onUpdateFilters={handleUpdateFilters}
           isUpdatingFilters={isUpdatingFilters}
         />

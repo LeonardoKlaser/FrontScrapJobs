@@ -2,14 +2,16 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Building2, Loader2, Search, X } from 'lucide-react'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import axios from 'axios'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
 import type { FilterPreviewResult } from '@/services/filterPreviewService'
+import type { SiteLocation } from '@/models/siteCareer'
 import { useFilterPreview } from '@/hooks/useFilterPreview'
 import { useSiteKeywords } from '@/hooks/useSiteKeywords'
+import { RegionChip } from '@/components/ui/region-chip'
 
 // Espelha a ordem do backend Tokenize: ToLower → NFD → strip Mn → NFC.
 // Ordem importa pra edge cases (Turkish dotless-i, eszett). Divergência
@@ -42,10 +44,12 @@ interface RegistrationModalProps {
   remainingSlots: number
   isAlreadyRegistered: boolean | undefined
   isLoading: boolean
-  onRegister: (targetWords: string[]) => void
+  onRegister: (targetWords: string[], locationFilters: string[]) => void
   onUnRegister: () => void
   currentTargetWords?: string[]
-  onUpdateFilters?: (targetWords: string[]) => void
+  currentLocationFilters?: string[]
+  availableLocations?: SiteLocation[]
+  onUpdateFilters?: (targetWords: string[], locationFilters: string[]) => void
   isUpdatingFilters?: boolean
 }
 
@@ -61,6 +65,8 @@ export function RegistrationModal({
   onRegister,
   onUnRegister,
   currentTargetWords,
+  currentLocationFilters,
+  availableLocations,
   onUpdateFilters,
   isUpdatingFilters
 }: RegistrationModalProps) {
@@ -77,19 +83,34 @@ export function RegistrationModal({
   const hasNoSlots = remainingSlots === 0 && !isAlreadyRegistered
   const { data: siteKeywords } = useSiteKeywords(siteId, isOpen)
   const [showZeroMatchWarning, setShowZeroMatchWarning] = useState(false)
+  const [selectedRegions, setSelectedRegions] = useState<string[]>([])
+
+  // Snapshot dos props no momento da abertura — sem isso, re-render do parent
+  // com nova referencia de currentLocationFilters clobberava edits in-progress.
+  const currentTargetWordsRef = useRef(currentTargetWords)
+  const currentLocationFiltersRef = useRef(currentLocationFilters)
+  currentTargetWordsRef.current = currentTargetWords
+  currentLocationFiltersRef.current = currentLocationFilters
 
   useEffect(() => {
     if (isOpen) {
       setKeywords('')
-      const hydrated = (currentTargetWords ?? []).flatMap(splitIntoTags)
+      const hydrated = (currentTargetWordsRef.current ?? []).flatMap(splitIntoTags)
       setEditKeywords(Array.from(new Set(hydrated)))
       setKeywordInput('')
       setPreviewResult(null)
       setPreviewError(null)
       setShowSample(false)
       setShowZeroMatchWarning(false)
+      setSelectedRegions(currentLocationFiltersRef.current ?? [])
     }
-  }, [isOpen, currentTargetWords])
+  }, [isOpen])
+
+  const toggleRegion = (region: string) => {
+    setSelectedRegions((prev) =>
+      prev.includes(region) ? prev.filter((r) => r !== region) : [...prev, region]
+    )
+  }
 
   const addKeyword = useCallback(() => {
     const tokens = splitIntoTags(keywordInput)
@@ -134,9 +155,31 @@ export function RegistrationModal({
     return suggestions.slice(0, 8)
   }
 
+  const locationSection = availableLocations && availableLocations.length > 0 && (
+    <div className="space-y-1.5">
+      <Label className="text-muted-foreground text-sm">{t('popup.locationTitle')}</Label>
+      <p className="text-xs text-muted-foreground">{t('popup.locationHelp')}</p>
+      <div className="flex flex-wrap gap-1.5">
+        {availableLocations.map((loc) => {
+          const active = selectedRegions.includes(loc.region)
+          return (
+            <RegionChip key={loc.region} active={active} onClick={() => toggleRegion(loc.region)}>
+              {t(`regions.${loc.region}`)} ({loc.job_count})
+            </RegionChip>
+          )
+        })}
+      </div>
+    </div>
+  )
+
   const handleSaveWithValidation = () => {
     const filters = isAlreadyRegistered ? editKeywords : previewTags
     if (filters.length === 0) return
+
+    // Site sem locations conhecidas: nao envia filtros stale do estado anterior.
+    // Equivale a "aceitar tudo" — alinha com a UX de quando o site nao tem
+    // jobs recentes pra filtrar por regiao.
+    const effectiveRegions = (availableLocations?.length ?? 0) > 0 ? selectedRegions : []
 
     filterPreview.mutate(
       { siteId, filters },
@@ -144,9 +187,9 @@ export function RegistrationModal({
         onSuccess: (result) => {
           if (result.matched_jobs > 0) {
             if (isAlreadyRegistered) {
-              onUpdateFilters?.(editKeywords)
+              onUpdateFilters?.(editKeywords, effectiveRegions)
             } else {
-              onRegister(previewTags)
+              onRegister(previewTags, effectiveRegions)
             }
           } else {
             setShowZeroMatchWarning(true)
@@ -154,9 +197,9 @@ export function RegistrationModal({
         },
         onError: () => {
           if (isAlreadyRegistered) {
-            onUpdateFilters?.(editKeywords)
+            onUpdateFilters?.(editKeywords, effectiveRegions)
           } else {
-            onRegister(previewTags)
+            onRegister(previewTags, effectiveRegions)
           }
         }
       }
@@ -165,10 +208,11 @@ export function RegistrationModal({
 
   const handleSaveAnyway = () => {
     setShowZeroMatchWarning(false)
+    const effectiveRegions = (availableLocations?.length ?? 0) > 0 ? selectedRegions : []
     if (isAlreadyRegistered) {
-      onUpdateFilters?.(editKeywords)
+      onUpdateFilters?.(editKeywords, effectiveRegions)
     } else {
-      onRegister(previewTags)
+      onRegister(previewTags, effectiveRegions)
     }
   }
 
@@ -203,10 +247,7 @@ export function RegistrationModal({
   const handlePreviewRegistrationFilters = () => runPreview(previewTags)
 
   const isRegisterButtonDisabled =
-    hasNoSlots ||
-    isLoading ||
-    previewLoading ||
-    (previewTags.length === 0 && !isAlreadyRegistered)
+    hasNoSlots || isLoading || previewLoading || (previewTags.length === 0 && !isAlreadyRegistered)
 
   const handleClose = () => {
     setKeywords('')
@@ -295,6 +336,7 @@ export function RegistrationModal({
                 </div>
                 <p className="text-xs text-muted-foreground">{t('popup.keywordsHelp')}</p>
               </div>
+              {locationSection}
               {siteKeywords && siteKeywords.length > 0 && (
                 <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3">
                   <div className="flex items-center gap-1.5 mb-2">
@@ -501,6 +543,7 @@ export function RegistrationModal({
                 />
                 <p className="text-xs text-muted-foreground">{t('popup.keywordsHelp')}</p>
               </div>
+              {locationSection}
               {siteKeywords && siteKeywords.length > 0 && (
                 <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3">
                   <div className="flex items-center gap-1.5 mb-2">

@@ -17,8 +17,15 @@ export function useRegisterUserSite() {
 export function useUpdateUserSiteFilters() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ siteId, targetWords }: { siteId: number; targetWords: string[] }) =>
-      siteCareerService.updateUserSiteFilters(siteId, targetWords),
+    mutationFn: ({
+      siteId,
+      targetWords,
+      locationFilters
+    }: {
+      siteId: number
+      targetWords: string[]
+      locationFilters: string[]
+    }) => siteCareerService.updateUserSiteFilters(siteId, targetWords, locationFilters),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['siteCareerList'] })
     }
