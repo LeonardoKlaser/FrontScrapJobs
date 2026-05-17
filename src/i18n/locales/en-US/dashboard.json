@@ -3,7 +3,13 @@
     "monitoredUrls": "Monitored URLs",
     "newJobs24h": "New jobs (24h)",
     "alertsSent": "Notifications sent",
-    "alertsSentDescription": "Total emails sent with matching jobs"
+    "alertsSentDescription": "Total emails sent with matching jobs",
+    "monitoredUrlsValue_one": "{{count}} tracked company",
+    "monitoredUrlsValue_other": "{{count}} tracked companies",
+    "newJobs24hValue_one": "{{count}} new in 24h",
+    "newJobs24hValue_other": "{{count}} new in 24h",
+    "alertsSentValue_one": "{{count}} alert",
+    "alertsSentValue_other": "{{count}} alerts"
   },
   "latestJobs": {
     "title": "Latest jobs",

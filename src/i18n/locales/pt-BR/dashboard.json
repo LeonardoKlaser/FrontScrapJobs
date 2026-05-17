@@ -3,7 +3,13 @@
     "monitoredUrls": "URLs monitoradas",
     "newJobs24h": "Vagas novas (24h)",
     "alertsSent": "Notificações enviadas",
-    "alertsSentDescription": "Total de e-mails com vagas compatíveis enviados"
+    "alertsSentDescription": "Total de e-mails com vagas compatíveis enviados",
+    "monitoredUrlsValue_one": "{{count}} empresa monitorada",
+    "monitoredUrlsValue_other": "{{count}} empresas monitoradas",
+    "newJobs24hValue_one": "{{count}} nova em 24h",
+    "newJobs24hValue_other": "{{count}} novas em 24h",
+    "alertsSentValue_one": "{{count}} alerta",
+    "alertsSentValue_other": "{{count}} alertas"
   },
   "latestJobs": {
     "title": "Últimas vagas",
