@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { CurriculumList } from '@/components/curriculum/curriculum-list'
 import { CurriculumForm } from '@/components/curriculum/curriculum-form'
 import { useCurriculum } from '@/hooks/useCurriculum'
-import { PageHeader } from '@/components/common/page-header'
+import { AppPageHeader } from '@/components/common/app-page-header'
 import { PdfExportModal } from '@/components/curriculum/pdf-export-modal'
 import type { Curriculum as CurriculumType } from '@/models/curriculum'
 
@@ -38,38 +38,39 @@ export function Curriculum() {
   }
 
   return (
-    <div>
-      <div className="mb-10">
-        <PageHeader title={t('title')} description={t('description')} />
-      </div>
+    <>
+      <AppPageHeader title={t('pageTitle.curriculum', { ns: 'common' })} />
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <p className="text-sm text-muted-foreground mb-10">{t('description')}</p>
 
-      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-6">
-        <div className="animate-fade-in-up [animation-delay:50ms]">
-          <CurriculumList
-            curriculums={curriculums}
-            selectedId={selectedCurriculumId}
-            onSelect={handleSelectCurriculum}
-            onCreateNew={handleCreateNew}
-            onExport={setExportCurriculumId}
-            onImportExtracted={handleExtracted}
-          />
+        <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-6">
+          <div className="animate-fade-in-up [animation-delay:50ms]">
+            <CurriculumList
+              curriculums={curriculums}
+              selectedId={selectedCurriculumId}
+              onSelect={handleSelectCurriculum}
+              onCreateNew={handleCreateNew}
+              onExport={setExportCurriculumId}
+              onImportExtracted={handleExtracted}
+            />
+          </div>
+
+          <div className="animate-fade-in-up [animation-delay:100ms]">
+            <CurriculumForm
+              curriculum={selectedCurriculum}
+              isEditing={selectedCurriculumId !== null}
+              initialData={selectedCurriculumId === null ? (importedData ?? undefined) : undefined}
+              onSaveSuccess={() => setImportedData(null)}
+            />
+          </div>
         </div>
 
-        <div className="animate-fade-in-up [animation-delay:100ms]">
-          <CurriculumForm
-            curriculum={selectedCurriculum}
-            isEditing={selectedCurriculumId !== null}
-            initialData={selectedCurriculumId === null ? (importedData ?? undefined) : undefined}
-            onSaveSuccess={() => setImportedData(null)}
-          />
-        </div>
+        <PdfExportModal
+          curriculumId={exportCurriculumId}
+          open={exportCurriculumId !== null}
+          onClose={() => setExportCurriculumId(null)}
+        />
       </div>
-
-      <PdfExportModal
-        curriculumId={exportCurriculumId}
-        open={exportCurriculumId !== null}
-        onClose={() => setExportCurriculumId(null)}
-      />
-    </div>
+    </>
   )
 }

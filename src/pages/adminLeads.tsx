@@ -9,7 +9,7 @@ import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import { EmptyState } from '@/components/common/empty-state'
 import { LoadingSection } from '@/components/common/loading-section'
-import { PageHeader } from '@/components/common/page-header'
+import { AppPageHeader } from '@/components/common/app-page-header'
 import { useAdminLeads, useSetLeadContacted } from '@/hooks/useAdminLeads'
 import type { AdminLead } from '@/services/adminLeadsService'
 
@@ -105,174 +105,178 @@ export default function AdminLeadsPage() {
   }, [data, search, hideContacted])
 
   return (
-    <div className="space-y-10">
-      <PageHeader
-        title={t('leads.title', { defaultValue: 'Leads' })}
-        description={t('leads.description', {
-          defaultValue: 'Pessoas que iniciaram o checkout e não finalizaram.'
-        })}
-      />
-
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <Input
-          type="text"
-          placeholder={t('leads.searchPlaceholder', {
-            defaultValue: 'Buscar por nome ou email...'
+    <>
+      <AppPageHeader title={t('pageTitle.adminLeads', { ns: 'common' })} />
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
+        <p className="text-sm text-muted-foreground">
+          {t('leads.description', {
+            defaultValue: 'Pessoas que iniciaram o checkout e não finalizaram.'
           })}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="max-w-sm"
-        />
-        <label className="flex items-center gap-2 text-sm">
-          <Switch checked={hideContacted} onCheckedChange={setHideContacted} />
-          {t('leads.hideContacted', { defaultValue: 'Ocultar contatados' })}
-        </label>
-      </div>
+        </p>
 
-      {isLoading && (
-        <LoadingSection
-          variant="section"
-          label={t('leads.loading', { defaultValue: 'Carregando...' })}
-        />
-      )}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <Input
+            type="text"
+            placeholder={t('leads.searchPlaceholder', {
+              defaultValue: 'Buscar por nome ou email...'
+            })}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="max-w-sm"
+          />
+          <label className="flex items-center gap-2 text-sm">
+            <Switch checked={hideContacted} onCheckedChange={setHideContacted} />
+            {t('leads.hideContacted', { defaultValue: 'Ocultar contatados' })}
+          </label>
+        </div>
 
-      {!isLoading && isError && isForbiddenError(error) && (
-        <EmptyState
-          icon={ShieldAlert}
-          title={t('leads.forbiddenTitle', { defaultValue: 'Sem permissão' })}
-          description={t('leads.forbiddenDescription', {
-            defaultValue: 'Esta página é restrita a administradores.'
-          })}
-        />
-      )}
+        {isLoading && (
+          <LoadingSection
+            variant="section"
+            label={t('leads.loading', { defaultValue: 'Carregando...' })}
+          />
+        )}
 
-      {!isLoading && isError && !isForbiddenError(error) && (
-        <EmptyState
-          icon={AlertTriangle}
-          title={t('leads.errorTitle', { defaultValue: 'Erro ao carregar leads' })}
-          action={
-            <Button variant="outline" onClick={() => refetch()}>
-              {t('leads.retry', { defaultValue: 'Tentar novamente' })}
-            </Button>
-          }
-        />
-      )}
+        {!isLoading && isError && isForbiddenError(error) && (
+          <EmptyState
+            icon={ShieldAlert}
+            title={t('leads.forbiddenTitle', { defaultValue: 'Sem permissão' })}
+            description={t('leads.forbiddenDescription', {
+              defaultValue: 'Esta página é restrita a administradores.'
+            })}
+          />
+        )}
 
-      {!isLoading && !isError && filtered.length === 0 && (
-        <EmptyState
-          icon={Users}
-          title={t('leads.empty', { defaultValue: 'Nenhum lead encontrado' })}
-        />
-      )}
+        {!isLoading && isError && !isForbiddenError(error) && (
+          <EmptyState
+            icon={AlertTriangle}
+            title={t('leads.errorTitle', { defaultValue: 'Erro ao carregar leads' })}
+            action={
+              <Button variant="outline" onClick={() => refetch()}>
+                {t('leads.retry', { defaultValue: 'Tentar novamente' })}
+              </Button>
+            }
+          />
+        )}
 
-      {!isLoading && !isError && filtered.length > 0 && (
-        <div className="overflow-auto rounded-lg border border-border/50">
-          <table className="w-full text-sm">
-            <thead className="bg-muted/40 text-left">
-              <tr>
-                <th className="p-3 font-medium">{t('leads.col.name', { defaultValue: 'Nome' })}</th>
-                <th className="p-3 font-medium">
-                  {t('leads.col.email', { defaultValue: 'Email' })}
-                </th>
-                <th className="p-3 font-medium">
-                  {t('leads.col.phone', { defaultValue: 'Telefone' })}
-                </th>
-                <th className="p-3 font-medium">
-                  {t('leads.col.plan', { defaultValue: 'Plano' })}
-                </th>
-                <th className="p-3 font-medium">
-                  {t('leads.col.attempts', { defaultValue: 'Tentativas' })}
-                </th>
-                <th className="p-3 font-medium">
-                  {t('leads.col.lastAttempt', { defaultValue: 'Última tentativa' })}
-                </th>
-                <th className="p-3 font-medium">
-                  {t('leads.col.actions', { defaultValue: 'Ações' })}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((lead) => {
-                const isContacted = lead.contacted_at != null
-                const isThisRowPending = pendingIds.has(lead.id)
-                const validPhone = isValidBRPhone(lead.phone)
-                return (
-                  <tr
-                    key={lead.id}
-                    className={`border-t border-border/50 ${isContacted ? 'opacity-60' : ''}`}
-                  >
-                    <td className="p-3">
-                      <div className="flex items-center gap-2">
-                        <span>{lead.name}</span>
-                        {isContacted && (
-                          <Badge variant="secondary">
-                            {t('leads.contactedOn', {
-                              defaultValue: 'Contatado em {{date}}',
-                              date: formatDateSafe(lead.contacted_at!, DATE_SHORT_FMT)
-                            })}
-                          </Badge>
-                        )}
-                      </div>
-                    </td>
-                    <td className="p-3">{lead.email}</td>
-                    <td className="p-3">{lead.phone}</td>
-                    <td className="p-3">{lead.plan_name}</td>
-                    <td className="p-3">{lead.attempts}</td>
-                    <td className="p-3">{formatDateSafe(lead.last_attempt_at, DATE_TIME_FMT)}</td>
-                    <td className="p-3">
-                      <div className="flex items-center gap-2">
-                        {validPhone ? (
-                          <Button asChild size="sm" variant="outline">
-                            <a href={whatsappUrl(lead)} target="_blank" rel="noopener noreferrer">
+        {!isLoading && !isError && filtered.length === 0 && (
+          <EmptyState
+            icon={Users}
+            title={t('leads.empty', { defaultValue: 'Nenhum lead encontrado' })}
+          />
+        )}
+
+        {!isLoading && !isError && filtered.length > 0 && (
+          <div className="overflow-auto rounded-lg border border-border/50">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/40 text-left">
+                <tr>
+                  <th className="p-3 font-medium">
+                    {t('leads.col.name', { defaultValue: 'Nome' })}
+                  </th>
+                  <th className="p-3 font-medium">
+                    {t('leads.col.email', { defaultValue: 'Email' })}
+                  </th>
+                  <th className="p-3 font-medium">
+                    {t('leads.col.phone', { defaultValue: 'Telefone' })}
+                  </th>
+                  <th className="p-3 font-medium">
+                    {t('leads.col.plan', { defaultValue: 'Plano' })}
+                  </th>
+                  <th className="p-3 font-medium">
+                    {t('leads.col.attempts', { defaultValue: 'Tentativas' })}
+                  </th>
+                  <th className="p-3 font-medium">
+                    {t('leads.col.lastAttempt', { defaultValue: 'Última tentativa' })}
+                  </th>
+                  <th className="p-3 font-medium">
+                    {t('leads.col.actions', { defaultValue: 'Ações' })}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((lead) => {
+                  const isContacted = lead.contacted_at != null
+                  const isThisRowPending = pendingIds.has(lead.id)
+                  const validPhone = isValidBRPhone(lead.phone)
+                  return (
+                    <tr
+                      key={lead.id}
+                      className={`border-t border-border/50 ${isContacted ? 'opacity-60' : ''}`}
+                    >
+                      <td className="p-3">
+                        <div className="flex items-center gap-2">
+                          <span>{lead.name}</span>
+                          {isContacted && (
+                            <Badge variant="secondary">
+                              {t('leads.contactedOn', {
+                                defaultValue: 'Contatado em {{date}}',
+                                date: formatDateSafe(lead.contacted_at!, DATE_SHORT_FMT)
+                              })}
+                            </Badge>
+                          )}
+                        </div>
+                      </td>
+                      <td className="p-3">{lead.email}</td>
+                      <td className="p-3">{lead.phone}</td>
+                      <td className="p-3">{lead.plan_name}</td>
+                      <td className="p-3">{lead.attempts}</td>
+                      <td className="p-3">{formatDateSafe(lead.last_attempt_at, DATE_TIME_FMT)}</td>
+                      <td className="p-3">
+                        <div className="flex items-center gap-2">
+                          {validPhone ? (
+                            <Button asChild size="sm" variant="outline">
+                              <a href={whatsappUrl(lead)} target="_blank" rel="noopener noreferrer">
+                                <MessageCircle className="size-4" />
+                                {t('leads.whatsapp', { defaultValue: 'WhatsApp' })}
+                              </a>
+                            </Button>
+                          ) : (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              disabled
+                              title={t('leads.invalidPhone', {
+                                defaultValue: 'Telefone inválido'
+                              })}
+                            >
                               <MessageCircle className="size-4" />
                               {t('leads.whatsapp', { defaultValue: 'WhatsApp' })}
-                            </a>
-                          </Button>
-                        ) : (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            disabled
-                            title={t('leads.invalidPhone', {
-                              defaultValue: 'Telefone inválido'
-                            })}
-                          >
-                            <MessageCircle className="size-4" />
-                            {t('leads.whatsapp', { defaultValue: 'WhatsApp' })}
-                          </Button>
-                        )}
-                        {isContacted ? (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            disabled={isThisRowPending}
-                            onClick={() => mutateContacted(lead.id, false)}
-                          >
-                            <Undo2 className="size-4" />
-                            {t('leads.unmarkContacted', { defaultValue: 'Desmarcar' })}
-                          </Button>
-                        ) : (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            disabled={isThisRowPending}
-                            onClick={() => mutateContacted(lead.id, true)}
-                          >
-                            <Check className="size-4" />
-                            {t('leads.markContacted', {
-                              defaultValue: 'Marcar como contatado'
-                            })}
-                          </Button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
+                            </Button>
+                          )}
+                          {isContacted ? (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              disabled={isThisRowPending}
+                              onClick={() => mutateContacted(lead.id, false)}
+                            >
+                              <Undo2 className="size-4" />
+                              {t('leads.unmarkContacted', { defaultValue: 'Desmarcar' })}
+                            </Button>
+                          ) : (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              disabled={isThisRowPending}
+                              onClick={() => mutateContacted(lead.id, true)}
+                            >
+                              <Check className="size-4" />
+                              {t('leads.markContacted', {
+                                defaultValue: 'Marcar como contatado'
+                              })}
+                            </Button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </>
   )
 }

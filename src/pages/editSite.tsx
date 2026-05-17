@@ -4,7 +4,7 @@ import { toast } from 'sonner'
 import { Building2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { EmptyState } from '@/components/common/empty-state'
-import { PageHeader } from '@/components/common/page-header'
+import { AppPageHeader } from '@/components/common/app-page-header'
 import SiteConfigForm from '@/components/sites/site-config-form'
 import { useSite, useUpdateSiteConfig } from '@/hooks/useSiteCareer'
 import type { SiteConfigFormData } from '@/services/siteCareerService'
@@ -41,12 +41,14 @@ export default function EditSitePage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-10">
-        <PageHeader
-          title={t('editSite.title', { defaultValue: 'Editar Site' })}
-          description={t('editSite.loading', { defaultValue: 'Carregando...' })}
-        />
-      </div>
+      <>
+        <AppPageHeader title={t('pageTitle.editSite', { ns: 'common' })} />
+        <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
+          <p className="text-sm text-muted-foreground">
+            {t('editSite.loading', { defaultValue: 'Carregando...' })}
+          </p>
+        </div>
+      </>
     )
   }
 
@@ -95,18 +97,18 @@ export default function EditSitePage() {
   }
 
   return (
-    <div className="space-y-10">
-      <PageHeader
-        title={t('editSite.title', { defaultValue: 'Editar Site' })}
-        description={data.site_name}
-      />
-      <SiteConfigForm
-        mode="edit"
-        initialData={data}
-        submitLabel={t('editSite.submitButton', { defaultValue: 'Salvar Alterações' })}
-        onSubmit={handleSubmit}
-        onSubmitSuccess={() => navigate(PATHS.app.adminSites)}
-      />
-    </div>
+    <>
+      <AppPageHeader title={t('pageTitle.editSite', { ns: 'common' })} />
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
+        <p className="text-sm text-muted-foreground">{data.site_name}</p>
+        <SiteConfigForm
+          mode="edit"
+          initialData={data}
+          submitLabel={t('editSite.submitButton', { defaultValue: 'Salvar Alterações' })}
+          onSubmit={handleSubmit}
+          onSubmitSuccess={() => navigate(PATHS.app.adminSites)}
+        />
+      </div>
+    </>
   )
 }

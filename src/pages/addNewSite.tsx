@@ -1,4 +1,4 @@
-import { PageHeader } from '@/components/common/page-header'
+import { AppPageHeader } from '@/components/common/app-page-header'
 import SiteConfigForm from '@/components/sites/site-config-form'
 import { useAddSiteConfig } from '@/hooks/useAddSiteConfig'
 import type { SiteConfigFormData } from '@/services/siteCareerService'
@@ -15,14 +15,17 @@ export default function AdicionarSitePage() {
   }
 
   return (
-    <div className="space-y-10">
-      <PageHeader title={t('addSite.title')} description={t('addSite.description')} />
-      <SiteConfigForm
-        mode="create"
-        submitLabel={t('addSite.submitButton')}
-        onSubmit={handleSubmit}
-        onSubmitSuccess={() => window.scrollTo(0, 0)}
-      />
-    </div>
+    <>
+      <AppPageHeader title={t('pageTitle.addNewSite', { ns: 'common' })} />
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
+        <p className="text-sm text-muted-foreground">{t('addSite.description')}</p>
+        <SiteConfigForm
+          mode="create"
+          submitLabel={t('addSite.submitButton')}
+          onSubmit={handleSubmit}
+          onSubmitSuccess={() => window.scrollTo(0, 0)}
+        />
+      </div>
+    </>
   )
 }

@@ -23,7 +23,7 @@ import { FilterPills } from '@/components/common/filter-pills'
 import { EmptyState } from '@/components/common/empty-state'
 import { RequestSiteBanner } from '@/components/sites/request-site-banner'
 import { RequestSiteForm } from '@/components/sites/request-site-form'
-import { PageHeader } from '@/components/common/page-header'
+import { AppPageHeader } from '@/components/common/app-page-header'
 import { RegionChip } from '@/components/ui/region-chip'
 
 type SortKey = 'alphabetical' | 'newest' | 'subscribed_first'
@@ -184,164 +184,169 @@ export default function EmpresasPage() {
   }
 
   return (
-    <div className="space-y-10">
-      <PageHeader title={t('title')} description={t('description')} />
+    <>
+      <AppPageHeader title={t('pageTitle.sites', { ns: 'common' })} />
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
+        <p className="text-sm text-muted-foreground">{t('description')}</p>
 
-      {/* Stats row */}
-      <div className="animate-fade-in-up grid grid-cols-3 gap-3 sm:gap-4 max-w-lg mx-auto [animation-delay:50ms]">
-        <div className="text-center">
-          <p className="text-2xl font-display font-bold text-foreground">{totalCount}</p>
-          <p className="text-xs text-muted-foreground">{t('stats.companies')}</p>
+        {/* Stats row */}
+        <div className="animate-fade-in-up grid grid-cols-3 gap-3 sm:gap-4 max-w-lg mx-auto [animation-delay:50ms]">
+          <div className="text-center">
+            <p className="text-2xl font-display font-bold text-foreground">{totalCount}</p>
+            <p className="text-xs text-muted-foreground">{t('stats.companies')}</p>
+          </div>
+          <div className="text-center border-x border-border/50">
+            <p className="text-2xl font-display font-bold text-primary">{subscribedCount}</p>
+            <p className="text-xs text-muted-foreground">{t('stats.subscribed')}</p>
+          </div>
+          <div className="text-center">
+            <p className="text-2xl font-display font-bold text-foreground">{remainingSlots}</p>
+            <p className="text-xs text-muted-foreground">{t('stats.freeSlots')}</p>
+          </div>
         </div>
-        <div className="text-center border-x border-border/50">
-          <p className="text-2xl font-display font-bold text-primary">{subscribedCount}</p>
-          <p className="text-xs text-muted-foreground">{t('stats.subscribed')}</p>
-        </div>
-        <div className="text-center">
-          <p className="text-2xl font-display font-bold text-foreground">{remainingSlots}</p>
-          <p className="text-xs text-muted-foreground">{t('stats.freeSlots')}</p>
-        </div>
-      </div>
 
-      {/* Request banner */}
-      <div className="animate-fade-in-up [animation-delay:75ms]">
-        <RequestSiteBanner />
-      </div>
+        {/* Request banner */}
+        <div className="animate-fade-in-up [animation-delay:75ms]">
+          <RequestSiteBanner />
+        </div>
 
-      {/* Search + Filters */}
-      <div className="animate-fade-in-up max-w-md mx-auto space-y-3 [animation-delay:100ms]">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
-          <Input
-            type="text"
-            placeholder={t('search')}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 pr-9"
-          />
-          {searchTerm && (
-            <button
-              type="button"
-              onClick={() => setSearchTerm('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-            >
-              <X className="h-4 w-4" />
-            </button>
+        {/* Search + Filters */}
+        <div className="animate-fade-in-up max-w-md mx-auto space-y-3 [animation-delay:100ms]">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input
+              type="text"
+              placeholder={t('search')}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-9 pr-9"
+            />
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={() => setSearchTerm('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <FilterPills options={filters} activeKey={filter} onChange={setFilter} />
+            <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortKey)}>
+              <SelectTrigger
+                aria-label={t('sort.label', { defaultValue: 'Ordenar por' })}
+                className="w-full gap-2 sm:w-52"
+              >
+                <ArrowUpDown className="size-3.5 text-muted-foreground" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="alphabetical">
+                  {t('sort.alphabetical', { defaultValue: 'Alfabético (A-Z)' })}
+                </SelectItem>
+                <SelectItem value="newest">
+                  {t('sort.newest', { defaultValue: 'Data de inclusão mais recente' })}
+                </SelectItem>
+                <SelectItem value="subscribed_first">
+                  {t('sort.subscribedFirst', { defaultValue: 'Inscritas primeiro' })}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          {Object.entries(regionCounts).some(([, count]) => count > 0) && (
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs font-medium text-muted-foreground">
+                {t('regions.title')}:
+              </span>
+              {(['BR', 'US_CA', 'EUROPE', 'REMOTE', 'OTHER'] as const).map((region) => {
+                const count = regionCounts[region] ?? 0
+                if (count === 0) return null
+                const active = activeRegions.includes(region)
+                return (
+                  <RegionChip key={region} active={active} onClick={() => toggleRegion(region)}>
+                    {t(`regions.${region}`)} ({count})
+                  </RegionChip>
+                )
+              })}
+            </div>
           )}
         </div>
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <FilterPills options={filters} activeKey={filter} onChange={setFilter} />
-          <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortKey)}>
-            <SelectTrigger
-              aria-label={t('sort.label', { defaultValue: 'Ordenar por' })}
-              className="w-full gap-2 sm:w-52"
+
+        {/* Company grid */}
+        <div className="grid grid-cols-2 min-[480px]:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+          {filteredCompanies?.map((company, index) => (
+            <button
+              key={company.site_id}
+              className="animate-fade-in-up hover-lift group relative flex flex-col items-center gap-2 sm:gap-3 rounded-lg border border-border/50 bg-card p-3 sm:p-5 text-center transition-all duration-150 hover:border-primary/20 hover:bg-card/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              style={{ animationDelay: `${150 + index * 40}ms` }}
+              onClick={() => handleCompanyClick(company)}
             >
-              <ArrowUpDown className="size-3.5 text-muted-foreground" />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="alphabetical">
-                {t('sort.alphabetical', { defaultValue: 'Alfabético (A-Z)' })}
-              </SelectItem>
-              <SelectItem value="newest">
-                {t('sort.newest', { defaultValue: 'Data de inclusão mais recente' })}
-              </SelectItem>
-              <SelectItem value="subscribed_first">
-                {t('sort.subscribedFirst', { defaultValue: 'Inscritas primeiro' })}
-              </SelectItem>
-            </SelectContent>
-          </Select>
+              {company.is_subscribed && (
+                <Badge className="absolute -top-2 -right-2 px-1.5 py-0.5 text-xs">
+                  <CheckCircle className="size-3" />
+                </Badge>
+              )}
+              <div className="flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center rounded-lg bg-muted/30 p-2">
+                {company.logo_url ? (
+                  <img
+                    src={company.logo_url}
+                    alt={`${company.site_name} logo`}
+                    className="max-h-full max-w-full object-contain"
+                  />
+                ) : (
+                  <Building2 className="size-6 text-muted-foreground" />
+                )}
+              </div>
+              <span className="text-sm font-medium text-foreground leading-tight">
+                {company.site_name}
+              </span>
+            </button>
+          ))}
         </div>
-        {Object.entries(regionCounts).some(([, count]) => count > 0) && (
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-medium text-muted-foreground">{t('regions.title')}:</span>
-            {(['BR', 'US_CA', 'EUROPE', 'REMOTE', 'OTHER'] as const).map((region) => {
-              const count = regionCounts[region] ?? 0
-              if (count === 0) return null
-              const active = activeRegions.includes(region)
-              return (
-                <RegionChip key={region} active={active} onClick={() => toggleRegion(region)}>
-                  {t(`regions.${region}`)} ({count})
-                </RegionChip>
-              )
-            })}
-          </div>
+
+        {/* Empty state */}
+        {filteredCompanies?.length === 0 && (
+          <>
+            <EmptyState icon={Search} title={t('emptySearch', { term: searchTerm })} />
+            {searchTerm && (
+              <div className="w-full max-w-md mx-auto rounded-lg border border-primary/20 bg-primary/5 p-5 space-y-3">
+                <div className="flex items-center gap-2 justify-center">
+                  <Radar className="h-4 w-4 text-primary" />
+                  <p className="text-sm font-medium text-foreground">
+                    {t('emptySearchRequest.title')}
+                  </p>
+                </div>
+                <p className="text-xs text-muted-foreground text-center">
+                  {t('emptySearchRequest.description')}
+                </p>
+                <RequestSiteForm />
+              </div>
+            )}
+          </>
+        )}
+
+        {selectedCompany && (
+          <RegistrationModal
+            key={selectedCompany.site_id}
+            isOpen={isPopupOpen}
+            onClose={() => setPopupOpen(false)}
+            siteId={selectedCompany.site_id}
+            companyName={selectedCompany.site_name}
+            companyLogo={selectedCompany.logo_url}
+            remainingSlots={remainingSlots}
+            isAlreadyRegistered={selectedCompany.is_subscribed}
+            isLoading={isRegisteringUser}
+            onRegister={handleRegister}
+            onUnRegister={handleUnregister}
+            currentTargetWords={selectedCompany.target_words}
+            currentLocationFilters={selectedCompany.location_filters}
+            availableLocations={selectedCompany.locations}
+            onUpdateFilters={handleUpdateFilters}
+            isUpdatingFilters={isUpdatingFilters}
+          />
         )}
       </div>
-
-      {/* Company grid */}
-      <div className="grid grid-cols-2 min-[480px]:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-        {filteredCompanies?.map((company, index) => (
-          <button
-            key={company.site_id}
-            className="animate-fade-in-up hover-lift group relative flex flex-col items-center gap-2 sm:gap-3 rounded-lg border border-border/50 bg-card p-3 sm:p-5 text-center transition-all duration-150 hover:border-primary/20 hover:bg-card/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            style={{ animationDelay: `${150 + index * 40}ms` }}
-            onClick={() => handleCompanyClick(company)}
-          >
-            {company.is_subscribed && (
-              <Badge className="absolute -top-2 -right-2 px-1.5 py-0.5 text-xs">
-                <CheckCircle className="size-3" />
-              </Badge>
-            )}
-            <div className="flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center rounded-lg bg-muted/30 p-2">
-              {company.logo_url ? (
-                <img
-                  src={company.logo_url}
-                  alt={`${company.site_name} logo`}
-                  className="max-h-full max-w-full object-contain"
-                />
-              ) : (
-                <Building2 className="size-6 text-muted-foreground" />
-              )}
-            </div>
-            <span className="text-sm font-medium text-foreground leading-tight">
-              {company.site_name}
-            </span>
-          </button>
-        ))}
-      </div>
-
-      {/* Empty state */}
-      {filteredCompanies?.length === 0 && (
-        <>
-          <EmptyState icon={Search} title={t('emptySearch', { term: searchTerm })} />
-          {searchTerm && (
-            <div className="w-full max-w-md mx-auto rounded-lg border border-primary/20 bg-primary/5 p-5 space-y-3">
-              <div className="flex items-center gap-2 justify-center">
-                <Radar className="h-4 w-4 text-primary" />
-                <p className="text-sm font-medium text-foreground">
-                  {t('emptySearchRequest.title')}
-                </p>
-              </div>
-              <p className="text-xs text-muted-foreground text-center">
-                {t('emptySearchRequest.description')}
-              </p>
-              <RequestSiteForm />
-            </div>
-          )}
-        </>
-      )}
-
-      {selectedCompany && (
-        <RegistrationModal
-          key={selectedCompany.site_id}
-          isOpen={isPopupOpen}
-          onClose={() => setPopupOpen(false)}
-          siteId={selectedCompany.site_id}
-          companyName={selectedCompany.site_name}
-          companyLogo={selectedCompany.logo_url}
-          remainingSlots={remainingSlots}
-          isAlreadyRegistered={selectedCompany.is_subscribed}
-          isLoading={isRegisteringUser}
-          onRegister={handleRegister}
-          onUnRegister={handleUnregister}
-          currentTargetWords={selectedCompany.target_words}
-          currentLocationFilters={selectedCompany.location_filters}
-          availableLocations={selectedCompany.locations}
-          onUpdateFilters={handleUpdateFilters}
-          isUpdatingFilters={isUpdatingFilters}
-        />
-      )}
-    </div>
+    </>
   )
 }

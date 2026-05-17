@@ -26,7 +26,7 @@ import { KanbanColumn } from '@/components/applications/kanban-column'
 import { KanbanCardPreview } from '@/components/applications/kanban-card'
 import { ApplicationDrawer } from '@/components/applications/application-drawer'
 import { InterviewRoundDialog } from '@/components/applications/interview-round-dialog'
-import { PageHeader } from '@/components/common/page-header'
+import { AppPageHeader } from '@/components/common/app-page-header'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -191,93 +191,96 @@ export default function Applications() {
 
   if (apps.length === 0) {
     return (
-      <div className="space-y-10">
-        <PageHeader title={t('kanban.title')} />
-        <div className="text-center py-20 space-y-2">
-          <p className="text-muted-foreground">{t('kanban.emptyState')}</p>
-          <p className="text-sm text-muted-foreground">{t('kanban.emptyStateHint')}</p>
+      <>
+        <AppPageHeader title={t('pageTitle.applications', { ns: 'common' })} />
+        <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
+          <div className="text-center py-20 space-y-2">
+            <p className="text-muted-foreground">{t('kanban.emptyState')}</p>
+            <p className="text-sm text-muted-foreground">{t('kanban.emptyStateHint')}</p>
+          </div>
         </div>
-      </div>
+      </>
     )
   }
 
   return (
-    <div className="space-y-10">
-      <PageHeader title={t('kanban.title')} />
+    <>
+      <AppPageHeader title={t('pageTitle.applications', { ns: 'common' })} />
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCorners}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          onDragCancel={() => setActiveCard(null)}
+        >
+          {/* Main columns */}
+          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin">
+            {ACTIVE_STATUSES.map((status) => (
+              <KanbanColumn
+                key={status}
+                status={status}
+                items={getAppsByStatus(status)}
+                onCardClick={handleCardClick}
+              />
+            ))}
+          </div>
 
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCorners}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-        onDragCancel={() => setActiveCard(null)}
-      >
-        {/* Main columns */}
-        <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin">
-          {ACTIVE_STATUSES.map((status) => (
-            <KanbanColumn
-              key={status}
-              status={status}
-              items={getAppsByStatus(status)}
-              onCardClick={handleCardClick}
-            />
-          ))}
-        </div>
+          {/* Terminal columns */}
+          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin opacity-60">
+            {TERMINAL_STATUSES.map((status) => (
+              <KanbanColumn
+                key={status}
+                status={status}
+                items={getAppsByStatus(status)}
+                onCardClick={handleCardClick}
+              />
+            ))}
+          </div>
 
-        {/* Terminal columns */}
-        <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin opacity-60">
-          {TERMINAL_STATUSES.map((status) => (
-            <KanbanColumn
-              key={status}
-              status={status}
-              items={getAppsByStatus(status)}
-              onCardClick={handleCardClick}
-            />
-          ))}
-        </div>
+          <DragOverlay>{activeCard && <KanbanCardPreview app={activeCard} />}</DragOverlay>
+        </DndContext>
 
-        <DragOverlay>{activeCard && <KanbanCardPreview app={activeCard} />}</DragOverlay>
-      </DndContext>
+        <InterviewRoundDialog
+          open={!!interviewDialog}
+          onConfirm={handleInterviewConfirm}
+          onCancel={() => setInterviewDialog(null)}
+        />
 
-      <InterviewRoundDialog
-        open={!!interviewDialog}
-        onConfirm={handleInterviewConfirm}
-        onCancel={() => setInterviewDialog(null)}
-      />
+        <ApplicationDrawer
+          app={selectedApp}
+          open={drawerOpen}
+          onClose={() => {
+            setDrawerOpen(false)
+            setSelectedAppId(null)
+          }}
+          onDelete={handleDelete}
+        />
 
-      <ApplicationDrawer
-        app={selectedApp}
-        open={drawerOpen}
-        onClose={() => {
-          setDrawerOpen(false)
-          setSelectedAppId(null)
-        }}
-        onDelete={handleDelete}
-      />
-
-      <AlertDialog
-        open={!!confirmAction}
-        onOpenChange={(o) => {
-          if (!o) setConfirmAction(null)
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {t('common:actions.confirm', { defaultValue: 'Confirmar' })}
-            </AlertDialogTitle>
-            <AlertDialogDescription>{confirmAction?.message}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setConfirmAction(null)}>
-              {t('common:actions.cancel', { defaultValue: 'Cancelar' })}
-            </AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmAction}>
-              {t('common:actions.confirm', { defaultValue: 'Confirmar' })}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+        <AlertDialog
+          open={!!confirmAction}
+          onOpenChange={(o) => {
+            if (!o) setConfirmAction(null)
+          }}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                {t('common:actions.confirm', { defaultValue: 'Confirmar' })}
+              </AlertDialogTitle>
+              <AlertDialogDescription>{confirmAction?.message}</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setConfirmAction(null)}>
+                {t('common:actions.cancel', { defaultValue: 'Cancelar' })}
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={handleConfirmAction}>
+                {t('common:actions.confirm', { defaultValue: 'Confirmar' })}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
+    </>
   )
 }
