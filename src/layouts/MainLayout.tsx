@@ -1,13 +1,16 @@
-import { AppHeader } from '@/components/common/app-header'
-import { AppFooter } from '@/components/common/app-footer'
 import { Outlet } from 'react-router'
+import { useTranslation } from 'react-i18next'
+import { useEffect, useState } from 'react'
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
+import { AppSidebar } from '@/components/common/app-sidebar'
+import { AppFooter } from '@/components/common/app-footer'
 import { ScrollToTop } from '@/components/common/scroll-to-top'
 import { TrialBanner } from '@/components/app/trial-banner'
 import { FeedbackModal } from '@/components/feedback/FeedbackModal'
 import { useFeedbackModal } from '@/hooks/useFeedback'
-import { useState, useEffect } from 'react'
 
 export function MainLayout() {
+  const { t } = useTranslation('common')
   const { shouldShow } = useFeedbackModal()
   const [feedbackOpen, setFeedbackOpen] = useState(false)
 
@@ -19,17 +22,21 @@ export function MainLayout() {
   }, [shouldShow])
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      <ScrollToTop />
-      <AppHeader />
-      <TrialBanner />
-
-      <main className="flex-1 mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 w-full">
-        <Outlet />
-      </main>
-
-      <AppFooter />
+    <SidebarProvider defaultOpen>
+      <AppSidebar />
+      <SidebarInset>
+        <ScrollToTop />
+        <TrialBanner />
+        <div className="relative flex-1">
+          <SidebarTrigger
+            className="md:hidden absolute left-3 top-3 z-40"
+            aria-label={t('nav.openMenu')}
+          />
+          <Outlet />
+        </div>
+        <AppFooter />
+      </SidebarInset>
       <FeedbackModal open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
-    </div>
+    </SidebarProvider>
   )
 }
