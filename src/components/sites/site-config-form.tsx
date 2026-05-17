@@ -28,7 +28,7 @@ import {
   CheckCircle,
   Play
 } from 'lucide-react'
-import { Tooltip } from '@/components/tooltip'
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 import { useSandboxScrape } from '@/hooks/useAddSiteConfig'
 import { useButtonState } from '@/hooks/useButtonState'
 import { type SiteConfigFormData } from '@/services/siteCareerService'
@@ -479,8 +479,11 @@ export default function SiteConfigForm({
                       <Label htmlFor="job_list_item_selector">
                         {t('addSite.cssConfig.jobListItem')}
                       </Label>
-                      <Tooltip content="Ex: .job-card, li.search-result">
-                        <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>Ex: .job-card, li.search-result</TooltipContent>
                       </Tooltip>
                     </div>
                     <Input
@@ -494,8 +497,11 @@ export default function SiteConfigForm({
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <Label htmlFor="title_selector">{t('addSite.cssConfig.jobTitle')}</Label>
-                      <Tooltip content="Ex: h2.job-title">
-                        <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>Ex: h2.job-title</TooltipContent>
                       </Tooltip>
                     </div>
                     <Input
@@ -509,8 +515,11 @@ export default function SiteConfigForm({
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <Label htmlFor="link_selector">{t('addSite.cssConfig.jobLink')}</Label>
-                      <Tooltip content="Ex: a.apply-button">
-                        <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>Ex: a.apply-button</TooltipContent>
                       </Tooltip>
                     </div>
                     <Input
@@ -524,8 +533,11 @@ export default function SiteConfigForm({
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <Label htmlFor="link_attribute">{t('addSite.cssConfig.linkAttribute')}</Label>
-                      <Tooltip content="Ex: href, data-href">
-                        <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>Ex: href, data-href</TooltipContent>
                       </Tooltip>
                     </div>
                     <Input
@@ -539,8 +551,11 @@ export default function SiteConfigForm({
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <Label htmlFor="location_selector">{t('addSite.cssConfig.location')}</Label>
-                      <Tooltip content="Ex: .job-location span">
-                        <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>Ex: .job-location span</TooltipContent>
                       </Tooltip>
                     </div>
                     <Input
@@ -554,8 +569,11 @@ export default function SiteConfigForm({
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <Label htmlFor="next_page_selector">{t('addSite.cssConfig.nextPage')}</Label>
-                      <Tooltip content="Ex: a.pagination-next">
-                        <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>Ex: a.pagination-next</TooltipContent>
                       </Tooltip>
                     </div>
                     <Input
@@ -569,8 +587,14 @@ export default function SiteConfigForm({
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <Label htmlFor="pagination_url_template">URL Template (Pagination)</Label>
-                      <Tooltip content="URL com {page} ou {offset} para paginar. Ex: https://site.com/jobs?page={page}">
-                        <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          {'URL com {page} ou {offset} para paginar. Ex: ' +
+                            'https://site.com/jobs?page={page}'}
+                        </TooltipContent>
                       </Tooltip>
                     </div>
                     <Input
@@ -584,8 +608,14 @@ export default function SiteConfigForm({
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <Label htmlFor="embedded_json_selector">Embedded JSON Selector</Label>
-                      <Tooltip content="Selector CSS para extrair JSON embutido no HTML (ex: script#__NEXT_DATA__ para sites Gupy/Next.js)">
-                        <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          Selector CSS para extrair JSON embutido no HTML (ex: script#__NEXT_DATA__
+                          para sites Gupy/Next.js)
+                        </TooltipContent>
                       </Tooltip>
                     </div>
                     <Input
@@ -601,8 +631,13 @@ export default function SiteConfigForm({
                       <Label htmlFor="job_description_selector">
                         {t('addSite.cssConfig.jobDescription')}
                       </Label>
-                      <Tooltip content={t('addSite.cssConfig.jobDescriptionTooltip')}>
-                        <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          {t('addSite.cssConfig.jobDescriptionTooltip')}
+                        </TooltipContent>
                       </Tooltip>
                     </div>
                     <Input
@@ -620,8 +655,13 @@ export default function SiteConfigForm({
                       <Label htmlFor="job_requisition_id_selector">
                         {t('addSite.cssConfig.requisitionId')}
                       </Label>
-                      <Tooltip content={t('addSite.cssConfig.requisitionIdTooltip')}>
-                        <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          {t('addSite.cssConfig.requisitionIdTooltip')}
+                        </TooltipContent>
                       </Tooltip>
                     </div>
                     <Input
@@ -639,8 +679,13 @@ export default function SiteConfigForm({
                       <Label htmlFor="job_requisition_id_attribute">
                         {t('addSite.cssConfig.requisitionIdAttribute')}
                       </Label>
-                      <Tooltip content={t('addSite.cssConfig.requisitionIdAttributeTooltip')}>
-                        <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          {t('addSite.cssConfig.requisitionIdAttributeTooltip')}
+                        </TooltipContent>
                       </Tooltip>
                     </div>
                     <Input
@@ -666,8 +711,14 @@ export default function SiteConfigForm({
                           <Label htmlFor="css_api_endpoint_template">
                             API Endpoint Template (base para links)
                           </Label>
-                          <Tooltip content="Base URL para construir links das vagas. Ex: https://empresa.gupy.io/jobs">
-                            <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              Base URL para construir links das vagas. Ex:
+                              https://empresa.gupy.io/jobs
+                            </TooltipContent>
                           </Tooltip>
                         </div>
                         <Input
@@ -682,8 +733,14 @@ export default function SiteConfigForm({
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
                           <Label htmlFor="css_json_data_mappings">JSON Data Mappings</Label>
-                          <Tooltip content="Mapeamento gjson dos campos no JSON embutido. Ex: jobs_array_path, title_path, link_path...">
-                            <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              Mapeamento gjson dos campos no JSON embutido. Ex: jobs_array_path,
+                              title_path, link_path...
+                            </TooltipContent>
                           </Tooltip>
                         </div>
                         <Textarea
@@ -774,8 +831,11 @@ export default function SiteConfigForm({
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <Label htmlFor="json_data_mappings">{t('addSite.apiConfig.jsonMapping')}</Label>
-                    <Tooltip content={t('addSite.apiConfig.jsonMappingTooltip')}>
-                      <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent>{t('addSite.apiConfig.jsonMappingTooltip')}</TooltipContent>
                     </Tooltip>
                   </div>
                   <Textarea
@@ -793,8 +853,13 @@ export default function SiteConfigForm({
                     <Label htmlFor="pagination_delay_ms">
                       {t('addSite.apiConfig.paginationDelay')}
                     </Label>
-                    <Tooltip content={t('addSite.apiConfig.paginationDelayTooltip')}>
-                      <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {t('addSite.apiConfig.paginationDelayTooltip')}
+                      </TooltipContent>
                     </Tooltip>
                   </div>
                   <Input
@@ -833,8 +898,11 @@ export default function SiteConfigForm({
                     <Label htmlFor="headless_actions_json">
                       {t('addSite.headlessActions.fieldLabel')}
                     </Label>
-                    <Tooltip content={t('addSite.headlessActions.fieldTooltip')}>
-                      <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent>{t('addSite.headlessActions.fieldTooltip')}</TooltipContent>
                     </Tooltip>
                   </div>
                   <Textarea

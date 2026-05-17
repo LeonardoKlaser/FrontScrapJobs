@@ -7,7 +7,7 @@ import { Toaster } from 'sonner'
 import i18n from '@/i18n'
 import { ErrorBoundary } from '@/components/common/error-boundary'
 import { LoadingSection } from '@/components/common/loading-section'
-import { TooltipProvider } from '@/components/tooltip'
+import { TooltipProvider } from '@/components/ui/tooltip'
 
 function ThemedToaster() {
   const { theme } = useTheme()
