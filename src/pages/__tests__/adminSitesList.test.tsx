@@ -56,6 +56,8 @@ function makeSite(partial: Partial<SiteConfig>): SiteConfig {
     api_payload_template: null,
     json_data_mappings: null,
     headless_actions_json: null,
+    embedded_json_selector: null,
+    pagination_url_template: null,
     created_at: '2026-04-01T10:00:00Z',
     ...partial
   }

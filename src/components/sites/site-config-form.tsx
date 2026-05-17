@@ -568,9 +568,7 @@ export default function SiteConfigForm({
 
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <Label htmlFor="pagination_url_template">
-                        URL Template (Pagination)
-                      </Label>
+                      <Label htmlFor="pagination_url_template">URL Template (Pagination)</Label>
                       <Tooltip content="URL com {page} ou {offset} para paginar. Ex: https://site.com/jobs?page={page}">
                         <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
                       </Tooltip>
@@ -579,17 +577,13 @@ export default function SiteConfigForm({
                       id="pagination_url_template"
                       placeholder="https://site.com/jobs/{offset}/"
                       value={formData.pagination_url_template}
-                      onChange={(e) =>
-                        handleInputChange('pagination_url_template', e.target.value)
-                      }
+                      onChange={(e) => handleInputChange('pagination_url_template', e.target.value)}
                     />
                   </div>
 
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <Label htmlFor="embedded_json_selector">
-                        Embedded JSON Selector
-                      </Label>
+                      <Label htmlFor="embedded_json_selector">Embedded JSON Selector</Label>
                       <Tooltip content="Selector CSS para extrair JSON embutido no HTML (ex: script#__NEXT_DATA__ para sites Gupy/Next.js)">
                         <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
                       </Tooltip>
@@ -598,9 +592,7 @@ export default function SiteConfigForm({
                       id="embedded_json_selector"
                       placeholder="script#__NEXT_DATA__"
                       value={formData.embedded_json_selector}
-                      onChange={(e) =>
-                        handleInputChange('embedded_json_selector', e.target.value)
-                      }
+                      onChange={(e) => handleInputChange('embedded_json_selector', e.target.value)}
                     />
                   </div>
 
@@ -689,9 +681,7 @@ export default function SiteConfigForm({
                       </div>
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
-                          <Label htmlFor="css_json_data_mappings">
-                            JSON Data Mappings
-                          </Label>
+                          <Label htmlFor="css_json_data_mappings">JSON Data Mappings</Label>
                           <Tooltip content="Mapeamento gjson dos campos no JSON embutido. Ex: jobs_array_path, title_path, link_path...">
                             <HelpCircle className="size-3.5 text-muted-foreground cursor-help" />
                           </Tooltip>
@@ -701,9 +691,7 @@ export default function SiteConfigForm({
                           className="font-mono text-sm"
                           placeholder='{"jobs_array_path":"props.pageProps.jobs","title_path":"title","link_path":"id","location_path":"workplace.address.city","description_path":"","requisition_id_path":"id","skip_link_slug":true}'
                           value={formData.json_data_mappings}
-                          onChange={(e) =>
-                            handleInputChange('json_data_mappings', e.target.value)
-                          }
+                          onChange={(e) => handleInputChange('json_data_mappings', e.target.value)}
                           rows={4}
                         />
                       </div>

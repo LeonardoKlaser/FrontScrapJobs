@@ -33,7 +33,9 @@ const mockFormData: SiteConfigFormData = {
   api_headers_json: '',
   api_payload_template: '',
   json_data_mappings: '',
-  headless_actions_json: ''
+  headless_actions_json: '',
+  embedded_json_selector: '',
+  pagination_url_template: ''
 }
 
 describe('siteCareerService', () => {
