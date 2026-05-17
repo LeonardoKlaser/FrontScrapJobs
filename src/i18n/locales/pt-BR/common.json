@@ -10,7 +10,39 @@
     "adminEmails": "Emails",
     "applications": "Candidaturas",
     "logout": "Sair",
-    "openMenu": "Abrir menu"
+    "openMenu": "Abrir menu",
+    "section": {
+      "main": "Navegação",
+      "admin": "Admin"
+    }
+  },
+  "pageTitle": {
+    "home": "Início",
+    "curriculum": "Currículo",
+    "sites": "Empresas",
+    "applications": "Candidaturas",
+    "account": "Minha conta",
+    "renew": "Renovar plano",
+    "adminDashboard": "Dashboard admin",
+    "adminSites": "Gerenciar sites",
+    "adminLeads": "Leads",
+    "addNewSite": "Novo site",
+    "editSite": "Editar site",
+    "adminEmails": {
+      "hub": "E-mails",
+      "templates": "Templates",
+      "templateEditor": "Editor de template",
+      "events": "Eventos",
+      "lifecycle": "Lifecycle",
+      "lifecycleEditor": "Editor de lifecycle",
+      "campaigns": "Campanhas",
+      "campaignEditor": "Editor de campanha",
+      "logs": "Logs de e-mail"
+    }
+  },
+  "home": {
+    "addCompany": "Adicionar empresa",
+    "manage": "Gerenciar"
   },
   "theme": {
     "toggle": "Alternar tema",

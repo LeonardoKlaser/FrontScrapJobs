@@ -10,7 +10,39 @@
     "adminEmails": "Emails",
     "applications": "Applications",
     "logout": "Sign Out",
-    "openMenu": "Open menu"
+    "openMenu": "Open menu",
+    "section": {
+      "main": "Navigation",
+      "admin": "Admin"
+    }
+  },
+  "pageTitle": {
+    "home": "Home",
+    "curriculum": "Resume",
+    "sites": "Companies",
+    "applications": "Applications",
+    "account": "My account",
+    "renew": "Renew plan",
+    "adminDashboard": "Admin dashboard",
+    "adminSites": "Manage sites",
+    "adminLeads": "Leads",
+    "addNewSite": "New site",
+    "editSite": "Edit site",
+    "adminEmails": {
+      "hub": "Emails",
+      "templates": "Templates",
+      "templateEditor": "Template editor",
+      "events": "Events",
+      "lifecycle": "Lifecycle",
+      "lifecycleEditor": "Lifecycle editor",
+      "campaigns": "Campaigns",
+      "campaignEditor": "Campaign editor",
+      "logs": "Email logs"
+    }
+  },
+  "home": {
+    "addCompany": "Add company",
+    "manage": "Manage"
   },
   "theme": {
     "toggle": "Toggle theme",
