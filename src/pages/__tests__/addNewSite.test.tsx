@@ -37,8 +37,11 @@ vi.mock('sonner', () => ({
   }
 }))
 
-vi.mock('@/components/tooltip', () => ({
-  Tooltip: ({ children }: { children: ReactNode }) => <>{children}</>
+vi.mock('@/components/ui/tooltip', () => ({
+  Tooltip: ({ children }: { children: ReactNode }) => <>{children}</>,
+  TooltipTrigger: ({ children }: { children: ReactNode }) => <>{children}</>,
+  TooltipContent: ({ children }: { children: ReactNode }) => <>{children}</>,
+  TooltipProvider: ({ children }: { children: ReactNode }) => <>{children}</>
 }))
 
 function wrap(ui: ReactNode) {
