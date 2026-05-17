@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/select'
 import { StatusBadge } from '@/components/admin-emails/StatusBadge'
 import { CampaignProgressBar } from '@/components/admin-emails/CampaignProgressBar'
+import { AppPageHeader } from '@/components/common/app-page-header'
 
 // Sentinel 'all' em vez de string vazia — Radix Select não aceita value=''.
 // Pattern reusado de LogsViewer.tsx (filtro Status/Origem).
@@ -62,90 +63,95 @@ export default function CampaignsList() {
   }
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>{t('campaigns.title')}</CardTitle>
-        <Button asChild>
-          <Link to={PATHS.app.adminEmails.campaignNew}>{t('campaigns.new')}</Link>
-        </Button>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <Select value={status} onValueChange={handleStatusChange}>
-          <SelectTrigger className="w-48">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {STATUS_OPTIONS.map((s) => (
-              <SelectItem key={s} value={s}>
-                {t(`campaigns.list.filters.${s}`)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        {isLoading && <p>{t('campaigns.list.loading')}</p>}
-        {data && data.data.length === 0 && <p>{t('campaigns.list.empty')}</p>}
-        {data && data.data.length > 0 && (
-          <>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('campaigns.list.columns.name')}</TableHead>
-                  <TableHead>{t('campaigns.list.columns.status')}</TableHead>
-                  <TableHead>{t('campaigns.list.columns.sendAt')}</TableHead>
-                  <TableHead>{t('campaigns.list.columns.progress')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.data.map((c) => (
-                  <TableRow key={c.id}>
-                    <TableCell>
-                      <Link to={PATHS.app.adminEmails.campaignEdit(c.id)} className="underline">
-                        {c.name}
-                      </Link>
-                    </TableCell>
-                    <TableCell>
-                      <StatusBadge status={c.status} />
-                    </TableCell>
-                    <TableCell>
-                      {c.send_at ? new Date(c.send_at).toLocaleString('pt-BR') : '—'}
-                    </TableCell>
-                    <TableCell className="w-64">
-                      <CampaignProgressBar
-                        sent={c.sent_count}
-                        failed={c.failed_count}
-                        recipient={c.recipient_count ?? null}
-                      />
-                    </TableCell>
-                  </TableRow>
+    <>
+      <AppPageHeader title={t('pageTitle.adminEmails.campaigns', { ns: 'common' })} />
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>{t('campaigns.title')}</CardTitle>
+            <Button asChild>
+              <Link to={PATHS.app.adminEmails.campaignNew}>{t('campaigns.new')}</Link>
+            </Button>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Select value={status} onValueChange={handleStatusChange}>
+              <SelectTrigger className="w-48">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {STATUS_OPTIONS.map((s) => (
+                  <SelectItem key={s} value={s}>
+                    {t(`campaigns.list.filters.${s}`)}
+                  </SelectItem>
                 ))}
-              </TableBody>
-            </Table>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">
-                {t('campaigns.list.page', { current: currentPage, total: totalPages })}
-              </span>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={!hasPrev}
-                  onClick={() => setOffset(Math.max(0, offset - PAGE_LIMIT))}
-                >
-                  {t('campaigns.list.prev')}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={!hasNext}
-                  onClick={() => setOffset(offset + PAGE_LIMIT)}
-                >
-                  {t('campaigns.list.next')}
-                </Button>
-              </div>
-            </div>
-          </>
-        )}
-      </CardContent>
-    </Card>
+              </SelectContent>
+            </Select>
+            {isLoading && <p>{t('campaigns.list.loading')}</p>}
+            {data && data.data.length === 0 && <p>{t('campaigns.list.empty')}</p>}
+            {data && data.data.length > 0 && (
+              <>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t('campaigns.list.columns.name')}</TableHead>
+                      <TableHead>{t('campaigns.list.columns.status')}</TableHead>
+                      <TableHead>{t('campaigns.list.columns.sendAt')}</TableHead>
+                      <TableHead>{t('campaigns.list.columns.progress')}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {data.data.map((c) => (
+                      <TableRow key={c.id}>
+                        <TableCell>
+                          <Link to={PATHS.app.adminEmails.campaignEdit(c.id)} className="underline">
+                            {c.name}
+                          </Link>
+                        </TableCell>
+                        <TableCell>
+                          <StatusBadge status={c.status} />
+                        </TableCell>
+                        <TableCell>
+                          {c.send_at ? new Date(c.send_at).toLocaleString('pt-BR') : '—'}
+                        </TableCell>
+                        <TableCell className="w-64">
+                          <CampaignProgressBar
+                            sent={c.sent_count}
+                            failed={c.failed_count}
+                            recipient={c.recipient_count ?? null}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">
+                    {t('campaigns.list.page', { current: currentPage, total: totalPages })}
+                  </span>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={!hasPrev}
+                      onClick={() => setOffset(Math.max(0, offset - PAGE_LIMIT))}
+                    >
+                      {t('campaigns.list.prev')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={!hasNext}
+                      onClick={() => setOffset(offset + PAGE_LIMIT)}
+                    >
+                      {t('campaigns.list.next')}
+                    </Button>
+                  </div>
+                </div>
+              </>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </>
   )
 }

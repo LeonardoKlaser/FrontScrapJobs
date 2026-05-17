@@ -46,6 +46,7 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { AppPageHeader } from '@/components/common/app-page-header'
 import { StatusBadge } from '@/components/admin-emails/StatusBadge'
 import { CampaignProgressBar } from '@/components/admin-emails/CampaignProgressBar'
 import { FilterBuilder, normalizeFilter } from '@/components/admin-emails/FilterBuilder'
@@ -261,7 +262,14 @@ export default function CampaignEditor() {
   }
 
   if (!isNew && campLoading) {
-    return <div className="p-6 text-muted-foreground">{t('campaigns.list.loading')}</div>
+    return (
+      <>
+        <AppPageHeader title={t('pageTitle.adminEmails.campaignEditor', { ns: 'common' })} />
+        <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="p-6 text-muted-foreground">{t('campaigns.list.loading')}</div>
+        </div>
+      </>
+    )
   }
 
   const showProgress =
@@ -272,186 +280,131 @@ export default function CampaignEditor() {
   const isTerminal = status != null && isCampaignTerminal(status)
 
   return (
-    <div className="p-6 space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold">{isNew ? t('campaigns.new') : (camp?.name ?? '')}</h1>
-          {status && <StatusBadge status={status} />}
+    <>
+      <AppPageHeader title={t('pageTitle.adminEmails.campaignEditor', { ns: 'common' })} />
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold">
+              {isNew ? t('campaigns.new') : (camp?.name ?? '')}
+            </h1>
+            {status && <StatusBadge status={status} />}
+          </div>
+          <Button variant="ghost" onClick={() => navigate(PATHS.app.adminEmails.campaigns)}>
+            {t('campaigns.editor.cancel')}
+          </Button>
         </div>
-        <Button variant="ghost" onClick={() => navigate(PATHS.app.adminEmails.campaigns)}>
-          {t('campaigns.editor.cancel')}
-        </Button>
-      </div>
 
-      {camp?.last_error && (
-        <Alert variant="destructive">
-          <AlertDescription>
-            <strong>{t('campaigns.editor.lastError')}:</strong> {camp.last_error}
-          </AlertDescription>
-        </Alert>
-      )}
+        {camp?.last_error && (
+          <Alert variant="destructive">
+            <AlertDescription>
+              <strong>{t('campaigns.editor.lastError')}:</strong> {camp.last_error}
+            </AlertDescription>
+          </Alert>
+        )}
 
-      {showProgress && camp && (
-        <Card>
-          <CardContent className="p-4">
-            <CampaignProgressBar
-              sent={camp.sent_count}
-              failed={camp.failed_count}
-              recipient={camp.recipient_count ?? null}
-            />
-          </CardContent>
-        </Card>
-      )}
+        {showProgress && camp && (
+          <Card>
+            <CardContent className="p-4">
+              <CampaignProgressBar
+                sent={camp.sent_count}
+                failed={camp.failed_count}
+                recipient={camp.recipient_count ?? null}
+              />
+            </CardContent>
+          </Card>
+        )}
 
-      <form onSubmit={onSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="space-y-3">
-          <div>
-            <Label>{t('campaigns.editor.name')}</Label>
-            <Input
-              {...form.register('name')}
-              placeholder={t('campaigns.editor.namePlaceholder')}
-              disabled={!fullyEditable && !isScheduled}
-            />
-          </div>
-          <div>
-            <Label>{t('campaigns.editor.template')}</Label>
-            <Select
-              value={String(form.watch('template_id') || '')}
-              onValueChange={(v) => form.setValue('template_id', Number(v))}
-              disabled={!fullyEditable}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder={t('campaigns.editor.templatePlaceholder')} />
-              </SelectTrigger>
-              <SelectContent>
-                {(templates ?? []).map((tpl) => (
-                  <SelectItem key={tpl.id} value={String(tpl.id)}>
-                    {tpl.name} ({tpl.key})
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          {sendAtEditable && !isNew && (
+        <form onSubmit={onSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="space-y-3">
             <div>
-              <Label>{t('campaigns.editor.scheduleAt')}</Label>
+              <Label>{t('campaigns.editor.name')}</Label>
               <Input
-                type="datetime-local"
-                value={isScheduled ? sendAtEdit : scheduleAt}
-                onChange={(e) =>
-                  isScheduled ? setSendAtEdit(e.target.value) : setScheduleAt(e.target.value)
-                }
+                {...form.register('name')}
+                placeholder={t('campaigns.editor.namePlaceholder')}
+                disabled={!fullyEditable && !isScheduled}
               />
             </div>
-          )}
-        </div>
-
-        <div className="space-y-3">
-          <Label>{t('campaigns.editor.audience')}</Label>
-          {fullyEditable ? (
-            <>
-              {schemaFields ? (
-                <FilterBuilder
-                  fields={schemaFields}
-                  value={filter}
-                  onChange={setFilter}
-                  maxDepth={3}
+            <div>
+              <Label>{t('campaigns.editor.template')}</Label>
+              <Select
+                value={String(form.watch('template_id') || '')}
+                onValueChange={(v) => form.setValue('template_id', Number(v))}
+                disabled={!fullyEditable}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={t('campaigns.editor.templatePlaceholder')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {(templates ?? []).map((tpl) => (
+                    <SelectItem key={tpl.id} value={String(tpl.id)}>
+                      {tpl.name} ({tpl.key})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            {sendAtEditable && !isNew && (
+              <div>
+                <Label>{t('campaigns.editor.scheduleAt')}</Label>
+                <Input
+                  type="datetime-local"
+                  value={isScheduled ? sendAtEdit : scheduleAt}
+                  onChange={(e) =>
+                    isScheduled ? setSendAtEdit(e.target.value) : setScheduleAt(e.target.value)
+                  }
                 />
-              ) : (
-                <p className="text-sm text-muted-foreground">{t('campaigns.list.loading')}</p>
-              )}
-              <AudiencePreview filter={filter} debounceMs={800} />
-            </>
-          ) : (
-            <pre className="bg-muted p-2 rounded font-mono text-xs overflow-auto">
-              {JSON.stringify(camp?.segment_filter ?? {}, null, 2)}
-            </pre>
-          )}
-        </div>
+              </div>
+            )}
+          </div>
 
-        <div className="lg:col-span-2 flex flex-wrap justify-end gap-2">
-          {fullyEditable && (
-            <Button type="submit" disabled={create.isPending || update.isPending}>
-              {t('campaigns.editor.saveDraft')}
-            </Button>
-          )}
-          {isDraftWithId && (
-            <>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={handleSchedule}
-                disabled={schedule.isPending || !scheduleAt}
-              >
-                {t('campaigns.editor.schedule')}
-              </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={handleSendNow}
-                disabled={sendNow.isPending}
-              >
-                {t('campaigns.editor.sendNow')}
-              </Button>
-              <Button
-                type="button"
-                variant="destructive"
-                onClick={handleDelete}
-                disabled={remove.isPending}
-              >
-                {t('campaigns.editor.delete')}
-              </Button>
-            </>
-          )}
-          {isScheduled && (
-            <>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={handleUpdateScheduled}
-                disabled={update.isPending}
-              >
+          <div className="space-y-3">
+            <Label>{t('campaigns.editor.audience')}</Label>
+            {fullyEditable ? (
+              <>
+                {schemaFields ? (
+                  <FilterBuilder
+                    fields={schemaFields}
+                    value={filter}
+                    onChange={setFilter}
+                    maxDepth={3}
+                  />
+                ) : (
+                  <p className="text-sm text-muted-foreground">{t('campaigns.list.loading')}</p>
+                )}
+                <AudiencePreview filter={filter} debounceMs={800} />
+              </>
+            ) : (
+              <pre className="bg-muted p-2 rounded font-mono text-xs overflow-auto">
+                {JSON.stringify(camp?.segment_filter ?? {}, null, 2)}
+              </pre>
+            )}
+          </div>
+
+          <div className="lg:col-span-2 flex flex-wrap justify-end gap-2">
+            {fullyEditable && (
+              <Button type="submit" disabled={create.isPending || update.isPending}>
                 {t('campaigns.editor.saveDraft')}
               </Button>
-              <Button
-                type="button"
-                variant="destructive"
-                onClick={handleCancel}
-                disabled={cancel.isPending}
-              >
-                {t('campaigns.editor.cancel')}
-              </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={handleDuplicate}
-                disabled={duplicate.isPending}
-              >
-                {t('campaigns.editor.duplicate')}
-              </Button>
-            </>
-          )}
-          {isSending && (
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={handleDuplicate}
-              disabled={duplicate.isPending}
-            >
-              {t('campaigns.editor.duplicate')}
-            </Button>
-          )}
-          {isTerminal && (
-            <>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={handleDuplicate}
-                disabled={duplicate.isPending}
-              >
-                {t('campaigns.editor.duplicate')}
-              </Button>
-              {(status === 'failed' || status === 'canceled') && (
+            )}
+            {isDraftWithId && (
+              <>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={handleSchedule}
+                  disabled={schedule.isPending || !scheduleAt}
+                >
+                  {t('campaigns.editor.schedule')}
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={handleSendNow}
+                  disabled={sendNow.isPending}
+                >
+                  {t('campaigns.editor.sendNow')}
+                </Button>
                 <Button
                   type="button"
                   variant="destructive"
@@ -460,11 +413,71 @@ export default function CampaignEditor() {
                 >
                   {t('campaigns.editor.delete')}
                 </Button>
-              )}
-            </>
-          )}
-        </div>
-      </form>
-    </div>
+              </>
+            )}
+            {isScheduled && (
+              <>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={handleUpdateScheduled}
+                  disabled={update.isPending}
+                >
+                  {t('campaigns.editor.saveDraft')}
+                </Button>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={handleCancel}
+                  disabled={cancel.isPending}
+                >
+                  {t('campaigns.editor.cancel')}
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={handleDuplicate}
+                  disabled={duplicate.isPending}
+                >
+                  {t('campaigns.editor.duplicate')}
+                </Button>
+              </>
+            )}
+            {isSending && (
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={handleDuplicate}
+                disabled={duplicate.isPending}
+              >
+                {t('campaigns.editor.duplicate')}
+              </Button>
+            )}
+            {isTerminal && (
+              <>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={handleDuplicate}
+                  disabled={duplicate.isPending}
+                >
+                  {t('campaigns.editor.duplicate')}
+                </Button>
+                {(status === 'failed' || status === 'canceled') && (
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    onClick={handleDelete}
+                    disabled={remove.isPending}
+                  >
+                    {t('campaigns.editor.delete')}
+                  </Button>
+                )}
+              </>
+            )}
+          </div>
+        </form>
+      </div>
+    </>
   )
 }

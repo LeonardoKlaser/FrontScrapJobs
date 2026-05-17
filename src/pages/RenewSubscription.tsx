@@ -12,6 +12,7 @@ import { useUser } from '@/hooks/useUser'
 import { usePixPayment } from '@/hooks/usePixPayment'
 import { PATHS } from '@/router/paths'
 import { LoadingSection } from '@/components/common/loading-section'
+import { AppPageHeader } from '@/components/common/app-page-header'
 import { PixPaymentStep } from '@/components/checkout/pix-payment-step'
 import type { PixPaymentResult } from '@/services/pixService'
 import type { Plan } from '@/models/plan'
@@ -282,21 +283,33 @@ export default function RenewSubscription() {
   }, [clearPixSnapshot])
 
   if (plansLoading) {
-    return <LoadingSection variant="full" label={t('renew.loading')} />
+    return (
+      <>
+        <AppPageHeader title={t('pageTitle.renew', { ns: 'common' })} />
+        <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <LoadingSection variant="full" label={t('renew.loading')} />
+        </div>
+      </>
+    )
   }
 
   // If pixResult is set, show the QR code step
   if (pixResult && selectedPlan) {
     return (
-      <div className="container mx-auto max-w-lg py-10 px-4">
-        <PixPaymentStep
-          pixResult={pixResult}
-          planId={selectedPlan.id}
-          userEmail={user?.email ?? ''}
-          onExpired={handlePixExpired}
-          onConfirmed={clearPixSnapshot}
-        />
-      </div>
+      <>
+        <AppPageHeader title={t('pageTitle.renew', { ns: 'common' })} />
+        <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="container mx-auto max-w-lg py-10 px-4">
+            <PixPaymentStep
+              pixResult={pixResult}
+              planId={selectedPlan.id}
+              userEmail={user?.email ?? ''}
+              onExpired={handlePixExpired}
+              onConfirmed={clearPixSnapshot}
+            />
+          </div>
+        </div>
+      </>
     )
   }
 
@@ -305,318 +318,329 @@ export default function RenewSubscription() {
   const quarterlyDisabled = paymentMethod === 'card'
 
   return (
-    <div className="container mx-auto max-w-5xl py-10 px-4">
-      {/* Header warning */}
-      <div className="flex items-center gap-3 rounded-lg border border-warning/30 bg-warning/5 p-4 mb-8">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-warning/10">
-          <AlertTriangle className="h-5 w-5 text-warning" />
-        </div>
-        <div>
-          <h2 className="font-semibold text-foreground">{t('renew.title')}</h2>
-          <p className="text-sm text-muted-foreground">{t('renew.description')}</p>
-        </div>
-      </div>
-
-      {sortedPlans.length === 0 ? (
-        <div className="rounded-lg border border-border bg-card p-8 text-center">
-          <h3 className="text-lg font-semibold text-foreground">{t('renew.emptyTitle')}</h3>
-          <p className="mt-2 text-sm text-muted-foreground">{t('renew.emptyDescription')}</p>
-          <Button
-            variant="outline"
-            size="sm"
-            className="mt-4"
-            onClick={() => refetch()}
-            disabled={isFetching}
-          >
-            {t('renew.emptyRetry')}
-          </Button>
-        </div>
-      ) : (
-        <div className="space-y-8">
-          {/* 1. Period toggle */}
-          <div className="flex flex-col items-center gap-2">
-            <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-              <button
-                type="button"
-                onClick={() => setPeriod('monthly')}
-                className={
-                  'rounded-md px-4 py-2 text-sm font-medium transition-all' +
-                  (period === 'monthly'
-                    ? ' bg-card text-foreground shadow-sm'
-                    : ' text-muted-foreground hover:text-foreground')
-                }
-              >
-                {t('renew.period.monthly')}
-              </button>
-              <button
-                type="button"
-                onClick={() => !quarterlyDisabled && setPeriod('quarterly')}
-                disabled={quarterlyDisabled}
-                title={quarterlyDisabled ? t('renew.period.quarterlyPixOnly') : undefined}
-                className={
-                  'rounded-md px-4 py-2 text-sm font-medium transition-all flex items-center gap-2' +
-                  (quarterlyDisabled
-                    ? ' text-muted-foreground/40 cursor-not-allowed'
-                    : period === 'quarterly'
-                      ? ' bg-card text-foreground shadow-sm'
-                      : ' text-muted-foreground hover:text-foreground')
-                }
-              >
-                {t('renew.period.quarterly')}
-                {selectedPlan && getDiscountPercent(selectedPlan) > 0 && (
-                  <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-bold text-emerald-500">
-                    {t('renew.period.discount', {
-                      percent: getDiscountPercent(selectedPlan)
-                    })}
-                  </span>
-                )}
-              </button>
+    <>
+      <AppPageHeader title={t('pageTitle.renew', { ns: 'common' })} />
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="container mx-auto max-w-5xl py-10 px-4">
+          {/* Header warning */}
+          <div className="flex items-center gap-3 rounded-lg border border-warning/30 bg-warning/5 p-4 mb-8">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-warning/10">
+              <AlertTriangle className="h-5 w-5 text-warning" />
             </div>
-            {quarterlyDisabled && (
-              <p className="text-xs text-muted-foreground">{t('renew.period.quarterlyPixOnly')}</p>
-            )}
-          </div>
-
-          {/* 2. Plan cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {sortedPlans.map((plan, index) => {
-              const isPopular = index === midIndex
-              const isSelected = plan.id === effectivePlanId
-              const displayPrice = getDisplayPrice(plan)
-              return (
-                <button
-                  key={plan.id}
-                  type="button"
-                  onClick={() => setSelectedPlanId(plan.id)}
-                  className={
-                    'relative flex flex-col rounded-2xl bg-card p-6 text-left transition-all' +
-                    ' duration-150 hover-lift cursor-pointer' +
-                    (isSelected
-                      ? ' border-2 border-emerald-500 shadow-[0_0_30px_rgba(16,185,129,0.15)]'
-                      : ' border border-border hover:border-border/80')
-                  }
-                >
-                  {isPopular && (
-                    <span
-                      className={
-                        'absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-emerald-500' +
-                        ' px-3 py-1 text-xs font-bold text-white'
-                      }
-                    >
-                      {t('renew.popular')}
-                    </span>
-                  )}
-
-                  <div className="text-center pb-4">
-                    <h3 className="text-xl font-bold text-foreground">{plan.name}</h3>
-                    <div className="mt-3 flex items-baseline justify-center gap-1">
-                      <span className="font-display text-3xl font-bold leading-none text-foreground">
-                        {formatCurrency(displayPrice)}
-                      </span>
-                      <span className="text-sm text-muted-foreground">
-                        {period === 'quarterly' ? '/tri' : t('renew.perMonth')}
-                      </span>
-                    </div>
-                    {period === 'quarterly' && (
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {t('renew.perMonthAbbrev', { price: getMonthlyEquivalent(plan) })}
-                      </p>
-                    )}
-                  </div>
-
-                  <ul className="space-y-2 flex-1">
-                    <li className="flex items-center gap-2 text-sm">
-                      <Check className="h-4 w-4 shrink-0 text-emerald-500" />
-                      <span className="text-muted-foreground">
-                        {t('renew.sites', { count: plan.max_sites })}
-                      </span>
-                    </li>
-                    <li className="flex items-center gap-2 text-sm">
-                      <Check className="h-4 w-4 shrink-0 text-emerald-500" />
-                      <span className="text-muted-foreground">
-                        {plan.max_ai_analyses === 0
-                          ? t('renew.unlimitedAnalyses')
-                          : t('renew.analyses', { count: plan.max_ai_analyses })}
-                      </span>
-                    </li>
-                  </ul>
-
-                  {/* Selection indicator */}
-                  <div className="mt-4 flex items-center justify-center">
-                    <div
-                      className={
-                        'h-5 w-5 rounded-full border-2 flex items-center justify-center transition-colors' +
-                        (isSelected
-                          ? ' border-emerald-500 bg-emerald-500'
-                          : ' border-muted-foreground/30')
-                      }
-                    >
-                      {isSelected && <Check className="h-3 w-3 text-white" />}
-                    </div>
-                  </div>
-                </button>
-              )
-            })}
-          </div>
-
-          {/* 3. Payment method toggle */}
-          <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-foreground">
-              {t('renew.paymentMethod.title')}
-            </h3>
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => {
-                  setPaymentMethod('pix')
-                  trackTrial('payment_method_selected', { method: 'pix' })
-                }}
-                className={
-                  'flex flex-col items-center gap-2 rounded-xl p-4 transition-all border' +
-                  (paymentMethod === 'pix'
-                    ? ' border-emerald-500 bg-emerald-500/5 shadow-sm'
-                    : ' border-border bg-card hover:border-border/80')
-                }
-              >
-                <QrCode
-                  className={
-                    'h-6 w-6' +
-                    (paymentMethod === 'pix' ? ' text-emerald-500' : ' text-muted-foreground')
-                  }
-                />
-                <span className="text-sm font-semibold text-foreground">
-                  {t('renew.paymentMethod.pix')}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {t('renew.paymentMethod.pixDescription')}
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setPaymentMethod('card')
-                  trackTrial('payment_method_selected', { method: 'card' })
-                }}
-                className={
-                  'flex flex-col items-center gap-2 rounded-xl p-4 transition-all border' +
-                  (paymentMethod === 'card'
-                    ? ' border-emerald-500 bg-emerald-500/5 shadow-sm'
-                    : ' border-border bg-card hover:border-border/80')
-                }
-              >
-                <CreditCard
-                  className={
-                    'h-6 w-6' +
-                    (paymentMethod === 'card' ? ' text-emerald-500' : ' text-muted-foreground')
-                  }
-                />
-                <span className="text-sm font-semibold text-foreground">
-                  {t('renew.paymentMethod.card')}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {t('renew.paymentMethod.cardDescription')}
-                </span>
-              </button>
+            <div>
+              <h2 className="font-semibold text-foreground">{t('renew.title')}</h2>
+              <p className="text-sm text-muted-foreground">{t('renew.description')}</p>
             </div>
           </div>
 
-          {/* 4. Conditional form / action */}
-          {paymentMethod === 'pix' ? (
-            <div className="space-y-4 rounded-xl border border-border bg-card p-6">
-              {error && (
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-
-              <div className="space-y-2">
-                <Label htmlFor="pix-name">{t('renew.fields.name')}</Label>
-                <Input
-                  id="pix-name"
-                  value={name}
-                  onChange={(e) => {
-                    setName(e.target.value)
-                    if (fieldErrors.name) setFieldErrors((p) => ({ ...p, name: '' }))
-                  }}
-                  disabled={loading}
-                  className={fieldErrors.name ? 'border-destructive' : ''}
-                />
-                {fieldErrors.name && <p className="text-xs text-destructive">{fieldErrors.name}</p>}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="pix-cpf">{t('renew.fields.cpf')}</Label>
-                <Input
-                  id="pix-cpf"
-                  inputMode="numeric"
-                  placeholder={t('renew.fields.cpfPlaceholder')}
-                  value={cpf}
-                  onChange={(e) => {
-                    setCpf(formatCpf(e.target.value))
-                    if (fieldErrors.cpf) setFieldErrors((p) => ({ ...p, cpf: '' }))
-                  }}
-                  disabled={loading}
-                  className={'font-mono' + (fieldErrors.cpf ? ' border-destructive' : '')}
-                />
-                {fieldErrors.cpf && <p className="text-xs text-destructive">{fieldErrors.cpf}</p>}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="pix-phone">{t('renew.fields.phone')}</Label>
-                <Input
-                  id="pix-phone"
-                  inputMode="tel"
-                  placeholder={t('renew.fields.phonePlaceholder')}
-                  value={phone}
-                  onChange={(e) => {
-                    setPhone(formatPhone(e.target.value))
-                    if (fieldErrors.phone) setFieldErrors((p) => ({ ...p, phone: '' }))
-                  }}
-                  disabled={loading}
-                  className={fieldErrors.phone ? 'border-destructive' : ''}
-                />
-                {fieldErrors.phone && (
-                  <p className="text-xs text-destructive">{fieldErrors.phone}</p>
-                )}
-              </div>
-
+          {sortedPlans.length === 0 ? (
+            <div className="rounded-lg border border-border bg-card p-8 text-center">
+              <h3 className="text-lg font-semibold text-foreground">{t('renew.emptyTitle')}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">{t('renew.emptyDescription')}</p>
               <Button
-                variant="glow"
-                size="lg"
-                className="w-full h-auto gap-2 py-4 text-base font-semibold"
-                disabled={submitDisabled}
-                onClick={handlePixSubmit}
+                variant="outline"
+                size="sm"
+                className="mt-4"
+                onClick={() => refetch()}
+                disabled={isFetching}
               >
-                {loading ? (
-                  <>
-                    <Spinner className="h-4 w-4" />
-                    {t('renew.generating')}
-                  </>
-                ) : (
-                  <>
-                    <Zap className="h-4 w-4" />
-                    {t('renew.pixCta')}
-                  </>
-                )}
+                {t('renew.emptyRetry')}
               </Button>
             </div>
           ) : (
-            <div className="rounded-xl border border-border bg-card p-6">
-              <Button
-                variant="glow"
-                size="lg"
-                className="w-full h-auto gap-2 py-4 text-base font-semibold"
-                disabled={!selectedPlan}
-                onClick={handleCardNavigate}
-              >
-                <CreditCard className="h-4 w-4" />
-                {t('renew.cardCta')}
-              </Button>
+            <div className="space-y-8">
+              {/* 1. Period toggle */}
+              <div className="flex flex-col items-center gap-2">
+                <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
+                  <button
+                    type="button"
+                    onClick={() => setPeriod('monthly')}
+                    className={
+                      'rounded-md px-4 py-2 text-sm font-medium transition-all' +
+                      (period === 'monthly'
+                        ? ' bg-card text-foreground shadow-sm'
+                        : ' text-muted-foreground hover:text-foreground')
+                    }
+                  >
+                    {t('renew.period.monthly')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => !quarterlyDisabled && setPeriod('quarterly')}
+                    disabled={quarterlyDisabled}
+                    title={quarterlyDisabled ? t('renew.period.quarterlyPixOnly') : undefined}
+                    className={
+                      'rounded-md px-4 py-2 text-sm font-medium transition-all flex items-center gap-2' +
+                      (quarterlyDisabled
+                        ? ' text-muted-foreground/40 cursor-not-allowed'
+                        : period === 'quarterly'
+                          ? ' bg-card text-foreground shadow-sm'
+                          : ' text-muted-foreground hover:text-foreground')
+                    }
+                  >
+                    {t('renew.period.quarterly')}
+                    {selectedPlan && getDiscountPercent(selectedPlan) > 0 && (
+                      <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-bold text-emerald-500">
+                        {t('renew.period.discount', {
+                          percent: getDiscountPercent(selectedPlan)
+                        })}
+                      </span>
+                    )}
+                  </button>
+                </div>
+                {quarterlyDisabled && (
+                  <p className="text-xs text-muted-foreground">
+                    {t('renew.period.quarterlyPixOnly')}
+                  </p>
+                )}
+              </div>
+
+              {/* 2. Plan cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {sortedPlans.map((plan, index) => {
+                  const isPopular = index === midIndex
+                  const isSelected = plan.id === effectivePlanId
+                  const displayPrice = getDisplayPrice(plan)
+                  return (
+                    <button
+                      key={plan.id}
+                      type="button"
+                      onClick={() => setSelectedPlanId(plan.id)}
+                      className={
+                        'relative flex flex-col rounded-2xl bg-card p-6 text-left transition-all' +
+                        ' duration-150 hover-lift cursor-pointer' +
+                        (isSelected
+                          ? ' border-2 border-emerald-500 shadow-[0_0_30px_rgba(16,185,129,0.15)]'
+                          : ' border border-border hover:border-border/80')
+                      }
+                    >
+                      {isPopular && (
+                        <span
+                          className={
+                            'absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-emerald-500' +
+                            ' px-3 py-1 text-xs font-bold text-white'
+                          }
+                        >
+                          {t('renew.popular')}
+                        </span>
+                      )}
+
+                      <div className="text-center pb-4">
+                        <h3 className="text-xl font-bold text-foreground">{plan.name}</h3>
+                        <div className="mt-3 flex items-baseline justify-center gap-1">
+                          <span className="font-display text-3xl font-bold leading-none text-foreground">
+                            {formatCurrency(displayPrice)}
+                          </span>
+                          <span className="text-sm text-muted-foreground">
+                            {period === 'quarterly' ? '/tri' : t('renew.perMonth')}
+                          </span>
+                        </div>
+                        {period === 'quarterly' && (
+                          <p className="mt-1 text-xs text-muted-foreground">
+                            {t('renew.perMonthAbbrev', { price: getMonthlyEquivalent(plan) })}
+                          </p>
+                        )}
+                      </div>
+
+                      <ul className="space-y-2 flex-1">
+                        <li className="flex items-center gap-2 text-sm">
+                          <Check className="h-4 w-4 shrink-0 text-emerald-500" />
+                          <span className="text-muted-foreground">
+                            {t('renew.sites', { count: plan.max_sites })}
+                          </span>
+                        </li>
+                        <li className="flex items-center gap-2 text-sm">
+                          <Check className="h-4 w-4 shrink-0 text-emerald-500" />
+                          <span className="text-muted-foreground">
+                            {plan.max_ai_analyses === 0
+                              ? t('renew.unlimitedAnalyses')
+                              : t('renew.analyses', { count: plan.max_ai_analyses })}
+                          </span>
+                        </li>
+                      </ul>
+
+                      {/* Selection indicator */}
+                      <div className="mt-4 flex items-center justify-center">
+                        <div
+                          className={
+                            'h-5 w-5 rounded-full border-2 flex items-center justify-center transition-colors' +
+                            (isSelected
+                              ? ' border-emerald-500 bg-emerald-500'
+                              : ' border-muted-foreground/30')
+                          }
+                        >
+                          {isSelected && <Check className="h-3 w-3 text-white" />}
+                        </div>
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+
+              {/* 3. Payment method toggle */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-semibold text-foreground">
+                  {t('renew.paymentMethod.title')}
+                </h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPaymentMethod('pix')
+                      trackTrial('payment_method_selected', { method: 'pix' })
+                    }}
+                    className={
+                      'flex flex-col items-center gap-2 rounded-xl p-4 transition-all border' +
+                      (paymentMethod === 'pix'
+                        ? ' border-emerald-500 bg-emerald-500/5 shadow-sm'
+                        : ' border-border bg-card hover:border-border/80')
+                    }
+                  >
+                    <QrCode
+                      className={
+                        'h-6 w-6' +
+                        (paymentMethod === 'pix' ? ' text-emerald-500' : ' text-muted-foreground')
+                      }
+                    />
+                    <span className="text-sm font-semibold text-foreground">
+                      {t('renew.paymentMethod.pix')}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {t('renew.paymentMethod.pixDescription')}
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPaymentMethod('card')
+                      trackTrial('payment_method_selected', { method: 'card' })
+                    }}
+                    className={
+                      'flex flex-col items-center gap-2 rounded-xl p-4 transition-all border' +
+                      (paymentMethod === 'card'
+                        ? ' border-emerald-500 bg-emerald-500/5 shadow-sm'
+                        : ' border-border bg-card hover:border-border/80')
+                    }
+                  >
+                    <CreditCard
+                      className={
+                        'h-6 w-6' +
+                        (paymentMethod === 'card' ? ' text-emerald-500' : ' text-muted-foreground')
+                      }
+                    />
+                    <span className="text-sm font-semibold text-foreground">
+                      {t('renew.paymentMethod.card')}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {t('renew.paymentMethod.cardDescription')}
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              {/* 4. Conditional form / action */}
+              {paymentMethod === 'pix' ? (
+                <div className="space-y-4 rounded-xl border border-border bg-card p-6">
+                  {error && (
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription>{error}</AlertDescription>
+                    </Alert>
+                  )}
+
+                  <div className="space-y-2">
+                    <Label htmlFor="pix-name">{t('renew.fields.name')}</Label>
+                    <Input
+                      id="pix-name"
+                      value={name}
+                      onChange={(e) => {
+                        setName(e.target.value)
+                        if (fieldErrors.name) setFieldErrors((p) => ({ ...p, name: '' }))
+                      }}
+                      disabled={loading}
+                      className={fieldErrors.name ? 'border-destructive' : ''}
+                    />
+                    {fieldErrors.name && (
+                      <p className="text-xs text-destructive">{fieldErrors.name}</p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="pix-cpf">{t('renew.fields.cpf')}</Label>
+                    <Input
+                      id="pix-cpf"
+                      inputMode="numeric"
+                      placeholder={t('renew.fields.cpfPlaceholder')}
+                      value={cpf}
+                      onChange={(e) => {
+                        setCpf(formatCpf(e.target.value))
+                        if (fieldErrors.cpf) setFieldErrors((p) => ({ ...p, cpf: '' }))
+                      }}
+                      disabled={loading}
+                      className={'font-mono' + (fieldErrors.cpf ? ' border-destructive' : '')}
+                    />
+                    {fieldErrors.cpf && (
+                      <p className="text-xs text-destructive">{fieldErrors.cpf}</p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="pix-phone">{t('renew.fields.phone')}</Label>
+                    <Input
+                      id="pix-phone"
+                      inputMode="tel"
+                      placeholder={t('renew.fields.phonePlaceholder')}
+                      value={phone}
+                      onChange={(e) => {
+                        setPhone(formatPhone(e.target.value))
+                        if (fieldErrors.phone) setFieldErrors((p) => ({ ...p, phone: '' }))
+                      }}
+                      disabled={loading}
+                      className={fieldErrors.phone ? 'border-destructive' : ''}
+                    />
+                    {fieldErrors.phone && (
+                      <p className="text-xs text-destructive">{fieldErrors.phone}</p>
+                    )}
+                  </div>
+
+                  <Button
+                    variant="glow"
+                    size="lg"
+                    className="w-full h-auto gap-2 py-4 text-base font-semibold"
+                    disabled={submitDisabled}
+                    onClick={handlePixSubmit}
+                  >
+                    {loading ? (
+                      <>
+                        <Spinner className="h-4 w-4" />
+                        {t('renew.generating')}
+                      </>
+                    ) : (
+                      <>
+                        <Zap className="h-4 w-4" />
+                        {t('renew.pixCta')}
+                      </>
+                    )}
+                  </Button>
+                </div>
+              ) : (
+                <div className="rounded-xl border border-border bg-card p-6">
+                  <Button
+                    variant="glow"
+                    size="lg"
+                    className="w-full h-auto gap-2 py-4 text-base font-semibold"
+                    disabled={!selectedPlan}
+                    onClick={handleCardNavigate}
+                  >
+                    <CreditCard className="h-4 w-4" />
+                    {t('renew.cardCta')}
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </div>
-      )}
-    </div>
+      </div>
+    </>
   )
 }

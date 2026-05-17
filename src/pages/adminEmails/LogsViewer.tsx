@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { AppPageHeader } from '@/components/common/app-page-header'
 import { Loader2 } from 'lucide-react'
 import {
   Select,
@@ -141,250 +142,256 @@ export default function LogsViewer() {
   const logs: EmailLog[] = data?.logs ?? []
 
   return (
-    <div className="p-6 space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">{t('logs.title')}</h1>
-        <Button variant="outline" onClick={handleExport}>
-          {t('logs.exportButton')}
-        </Button>
-      </div>
-
-      <Card className="p-4 space-y-3">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
-          <div>
-            <Label>De</Label>
-            <Input
-              type="datetime-local"
-              value={fromInput}
-              onChange={(e) => setFromInput(e.target.value)}
-              aria-invalid={fromParsed.kind === 'invalid'}
-            />
-            {fromParsed.kind === 'invalid' && (
-              <p className="text-xs text-destructive mt-1">Data inválida</p>
-            )}
-          </div>
-          <div>
-            <Label>Até</Label>
-            <Input
-              type="datetime-local"
-              value={toInput}
-              onChange={(e) => setToInput(e.target.value)}
-              aria-invalid={toParsed.kind === 'invalid'}
-            />
-            {toParsed.kind === 'invalid' && (
-              <p className="text-xs text-destructive mt-1">Data inválida</p>
-            )}
-          </div>
-          <div>
-            <Label>Status</Label>
-            <Select
-              value={filters.status ?? 'all'}
-              onValueChange={(v) =>
-                setFilters((p) => ({
-                  ...p,
-                  status: v === 'all' ? undefined : (v as EmailLogStatus)
-                }))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
-                {STATUS_OPTIONS.map((s) => (
-                  <SelectItem key={s} value={s}>
-                    {s}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label>Origem</Label>
-            <Select
-              value={filters.source ?? 'all'}
-              onValueChange={(v) =>
-                setFilters((p) => ({
-                  ...p,
-                  source: v === 'all' ? undefined : (v as 'event' | 'lifecycle')
-                }))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todas</SelectItem>
-                <SelectItem value="event">Event</SelectItem>
-                <SelectItem value="lifecycle">Lifecycle</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label>Template key</Label>
-            <Input
-              value={templateKeyInput}
-              onChange={(e) => setTemplateKeyInput(e.target.value)}
-              placeholder="ex: welcome_email"
-            />
-          </div>
-          <div>
-            <Label>Destinatário</Label>
-            <Input
-              value={recipientInput}
-              onChange={(e) => setRecipientInput(e.target.value)}
-              placeholder="email..."
-            />
-          </div>
-          <div>
-            <Label>{t('logs.filters.campaignId')}</Label>
-            <Input
-              type="number"
-              inputMode="numeric"
-              value={campaignIdInput}
-              onChange={(e) => setCampaignIdInput(e.target.value)}
-              placeholder={t('logs.filters.campaignIdPlaceholder')}
-              min="1"
-            />
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <Button onClick={applyFilters} disabled={dateInputsInvalid}>
-            Aplicar filtros
-          </Button>
-          <Button variant="ghost" onClick={clearFilters}>
-            Limpar
+    <>
+      <AppPageHeader title={t('pageTitle.adminEmails.logs', { ns: 'common' })} />
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold">{t('logs.title')}</h1>
+          <Button variant="outline" onClick={handleExport}>
+            {t('logs.exportButton')}
           </Button>
         </div>
-      </Card>
 
-      <Card>
-        {isLoading ? (
-          <div className="flex items-center gap-2 p-6 text-muted-foreground">
-            <Loader2 className="h-4 w-4 animate-spin" /> Carregando...
+        <Card className="p-4 space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+            <div>
+              <Label>De</Label>
+              <Input
+                type="datetime-local"
+                value={fromInput}
+                onChange={(e) => setFromInput(e.target.value)}
+                aria-invalid={fromParsed.kind === 'invalid'}
+              />
+              {fromParsed.kind === 'invalid' && (
+                <p className="text-xs text-destructive mt-1">Data inválida</p>
+              )}
+            </div>
+            <div>
+              <Label>Até</Label>
+              <Input
+                type="datetime-local"
+                value={toInput}
+                onChange={(e) => setToInput(e.target.value)}
+                aria-invalid={toParsed.kind === 'invalid'}
+              />
+              {toParsed.kind === 'invalid' && (
+                <p className="text-xs text-destructive mt-1">Data inválida</p>
+              )}
+            </div>
+            <div>
+              <Label>Status</Label>
+              <Select
+                value={filters.status ?? 'all'}
+                onValueChange={(v) =>
+                  setFilters((p) => ({
+                    ...p,
+                    status: v === 'all' ? undefined : (v as EmailLogStatus)
+                  }))
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  {STATUS_OPTIONS.map((s) => (
+                    <SelectItem key={s} value={s}>
+                      {s}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Origem</Label>
+              <Select
+                value={filters.source ?? 'all'}
+                onValueChange={(v) =>
+                  setFilters((p) => ({
+                    ...p,
+                    source: v === 'all' ? undefined : (v as 'event' | 'lifecycle')
+                  }))
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas</SelectItem>
+                  <SelectItem value="event">Event</SelectItem>
+                  <SelectItem value="lifecycle">Lifecycle</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Template key</Label>
+              <Input
+                value={templateKeyInput}
+                onChange={(e) => setTemplateKeyInput(e.target.value)}
+                placeholder="ex: welcome_email"
+              />
+            </div>
+            <div>
+              <Label>Destinatário</Label>
+              <Input
+                value={recipientInput}
+                onChange={(e) => setRecipientInput(e.target.value)}
+                placeholder="email..."
+              />
+            </div>
+            <div>
+              <Label>{t('logs.filters.campaignId')}</Label>
+              <Input
+                type="number"
+                inputMode="numeric"
+                value={campaignIdInput}
+                onChange={(e) => setCampaignIdInput(e.target.value)}
+                placeholder={t('logs.filters.campaignIdPlaceholder')}
+                min="1"
+              />
+            </div>
           </div>
-        ) : isError ? (
-          <div className="p-6 space-y-3">
-            <p className="text-sm text-destructive">
-              {extractApiError(error, 'Erro ao carregar logs')}
-            </p>
-            <Button variant="outline" size="sm" onClick={() => refetch()}>
-              Tentar novamente
+          <div className="flex gap-2">
+            <Button onClick={applyFilters} disabled={dateInputsInvalid}>
+              Aplicar filtros
+            </Button>
+            <Button variant="ghost" onClick={clearFilters}>
+              Limpar
             </Button>
           </div>
-        ) : (
-          <table className="w-full">
-            <thead className="border-b">
-              <tr className="text-left">
-                <th className="p-3 font-medium">Data</th>
-                <th className="p-3 font-medium">Template</th>
-                <th className="p-3 font-medium">Destinatário</th>
-                <th className="p-3 font-medium">Status</th>
-                <th className="p-3 font-medium">Provider</th>
-              </tr>
-            </thead>
-            <tbody>
-              {logs.map((log) => (
-                <tr
-                  key={log.id}
-                  className="border-b hover:bg-muted/50 cursor-pointer"
-                  onClick={() => setSelectedLogId(log.id)}
-                >
-                  <td className="p-3 text-sm text-muted-foreground">
-                    {new Date(log.created_at).toLocaleString('pt-BR')}
-                  </td>
-                  <td className="p-3 font-mono text-sm">{log.template_key_snapshot}</td>
-                  <td className="p-3 text-sm">{log.recipient_email}</td>
-                  <td className="p-3">
-                    <Badge variant={statusVariant(log.status)}>{log.status}</Badge>
-                  </td>
-                  <td className="p-3 text-sm text-muted-foreground">{log.provider ?? '—'}</td>
-                </tr>
-              ))}
-              {logs.length === 0 && (
-                <tr>
-                  <td colSpan={5} className="p-6 text-center text-muted-foreground">
-                    Nenhum log encontrado
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        )}
-      </Card>
+        </Card>
 
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
-          {total > 0
-            ? `Página ${currentPage} de ${totalPages} • ${total} registros`
-            : 'Sem registros'}
-        </p>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={handlePrev} disabled={offset === 0}>
-            Anterior
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleNext}
-            disabled={offset + limit >= total}
-          >
-            Próximo
-          </Button>
-        </div>
-      </div>
-
-      <Sheet open={selectedLogId !== null} onOpenChange={(o) => !o && setSelectedLogId(null)}>
-        <SheetContent className="w-full sm:max-w-md overflow-y-auto">
-          <SheetHeader>
-            <SheetTitle>Detalhes do log</SheetTitle>
-            <SheetDescription>{detail.data ? `ID #${detail.data.id}` : ''}</SheetDescription>
-          </SheetHeader>
-          <div className="p-4 space-y-3 text-sm">
-            {detail.isLoading ? (
-              <p className="text-muted-foreground">Carregando...</p>
-            ) : detail.data ? (
-              <dl className="space-y-2">
-                <Field label="Template" value={detail.data.template_key_snapshot} />
-                <Field label="Destinatário" value={detail.data.recipient_email} />
-                <Field label="Status" value={detail.data.status} />
-                <Field label="Provider" value={detail.data.provider ?? '—'} />
-                <Field label="Provider message ID" value={detail.data.provider_message_id ?? '—'} />
-                <Field
-                  label="Criado em"
-                  value={new Date(detail.data.created_at).toLocaleString('pt-BR')}
-                />
-                <Field
-                  label="Enviado em"
-                  value={
-                    detail.data.sent_at
-                      ? new Date(detail.data.sent_at).toLocaleString('pt-BR')
-                      : '—'
-                  }
-                />
-                <Field label="User ID" value={String(detail.data.user_id ?? '—')} />
-                <Field label="Subscriber ID" value={String(detail.data.subscriber_id ?? '—')} />
-                <Field
-                  label="Lifecycle job ID"
-                  value={String(detail.data.lifecycle_job_id ?? '—')}
-                />
-                <Field label="Dedup key" value={detail.data.dedup_key ?? '—'} />
-                {detail.data.error_message && (
-                  <div>
-                    <dt className="font-medium">Erro</dt>
-                    <dd className="mt-1 p-2 bg-destructive/10 text-destructive text-xs font-mono whitespace-pre-wrap rounded">
-                      {detail.data.error_message}
-                    </dd>
-                  </div>
+        <Card>
+          {isLoading ? (
+            <div className="flex items-center gap-2 p-6 text-muted-foreground">
+              <Loader2 className="h-4 w-4 animate-spin" /> Carregando...
+            </div>
+          ) : isError ? (
+            <div className="p-6 space-y-3">
+              <p className="text-sm text-destructive">
+                {extractApiError(error, 'Erro ao carregar logs')}
+              </p>
+              <Button variant="outline" size="sm" onClick={() => refetch()}>
+                Tentar novamente
+              </Button>
+            </div>
+          ) : (
+            <table className="w-full">
+              <thead className="border-b">
+                <tr className="text-left">
+                  <th className="p-3 font-medium">Data</th>
+                  <th className="p-3 font-medium">Template</th>
+                  <th className="p-3 font-medium">Destinatário</th>
+                  <th className="p-3 font-medium">Status</th>
+                  <th className="p-3 font-medium">Provider</th>
+                </tr>
+              </thead>
+              <tbody>
+                {logs.map((log) => (
+                  <tr
+                    key={log.id}
+                    className="border-b hover:bg-muted/50 cursor-pointer"
+                    onClick={() => setSelectedLogId(log.id)}
+                  >
+                    <td className="p-3 text-sm text-muted-foreground">
+                      {new Date(log.created_at).toLocaleString('pt-BR')}
+                    </td>
+                    <td className="p-3 font-mono text-sm">{log.template_key_snapshot}</td>
+                    <td className="p-3 text-sm">{log.recipient_email}</td>
+                    <td className="p-3">
+                      <Badge variant={statusVariant(log.status)}>{log.status}</Badge>
+                    </td>
+                    <td className="p-3 text-sm text-muted-foreground">{log.provider ?? '—'}</td>
+                  </tr>
+                ))}
+                {logs.length === 0 && (
+                  <tr>
+                    <td colSpan={5} className="p-6 text-center text-muted-foreground">
+                      Nenhum log encontrado
+                    </td>
+                  </tr>
                 )}
-              </dl>
-            ) : (
-              <p className="text-muted-foreground">Não encontrado</p>
-            )}
+              </tbody>
+            </table>
+          )}
+        </Card>
+
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-muted-foreground">
+            {total > 0
+              ? `Página ${currentPage} de ${totalPages} • ${total} registros`
+              : 'Sem registros'}
+          </p>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={handlePrev} disabled={offset === 0}>
+              Anterior
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleNext}
+              disabled={offset + limit >= total}
+            >
+              Próximo
+            </Button>
           </div>
-        </SheetContent>
-      </Sheet>
-    </div>
+        </div>
+
+        <Sheet open={selectedLogId !== null} onOpenChange={(o) => !o && setSelectedLogId(null)}>
+          <SheetContent className="w-full sm:max-w-md overflow-y-auto">
+            <SheetHeader>
+              <SheetTitle>Detalhes do log</SheetTitle>
+              <SheetDescription>{detail.data ? `ID #${detail.data.id}` : ''}</SheetDescription>
+            </SheetHeader>
+            <div className="p-4 space-y-3 text-sm">
+              {detail.isLoading ? (
+                <p className="text-muted-foreground">Carregando...</p>
+              ) : detail.data ? (
+                <dl className="space-y-2">
+                  <Field label="Template" value={detail.data.template_key_snapshot} />
+                  <Field label="Destinatário" value={detail.data.recipient_email} />
+                  <Field label="Status" value={detail.data.status} />
+                  <Field label="Provider" value={detail.data.provider ?? '—'} />
+                  <Field
+                    label="Provider message ID"
+                    value={detail.data.provider_message_id ?? '—'}
+                  />
+                  <Field
+                    label="Criado em"
+                    value={new Date(detail.data.created_at).toLocaleString('pt-BR')}
+                  />
+                  <Field
+                    label="Enviado em"
+                    value={
+                      detail.data.sent_at
+                        ? new Date(detail.data.sent_at).toLocaleString('pt-BR')
+                        : '—'
+                    }
+                  />
+                  <Field label="User ID" value={String(detail.data.user_id ?? '—')} />
+                  <Field label="Subscriber ID" value={String(detail.data.subscriber_id ?? '—')} />
+                  <Field
+                    label="Lifecycle job ID"
+                    value={String(detail.data.lifecycle_job_id ?? '—')}
+                  />
+                  <Field label="Dedup key" value={detail.data.dedup_key ?? '—'} />
+                  {detail.data.error_message && (
+                    <div>
+                      <dt className="font-medium">Erro</dt>
+                      <dd className="mt-1 p-2 bg-destructive/10 text-destructive text-xs font-mono whitespace-pre-wrap rounded">
+                        {detail.data.error_message}
+                      </dd>
+                    </div>
+                  )}
+                </dl>
+              ) : (
+                <p className="text-muted-foreground">Não encontrado</p>
+              )}
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+    </>
   )
 }
 

@@ -1,6 +1,7 @@
 import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppPageHeader } from '@/components/common/app-page-header'
 import { useEmailTemplates } from '@/hooks/useEmailTemplates'
 import { useEmailEvents } from '@/hooks/useEmailEvents'
 import { useEmailLifecycleJobs } from '@/hooks/useEmailLifecycle'
@@ -50,45 +51,48 @@ export default function Hub() {
   const campaigns = useEmailCampaigns({ limit: 1, offset: 0 })
 
   return (
-    <div className="p-6 space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">{t('hub.title')}</h1>
-        <p className="text-muted-foreground">{t('hub.subtitle')}</p>
+    <>
+      <AppPageHeader title={t('pageTitle.adminEmails.hub', { ns: 'common' })} />
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold">{t('hub.title')}</h1>
+          <p className="text-muted-foreground">{t('hub.subtitle')}</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <KpiCard
+            title={t('hub.kpi.templates')}
+            count={tpls.data?.length ?? 0}
+            loading={tpls.isLoading}
+            href={PATHS.app.adminEmails.templates}
+          />
+          <KpiCard
+            title={t('hub.kpi.events')}
+            count={events.data?.length ?? 0}
+            loading={events.isLoading}
+            href={PATHS.app.adminEmails.events}
+          />
+          <KpiCard
+            title={t('hub.kpi.lifecycle')}
+            count={lifecycle.data?.length ?? 0}
+            loading={lifecycle.isLoading}
+            href={PATHS.app.adminEmails.lifecycle}
+          />
+          <KpiCard
+            title={t('hub.kpi.logs')}
+            count={logs.data?.total ?? null}
+            loading={logs.isLoading}
+            href={PATHS.app.adminEmails.logs}
+            description={t('hub.kpi.logsDescription')}
+          />
+          <KpiCard
+            title={t('hub.kpi.campaigns')}
+            count={campaigns.data?.total ?? null}
+            loading={campaigns.isLoading}
+            href={PATHS.app.adminEmails.campaigns}
+            description={t('hub.kpi.campaignsDescription')}
+          />
+        </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <KpiCard
-          title={t('hub.kpi.templates')}
-          count={tpls.data?.length ?? 0}
-          loading={tpls.isLoading}
-          href={PATHS.app.adminEmails.templates}
-        />
-        <KpiCard
-          title={t('hub.kpi.events')}
-          count={events.data?.length ?? 0}
-          loading={events.isLoading}
-          href={PATHS.app.adminEmails.events}
-        />
-        <KpiCard
-          title={t('hub.kpi.lifecycle')}
-          count={lifecycle.data?.length ?? 0}
-          loading={lifecycle.isLoading}
-          href={PATHS.app.adminEmails.lifecycle}
-        />
-        <KpiCard
-          title={t('hub.kpi.logs')}
-          count={logs.data?.total ?? null}
-          loading={logs.isLoading}
-          href={PATHS.app.adminEmails.logs}
-          description={t('hub.kpi.logsDescription')}
-        />
-        <KpiCard
-          title={t('hub.kpi.campaigns')}
-          count={campaigns.data?.total ?? null}
-          loading={campaigns.isLoading}
-          href={PATHS.app.adminEmails.campaigns}
-          description={t('hub.kpi.campaignsDescription')}
-        />
-      </div>
-    </div>
+    </>
   )
 }

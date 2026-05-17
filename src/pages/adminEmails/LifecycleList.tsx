@@ -5,6 +5,7 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { AppPageHeader } from '@/components/common/app-page-header'
 import {
   useEmailLifecycleJobs,
   useDeleteLifecycle,
@@ -149,41 +150,44 @@ export default function LifecycleList() {
   ]
 
   return (
-    <div className="p-6 space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">{t('lifecycle.title')}</h1>
-        {activeTab === 'simple_segment' && (
-          <Button asChild>
-            <Link to={PATHS.app.adminEmails.lifecycleNew}>{t('lifecycle.createButton')}</Link>
-          </Button>
-        )}
+    <>
+      <AppPageHeader title={t('pageTitle.adminEmails.lifecycle', { ns: 'common' })} />
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold">{t('lifecycle.title')}</h1>
+          {activeTab === 'simple_segment' && (
+            <Button asChild>
+              <Link to={PATHS.app.adminEmails.lifecycleNew}>{t('lifecycle.createButton')}</Link>
+            </Button>
+          )}
+        </div>
+        <div className="border-b flex gap-1">
+          {tabs.map((t) => (
+            <button
+              key={t.kind}
+              type="button"
+              onClick={() => setActiveTab(t.kind)}
+              className={
+                'px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ' +
+                (activeTab === t.kind
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-muted-foreground hover:text-foreground')
+              }
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+        <Card>
+          <LifecycleTable
+            jobs={activeTab === 'simple_segment' ? configurable : specialized}
+            isLoading={isLoading}
+            isError={isError}
+            error={error}
+            onRetry={refetch}
+          />
+        </Card>
       </div>
-      <div className="border-b flex gap-1">
-        {tabs.map((t) => (
-          <button
-            key={t.kind}
-            type="button"
-            onClick={() => setActiveTab(t.kind)}
-            className={
-              'px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ' +
-              (activeTab === t.kind
-                ? 'border-primary text-primary'
-                : 'border-transparent text-muted-foreground hover:text-foreground')
-            }
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
-      <Card>
-        <LifecycleTable
-          jobs={activeTab === 'simple_segment' ? configurable : specialized}
-          isLoading={isLoading}
-          isError={isError}
-          error={error}
-          onRetry={refetch}
-        />
-      </Card>
-    </div>
+    </>
   )
 }

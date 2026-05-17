@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { useForm, type Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
@@ -24,6 +25,7 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { Card, CardContent } from '@/components/ui/card'
+import { AppPageHeader } from '@/components/common/app-page-header'
 import { CronExpressionInput } from '@/components/admin-emails/CronExpressionInput'
 import { AudiencePreview } from '@/components/admin-emails/AudiencePreview'
 import { FilterBuilder, normalizeFilter } from '@/components/admin-emails/FilterBuilder'
@@ -32,6 +34,7 @@ import { extractApiError } from '@/lib/extractApiError'
 import type { SegmentFilter } from '@/models/email'
 
 export default function LifecycleEditor() {
+  const { t } = useTranslation('common')
   const { id } = useParams()
   const idNum = id ? Number(id) : null
   const isEdit = idNum !== null && !Number.isNaN(idNum)
@@ -118,158 +121,173 @@ export default function LifecycleEditor() {
   }
 
   if (isEdit && jobQuery.isLoading) {
-    return <div className="p-6 text-muted-foreground">Carregando...</div>
+    return (
+      <>
+        <AppPageHeader title={t('pageTitle.adminEmails.lifecycleEditor')} />
+        <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="p-6 text-muted-foreground">Carregando...</div>
+        </div>
+      </>
+    )
   }
 
   if (isEdit && jobQuery.isError) {
     return (
-      <div className="p-6 space-y-3">
-        <p className="text-sm text-destructive">
-          {extractApiError(jobQuery.error, 'Erro ao carregar lifecycle')}
-        </p>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => jobQuery.refetch()}>
-            Tentar novamente
-          </Button>
-          <Button variant="ghost" onClick={() => navigate(PATHS.app.adminEmails.lifecycle)}>
-            Voltar
-          </Button>
+      <>
+        <AppPageHeader title={t('pageTitle.adminEmails.lifecycleEditor')} />
+        <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="p-6 space-y-3">
+            <p className="text-sm text-destructive">
+              {extractApiError(jobQuery.error, 'Erro ao carregar lifecycle')}
+            </p>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => jobQuery.refetch()}>
+                Tentar novamente
+              </Button>
+              <Button variant="ghost" onClick={() => navigate(PATHS.app.adminEmails.lifecycle)}>
+                Voltar
+              </Button>
+            </div>
+          </div>
         </div>
-      </div>
+      </>
     )
   }
 
   return (
-    <div className="p-6 space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">
-          {isEdit ? `Editar lifecycle: ${jobQuery.data?.name ?? ''}` : 'Novo lifecycle'}
-        </h1>
-        <div className="flex gap-2">
-          {isEdit && (
-            <Button variant="outline" onClick={handleRunNow} disabled={runNowMut.isPending}>
-              {runNowMut.isPending ? 'Enfileirando...' : 'Executar agora'}
+    <>
+      <AppPageHeader title={t('pageTitle.adminEmails.lifecycleEditor')} />
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold">
+            {isEdit ? `Editar lifecycle: ${jobQuery.data?.name ?? ''}` : 'Novo lifecycle'}
+          </h1>
+          <div className="flex gap-2">
+            {isEdit && (
+              <Button variant="outline" onClick={handleRunNow} disabled={runNowMut.isPending}>
+                {runNowMut.isPending ? 'Enfileirando...' : 'Executar agora'}
+              </Button>
+            )}
+            <Button variant="ghost" onClick={() => navigate(PATHS.app.adminEmails.lifecycle)}>
+              Voltar
             </Button>
-          )}
-          <Button variant="ghost" onClick={() => navigate(PATHS.app.adminEmails.lifecycle)}>
-            Voltar
-          </Button>
+          </div>
         </div>
-      </div>
 
-      {editingDisabledForSpecialized && (
-        <Card>
-          <CardContent className="p-3 text-sm text-muted-foreground">
-            Esta é uma lifecycle <strong>especializada</strong> (handler em código). Você pode
-            alterar template_id, cron_expression, dedup e is_active. Filter é gerenciado pelo
-            handler.
-          </CardContent>
-        </Card>
-      )}
+        {editingDisabledForSpecialized && (
+          <Card>
+            <CardContent className="p-3 text-sm text-muted-foreground">
+              Esta é uma lifecycle <strong>especializada</strong> (handler em código). Você pode
+              alterar template_id, cron_expression, dedup e is_active. Filter é gerenciado pelo
+              handler.
+            </CardContent>
+          </Card>
+        )}
 
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="grid grid-cols-1 lg:grid-cols-2 gap-4"
-      >
-        <div className="space-y-3">
-          <div>
-            <Label>Nome</Label>
-            <Input {...form.register('name')} disabled={isSpecialized} />
-          </div>
-          <div>
-            <Label>Template</Label>
-            <Select
-              value={String(watchAll.template_id || '')}
-              onValueChange={(v) => form.setValue('template_id', Number(v))}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione um template" />
-              </SelectTrigger>
-              <SelectContent>
-                {(templates.data ?? []).map((t) => (
-                  <SelectItem key={t.id} value={String(t.id)}>
-                    {t.name} ({t.key})
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <CronExpressionInput
-            label="Cron"
-            value={watchAll.cron_expression}
-            onChange={(v) => form.setValue('cron_expression', v)}
-            timezone={watchAll.timezone}
-          />
-          <div>
-            <Label>Timezone</Label>
-            <Input {...form.register('timezone')} />
-          </div>
-          <div className="grid grid-cols-2 gap-2">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-4"
+        >
+          <div className="space-y-3">
             <div>
-              <Label>Dedup key template</Label>
-              <Input {...form.register('dedup_key_template')} disabled={isSpecialized} />
+              <Label>Nome</Label>
+              <Input {...form.register('name')} disabled={isSpecialized} />
             </div>
             <div>
-              <Label>Dedup window (horas)</Label>
-              <Input
-                type="number"
-                {...form.register('dedup_window_hours', { valueAsNumber: true })}
-              />
+              <Label>Template</Label>
+              <Select
+                value={String(watchAll.template_id || '')}
+                onValueChange={(v) => form.setValue('template_id', Number(v))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione um template" />
+                </SelectTrigger>
+                <SelectContent>
+                  {(templates.data ?? []).map((t) => (
+                    <SelectItem key={t.id} value={String(t.id)}>
+                      {t.name} ({t.key})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Switch
-              checked={watchAll.is_active}
-              onCheckedChange={(v) => form.setValue('is_active', v)}
+            <CronExpressionInput
+              label="Cron"
+              value={watchAll.cron_expression}
+              onChange={(v) => form.setValue('cron_expression', v)}
+              timezone={watchAll.timezone}
             />
-            <Label>Ativo</Label>
-          </div>
-        </div>
-
-        <div className="space-y-3">
-          {!isSpecialized && (
-            <>
+            <div>
+              <Label>Timezone</Label>
+              <Input {...form.register('timezone')} />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
               <div>
-                <Label>Filtro de usuários</Label>
-                {schema.data ? (
-                  <FilterBuilder
-                    fields={schema.data}
-                    value={filter}
-                    onChange={setFilter}
-                    maxDepth={3}
-                  />
-                ) : schema.isLoading ? (
-                  <p className="text-sm text-muted-foreground">Carregando schema...</p>
-                ) : (
-                  <p className="text-sm text-destructive">Erro ao carregar schema de fields</p>
-                )}
+                <Label>Dedup key template</Label>
+                <Input {...form.register('dedup_key_template')} disabled={isSpecialized} />
               </div>
-              <AudiencePreview filter={filter} debounceMs={800} />
-            </>
-          )}
-          {isSpecialized && (
-            <Card>
-              <CardContent className="p-4 text-sm text-muted-foreground">
-                Filtro gerenciado pelo handler especializado:{' '}
-                <code className="font-mono text-xs">{jobQuery.data?.handler_key}</code>
-              </CardContent>
-            </Card>
-          )}
-        </div>
+              <div>
+                <Label>Dedup window (horas)</Label>
+                <Input
+                  type="number"
+                  {...form.register('dedup_window_hours', { valueAsNumber: true })}
+                />
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Switch
+                checked={watchAll.is_active}
+                onCheckedChange={(v) => form.setValue('is_active', v)}
+              />
+              <Label>Ativo</Label>
+            </div>
+          </div>
 
-        <div className="lg:col-span-2 flex justify-end gap-2">
-          <Button
-            variant="ghost"
-            type="button"
-            onClick={() => navigate(PATHS.app.adminEmails.lifecycle)}
-          >
-            Cancelar
-          </Button>
-          <Button type="submit" disabled={createMut.isPending || updateMut.isPending}>
-            Salvar
-          </Button>
-        </div>
-      </form>
-    </div>
+          <div className="space-y-3">
+            {!isSpecialized && (
+              <>
+                <div>
+                  <Label>Filtro de usuários</Label>
+                  {schema.data ? (
+                    <FilterBuilder
+                      fields={schema.data}
+                      value={filter}
+                      onChange={setFilter}
+                      maxDepth={3}
+                    />
+                  ) : schema.isLoading ? (
+                    <p className="text-sm text-muted-foreground">Carregando schema...</p>
+                  ) : (
+                    <p className="text-sm text-destructive">Erro ao carregar schema de fields</p>
+                  )}
+                </div>
+                <AudiencePreview filter={filter} debounceMs={800} />
+              </>
+            )}
+            {isSpecialized && (
+              <Card>
+                <CardContent className="p-4 text-sm text-muted-foreground">
+                  Filtro gerenciado pelo handler especializado:{' '}
+                  <code className="font-mono text-xs">{jobQuery.data?.handler_key}</code>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          <div className="lg:col-span-2 flex justify-end gap-2">
+            <Button
+              variant="ghost"
+              type="button"
+              onClick={() => navigate(PATHS.app.adminEmails.lifecycle)}
+            >
+              Cancelar
+            </Button>
+            <Button type="submit" disabled={createMut.isPending || updateMut.isPending}>
+              Salvar
+            </Button>
+          </div>
+        </form>
+      </div>
+    </>
   )
 }

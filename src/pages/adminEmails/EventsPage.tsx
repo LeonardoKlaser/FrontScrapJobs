@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { useEmailEvents, useSubscribers, useDeleteSubscriber } from '@/hooks/useEmailEvents'
 import { SubscriberFormDialog } from '@/components/admin-emails/SubscriberFormDialog'
 import { DeleteConfirmDialog } from '@/components/admin-emails/DeleteConfirmDialog'
+import { AppPageHeader } from '@/components/common/app-page-header'
 import type { EmailEvent, EmailEventSubscriber } from '@/models/email'
 import { extractApiError } from '@/lib/extractApiError'
 
@@ -150,47 +151,50 @@ export default function EventsPage() {
   const { data, isLoading, isError, error, refetch } = useEmailEvents()
 
   return (
-    <div className="p-6 space-y-4">
-      <div>
-        <h1 className="text-2xl font-bold">{t('events.title')}</h1>
-        <p className="text-muted-foreground">
-          Configure subscribers para cada evento publicado pelo sistema
-        </p>
-      </div>
-      {isLoading ? (
-        <p className="text-muted-foreground">Carregando...</p>
-      ) : isError ? (
-        <div className="space-y-3">
-          <p className="text-sm text-destructive">
-            {extractApiError(error, 'Erro ao carregar eventos')}
+    <>
+      <AppPageHeader title={t('pageTitle.adminEmails.events', { ns: 'common' })} />
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-4">
+        <div>
+          <h1 className="text-2xl font-bold">{t('events.title')}</h1>
+          <p className="text-muted-foreground">
+            Configure subscribers para cada evento publicado pelo sistema
           </p>
-          <Button variant="outline" size="sm" onClick={() => refetch()}>
-            Tentar novamente
-          </Button>
         </div>
-      ) : (data?.length ?? 0) === 0 ? (
-        <p className="text-muted-foreground">Nenhum evento registrado</p>
-      ) : (
-        <Card>
-          <Accordion type="single" collapsible className="w-full">
-            {(data ?? []).map((event) => (
-              <AccordionItem key={event.id} value={String(event.id)} className="px-4">
-                <AccordionTrigger>
-                  <div className="flex flex-col items-start text-left">
-                    <span className="font-mono text-sm">{event.name}</span>
-                    <span className="text-xs text-muted-foreground font-normal">
-                      {event.description}
-                    </span>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <SubscribersList event={event} />
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </Card>
-      )}
-    </div>
+        {isLoading ? (
+          <p className="text-muted-foreground">Carregando...</p>
+        ) : isError ? (
+          <div className="space-y-3">
+            <p className="text-sm text-destructive">
+              {extractApiError(error, 'Erro ao carregar eventos')}
+            </p>
+            <Button variant="outline" size="sm" onClick={() => refetch()}>
+              Tentar novamente
+            </Button>
+          </div>
+        ) : (data?.length ?? 0) === 0 ? (
+          <p className="text-muted-foreground">Nenhum evento registrado</p>
+        ) : (
+          <Card>
+            <Accordion type="single" collapsible className="w-full">
+              {(data ?? []).map((event) => (
+                <AccordionItem key={event.id} value={String(event.id)} className="px-4">
+                  <AccordionTrigger>
+                    <div className="flex flex-col items-start text-left">
+                      <span className="font-mono text-sm">{event.name}</span>
+                      <span className="text-xs text-muted-foreground font-normal">
+                        {event.description}
+                      </span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <SubscribersList event={event} />
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </Card>
+        )}
+      </div>
+    </>
   )
 }
