@@ -8,7 +8,7 @@ test.describe('Curriculo', () => {
   })
 
   test('lista de curriculos carrega com curriculos existentes', async ({ page }) => {
-    await expect(page.getByText('Gerenciador de Currículos')).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'Currículo' })).toBeVisible()
 
     // Both mock curricula should appear in sidebar (exact match avoids
     // collision with the form heading "Editando: Curriculo Frontend")

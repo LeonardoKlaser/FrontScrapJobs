@@ -7,18 +7,20 @@ test.describe('Dashboard', () => {
     await page.waitForURL('/app')
   })
 
-  test('exibe os 3 stats cards com valores corretos', async ({ page }) => {
-    // Stats cards: each card has a title (p.text-sm) and a value (p.font-display.text-3xl)
-    const statsSection = page.locator('.grid').first()
-    await expect(statsSection.getByText('URLs monitoradas')).toBeVisible()
-    await expect(statsSection.getByText('Vagas novas (24h)')).toBeVisible()
-    await expect(statsSection.getByText('Notificações enviadas')).toBeVisible()
+  test('exibe a stats strip com valores corretos', async ({ page }) => {
+    // Stats are an inline flex row with pluralized strings (post-redesign).
+    const monitored = mockDashboard.monitored_urls_count
+    const newJobs = mockDashboard.new_jobs_today_count
+    const alerts = mockDashboard.alerts_sent_count
 
-    // Check values inside the stats cards using the bold text selector
-    const boldValues = statsSection.locator('p.font-display')
-    await expect(boldValues.nth(0)).toHaveText(String(mockDashboard.monitored_urls_count))
-    await expect(boldValues.nth(1)).toHaveText(String(mockDashboard.new_jobs_today_count))
-    await expect(boldValues.nth(2)).toHaveText(String(mockDashboard.alerts_sent_count))
+    const monitoredText =
+      monitored === 1 ? `${monitored} empresa monitorada` : `${monitored} empresas monitoradas`
+    const newJobsText = newJobs === 1 ? `${newJobs} nova em 24h` : `${newJobs} novas em 24h`
+    const alertsText = alerts === 1 ? `${alerts} alerta` : `${alerts} alertas`
+
+    await expect(page.getByText(monitoredText)).toBeVisible()
+    await expect(page.getByText(newJobsText)).toBeVisible()
+    await expect(page.getByText(alertsText)).toBeVisible()
   })
 
   test('tabela de vagas renderiza com dados', async ({ page }) => {
@@ -48,11 +50,13 @@ test.describe('Dashboard', () => {
     await expect(page.locator('td').filter({ hasText: 'Vaga 11' })).toBeVisible()
   })
 
-  test('URLs monitoradas exibem na tabela', async ({ page }) => {
-    await expect(page.getByText('Empresas monitoradas')).toBeVisible()
+  test('URLs monitoradas exibem como chips', async ({ page }) => {
+    // SectionHeader renders an <h2>; the stats strip also contains the substring,
+    // so disambiguate via role.
+    await expect(page.getByRole('heading', { name: 'Empresas monitoradas' })).toBeVisible()
 
-    // Use role-based selectors to avoid strict mode violations
-    await expect(page.getByRole('cell', { name: 'Google', exact: true })).toBeVisible()
-    await expect(page.getByRole('cell', { name: 'Amazon', exact: true })).toBeVisible()
+    // Post-redesign monitored companies render as Badge chips, not a table.
+    await expect(page.getByText('Google', { exact: true })).toBeVisible()
+    await expect(page.getByText('Amazon', { exact: true })).toBeVisible()
   })
 })

@@ -8,7 +8,7 @@ test.describe('Sites / Empresas', () => {
   })
 
   test('lista de empresas carrega corretamente', async ({ page }) => {
-    await expect(page.getByText('Empresas Monitoradas')).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'Empresas' })).toBeVisible()
 
     // Page defaults to "Inscritas" when user has subscribed sites — switch to
     // "Todas" so non-subscribed companies (Microsoft, Apple) become visible.
