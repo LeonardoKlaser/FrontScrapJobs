@@ -99,7 +99,7 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="overflow-x-hidden">
         <SidebarGroup>
           <SidebarGroupLabel>{t('nav.section.main')}</SidebarGroupLabel>
           <SidebarMenu>
