@@ -241,7 +241,7 @@ export default function EmpresasPage() {
             <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortKey)}>
               <SelectTrigger
                 aria-label={t('sort.label', { defaultValue: 'Ordenar por' })}
-                className="w-full gap-2 sm:w-52"
+                className="w-full gap-2 sm:w-72"
               >
                 <ArrowUpDown className="size-3.5 text-muted-foreground" />
                 <SelectValue />
