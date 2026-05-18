@@ -10,6 +10,18 @@ vi.mock('react-i18next', () => ({
   })
 }))
 
+// O componente roda preview-filters antes de chamar onRegister/onUpdateFilters.
+// Sem mock, a mutation fica pendente e onRegister nunca é chamado.
+// Resolve com matched_jobs > 0 pra forçar o caminho do onSuccess.
+vi.mock('@/services/filterPreviewService', () => ({
+  previewFilters: vi.fn().mockResolvedValue({
+    total_jobs: 10,
+    matched_jobs: 5,
+    sample: [],
+    site_has_no_recent_jobs: false
+  })
+}))
+
 function renderWithClient(ui: ReactElement) {
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } }
@@ -96,7 +108,11 @@ describe('RegistrationModal — splitIntoTags no fluxo de cadastro', () => {
       target: { value: 'desenvolvedor senior, react' }
     })
     fireEvent.click(screen.getByRole('button', { name: 'popup.confirmSubscription' }))
-    expect(onRegister).toHaveBeenCalledWith(['desenvolvedor', 'senior', 'react'], [])
+    // handleSaveWithValidation aguarda previewFilters resolver antes de chamar
+    // onRegister; precisa de waitFor pra dar tempo do mock async resolver.
+    await waitFor(() => {
+      expect(onRegister).toHaveBeenCalledWith(['desenvolvedor', 'senior', 'react'], [])
+    })
   })
 
   it('botão fica desabilitado quando input só tem pontuação', () => {
