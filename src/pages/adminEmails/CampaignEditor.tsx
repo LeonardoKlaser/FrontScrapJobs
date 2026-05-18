@@ -285,9 +285,9 @@ export default function CampaignEditor() {
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold">
+            <h2 className="text-2xl font-bold">
               {isNew ? t('campaigns.new') : (camp?.name ?? '')}
-            </h1>
+            </h2>
             {status && <StatusBadge status={status} />}
           </div>
           <Button variant="ghost" onClick={() => navigate(PATHS.app.adminEmails.campaigns)}>

@@ -111,7 +111,8 @@ export function Home() {
     data,
     isLoading: isDashboardLoading,
     isError: isDashboardError,
-    error: dashboardError
+    error: dashboardError,
+    refetch: refetchDashboard
   } = useDashboard()
   const { data: user } = useUser()
   const [selectedJobId, setSelectedJobId] = useState<number | null>(null)
@@ -295,10 +296,23 @@ export function Home() {
     setWizardLatched((data.user_monitored_urls?.length ?? 0) === 0)
   }, [user, data, wizardLatched])
 
+  const addCompanyButton = (
+    <Button
+      variant="outline"
+      onClick={() => navigate(PATHS.app.listSites)}
+      aria-label={t('home.addCompany', { ns: 'common' })}
+    >
+      <Plus className="h-4 w-4" />
+      <span className="hidden sm:inline">{t('home.addCompany', { ns: 'common' })}</span>
+    </Button>
+  )
+
   if (isDashboardLoading) {
     return (
       <>
-        <AppPageHeader title={t('pageTitle.home', { ns: 'common' })} />
+        <AppPageHeader title={t('pageTitle.home', { ns: 'common' })}>
+          {addCompanyButton}
+        </AppPageHeader>
         <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {Array.from({ length: 3 }).map((_, i) => (
@@ -314,7 +328,9 @@ export function Home() {
   if (isDashboardError) {
     return (
       <>
-        <AppPageHeader title={t('pageTitle.home', { ns: 'common' })} />
+        <AppPageHeader title={t('pageTitle.home', { ns: 'common' })}>
+          {addCompanyButton}
+        </AppPageHeader>
         <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-center h-64 gap-3 animate-fade-in-up">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
@@ -324,6 +340,9 @@ export function Home() {
             <p className="text-xs text-muted-foreground max-w-sm text-center">
               {dashboardError.message}
             </p>
+            <Button variant="outline" size="sm" onClick={() => refetchDashboard()}>
+              {t('error.retry', { defaultValue: 'Tentar novamente' })}
+            </Button>
           </div>
         </div>
       </>
@@ -339,14 +358,7 @@ export function Home() {
   return (
     <>
       <AppPageHeader title={t('pageTitle.home', { ns: 'common' })}>
-        <Button
-          variant="outline"
-          onClick={() => navigate(PATHS.app.listSites)}
-          aria-label={t('home.addCompany', { ns: 'common' })}
-        >
-          <Plus className="h-4 w-4" />
-          <span className="hidden sm:inline">{t('home.addCompany', { ns: 'common' })}</span>
-        </Button>
+        {addCompanyButton}
       </AppPageHeader>
 
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">

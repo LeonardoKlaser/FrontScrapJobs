@@ -23,6 +23,7 @@ import { FilterPills } from '@/components/common/filter-pills'
 import { EmptyState } from '@/components/common/empty-state'
 import { RequestSiteBanner } from '@/components/sites/request-site-banner'
 import { RequestSiteForm } from '@/components/sites/request-site-form'
+import { toast } from 'sonner'
 import { AppPageHeader } from '@/components/common/app-page-header'
 import { RegionChip } from '@/components/ui/region-chip'
 
@@ -178,6 +179,10 @@ export default function EmpresasPage() {
       unregisterUser(selectedCompany.site_id, {
         onSuccess: () => {
           setPopupOpen(false)
+          toast.success(t('popup.unsubscribeSuccess', { defaultValue: 'Desvinculado com sucesso' }))
+        },
+        onError: () => {
+          toast.error(t('popup.unsubscribeError', { defaultValue: 'Erro ao desvincular empresa' }))
         }
       })
     }

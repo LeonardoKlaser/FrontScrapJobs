@@ -55,7 +55,7 @@ export default function Hub() {
       <AppPageHeader title={t('pageTitle.adminEmails.hub', { ns: 'common' })} />
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-6">
         <div>
-          <h1 className="text-2xl font-bold">{t('hub.title')}</h1>
+          <h2 className="text-2xl font-bold">{t('hub.title')}</h2>
           <p className="text-muted-foreground">{t('hub.subtitle')}</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

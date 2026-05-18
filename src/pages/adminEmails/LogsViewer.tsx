@@ -146,7 +146,7 @@ export default function LogsViewer() {
       <AppPageHeader title={t('pageTitle.adminEmails.logs', { ns: 'common' })} />
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">{t('logs.title')}</h1>
+          <h2 className="text-2xl font-bold">{t('logs.title')}</h2>
           <Button variant="outline" onClick={handleExport}>
             {t('logs.exportButton')}
           </Button>

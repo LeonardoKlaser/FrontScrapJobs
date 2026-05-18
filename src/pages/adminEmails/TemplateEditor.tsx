@@ -168,9 +168,9 @@ export default function TemplateEditor() {
       <AppPageHeader title={t('pageTitle.adminEmails.templateEditor')} />
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">
+          <h2 className="text-2xl font-bold">
             {isEdit ? `Editar: ${tplQuery.data?.key ?? ''}` : 'Novo template'}
-          </h1>
+          </h2>
           <Button variant="ghost" onClick={() => navigate(PATHS.app.adminEmails.templates)}>
             Voltar
           </Button>

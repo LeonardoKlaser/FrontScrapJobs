@@ -61,7 +61,7 @@ export default function TemplatesList() {
       <AppPageHeader title={t('pageTitle.adminEmails.templates', { ns: 'common' })} />
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">{t('templates.title')}</h1>
+          <h2 className="text-2xl font-bold">{t('templates.title')}</h2>
           <Button asChild>
             <Link to={PATHS.app.adminEmails.templateNew}>{t('templates.createButton')}</Link>
           </Button>

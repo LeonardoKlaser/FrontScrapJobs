@@ -159,9 +159,9 @@ export default function LifecycleEditor() {
       <AppPageHeader title={t('pageTitle.adminEmails.lifecycleEditor')} />
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">
+          <h2 className="text-2xl font-bold">
             {isEdit ? `Editar lifecycle: ${jobQuery.data?.name ?? ''}` : 'Novo lifecycle'}
-          </h1>
+          </h2>
           <div className="flex gap-2">
             {isEdit && (
               <Button variant="outline" onClick={handleRunNow} disabled={runNowMut.isPending}>

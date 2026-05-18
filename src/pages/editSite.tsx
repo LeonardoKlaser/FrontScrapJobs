@@ -53,22 +53,19 @@ export default function EditSitePage() {
   }
 
   if (error) {
-    if (isNotFoundError(error)) {
-      return (
-        <EmptyState
-          icon={Building2}
-          title={t('editSite.notFound', { defaultValue: 'Site não encontrado' })}
-          action={
-            <Button asChild variant="outline" size="sm">
-              <Link to={PATHS.app.adminSites}>
-                {t('editSite.backToList', { defaultValue: 'Voltar para a lista' })}
-              </Link>
-            </Button>
-          }
-        />
-      )
-    }
-    return (
+    const errorContent = isNotFoundError(error) ? (
+      <EmptyState
+        icon={Building2}
+        title={t('editSite.notFound', { defaultValue: 'Site não encontrado' })}
+        action={
+          <Button asChild variant="outline" size="sm">
+            <Link to={PATHS.app.adminSites}>
+              {t('editSite.backToList', { defaultValue: 'Voltar para a lista' })}
+            </Link>
+          </Button>
+        }
+      />
+    ) : (
       <EmptyState
         icon={Building2}
         title={t('editSite.loadError', { defaultValue: 'Erro ao carregar site' })}
@@ -86,6 +83,12 @@ export default function EditSitePage() {
           </Button>
         }
       />
+    )
+    return (
+      <>
+        <AppPageHeader title={t('pageTitle.editSite', { ns: 'common' })} />
+        <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">{errorContent}</div>
+      </>
     )
   }
 

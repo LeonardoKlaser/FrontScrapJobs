@@ -1,9 +1,5 @@
 {
   "stats": {
-    "monitoredUrls": "Monitored URLs",
-    "newJobs24h": "New jobs (24h)",
-    "alertsSent": "Notifications sent",
-    "alertsSentDescription": "Total emails sent with matching jobs",
     "monitoredUrlsValue_one": "{{count}} tracked company",
     "monitoredUrlsValue_other": "{{count}} tracked companies",
     "newJobs24hValue_one": "{{count}} new in 24h",
@@ -14,7 +10,6 @@
   "latestJobs": {
     "title": "Latest jobs",
     "searchPlaceholder": "Search by title...",
-    "search": "Search",
     "period": "Period",
     "all": "All time",
     "last24h": "Last 24h",
@@ -26,7 +21,6 @@
     "company": "Company",
     "location": "Location",
     "link": "Link",
-    "action": "Action",
     "viewJob": "View job",
     "analyzeAI": "Analyze with AI",
     "viewAnalysis": "View analysis",
@@ -48,16 +42,12 @@
   },
   "monitoredUrls": {
     "title": "Monitored companies",
-    "newUrl": "New URL",
     "empty": "You haven't added any companies to monitor yet.",
-    "addCompany": "Add company",
-    "name": "Name",
-    "remove": "Remove",
-    "removeSuccess": "Company removed successfully",
-    "removeError": "Failed to remove company"
+    "addCompany": "Add company"
   },
   "error": {
-    "loadDashboard": "Failed to load dashboard"
+    "loadDashboard": "Failed to load dashboard",
+    "retry": "Try again"
   },
   "banner": {
     "pixExpiresIn": "Your subscription expires in ",

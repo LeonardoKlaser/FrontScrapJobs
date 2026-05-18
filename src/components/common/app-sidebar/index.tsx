@@ -1,5 +1,5 @@
-import type { ComponentType } from 'react'
-import { Link, NavLink, useMatch } from 'react-router'
+import { useEffect, type ComponentType } from 'react'
+import { Link, NavLink, useLocation, useMatch } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import {
   Home,
@@ -50,7 +50,7 @@ const adminItems: Item[] = [
   { titleKey: 'nav.adminEmails', href: PATHS.app.adminEmails.hub, icon: Mail }
 ]
 
-function NavItem({ item, onNavigate }: { item: Item; onNavigate: () => void }) {
+function NavItem({ item }: { item: Item }) {
   const { t } = useTranslation('common')
   const end = item.href === PATHS.app.home
   const match = useMatch({ path: item.href, end })
@@ -59,7 +59,7 @@ function NavItem({ item, onNavigate }: { item: Item; onNavigate: () => void }) {
   return (
     <SidebarMenuItem>
       <SidebarMenuButton asChild isActive={isActive} tooltip={t(item.titleKey)}>
-        <NavLink to={item.href} end={end} prefetch="intent" onClick={onNavigate}>
+        <NavLink to={item.href} end={end}>
           <item.icon />
           <span>{t(item.titleKey)}</span>
         </NavLink>
@@ -73,16 +73,26 @@ export function AppSidebar() {
   const { data: user } = useUser()
   const { logout } = useAuth()
   const { setOpenMobile } = useSidebar()
-  const closeMobile = () => setOpenMobile(false)
-  const handleLogout = () => {
-    void logout()
+  const location = useLocation()
+
+  // Fecha o sheet mobile sempre que a rota muda. Mais robusto do que
+  // anexar onClick em cada item — cobre navegação via logout, mode toggle
+  // e qualquer link futuro sem precisar acoplar handlers.
+  useEffect(() => {
+    setOpenMobile(false)
+  }, [location.pathname, setOpenMobile])
+
+  const handleLogout = async () => {
+    await logout()
   }
+
+  const userLabel = user?.user_name || user?.email || t('nav.unknownUser')
 
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
         <div className="flex items-center justify-between gap-2 px-2">
-          <Link to={PATHS.app.home} prefetch="intent" onClick={closeMobile}>
+          <Link to={PATHS.app.home}>
             <Logo size={24} showText textClassName="text-base" />
           </Link>
           <SidebarTrigger className="hidden md:inline-flex" />
@@ -94,7 +104,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>{t('nav.section.main')}</SidebarGroupLabel>
           <SidebarMenu>
             {baseItems.map((item) => (
-              <NavItem key={item.href} item={item} onNavigate={closeMobile} />
+              <NavItem key={item.href} item={item} />
             ))}
           </SidebarMenu>
         </SidebarGroup>
@@ -106,7 +116,7 @@ export function AppSidebar() {
               <SidebarGroupLabel>{t('nav.section.admin')}</SidebarGroupLabel>
               <SidebarMenu>
                 {adminItems.map((item) => (
-                  <NavItem key={item.href} item={item} onNavigate={closeMobile} />
+                  <NavItem key={item.href} item={item} />
                 ))}
               </SidebarMenu>
             </SidebarGroup>
@@ -127,8 +137,10 @@ export function AppSidebar() {
           </SidebarMenuItem>
           {user && (
             <SidebarMenuItem>
-              <SidebarMenuButton tooltip={user.user_name ?? user.email}>
-                <span className="truncate">{user.user_name ?? user.email}</span>
+              <SidebarMenuButton asChild tooltip={userLabel}>
+                <NavLink to={PATHS.app.account}>
+                  <span className="truncate">{userLabel}</span>
+                </NavLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
           )}

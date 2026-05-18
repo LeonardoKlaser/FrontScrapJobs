@@ -9,9 +9,9 @@ export function DashboardHeader() {
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
       <div className="space-y-1">
         <div className="flex items-center gap-3">
-          <h1 className="font-display text-2xl md:text-3xl font-bold tracking-tight text-gradient-primary">
+          <h2 className="font-display text-2xl md:text-3xl font-bold tracking-tight text-gradient-primary">
             {t('dashboardHeader.title')}
-          </h1>
+          </h2>
           <Badge variant="default" className="hidden sm:inline-flex">
             <Shield className="size-3" />
             Admin

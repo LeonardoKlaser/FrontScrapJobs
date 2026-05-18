@@ -175,17 +175,27 @@ export default function Applications() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <div className="animate-spin h-6 w-6 border-2 border-primary border-t-transparent rounded-full" />
-      </div>
+      <>
+        <AppPageHeader title={t('pageTitle.applications', { ns: 'common' })} />
+        <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center py-20">
+            <div className="animate-spin h-6 w-6 border-2 border-primary border-t-transparent rounded-full" />
+          </div>
+        </div>
+      </>
     )
   }
 
   if (isError) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <p className="text-sm text-destructive">{t('kanban.errorState')}</p>
-      </div>
+      <>
+        <AppPageHeader title={t('pageTitle.applications', { ns: 'common' })} />
+        <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center h-64">
+            <p className="text-sm text-destructive">{t('kanban.errorState')}</p>
+          </div>
+        </div>
+      </>
     )
   }
 

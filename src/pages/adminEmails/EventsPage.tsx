@@ -155,7 +155,7 @@ export default function EventsPage() {
       <AppPageHeader title={t('pageTitle.adminEmails.events', { ns: 'common' })} />
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-4">
         <div>
-          <h1 className="text-2xl font-bold">{t('events.title')}</h1>
+          <h2 className="text-2xl font-bold">{t('events.title')}</h2>
           <p className="text-muted-foreground">
             Configure subscribers para cada evento publicado pelo sistema
           </p>

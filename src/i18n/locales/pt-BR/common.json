@@ -11,6 +11,7 @@
     "applications": "Candidaturas",
     "logout": "Sair",
     "openMenu": "Abrir menu",
+    "unknownUser": "Usuário",
     "section": {
       "main": "Navegação",
       "admin": "Admin"

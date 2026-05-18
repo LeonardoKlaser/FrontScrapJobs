@@ -28,7 +28,8 @@ export default defineConfig({
             '@radix-ui/react-select',
             '@radix-ui/react-accordion',
             '@radix-ui/react-navigation-menu',
-            '@radix-ui/react-tooltip'
+            '@radix-ui/react-tooltip',
+            'radix-ui'
           ],
           'vendor-form': ['react-hook-form', '@hookform/resolvers', 'zod'],
           'vendor-axios': ['axios'],
