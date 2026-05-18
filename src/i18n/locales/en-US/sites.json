@@ -44,6 +44,8 @@
     "receiving": "You receive job alerts from {{name}}.",
     "stopQuestion": "Do you want to stop receiving notifications?",
     "unsubscribe": "Unsubscribe",
+    "unsubscribeSuccess": "Successfully unsubscribed",
+    "unsubscribeError": "Failed to unsubscribe",
     "limitReached": "You have reached the company limit for your plan.",
     "instruction": "Enter keywords or roles of interest to receive alerts.",
     "keywordsLabel": "Keywords (separate with comma or space)",

@@ -44,6 +44,8 @@
     "receiving": "Você recebe alertas de vagas do(a) {{name}}.",
     "stopQuestion": "Deseja parar de receber notificações?",
     "unsubscribe": "Desvincular",
+    "unsubscribeSuccess": "Desvinculado com sucesso",
+    "unsubscribeError": "Erro ao desvincular empresa",
     "limitReached": "Você atingiu o limite de empresas do seu plano.",
     "instruction": "Insira palavras-chave ou cargos de interesse para receber alertas.",
     "keywordsLabel": "Palavras-chave (separe com vírgula ou espaço)",
