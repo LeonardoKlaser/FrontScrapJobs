@@ -15,7 +15,6 @@ import { PlusCircle, FileText, Trash2, FileDown } from 'lucide-react'
 import type { Curriculum } from '@/models/curriculum'
 import { EmptyState } from '@/components/common/empty-state'
 import { useDeleteCurriculum } from '@/hooks/useCurriculum'
-import { PdfImportButton } from '@/components/curriculum/pdf-import-button'
 
 interface CurriculumListProps {
   curriculums: Curriculum[] | undefined
@@ -23,7 +22,6 @@ interface CurriculumListProps {
   onSelect: (id: number) => void
   onCreateNew: () => void
   onExport?: (id: number) => void
-  onImportExtracted?: (data: Omit<Curriculum, 'id'>) => void
 }
 
 export function CurriculumList({
@@ -31,8 +29,7 @@ export function CurriculumList({
   selectedId,
   onSelect,
   onCreateNew,
-  onExport,
-  onImportExtracted
+  onExport
 }: CurriculumListProps) {
   const { t } = useTranslation('curriculum')
   const [deleteId, setDeleteId] = useState<number | null>(null)
@@ -42,14 +39,6 @@ export function CurriculumList({
 
   return (
     <div className="space-y-3 lg:sticky lg:top-8">
-      <div className="flex flex-col gap-2">
-        <Button onClick={onCreateNew} variant="outline" className="w-full gap-2">
-          <PlusCircle className="h-4 w-4" />
-          {t('list.newButton')}
-        </Button>
-        {onImportExtracted && <PdfImportButton onExtracted={onImportExtracted} />}
-      </div>
-
       {!hasCurriculums && (
         <EmptyState
           icon={FileText}

@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { PlusCircle } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { CurriculumList } from '@/components/curriculum/curriculum-list'
 import { CurriculumForm } from '@/components/curriculum/curriculum-form'
 import { useCurriculum } from '@/hooks/useCurriculum'
 import { AppPageHeader } from '@/components/common/app-page-header'
 import { PdfExportModal } from '@/components/curriculum/pdf-export-modal'
+import { PdfImportButton } from '@/components/curriculum/pdf-import-button'
 import type { Curriculum as CurriculumType } from '@/models/curriculum'
 
 export function Curriculum() {
@@ -39,7 +42,18 @@ export function Curriculum() {
 
   return (
     <>
-      <AppPageHeader title={t('pageTitle.curriculum', { ns: 'common' })} />
+      <AppPageHeader title={t('pageTitle.curriculum', { ns: 'common' })}>
+        <PdfImportButton onExtracted={handleExtracted} size="sm" />
+        <Button
+          onClick={handleCreateNew}
+          size="sm"
+          aria-label={t('list.newButton')}
+          className="gap-2"
+        >
+          <PlusCircle className="h-4 w-4" />
+          <span className="hidden sm:inline">{t('list.newButton')}</span>
+        </Button>
+      </AppPageHeader>
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <p className="text-sm text-muted-foreground mb-10">{t('description')}</p>
 
@@ -51,7 +65,6 @@ export function Curriculum() {
               onSelect={handleSelectCurriculum}
               onCreateNew={handleCreateNew}
               onExport={setExportCurriculumId}
-              onImportExtracted={handleExtracted}
             />
           </div>
 

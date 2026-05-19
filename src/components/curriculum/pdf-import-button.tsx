@@ -4,15 +4,22 @@ import { Upload, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useExtractPdf } from '@/hooks/usePdf'
 import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 import type { Curriculum } from '@/models/curriculum'
 
 interface PdfImportButtonProps {
   onExtracted: (data: Omit<Curriculum, 'id'>) => void
+  size?: 'sm' | 'default'
+  className?: string
 }
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024
 
-export function PdfImportButton({ onExtracted }: PdfImportButtonProps) {
+export function PdfImportButton({
+  onExtracted,
+  size = 'default',
+  className
+}: PdfImportButtonProps) {
   const { t } = useTranslation('curriculum')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { mutate: extractPdf, isPending } = useExtractPdf()
@@ -54,16 +61,16 @@ export function PdfImportButton({ onExtracted }: PdfImportButtonProps) {
       />
       <Button
         variant="outline"
+        size={size}
         onClick={() => fileInputRef.current?.click()}
         disabled={isPending}
-        className="w-full"
+        aria-label={t('pdf.importButton')}
+        className={cn('gap-2', className)}
       >
-        {isPending ? (
-          <Loader2 className="h-4 w-4 animate-spin mr-2" />
-        ) : (
-          <Upload className="h-4 w-4 mr-2" />
-        )}
-        {isPending ? t('pdf.importing') : t('pdf.importButton')}
+        {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+        <span className="hidden sm:inline">
+          {isPending ? t('pdf.importing') : t('pdf.importButton')}
+        </span>
       </Button>
     </>
   )
