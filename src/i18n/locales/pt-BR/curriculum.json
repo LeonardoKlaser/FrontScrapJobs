@@ -12,6 +12,13 @@
     "deleteSuccess": "Currículo excluído com sucesso!",
     "deleteError": "Erro ao excluir currículo."
   },
+  "switcher": {
+    "selectLabel": "Selecionar currículo",
+    "newCurriculumOption": "Criar novo currículo",
+    "exportAction": "Exportar PDF",
+    "deleteAction": "Excluir currículo",
+    "creatingNewLabel": "Novo currículo (não salvo)"
+  },
   "form": {
     "editing": "Editando: {{title}}",
     "createNew": "Criar Novo Currículo",

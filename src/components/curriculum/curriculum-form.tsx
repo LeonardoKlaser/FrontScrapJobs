@@ -29,6 +29,7 @@ interface CurriculumFormProps {
   isEditing: boolean
   initialData?: Omit<Curriculum, 'id'>
   onSaveSuccess?: () => void
+  hideTitle?: boolean
 }
 
 function normalizeDescription(desc: string | string[] | undefined): string[] {
@@ -78,7 +79,8 @@ export function CurriculumForm({
   curriculum,
   isEditing,
   initialData,
-  onSaveSuccess
+  onSaveSuccess,
+  hideTitle = false
 }: CurriculumFormProps) {
   const { t } = useTranslation('curriculum')
   const [formData, setFormData] = useState(createEmptyFormData)
@@ -367,11 +369,13 @@ export function CurriculumForm({
 
   return (
     <Card className="animate-fade-in-up">
-      <CardHeader>
-        <CardTitle className="text-xl tracking-tight">
-          {isEditing ? t('form.editing', { title: curriculum?.title }) : t('form.createNew')}
-        </CardTitle>
-      </CardHeader>
+      {!hideTitle && (
+        <CardHeader>
+          <CardTitle className="text-xl tracking-tight">
+            {isEditing ? t('form.editing', { title: curriculum?.title }) : t('form.createNew')}
+          </CardTitle>
+        </CardHeader>
+      )}
       <CardContent className="space-y-8">
         {/* Nome do Currículo */}
         <div className="space-y-2">

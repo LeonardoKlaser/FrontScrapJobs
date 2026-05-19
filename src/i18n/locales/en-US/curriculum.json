@@ -12,6 +12,13 @@
     "deleteSuccess": "Resume deleted successfully!",
     "deleteError": "Failed to delete resume."
   },
+  "switcher": {
+    "selectLabel": "Select resume",
+    "newCurriculumOption": "Create new resume",
+    "exportAction": "Export PDF",
+    "deleteAction": "Delete resume",
+    "creatingNewLabel": "New resume (unsaved)"
+  },
   "form": {
     "editing": "Editing: {{title}}",
     "createNew": "Create New Resume",

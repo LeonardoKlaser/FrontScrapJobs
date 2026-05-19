@@ -10,12 +10,15 @@ test.describe('Curriculo', () => {
   test('lista de curriculos carrega com curriculos existentes', async ({ page }) => {
     await expect(page.getByRole('heading', { level: 1, name: 'Currículo' })).toBeVisible()
 
-    // Both mock curricula should appear in sidebar (exact match avoids
-    // collision with the form heading "Editando: Curriculo Frontend")
-    await expect(page.getByText('Curriculo Frontend', { exact: true })).toBeVisible()
-    await expect(page.getByText('Curriculo Backend', { exact: true })).toBeVisible()
+    // Frontend is auto-selected; switcher trigger shows "Editando: Curriculo Frontend"
+    await expect(page.getByText('Editando: Curriculo Frontend')).toBeVisible()
 
-    // "Novo Currículo" button
+    // Open the switcher dropdown — both options should be inside
+    await page.getByRole('button', { name: /Selecionar currículo/ }).click()
+    await expect(page.getByRole('menuitem', { name: /Curriculo Frontend/ })).toBeVisible()
+    await expect(page.getByRole('menuitem', { name: /Curriculo Backend/ })).toBeVisible()
+
+    // "Novo Currículo" header action
     await expect(page.getByRole('button', { name: /Novo Currículo/ })).toBeVisible()
   })
 
@@ -23,8 +26,8 @@ test.describe('Curriculo', () => {
     // Click "Novo Currículo" to ensure we're in create mode
     await page.getByRole('button', { name: /Novo Currículo/ }).click()
 
-    // Form should show "Criar Novo Currículo"
-    await expect(page.getByText('Criar Novo Currículo')).toBeVisible()
+    // Switcher trigger shows the unsaved-new label
+    await expect(page.getByText(/Novo currículo \(não salvo\)/)).toBeVisible()
 
     // Fill basic fields
     await page.fill('#name', 'Curriculo Fullstack')
@@ -51,12 +54,12 @@ test.describe('Curriculo', () => {
   })
 
   test('selecionar curriculo existente mostra dados para edicao', async ({ page }) => {
-    // Click on the Backend card in the sidebar — the first card (Frontend) is
-    // auto-selected on page load, so picking the second one exercises the
-    // selection flow and avoids the strict-mode collision with the form heading.
-    await page.getByText('Curriculo Backend', { exact: true }).click()
+    // Frontend is auto-selected on load; open the switcher and pick Backend
+    // to exercise the selection flow.
+    await page.getByRole('button', { name: /Selecionar currículo/ }).click()
+    await page.getByRole('menuitem', { name: /Curriculo Backend/ }).click()
 
-    // Form should show editing mode for Backend
+    // Switcher trigger should now reflect Backend selection
     await expect(page.getByText('Editando: Curriculo Backend')).toBeVisible()
 
     // Fields should be pre-filled with the Backend curriculum data
