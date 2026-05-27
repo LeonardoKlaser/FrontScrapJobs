@@ -262,10 +262,10 @@ export function RegistrationModal({
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent
         aria-describedby={undefined}
-        className="max-w-[95vw] sm:max-w-[460px] p-0 gap-0 overflow-hidden"
+        className="max-w-[95vw] sm:max-w-[460px] p-0 gap-0 overflow-hidden flex flex-col max-h-[90dvh]"
       >
         {/* Company header */}
-        <div className="flex flex-col items-center gap-3 px-6 pt-6 pb-4">
+        <div className="flex flex-col items-center gap-3 px-6 pt-6 pb-4 shrink-0">
           <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-muted/50 p-2">
             {companyLogo ? (
               <img
@@ -281,7 +281,7 @@ export function RegistrationModal({
         </div>
 
         {/* Content */}
-        <div className="px-6 pb-6 space-y-5">
+        <div className="px-6 pb-6 space-y-5 overflow-y-auto">
           {isAlreadyRegistered ? (
             <div className="space-y-4">
               <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-center">
