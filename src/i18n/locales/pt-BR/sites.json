@@ -16,8 +16,8 @@
     "subscribedFirst": "Inscritas primeiro"
   },
   "seniority": {
-    "firstJobPrompt": "Primeira vaga?",
-    "levelTitle": "Nível",
+    "firstJobPrompt": "Em busca da primeira oportunidade? tente filtrar por:",
+    "levelTitle": "Em busca da primeira oportunidade? tente:",
     "levelHint": "Adiciona os termos de senioridade desta empresa aos seus filtros."
   },
   "regions": {

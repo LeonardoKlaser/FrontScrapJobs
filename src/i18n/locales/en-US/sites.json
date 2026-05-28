@@ -16,8 +16,8 @@
     "subscribedFirst": "Subscribed first"
   },
   "seniority": {
-    "firstJobPrompt": "First job?",
-    "levelTitle": "Level",
+    "firstJobPrompt": "Looking for your first opportunity? try filtering by:",
+    "levelTitle": "Looking for your first opportunity? try:",
     "levelHint": "Adds this company's seniority terms to your filters."
   },
   "regions": {
