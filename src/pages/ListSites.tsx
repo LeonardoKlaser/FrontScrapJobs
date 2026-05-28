@@ -26,6 +26,7 @@ import { RequestSiteForm } from '@/components/sites/request-site-form'
 import { toast } from 'sonner'
 import { AppPageHeader } from '@/components/common/app-page-header'
 import { RegionChip } from '@/components/ui/region-chip'
+import { SENIORITY_LABELS, type SeniorityLevel } from '@/lib/seniority'
 
 type SortKey = 'alphabetical' | 'newest' | 'subscribed_first'
 const SORT_STORAGE_KEY = 'sitesSortBy'
@@ -53,6 +54,7 @@ export default function EmpresasPage() {
   const { data: user } = useUser()
   const [filter, setFilter] = useState('all')
   const [activeRegions, setActiveRegions] = useState<string[]>([])
+  const [activeSeniority, setActiveSeniority] = useState<string[]>([])
   const hasAutoSelected = useRef(false)
   const [sortBy, setSortBy] = useState<SortKey>(() => {
     if (typeof window === 'undefined') return 'alphabetical'
@@ -103,9 +105,13 @@ export default function EmpresasPage() {
         if (activeRegions.length === 0) return true
         return company.locations?.some((loc) => activeRegions.includes(loc.region)) ?? false
       })
+      .filter((company) => {
+        if (activeSeniority.length === 0) return true
+        return activeSeniority.some((level) => company.seniority_levels?.includes(level))
+      })
       .slice()
       .sort(sortFn[sortBy])
-  }, [baseForRegionCounts, data, sortBy, activeRegions])
+  }, [baseForRegionCounts, data, sortBy, activeRegions, activeSeniority])
 
   const regionCounts = useMemo(() => {
     const counts: Record<string, number> = { BR: 0, US_CA: 0, EUROPE: 0, REMOTE: 0, OTHER: 0 }
@@ -121,9 +127,29 @@ export default function EmpresasPage() {
     return counts
   }, [baseForRegionCounts])
 
+  const seniorityCounts = useMemo(() => {
+    const counts: Record<string, number> = { estagio: 0, junior: 0 }
+    baseForRegionCounts.forEach((company) => {
+      const seen = new Set<string>()
+      company.seniority_levels?.forEach((level) => {
+        if (!seen.has(level)) {
+          counts[level] = (counts[level] ?? 0) + 1
+          seen.add(level)
+        }
+      })
+    })
+    return counts
+  }, [baseForRegionCounts])
+
   const toggleRegion = (region: string) => {
     setActiveRegions((prev) =>
       prev.includes(region) ? prev.filter((r) => r !== region) : [...prev, region]
+    )
+  }
+
+  const toggleSeniority = (level: string) => {
+    setActiveSeniority((prev) =>
+      prev.includes(level) ? prev.filter((s) => s !== level) : [...prev, level],
     )
   }
 
@@ -271,6 +297,23 @@ export default function EmpresasPage() {
                 return (
                   <RegionChip key={region} active={active} onClick={() => toggleRegion(region)}>
                     {t(`regions.${region}`)} ({count})
+                  </RegionChip>
+                )
+              })}
+            </div>
+          )}
+          {Object.entries(seniorityCounts).some(([, count]) => count > 0) && (
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs font-medium text-muted-foreground">
+                Primeira vaga?
+              </span>
+              {(['estagio', 'junior'] as SeniorityLevel[]).map((level) => {
+                const count = seniorityCounts[level] ?? 0
+                if (count === 0) return null
+                const active = activeSeniority.includes(level)
+                return (
+                  <RegionChip key={level} active={active} onClick={() => toggleSeniority(level)}>
+                    {SENIORITY_LABELS[level]} ({count})
                   </RegionChip>
                 )
               })}

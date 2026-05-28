@@ -13,6 +13,7 @@ export interface SiteCareer {
   target_words?: string[]
   location_filters?: string[]
   locations?: SiteLocation[]
+  seniority_levels?: string[]
   created_at: string
 }
 
