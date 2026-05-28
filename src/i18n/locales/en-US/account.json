@@ -4,6 +4,7 @@
   "tabs": {
     "profile": "Profile",
     "planBilling": "Plan & Billing",
+    "notifications": "Notifications",
     "security": "Security"
   },
   "profile": {

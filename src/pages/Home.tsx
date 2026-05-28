@@ -51,6 +51,7 @@ import {
 import { useDashboard, useLatestJobs, useJobCompanies } from '@/hooks/useDashboard'
 import { useUser } from '@/hooks/useUser'
 import { OnboardingWizard } from '@/components/app/onboarding-wizard'
+import { ActivationBanner } from '@/components/whatsapp/activation-banner'
 import { AnalysisDialog } from '@/components/analysis/analysis-dialog'
 import { PATHS } from '@/router/paths'
 import { safeHref } from '@/utils/url'
@@ -405,6 +406,8 @@ export function Home() {
 
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
         {showOnboarding && <OnboardingWizard onDismiss={() => setWizardDismissed(true)} />}
+
+        <ActivationBanner />
 
         <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-muted-foreground">
           <span>{t('stats.monitoredUrlsValue', { count: data?.monitored_urls_count ?? 0 })}</span>

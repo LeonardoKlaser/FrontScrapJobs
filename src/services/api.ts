@@ -35,7 +35,9 @@ api.interceptors.response.use(
       const isPublic =
         publicPaths.some((p) => path === p) ||
         path.startsWith('/checkout/') ||
-        path === '/payment-confirmation'
+        path === '/payment-confirmation' ||
+        // pagina publica de digest (magic-link): nao redireciona pro login
+        path.startsWith('/d/')
       if (!isPublic) {
         isRedirecting = true
         // i18next eh um singleton — pegamos a instancia global em vez de
@@ -57,7 +59,10 @@ api.interceptors.response.use(
     if (
       error.response?.status === 403 &&
       error.response?.data?.error === 'subscription_expired' &&
-      window.location.pathname !== '/app/renew'
+      window.location.pathname !== '/app/renew' &&
+      // a pagina de digest (magic-link) trata subscription_expired localmente —
+      // nao redireciona pra evitar tirar o usuario do digest abruptamente
+      !window.location.pathname.startsWith('/d/')
     ) {
       isRedirecting = true
       window.location.href = '/app/renew'

@@ -10,6 +10,10 @@ export const PATHS = {
   checkout: (planId: string) => `/checkout/${planId}`,
   paymentConfirmation: '/payment-confirmation',
   feedback: '/feedback',
+  // digestPath e o pattern pra router config; digest(token) e o helper de
+  // navegacao (magic-link publico). Manter ambos sincronizados se o pattern mudar.
+  digestPath: '/d/:token',
+  digest: (token: string) => `/d/${token}`,
   app: {
     home: '/app',
     curriculum: '/app/curriculum',

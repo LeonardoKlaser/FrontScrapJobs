@@ -135,4 +135,12 @@ describe('SignupForm', () => {
     renderForm()
     expect(screen.getByText('Erro do servidor')).toBeInTheDocument()
   })
+
+  it('não tem checkbox de WhatsApp (opt-in é feito na página de conta)', () => {
+    renderForm()
+    // O opt-in foi movido pro fluxo Request/Verify do WhatsAppAccountController,
+    // sempre acionado da página de conta (T9.x). O signup não envia mais
+    // whatsapp_optin/_number — vide authService.signup.
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument()
+  })
 })

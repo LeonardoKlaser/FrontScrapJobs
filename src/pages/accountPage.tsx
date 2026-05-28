@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { User, CreditCard, Lock } from 'lucide-react'
+import { User, CreditCard, Lock, MessageCircle } from 'lucide-react'
 import { AppPageHeader } from '@/components/common/app-page-header'
 import { ProfileSection } from '@/components/accountPage/profile-section'
 import { PlanSection } from '@/components/accountPage/plan-section'
 import { SecuritySection } from '@/components/accountPage/security-section'
+import { WhatsAppSection } from '@/components/accountPage/whatsapp-section'
 import { cn } from '@/lib/utils'
 import { useUser } from '@/hooks/useUser'
 
-type Tab = 'perfil' | 'plano' | 'seguranca'
+type Tab = 'perfil' | 'plano' | 'seguranca' | 'notificacoes'
 
 export default function AccountPage() {
   const [activeTab, setActiveTab] = useState<Tab>('perfil')
@@ -18,6 +19,7 @@ export default function AccountPage() {
   const menuItems = [
     { id: 'perfil' as Tab, label: t('tabs.profile'), icon: User },
     { id: 'plano' as Tab, label: t('tabs.planBilling'), icon: CreditCard },
+    { id: 'notificacoes' as Tab, label: t('tabs.notifications'), icon: MessageCircle },
     { id: 'seguranca' as Tab, label: t('tabs.security'), icon: Lock }
   ]
 
@@ -59,6 +61,7 @@ export default function AccountPage() {
         <div className="animate-tab-content-in" role="tabpanel" key={activeTab}>
           {activeTab === 'perfil' && <ProfileSection user={user} />}
           {activeTab === 'plano' && <PlanSection user={user} />}
+          {activeTab === 'notificacoes' && <WhatsAppSection user={user} />}
           {activeTab === 'seguranca' && <SecuritySection />}
         </div>
       </div>

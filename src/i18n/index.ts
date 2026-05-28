@@ -14,6 +14,8 @@ import ptBRApplications from './locales/pt-BR/applications.json'
 import ptBRPrivacy from './locales/pt-BR/privacy.json'
 import ptBROnboarding from './locales/pt-BR/onboarding.json'
 import ptBRAdminEmails from './locales/pt-BR/admin-emails.json'
+import ptBRDigest from './locales/pt-BR/digest.json'
+import ptBRWhatsApp from './locales/pt-BR/whatsapp.json'
 
 import enUSCommon from './locales/en-US/common.json'
 import enUSAuth from './locales/en-US/auth.json'
@@ -28,6 +30,8 @@ import enUSApplications from './locales/en-US/applications.json'
 import enUSPrivacy from './locales/en-US/privacy.json'
 import enUSOnboarding from './locales/en-US/onboarding.json'
 import enUSAdminEmails from './locales/en-US/admin-emails.json'
+import enUSDigest from './locales/en-US/digest.json'
+import enUSWhatsApp from './locales/en-US/whatsapp.json'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -44,7 +48,9 @@ i18n.use(initReactI18next).init({
       applications: ptBRApplications,
       privacy: ptBRPrivacy,
       onboarding: ptBROnboarding,
-      'admin-emails': ptBRAdminEmails
+      'admin-emails': ptBRAdminEmails,
+      digest: ptBRDigest,
+      whatsapp: ptBRWhatsApp
     },
     'en-US': {
       common: enUSCommon,
@@ -59,7 +65,9 @@ i18n.use(initReactI18next).init({
       applications: enUSApplications,
       privacy: enUSPrivacy,
       onboarding: enUSOnboarding,
-      'admin-emails': enUSAdminEmails
+      'admin-emails': enUSAdminEmails,
+      digest: enUSDigest,
+      whatsapp: enUSWhatsApp
     }
   },
   lng: typeof window !== 'undefined' ? localStorage.getItem('i18n-lng') || 'pt-BR' : 'pt-BR',

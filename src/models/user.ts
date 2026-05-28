@@ -20,4 +20,7 @@ export interface User {
   is_trial_active?: boolean
   feedback_modal_shown_count?: number
   feedback_given?: boolean
+  preferred_channel?: 'email' | 'whatsapp'
+  whatsapp_opted_in?: boolean
+  whatsapp_number?: string
 }

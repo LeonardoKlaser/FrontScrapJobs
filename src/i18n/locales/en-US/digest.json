@@ -1,0 +1,16 @@
+{
+  "heading": "Your jobs for today",
+  "subheading": "We found these jobs for you. Analyze your resume right here.",
+  "alreadyAnalyzed": "✓ already analyzed",
+  "notAcceptingBadge": "⚠️ job no longer accepting applications",
+  "viewJob": "View job",
+  "analyze": "Analyze",
+  "invalidTitle": "Invalid or expired link",
+  "invalidDescription": "This jobs link is no longer valid. Go back to WhatsApp to get a new one.",
+  "invalidCta": "Go to the site",
+  "renewTitle": "Subscription expired",
+  "renewDescription": "Your subscription expired, so we couldn't analyze the job. Renew to use analyses again.",
+  "renewCta": "Renew subscription",
+  "renewDismiss": "Not now",
+  "backToWhatsapp": "Back to WhatsApp"
+}
