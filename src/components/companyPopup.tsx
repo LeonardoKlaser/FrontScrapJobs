@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Building2, Loader2, Search, X } from 'lucide-react'
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import axios from 'axios'
 import { Input } from './ui/input'
@@ -12,6 +12,12 @@ import type { SiteLocation } from '@/models/siteCareer'
 import { useFilterPreview } from '@/hooks/useFilterPreview'
 import { useSiteKeywords } from '@/hooks/useSiteKeywords'
 import { RegionChip } from '@/components/ui/region-chip'
+import {
+  detectSeniorityFromKeywords,
+  termsForLevel,
+  SENIORITY_LABELS,
+  type SeniorityLevel,
+} from '@/lib/seniority'
 
 // Espelha a ordem do backend Tokenize: ToLower → NFD → strip Mn → NFC.
 // Ordem importa pra edge cases (Turkish dotless-i, eszett). Divergência
@@ -82,6 +88,10 @@ export function RegistrationModal({
   const previewLoading = filterPreview.isPending
   const hasNoSlots = remainingSlots === 0 && !isAlreadyRegistered
   const { data: siteKeywords } = useSiteKeywords(siteId, isOpen)
+  const detectedSeniority = useMemo(
+    () => (siteKeywords ? detectSeniorityFromKeywords(siteKeywords) : []),
+    [siteKeywords],
+  )
   const [showZeroMatchWarning, setShowZeroMatchWarning] = useState(false)
   const [selectedRegions, setSelectedRegions] = useState<string[]>([])
 
@@ -337,6 +347,31 @@ export function RegistrationModal({
                 <p className="text-xs text-muted-foreground">{t('popup.keywordsHelp')}</p>
               </div>
               {locationSection}
+              {detectedSeniority.length > 0 && (
+                <div className="space-y-1.5">
+                  <Label className="text-muted-foreground text-sm">Nível</Label>
+                  <div className="flex flex-wrap gap-1.5">
+                    {detectedSeniority.map((level) => (
+                      <button
+                        key={level}
+                        type="button"
+                        onClick={() => {
+                          const terms = termsForLevel(level as SeniorityLevel, siteKeywords!)
+                          terms.forEach((term) => handleAddSuggestion(term))
+                        }}
+                        className="bg-emerald-100 text-emerald-800 border border-emerald-200
+                          px-2.5 py-1 rounded-full text-xs cursor-pointer
+                          hover:bg-emerald-200 transition-colors"
+                      >
+                        {SENIORITY_LABELS[level as SeniorityLevel]}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-emerald-700 opacity-80">
+                    Adiciona os termos de senioridade desta empresa aos seus filtros.
+                  </p>
+                </div>
+              )}
               {siteKeywords && siteKeywords.length > 0 && (
                 <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3">
                   <div className="flex items-center gap-1.5 mb-2">
@@ -544,6 +579,31 @@ export function RegistrationModal({
                 <p className="text-xs text-muted-foreground">{t('popup.keywordsHelp')}</p>
               </div>
               {locationSection}
+              {detectedSeniority.length > 0 && (
+                <div className="space-y-1.5">
+                  <Label className="text-muted-foreground text-sm">Nível</Label>
+                  <div className="flex flex-wrap gap-1.5">
+                    {detectedSeniority.map((level) => (
+                      <button
+                        key={level}
+                        type="button"
+                        onClick={() => {
+                          const terms = termsForLevel(level as SeniorityLevel, siteKeywords!)
+                          terms.forEach((term) => handleAddSuggestion(term))
+                        }}
+                        className="bg-emerald-100 text-emerald-800 border border-emerald-200
+                          px-2.5 py-1 rounded-full text-xs cursor-pointer
+                          hover:bg-emerald-200 transition-colors"
+                      >
+                        {SENIORITY_LABELS[level as SeniorityLevel]}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-emerald-700 opacity-80">
+                    Adiciona os termos de senioridade desta empresa aos seus filtros.
+                  </p>
+                </div>
+              )}
               {siteKeywords && siteKeywords.length > 0 && (
                 <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3">
                   <div className="flex items-center gap-1.5 mb-2">
