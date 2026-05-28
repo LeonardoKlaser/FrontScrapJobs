@@ -1,6 +1,6 @@
 export const SENIORITY_GROUPS = {
   estagio: ['estagio', 'estagiario', 'estagiaria', 'intern', 'internship', 'trainee', 'talentos'],
-  junior: ['junior', 'jr', 'associate'],
+  junior: ['junior', 'jr'],
 } as const
 
 export type SeniorityLevel = keyof typeof SENIORITY_GROUPS

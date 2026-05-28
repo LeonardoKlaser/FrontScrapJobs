@@ -14,7 +14,7 @@ import { useSiteKeywords } from '@/hooks/useSiteKeywords'
 import { RegionChip } from '@/components/ui/region-chip'
 import {
   detectSeniorityFromKeywords,
-  termsForLevel,
+  SENIORITY_GROUPS,
   SENIORITY_LABELS,
   type SeniorityLevel,
 } from '@/lib/seniority'
@@ -55,6 +55,7 @@ interface RegistrationModalProps {
   currentTargetWords?: string[]
   currentLocationFilters?: string[]
   availableLocations?: SiteLocation[]
+  seniorityLevels?: string[]
   onUpdateFilters?: (targetWords: string[], locationFilters: string[]) => void
   isUpdatingFilters?: boolean
 }
@@ -73,6 +74,7 @@ export function RegistrationModal({
   currentTargetWords,
   currentLocationFilters,
   availableLocations,
+  seniorityLevels,
   onUpdateFilters,
   isUpdatingFilters
 }: RegistrationModalProps) {
@@ -89,8 +91,8 @@ export function RegistrationModal({
   const hasNoSlots = remainingSlots === 0 && !isAlreadyRegistered
   const { data: siteKeywords } = useSiteKeywords(siteId, isOpen)
   const detectedSeniority = useMemo(
-    () => (siteKeywords ? detectSeniorityFromKeywords(siteKeywords) : []),
-    [siteKeywords],
+    () => seniorityLevels ?? (siteKeywords ? detectSeniorityFromKeywords(siteKeywords) : []),
+    [seniorityLevels, siteKeywords],
   )
   const [showZeroMatchWarning, setShowZeroMatchWarning] = useState(false)
   const [selectedRegions, setSelectedRegions] = useState<string[]>([])
@@ -356,8 +358,9 @@ export function RegistrationModal({
                         key={level}
                         type="button"
                         onClick={() => {
-                          const terms = termsForLevel(level as SeniorityLevel, siteKeywords!)
-                          terms.forEach((term) => handleAddSuggestion(term))
+                          ;[...SENIORITY_GROUPS[level as SeniorityLevel]].forEach((term) =>
+                            handleAddSuggestion(term),
+                          )
                         }}
                         className="bg-emerald-100 text-emerald-800 border border-emerald-200
                           px-2.5 py-1 rounded-full text-xs cursor-pointer
@@ -588,8 +591,9 @@ export function RegistrationModal({
                         key={level}
                         type="button"
                         onClick={() => {
-                          const terms = termsForLevel(level as SeniorityLevel, siteKeywords!)
-                          terms.forEach((term) => handleAddSuggestion(term))
+                          ;[...SENIORITY_GROUPS[level as SeniorityLevel]].forEach((term) =>
+                            handleAddSuggestion(term),
+                          )
                         }}
                         className="bg-emerald-100 text-emerald-800 border border-emerald-200
                           px-2.5 py-1 rounded-full text-xs cursor-pointer

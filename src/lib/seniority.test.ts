@@ -42,9 +42,9 @@ describe('detectSeniorityFromKeywords', () => {
 
 describe('termsForLevel', () => {
   it('retorna apenas os termos que existem nos keywords do site', () => {
-    const kws = [{ keyword: 'jr' }, { keyword: 'react' }, { keyword: 'associate' }]
+    const kws = [{ keyword: 'jr' }, { keyword: 'react' }]
     const result = termsForLevel('junior', kws)
-    expect(result).toEqual(expect.arrayContaining(['jr', 'associate']))
+    expect(result).toEqual(['jr'])
     expect(result).not.toContain('junior')
   })
 

@@ -390,6 +390,7 @@ export default function EmpresasPage() {
             currentTargetWords={selectedCompany.target_words}
             currentLocationFilters={selectedCompany.location_filters}
             availableLocations={selectedCompany.locations}
+            seniorityLevels={selectedCompany.seniority_levels}
             onUpdateFilters={handleUpdateFilters}
             isUpdatingFilters={isUpdatingFilters}
           />
