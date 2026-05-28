@@ -349,7 +349,7 @@ export function RegistrationModal({
               {locationSection}
               {detectedSeniority.length > 0 && (
                 <div className="space-y-1.5">
-                  <Label className="text-muted-foreground text-sm">Nível</Label>
+                  <Label className="text-muted-foreground text-sm">{t('seniority.levelTitle')}</Label>
                   <div className="flex flex-wrap gap-1.5">
                     {detectedSeniority.map((level) => (
                       <button
@@ -368,7 +368,7 @@ export function RegistrationModal({
                     ))}
                   </div>
                   <p className="text-[10px] text-emerald-700 opacity-80">
-                    Adiciona os termos de senioridade desta empresa aos seus filtros.
+                    {t('seniority.levelHint')}
                   </p>
                 </div>
               )}
@@ -581,7 +581,7 @@ export function RegistrationModal({
               {locationSection}
               {detectedSeniority.length > 0 && (
                 <div className="space-y-1.5">
-                  <Label className="text-muted-foreground text-sm">Nível</Label>
+                  <Label className="text-muted-foreground text-sm">{t('seniority.levelTitle')}</Label>
                   <div className="flex flex-wrap gap-1.5">
                     {detectedSeniority.map((level) => (
                       <button
@@ -600,7 +600,7 @@ export function RegistrationModal({
                     ))}
                   </div>
                   <p className="text-[10px] text-emerald-700 opacity-80">
-                    Adiciona os termos de senioridade desta empresa aos seus filtros.
+                    {t('seniority.levelHint')}
                   </p>
                 </div>
               )}

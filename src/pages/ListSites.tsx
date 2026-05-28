@@ -111,7 +111,7 @@ export default function EmpresasPage() {
       })
       .slice()
       .sort(sortFn[sortBy])
-  }, [baseForRegionCounts, data, sortBy, activeRegions, activeSeniority])
+  }, [baseForRegionCounts, sortBy, activeRegions, activeSeniority])
 
   const regionCounts = useMemo(() => {
     const counts: Record<string, number> = { BR: 0, US_CA: 0, EUROPE: 0, REMOTE: 0, OTHER: 0 }
@@ -305,7 +305,7 @@ export default function EmpresasPage() {
           {Object.entries(seniorityCounts).some(([, count]) => count > 0) && (
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs font-medium text-muted-foreground">
-                Primeira vaga?
+                {t('seniority.firstJobPrompt')}
               </span>
               {(['estagio', 'junior'] as SeniorityLevel[]).map((level) => {
                 const count = seniorityCounts[level] ?? 0

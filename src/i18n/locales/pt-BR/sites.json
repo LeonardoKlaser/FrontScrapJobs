@@ -15,6 +15,11 @@
     "newest": "Data de inclusão mais recente",
     "subscribedFirst": "Inscritas primeiro"
   },
+  "seniority": {
+    "firstJobPrompt": "Primeira vaga?",
+    "levelTitle": "Nível",
+    "levelHint": "Adiciona os termos de senioridade desta empresa aos seus filtros."
+  },
   "regions": {
     "title": "Localização",
     "BR": "Brasil",

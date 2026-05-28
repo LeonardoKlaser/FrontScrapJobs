@@ -15,6 +15,11 @@
     "newest": "Most recently added",
     "subscribedFirst": "Subscribed first"
   },
+  "seniority": {
+    "firstJobPrompt": "First job?",
+    "levelTitle": "Level",
+    "levelHint": "Adds this company's seniority terms to your filters."
+  },
   "regions": {
     "title": "Location",
     "BR": "Brazil",
