@@ -1,13 +1,13 @@
 {
   "banner": {
-    "title": "Get your jobs on WhatsApp",
-    "description": "Turn on WhatsApp and get job alerts straight to your phone, in real time.",
+    "title": "Your jobs and your resume on WhatsApp",
+    "description": "Get job alerts on your phone and chat with the assistant to optimize your resume on the spot.",
     "cta": "Enable WhatsApp",
     "dismiss": "Dismiss"
   },
   "modal": {
-    "title": "Enable WhatsApp alerts",
-    "description": "Enter your mobile number to receive jobs via WhatsApp.",
+    "title": "Enable WhatsApp",
+    "description": "Enter your number to receive jobs and chat with the assistant via WhatsApp.",
     "numberLabel": "WhatsApp number",
     "numberPlaceholder": "(11) 99999-9999",
     "submit": "Send code",

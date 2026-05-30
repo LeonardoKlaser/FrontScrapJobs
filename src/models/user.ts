@@ -23,4 +23,7 @@ export interface User {
   preferred_channel?: 'email' | 'whatsapp'
   whatsapp_opted_in?: boolean
   whatsapp_number?: string
+  // whatsapp_enabled: usuário está na allowlist do beta fechado de WhatsApp.
+  // Quando false/undefined, o banner e a aba de notificações ficam escondidos.
+  whatsapp_enabled?: boolean
 }

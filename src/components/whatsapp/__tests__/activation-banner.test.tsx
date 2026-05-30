@@ -18,13 +18,14 @@ vi.mock('../optin-modal', () => ({
   OptInModal: () => null
 }))
 
-function userWith(optedIn: boolean): User {
+function userWith(optedIn: boolean, enabled = true): User {
   return {
     user_name: 'Fulano',
     email: 'a@b.com',
     is_admin: false,
     plan: undefined,
-    whatsapp_opted_in: optedIn
+    whatsapp_opted_in: optedIn,
+    whatsapp_enabled: enabled
   }
 }
 
@@ -40,6 +41,12 @@ describe('ActivationBanner', () => {
     render(<ActivationBanner />)
     expect(screen.getByText('banner.title')).toBeInTheDocument()
     expect(screen.getByText('banner.cta')).toBeInTheDocument()
+  })
+
+  it('fica escondido quando fora do beta (whatsapp_enabled false)', () => {
+    mockUseUser.mockReturnValue({ data: userWith(false, false) })
+    const { container } = render(<ActivationBanner />)
+    expect(container).toBeEmptyDOMElement()
   })
 
   it('fica escondido quando ja fez opt-in', () => {

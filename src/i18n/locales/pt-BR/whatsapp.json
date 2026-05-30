@@ -1,13 +1,13 @@
 {
   "banner": {
-    "title": "Receba suas vagas no WhatsApp",
-    "description": "Ative o WhatsApp e receba os alertas de vagas direto no seu celular, na hora.",
+    "title": "Suas vagas e seu currículo no WhatsApp",
+    "description": "Receba alertas de vagas no celular e converse com o assistente pra otimizar seu currículo na hora.",
     "cta": "Ativar WhatsApp",
     "dismiss": "Dispensar"
   },
   "modal": {
-    "title": "Ativar alertas no WhatsApp",
-    "description": "Informe seu número de celular para receber as vagas pelo WhatsApp.",
+    "title": "Ativar o WhatsApp",
+    "description": "Informe seu número para receber vagas e conversar com o assistente pelo WhatsApp.",
     "numberLabel": "Número de WhatsApp",
     "numberPlaceholder": "(11) 99999-9999",
     "submit": "Enviar código",

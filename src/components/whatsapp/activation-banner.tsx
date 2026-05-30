@@ -22,7 +22,8 @@ export function ActivationBanner() {
     }
   })
 
-  if (!user || user.whatsapp_opted_in || dismissed) return null
+  // Beta fechado: só mostra pra quem está na allowlist (whatsapp_enabled).
+  if (!user || !user.whatsapp_enabled || user.whatsapp_opted_in || dismissed) return null
 
   const handleDismiss = () => {
     setDismissed(true)

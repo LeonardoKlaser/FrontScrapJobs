@@ -16,10 +16,14 @@ export default function AccountPage() {
   const { data: user } = useUser()
   const { t } = useTranslation('account')
 
+  // Beta fechado: a aba de notificações (WhatsApp) só aparece pra quem está na
+  // allowlist (whatsapp_enabled). No GA, remover o filtro.
   const menuItems = [
     { id: 'perfil' as Tab, label: t('tabs.profile'), icon: User },
     { id: 'plano' as Tab, label: t('tabs.planBilling'), icon: CreditCard },
-    { id: 'notificacoes' as Tab, label: t('tabs.notifications'), icon: MessageCircle },
+    ...(user?.whatsapp_enabled
+      ? [{ id: 'notificacoes' as Tab, label: t('tabs.notifications'), icon: MessageCircle }]
+      : []),
     { id: 'seguranca' as Tab, label: t('tabs.security'), icon: Lock }
   ]
 
