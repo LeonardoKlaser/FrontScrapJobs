@@ -149,7 +149,7 @@ export default function EmpresasPage() {
 
   const toggleSeniority = (level: string) => {
     setActiveSeniority((prev) =>
-      prev.includes(level) ? prev.filter((s) => s !== level) : [...prev, level],
+      prev.includes(level) ? prev.filter((s) => s !== level) : [...prev, level]
     )
   }
 

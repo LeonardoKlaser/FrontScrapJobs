@@ -16,7 +16,7 @@ import {
   detectSeniorityFromKeywords,
   SENIORITY_GROUPS,
   SENIORITY_LABELS,
-  type SeniorityLevel,
+  type SeniorityLevel
 } from '@/lib/seniority'
 
 // Espelha a ordem do backend Tokenize: ToLower → NFD → strip Mn → NFC.
@@ -92,7 +92,7 @@ export function RegistrationModal({
   const { data: siteKeywords } = useSiteKeywords(siteId, isOpen)
   const detectedSeniority = useMemo(
     () => seniorityLevels ?? (siteKeywords ? detectSeniorityFromKeywords(siteKeywords) : []),
-    [seniorityLevels, siteKeywords],
+    [seniorityLevels, siteKeywords]
   )
   const [showZeroMatchWarning, setShowZeroMatchWarning] = useState(false)
   const [selectedRegions, setSelectedRegions] = useState<string[]>([])
@@ -351,7 +351,9 @@ export function RegistrationModal({
               {locationSection}
               {detectedSeniority.length > 0 && (
                 <div className="space-y-1.5">
-                  <Label className="text-muted-foreground text-sm">{t('seniority.levelTitle')}</Label>
+                  <Label className="text-muted-foreground text-sm">
+                    {t('seniority.levelTitle')}
+                  </Label>
                   <div className="flex flex-wrap gap-1.5">
                     {detectedSeniority.map((level) => (
                       <button
@@ -359,7 +361,7 @@ export function RegistrationModal({
                         type="button"
                         onClick={() => {
                           ;[...SENIORITY_GROUPS[level as SeniorityLevel]].forEach((term) =>
-                            handleAddSuggestion(term),
+                            handleAddSuggestion(term)
                           )
                         }}
                         className="bg-emerald-100 text-emerald-800 border border-emerald-200
@@ -584,7 +586,9 @@ export function RegistrationModal({
               {locationSection}
               {detectedSeniority.length > 0 && (
                 <div className="space-y-1.5">
-                  <Label className="text-muted-foreground text-sm">{t('seniority.levelTitle')}</Label>
+                  <Label className="text-muted-foreground text-sm">
+                    {t('seniority.levelTitle')}
+                  </Label>
                   <div className="flex flex-wrap gap-1.5">
                     {detectedSeniority.map((level) => (
                       <button
@@ -592,7 +596,7 @@ export function RegistrationModal({
                         type="button"
                         onClick={() => {
                           ;[...SENIORITY_GROUPS[level as SeniorityLevel]].forEach((term) =>
-                            handleAddSuggestion(term),
+                            handleAddSuggestion(term)
                           )
                         }}
                         className="bg-emerald-100 text-emerald-800 border border-emerald-200

@@ -3,7 +3,7 @@ import {
   detectSeniorityFromKeywords,
   termsForLevel,
   SENIORITY_GROUPS,
-  SENIORITY_LABELS,
+  SENIORITY_LABELS
 } from './seniority'
 
 describe('detectSeniorityFromKeywords', () => {
@@ -55,7 +55,9 @@ describe('termsForLevel', () => {
 
   it('retorna todos os termos do nível que existem nos keywords', () => {
     const kws = [...SENIORITY_GROUPS.estagio].map((k) => ({ keyword: k }))
-    expect(termsForLevel('estagio', kws)).toEqual(expect.arrayContaining([...SENIORITY_GROUPS.estagio]))
+    expect(termsForLevel('estagio', kws)).toEqual(
+      expect.arrayContaining([...SENIORITY_GROUPS.estagio])
+    )
   })
 })
 
