@@ -668,11 +668,11 @@ export function Home() {
                           <SortIcon field="location" sortField={sortField} sortDir={sortDir} />
                         </button>
                       </TableHead>
-                      <TableHead className="whitespace-nowrap w-[64px]">
+                      <TableHead className="whitespace-nowrap w-[64px] text-center">
                         {t('latestJobs.link')}
                       </TableHead>
-                      <TableHead className="w-[132px]" />
-                      <TableHead className="w-[64px]" />
+                      <TableHead className="w-[132px] text-center" />
+                      <TableHead className="w-[64px] text-center" />
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -699,7 +699,7 @@ export function Home() {
                         <TableCell className="truncate text-muted-foreground" title={job.location}>
                           {job.location}
                         </TableCell>
-                        <TableCell className="whitespace-nowrap">
+                        <TableCell className="whitespace-nowrap text-center">
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <a
@@ -715,7 +715,7 @@ export function Home() {
                             <TooltipContent>{t('latestJobs.viewJob')}</TooltipContent>
                           </Tooltip>
                         </TableCell>
-                        <TableCell className="whitespace-nowrap">
+                        <TableCell className="whitespace-nowrap text-center">
                           {job.application_id && job.application_status ? (
                             <ApplicationStatusDropdown
                               currentStatus={job.application_status}
@@ -728,7 +728,7 @@ export function Home() {
                             <ApplyButton jobId={job.id} iconOnly />
                           )}
                         </TableCell>
-                        <TableCell className="whitespace-nowrap">
+                        <TableCell className="whitespace-nowrap text-center">
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
