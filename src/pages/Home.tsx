@@ -28,6 +28,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { AppPageHeader } from '@/components/common/app-page-header'
 import { SectionHeader } from '@/components/common/section-header'
 import { EmptyState } from '@/components/common/empty-state'
@@ -84,20 +85,41 @@ function SortIcon({
 
 const LIMIT = 10
 
-function ApplyButton({ jobId }: { jobId: number }) {
+function ApplyButton({ jobId, iconOnly }: { jobId: number; iconOnly?: boolean }) {
   const { t } = useTranslation('applications')
   const createApplication = useCreateApplication()
+  const handleApply = () =>
+    createApplication.mutate(jobId, {
+      onSuccess: () => toast.success(t('toast.createSuccess')),
+      onError: (err) => toast.error(err.message)
+    })
+
+  if (iconOnly) {
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            size="icon"
+            variant="outline"
+            className="h-8 w-8"
+            onClick={handleApply}
+            disabled={createApplication.isPending}
+            aria-label={t('dashboard.applied')}
+          >
+            <ClipboardCheck className="h-3.5 w-3.5" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>{t('dashboard.applied')}</TooltipContent>
+      </Tooltip>
+    )
+  }
+
   return (
     <Button
       size="sm"
       variant="outline"
       className="gap-1.5 text-xs"
-      onClick={() =>
-        createApplication.mutate(jobId, {
-          onSuccess: () => toast.success(t('toast.createSuccess')),
-          onError: (err) => toast.error(err.message)
-        })
-      }
+      onClick={handleApply}
       disabled={createApplication.isPending}
     >
       <ClipboardCheck className="h-3.5 w-3.5" />
@@ -613,10 +635,10 @@ export function Home() {
                   coluna estaveis entre paginas e min-w garante legibilidade
                   (scroll interno so em telas estreitas). */}
               <div className="hidden sm:block overflow-hidden rounded-lg border border-border/50">
-                <Table className="text-sm table-fixed min-w-[920px]">
+                <Table className="text-sm table-fixed min-w-[680px]">
                   <TableHeader className="bg-muted/40">
                     <TableRow>
-                      <TableHead className="font-medium w-[38%]">
+                      <TableHead className="font-medium">
                         <button
                           type="button"
                           className="inline-flex items-center select-none"
@@ -626,7 +648,7 @@ export function Home() {
                           <SortIcon field="title" sortField={sortField} sortDir={sortDir} />
                         </button>
                       </TableHead>
-                      <TableHead className="font-medium w-[14%]">
+                      <TableHead className="font-medium w-[150px]">
                         <button
                           type="button"
                           className="inline-flex items-center select-none"
@@ -636,7 +658,7 @@ export function Home() {
                           <SortIcon field="company" sortField={sortField} sortDir={sortDir} />
                         </button>
                       </TableHead>
-                      <TableHead className="font-medium w-[12%]">
+                      <TableHead className="font-medium w-[120px]">
                         <button
                           type="button"
                           className="inline-flex items-center select-none"
@@ -646,11 +668,11 @@ export function Home() {
                           <SortIcon field="location" sortField={sortField} sortDir={sortDir} />
                         </button>
                       </TableHead>
-                      <TableHead className="whitespace-nowrap w-[8%]">
+                      <TableHead className="whitespace-nowrap w-[64px]">
                         {t('latestJobs.link')}
                       </TableHead>
-                      <TableHead className="w-[14%]" />
-                      <TableHead className="w-[14%]" />
+                      <TableHead className="w-[132px]" />
+                      <TableHead className="w-[64px]" />
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -678,15 +700,20 @@ export function Home() {
                           {job.location}
                         </TableCell>
                         <TableCell className="whitespace-nowrap">
-                          <a
-                            href={safeHref(job.job_link)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-primary hover:underline underline-offset-4"
-                          >
-                            {t('latestJobs.viewJob')}
-                            <ExternalLink className="h-3 w-3" />
-                          </a>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <a
+                                href={safeHref(job.job_link)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={t('latestJobs.viewJob')}
+                                className="inline-flex h-8 w-8 items-center justify-center rounded-md text-primary hover:bg-muted"
+                              >
+                                <ExternalLink className="h-4 w-4" />
+                              </a>
+                            </TooltipTrigger>
+                            <TooltipContent>{t('latestJobs.viewJob')}</TooltipContent>
+                          </Tooltip>
                         </TableCell>
                         <TableCell className="whitespace-nowrap">
                           {job.application_id && job.application_status ? (
@@ -698,28 +725,36 @@ export function Home() {
                               }
                             />
                           ) : (
-                            <ApplyButton jobId={job.id} />
+                            <ApplyButton jobId={job.id} iconOnly />
                           )}
                         </TableCell>
                         <TableCell className="whitespace-nowrap">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="gap-1.5 opacity-70 group-hover/row:opacity-100 transition-opacity text-xs"
-                            onClick={() => setSelectedJobId(job.id)}
-                          >
-                            {job.has_analysis ? (
-                              <>
-                                <Eye className="h-3.5 w-3.5" />
-                                {t('latestJobs.viewAnalysis')}
-                              </>
-                            ) : (
-                              <>
-                                <Bot className="h-3.5 w-3.5" />
-                                {t('latestJobs.analyzeAI')}
-                              </>
-                            )}
-                          </Button>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                size="icon"
+                                variant="outline"
+                                className="h-8 w-8 opacity-70 group-hover/row:opacity-100 transition-opacity"
+                                onClick={() => setSelectedJobId(job.id)}
+                                aria-label={
+                                  job.has_analysis
+                                    ? t('latestJobs.viewAnalysis')
+                                    : t('latestJobs.analyzeAI')
+                                }
+                              >
+                                {job.has_analysis ? (
+                                  <Eye className="h-3.5 w-3.5" />
+                                ) : (
+                                  <Bot className="h-3.5 w-3.5" />
+                                )}
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              {job.has_analysis
+                                ? t('latestJobs.viewAnalysis')
+                                : t('latestJobs.analyzeAI')}
+                            </TooltipContent>
+                          </Tooltip>
                         </TableCell>
                       </TableRow>
                     ))}
