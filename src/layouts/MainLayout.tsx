@@ -39,7 +39,11 @@ export function MainLayout() {
   return (
     <SidebarProvider defaultOpen={initialOpen}>
       <AppSidebar />
-      <SidebarInset>
+      {/* min-w-0 deixa o inset encolher abaixo da largura intrinseca do
+          conteudo (flex min-width:auto). Sem isso, tabelas largas (com
+          whitespace-nowrap) esticam a pagina toda e o scroll horizontal sai
+          da tabela para o body, movendo o header. */}
+      <SidebarInset className="min-w-0">
         <ScrollToTop />
         <TrialBanner />
         <SidebarTrigger

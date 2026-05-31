@@ -54,6 +54,7 @@ import { AnalysisDialog } from '@/components/analysis/analysis-dialog'
 import { PATHS } from '@/router/paths'
 import { safeHref } from '@/utils/url'
 import { categorizeLocation } from '@/lib/location'
+import { paginate } from '@/lib/pagination'
 import { toast } from 'sonner'
 import { ApplicationStatusDropdown } from '@/components/common/application-status-dropdown'
 import { useCreateApplication, useUpdateApplication } from '@/hooks/useApplications'
@@ -227,10 +228,16 @@ export function Home() {
     })
   }, [filteredJobs, sortField, sortDir])
 
-  // Client-side pagination
+  // Client-side pagination — safePage e clampado a [1, totalPages]
   const totalCount = sortedJobs.length
-  const totalPages = Math.ceil(totalCount / LIMIT)
-  const paginatedJobs = sortedJobs.slice((page - 1) * LIMIT, page * LIMIT)
+  const { pageItems: paginatedJobs, safePage, totalPages } = paginate(sortedJobs, page, LIMIT)
+
+  // Quando o conjunto filtrado encolhe (ex.: refetch em background reduz as
+  // vagas) a page atual pode ficar fora do range. Sincronizamos o state com o
+  // safePage para o usuario nao ficar "preso" numa pagina vazia sem controles.
+  useEffect(() => {
+    if (page !== safePage) setPage(safePage)
+  }, [page, safePage])
 
   const handleSort = useCallback(
     (field: SortField) => {
@@ -526,7 +533,7 @@ export function Home() {
             </div>
           ) : isJobsError ? (
             <p className="text-sm text-destructive">{t('latestJobs.loadError')}</p>
-          ) : paginatedJobs.length === 0 ? (
+          ) : totalCount === 0 ? (
             <EmptyState icon={FileText} title={t('latestJobs.empty')} />
           ) : (
             <>
@@ -600,12 +607,16 @@ export function Home() {
                 ))}
               </div>
 
-              {/* Desktop: table layout */}
-              <div className="hidden sm:block overflow-x-auto rounded-lg border border-border/50">
-                <Table className="text-sm">
+              {/* Desktop: table layout. O proprio primitivo Table ja envolve
+                  num container com overflow-x-auto; aqui so a moldura
+                  (borda arredondada + clip). table-fixed mantem as larguras de
+                  coluna estaveis entre paginas e min-w garante legibilidade
+                  (scroll interno so em telas estreitas). */}
+              <div className="hidden sm:block overflow-hidden rounded-lg border border-border/50">
+                <Table className="text-sm table-fixed min-w-[920px]">
                   <TableHeader className="bg-muted/40">
                     <TableRow>
-                      <TableHead className="font-medium">
+                      <TableHead className="font-medium w-[38%]">
                         <button
                           type="button"
                           className="inline-flex items-center select-none"
@@ -615,7 +626,7 @@ export function Home() {
                           <SortIcon field="title" sortField={sortField} sortDir={sortDir} />
                         </button>
                       </TableHead>
-                      <TableHead className="font-medium">
+                      <TableHead className="font-medium w-[14%]">
                         <button
                           type="button"
                           className="inline-flex items-center select-none"
@@ -625,7 +636,7 @@ export function Home() {
                           <SortIcon field="company" sortField={sortField} sortDir={sortDir} />
                         </button>
                       </TableHead>
-                      <TableHead className="font-medium">
+                      <TableHead className="font-medium w-[12%]">
                         <button
                           type="button"
                           className="inline-flex items-center select-none"
@@ -635,17 +646,22 @@ export function Home() {
                           <SortIcon field="location" sortField={sortField} sortDir={sortDir} />
                         </button>
                       </TableHead>
-                      <TableHead className="whitespace-nowrap">{t('latestJobs.link')}</TableHead>
-                      <TableHead />
-                      <TableHead />
+                      <TableHead className="whitespace-nowrap w-[8%]">
+                        {t('latestJobs.link')}
+                      </TableHead>
+                      <TableHead className="w-[14%]" />
+                      <TableHead className="w-[14%]" />
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {paginatedJobs.map((job) => (
                       <TableRow key={job.id} className="group/row hover:bg-muted/30">
-                        <TableCell className="whitespace-nowrap">
-                          <span className="flex items-center gap-2">
-                            <span className="font-medium text-foreground" title={job.title}>
+                        <TableCell>
+                          <span className="flex items-center gap-2 min-w-0">
+                            <span
+                              className="font-medium text-foreground truncate"
+                              title={job.title}
+                            >
                               {job.title}
                             </span>
                             {!matchedOnly && job.matched && (
@@ -655,10 +671,10 @@ export function Home() {
                             )}
                           </span>
                         </TableCell>
-                        <TableCell className="whitespace-nowrap text-muted-foreground">
+                        <TableCell className="truncate text-muted-foreground" title={job.company}>
                           {job.company}
                         </TableCell>
-                        <TableCell className="whitespace-nowrap text-muted-foreground">
+                        <TableCell className="truncate text-muted-foreground" title={job.location}>
                           {job.location}
                         </TableCell>
                         <TableCell className="whitespace-nowrap">
@@ -721,22 +737,22 @@ export function Home() {
                     size="sm"
                     variant="ghost"
                     className="text-muted-foreground"
-                    disabled={page <= 1}
-                    onClick={() => setPage((p) => p - 1)}
+                    disabled={safePage <= 1}
+                    onClick={() => setPage(safePage - 1)}
                   >
                     <ChevronLeft className="h-4 w-4" />
                     <span className="hidden sm:inline">{t('latestJobs.previous')}</span>
                   </Button>
                   <span className="inline-flex h-8 min-w-[2rem] items-center justify-center rounded-md bg-primary/10 px-2.5 text-sm font-medium text-primary">
-                    {page}
+                    {safePage}
                   </span>
-                  <span className="text-sm text-muted-foreground">/ {totalPages || 1}</span>
+                  <span className="text-sm text-muted-foreground">/ {totalPages}</span>
                   <Button
                     size="sm"
                     variant="ghost"
                     className="text-muted-foreground"
-                    disabled={page >= totalPages}
-                    onClick={() => setPage((p) => p + 1)}
+                    disabled={safePage >= totalPages}
+                    onClick={() => setPage(safePage + 1)}
                   >
                     <span className="hidden sm:inline">{t('latestJobs.next')}</span>
                     <ChevronRight className="h-4 w-4" />
