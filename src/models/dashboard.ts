@@ -33,4 +33,8 @@ export interface DashboardData {
 export interface JobsResponse {
   jobs: LatestJob[]
   total_count: number
+  // page/limit vêm da paginação server-side (Fase 2). Opcionais pra
+  // compatibilidade com respostas antigas em cache durante o deploy.
+  page?: number
+  limit?: number
 }

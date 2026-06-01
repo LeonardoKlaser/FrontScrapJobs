@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import {
@@ -47,13 +47,12 @@ import {
   TableBody,
   TableCell
 } from '@/components/ui/table'
-import { useDashboard, useLatestJobs } from '@/hooks/useDashboard'
+import { useDashboard, useLatestJobs, useJobCompanies } from '@/hooks/useDashboard'
 import { useUser } from '@/hooks/useUser'
 import { OnboardingWizard } from '@/components/app/onboarding-wizard'
 import { AnalysisDialog } from '@/components/analysis/analysis-dialog'
 import { PATHS } from '@/router/paths'
 import { safeHref } from '@/utils/url'
-import { paginate } from '@/lib/pagination'
 import { toast } from 'sonner'
 import { ApplicationStatusDropdown } from '@/components/common/application-status-dropdown'
 import { useCreateApplication, useUpdateApplication } from '@/hooks/useApplications'
@@ -157,15 +156,29 @@ export function Home() {
   const [days, setDays] = useState(0)
   const [matchedOnly, setMatchedOnly] = useState(true)
 
-  // Filters
+  // Filters — todos aplicados server-side (Fase 2).
   const [filterCompany, setFilterCompany] = useState('__all__')
-  // Região é filtro server-side (multi-rótulo: BR/US_CA/EUROPE/REMOTE/OTHER, OR).
+  // Região é multi-rótulo: BR/US_CA/EUROPE/REMOTE/OTHER (OR entre si).
   const [filterRegions, setFilterRegions] = useState<string[]>([])
   const [filterLocationText, setFilterLocationText] = useState('')
+  const [debouncedLocation, setDebouncedLocation] = useState('')
 
-  // Sorting
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedLocation(filterLocationText)
+      setPage(1)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [filterLocationText])
+
+  // Sorting (server-side). sortField null → backend usa created_at desc.
   const [sortField, setSortField] = useState<SortField | null>('created_at')
   const [sortDir, setSortDir] = useState<SortDir>('desc')
+
+  // Empresas do dropdown vêm de uma faceta server-side (não dá mais pra derivar
+  // do conjunto, já que só temos uma página).
+  const { data: companiesData } = useJobCompanies(days || undefined)
+  const uniqueCompanies = companiesData ?? []
 
   const {
     data: jobsData,
@@ -175,8 +188,25 @@ export function Home() {
     search: debouncedSearch,
     days: days || undefined,
     matched_only: matchedOnly,
-    regions: filterRegions
+    regions: filterRegions,
+    company: filterCompany === '__all__' ? undefined : filterCompany,
+    location: debouncedLocation || undefined,
+    sort: sortField ?? undefined,
+    dir: sortField ? (sortDir ?? undefined) : undefined,
+    page,
+    limit: LIMIT
   })
+
+  const paginatedJobs = jobsData?.jobs ?? []
+  const totalCount = jobsData?.total_count ?? 0
+  const totalPages = Math.max(1, Math.ceil(totalCount / LIMIT))
+  const safePage = Math.min(page, totalPages)
+
+  // Se a página atual ficou fora do range (ex.: filtro reduziu os resultados),
+  // sincroniza o state pro usuário não ficar preso numa página vazia.
+  useEffect(() => {
+    if (page > totalPages) setPage(totalPages)
+  }, [page, totalPages])
 
   const { t: tApp } = useTranslation('applications')
   const { mutate: updateApplicationMutate } = useUpdateApplication()
@@ -198,65 +228,13 @@ export function Home() {
     [updateApplicationMutate, tApp]
   )
 
-  // Also fetch all jobs for 24h count when matchedOnly differs
+  // Contagem de vagas das últimas 24h pro stat do topo — só usamos total_count,
+  // então limit=1 pra não trazer payload à toa.
   const { data: allJobsData } = useLatestJobs({
     days: 1,
-    matched_only: matchedOnly
+    matched_only: matchedOnly,
+    limit: 1
   })
-
-  const allJobs = jobsData?.jobs || []
-
-  // Unique companies for filter dropdown
-  const uniqueCompanies = useMemo(
-    () => [...new Set(allJobs.map((j) => j.company).filter(Boolean))].sort(),
-    [allJobs]
-  )
-
-  // Apply client-side filters
-  const filteredJobs = useMemo(
-    () =>
-      allJobs.filter((job) => {
-        if (filterCompany !== '__all__' && job.company !== filterCompany) return false
-
-        if (filterLocationText.trim()) {
-          const searchLower = filterLocationText.toLowerCase()
-          if (!job.location?.toLowerCase().includes(searchLower)) return false
-        }
-
-        return true
-      }),
-    [allJobs, filterCompany, filterLocationText]
-  )
-
-  // Apply sorting
-  const sortedJobs = useMemo(() => {
-    if (!sortField) return filteredJobs
-    const dir = sortDir === 'asc' ? 1 : -1
-    return [...filteredJobs].sort((a, b) => {
-      if (sortField === 'matched') {
-        return (Number(a.matched) - Number(b.matched)) * dir
-      }
-      if (sortField === 'created_at') {
-        const dateA = new Date(a.created_at || 0).getTime()
-        const dateB = new Date(b.created_at || 0).getTime()
-        return (dateA - dateB) * dir
-      }
-      const valA = (a[sortField] || '').toLowerCase()
-      const valB = (b[sortField] || '').toLowerCase()
-      return valA.localeCompare(valB) * dir
-    })
-  }, [filteredJobs, sortField, sortDir])
-
-  // Client-side pagination — safePage e clampado a [1, totalPages]
-  const totalCount = sortedJobs.length
-  const { pageItems: paginatedJobs, safePage, totalPages } = paginate(sortedJobs, page, LIMIT)
-
-  // Quando o conjunto filtrado encolhe (ex.: refetch em background reduz as
-  // vagas) a page atual pode ficar fora do range. Sincronizamos o state com o
-  // safePage para o usuario nao ficar "preso" numa pagina vazia sem controles.
-  useEffect(() => {
-    if (page !== safePage) setPage(safePage)
-  }, [page, safePage])
 
   const handleSort = useCallback(
     (field: SortField) => {
@@ -529,10 +507,7 @@ export function Home() {
                   <Input
                     placeholder={t('latestJobs.filterLocationSearch')}
                     value={filterLocationText}
-                    onChange={(e) => {
-                      setFilterLocationText(e.target.value)
-                      setPage(1)
-                    }}
+                    onChange={(e) => setFilterLocationText(e.target.value)}
                   />
                 </div>
               </PopoverContent>
@@ -550,7 +525,7 @@ export function Home() {
           </div>
 
           {/* Table */}
-          {isJobsLoading && allJobs.length === 0 ? (
+          {isJobsLoading && paginatedJobs.length === 0 ? (
             <div className="flex justify-center py-12">
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
             </div>
