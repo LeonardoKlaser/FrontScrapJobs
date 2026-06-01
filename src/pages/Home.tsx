@@ -53,7 +53,6 @@ import { OnboardingWizard } from '@/components/app/onboarding-wizard'
 import { AnalysisDialog } from '@/components/analysis/analysis-dialog'
 import { PATHS } from '@/router/paths'
 import { safeHref } from '@/utils/url'
-import { categorizeLocation } from '@/lib/location'
 import { paginate } from '@/lib/pagination'
 import { toast } from 'sonner'
 import { ApplicationStatusDropdown } from '@/components/common/application-status-dropdown'
@@ -83,6 +82,10 @@ function SortIcon({
 }
 
 const LIMIT = 10
+
+// Regiões aplicadas server-side via param `regions` (vocabulário do backend:
+// model.AllRegions). OTHER inclui vagas sem país identificado.
+const REGION_OPTIONS = ['BR', 'US_CA', 'EUROPE', 'REMOTE', 'OTHER'] as const
 
 function ApplyButton({ jobId, iconOnly }: { jobId: number; iconOnly?: boolean }) {
   const { t } = useTranslation('applications')
@@ -156,7 +159,8 @@ export function Home() {
 
   // Filters
   const [filterCompany, setFilterCompany] = useState('__all__')
-  const [filterLocationCategory, setFilterLocationCategory] = useState('__all__')
+  // Região é filtro server-side (multi-rótulo: BR/US_CA/EUROPE/REMOTE/OTHER, OR).
+  const [filterRegions, setFilterRegions] = useState<string[]>([])
   const [filterLocationText, setFilterLocationText] = useState('')
 
   // Sorting
@@ -170,7 +174,8 @@ export function Home() {
   } = useLatestJobs({
     search: debouncedSearch,
     days: days || undefined,
-    matched_only: matchedOnly
+    matched_only: matchedOnly,
+    regions: filterRegions
   })
 
   const { t: tApp } = useTranslation('applications')
@@ -213,13 +218,6 @@ export function Home() {
       allJobs.filter((job) => {
         if (filterCompany !== '__all__' && job.company !== filterCompany) return false
 
-        if (filterLocationCategory !== '__all__') {
-          const cat = categorizeLocation(job.location)
-          if (filterLocationCategory === 'National' && cat !== 'National') return false
-          if (filterLocationCategory === 'International' && cat !== 'International') return false
-          if (filterLocationCategory === 'Remote' && cat !== 'Remote') return false
-        }
-
         if (filterLocationText.trim()) {
           const searchLower = filterLocationText.toLowerCase()
           if (!job.location?.toLowerCase().includes(searchLower)) return false
@@ -227,7 +225,7 @@ export function Home() {
 
         return true
       }),
-    [allJobs, filterCompany, filterLocationCategory, filterLocationText]
+    [allJobs, filterCompany, filterLocationText]
   )
 
   // Apply sorting
@@ -286,19 +284,26 @@ export function Home() {
     setPage(1)
   }
 
+  const toggleRegion = (region: string) => {
+    setFilterRegions((prev) =>
+      prev.includes(region) ? prev.filter((r) => r !== region) : [...prev, region]
+    )
+    setPage(1)
+  }
+
   const resetFilters = () => {
     setFilterCompany('__all__')
-    setFilterLocationCategory('__all__')
+    setFilterRegions([])
     setFilterLocationText('')
     setPage(1)
   }
 
   const hasActiveFilters =
-    filterCompany !== '__all__' || filterLocationCategory !== '__all__' || filterLocationText !== ''
+    filterCompany !== '__all__' || filterRegions.length > 0 || filterLocationText !== ''
 
   const activeFilterCount =
     (filterCompany !== '__all__' ? 1 : 0) +
-    (filterLocationCategory !== '__all__' ? 1 : 0) +
+    (filterRegions.length > 0 ? 1 : 0) +
     (filterLocationText.trim() ? 1 : 0)
 
   // Latch the wizard the FIRST time both `user` and dashboard `data` have
@@ -495,29 +500,26 @@ export function Home() {
 
                 <div className="space-y-2">
                   <Label className="text-xs text-muted-foreground">
-                    {t('latestJobs.filterLocation')}
+                    {t('latestJobs.regionLabel')}
                   </Label>
-                  <Select
-                    value={filterLocationCategory}
-                    onValueChange={(v) => {
-                      setFilterLocationCategory(v)
-                      setPage(1)
-                    }}
-                  >
-                    <SelectTrigger className="w-full h-9">
-                      <SelectValue placeholder={t('latestJobs.filterLocationAll')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="__all__">{t('latestJobs.filterLocationAll')}</SelectItem>
-                      <SelectItem value="National">
-                        {t('latestJobs.filterLocationNational')}
-                      </SelectItem>
-                      <SelectItem value="International">
-                        {t('latestJobs.filterLocationInternational')}
-                      </SelectItem>
-                      <SelectItem value="Remote">{t('latestJobs.filterLocationRemote')}</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <div className="flex flex-wrap gap-2">
+                    {REGION_OPTIONS.map((region) => {
+                      const active = filterRegions.includes(region)
+                      return (
+                        <Button
+                          key={region}
+                          type="button"
+                          size="sm"
+                          variant={active ? 'default' : 'outline'}
+                          aria-pressed={active}
+                          onClick={() => toggleRegion(region)}
+                          className="h-8 text-xs"
+                        >
+                          {t(`latestJobs.regions.${region}`)}
+                        </Button>
+                      )
+                    })}
+                  </div>
                 </div>
 
                 <div className="space-y-2">

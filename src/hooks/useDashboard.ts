@@ -9,7 +9,12 @@ export function useDashboard() {
   })
 }
 
-export function useLatestJobs(params: { days?: number; search?: string; matched_only?: boolean }) {
+export function useLatestJobs(params: {
+  days?: number
+  search?: string
+  matched_only?: boolean
+  regions?: string[]
+}) {
   return useQuery({
     queryKey: ['latestJobs', params],
     queryFn: () => dashboardService.getLatestJobs(params),

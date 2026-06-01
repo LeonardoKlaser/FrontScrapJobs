@@ -41,6 +41,14 @@
     "filterLocationInternational": "International",
     "filterLocationRemote": "Remote",
     "filterLocationSearch": "Search location...",
+    "regionLabel": "Region",
+    "regions": {
+      "BR": "Brazil",
+      "US_CA": "US / Canada",
+      "EUROPE": "Europe",
+      "REMOTE": "Remote",
+      "OTHER": "Other"
+    },
     "clearFilters": "Clear filters",
     "filters": "Filters"
   },

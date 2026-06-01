@@ -8,6 +8,8 @@ export interface LatestJob {
   job_link: string
   matched: boolean
   has_analysis: boolean
+  country_code?: string
+  is_remote?: boolean
   created_at?: string
   application_id?: number
   application_status?: ApplicationStatus
