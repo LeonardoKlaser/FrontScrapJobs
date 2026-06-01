@@ -7,8 +7,6 @@ import {
   Plus,
   Loader2,
   Bot,
-  ChevronLeft,
-  ChevronRight,
   Search,
   ExternalLink,
   Sparkles,
@@ -32,6 +30,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { AppPageHeader } from '@/components/common/app-page-header'
 import { SectionHeader } from '@/components/common/section-header'
 import { EmptyState } from '@/components/common/empty-state'
+import { Pagination } from '@/components/common/pagination'
 import { SkeletonCard, SkeletonTable } from '@/components/common/skeleton'
 import {
   Select,
@@ -767,32 +766,7 @@ export function Home() {
                 <p className="text-sm text-muted-foreground">
                   {t('latestJobs.jobCount', { count: totalCount })}
                 </p>
-                <div className="flex items-center gap-1">
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="text-muted-foreground"
-                    disabled={safePage <= 1}
-                    onClick={() => setPage(safePage - 1)}
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                    <span className="hidden sm:inline">{t('latestJobs.previous')}</span>
-                  </Button>
-                  <span className="inline-flex h-8 min-w-[2rem] items-center justify-center rounded-md bg-primary/10 px-2.5 text-sm font-medium text-primary">
-                    {safePage}
-                  </span>
-                  <span className="text-sm text-muted-foreground">/ {totalPages}</span>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="text-muted-foreground"
-                    disabled={safePage >= totalPages}
-                    onClick={() => setPage(safePage + 1)}
-                  >
-                    <span className="hidden sm:inline">{t('latestJobs.next')}</span>
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </div>
+                <Pagination page={safePage} totalPages={totalPages} onPageChange={setPage} />
               </div>
             </>
           )}
