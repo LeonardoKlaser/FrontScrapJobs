@@ -177,7 +177,7 @@ export function Home() {
 
   // Empresas do dropdown vêm de uma faceta server-side (não dá mais pra derivar
   // do conjunto, já que só temos uma página).
-  const { data: companiesData } = useJobCompanies(days || undefined)
+  const { data: companiesData } = useJobCompanies(days)
   const uniqueCompanies = companiesData ?? []
 
   const {
@@ -186,7 +186,10 @@ export function Home() {
     isError: isJobsError
   } = useLatestJobs({
     search: debouncedSearch,
-    days: days || undefined,
+    // days=0 ('Todas') é enviado explícito pro backend tratar como "sem janela"
+    // (todas as vagas). Com `days || undefined`, 0 virava undefined → backend
+    // caía no default de 30 dias, e o "Todas" silenciosamente limitava a 30d.
+    days,
     matched_only: matchedOnly,
     regions: filterRegions,
     company: filterCompany === '__all__' ? undefined : filterCompany,
@@ -197,7 +200,11 @@ export function Home() {
     limit: LIMIT
   })
 
-  const paginatedJobs = jobsData?.jobs ?? []
+  // slice(0, LIMIT) é defesa pra janela de deploy: se um backend antigo (sem
+  // paginação server-side) responder com até 5000 vagas, o front renderiza no
+  // máximo uma página em vez de despejar tudo. No fluxo normal o backend já
+  // devolve <= LIMIT, então é no-op.
+  const paginatedJobs = (jobsData?.jobs ?? []).slice(0, LIMIT)
   const totalCount = jobsData?.total_count ?? 0
   const totalPages = Math.max(1, Math.ceil(totalCount / LIMIT))
   const safePage = Math.min(page, totalPages)

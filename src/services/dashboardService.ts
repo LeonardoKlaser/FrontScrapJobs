@@ -48,7 +48,7 @@ export const dashboardService = {
   getJobCompanies: async (days?: number): Promise<string[]> => {
     try {
       const { data } = await api.get('/api/dashboard/job-companies', {
-        params: days ? { days } : {}
+        params: days !== undefined ? { days } : {}
       })
       return (data?.companies as string[]) ?? []
     } catch (error) {
