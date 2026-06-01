@@ -115,4 +115,22 @@ describe('Pagination', () => {
     await user.click(screen.getByRole('button', { name: 'Ir' }))
     expect(onPageChange).not.toHaveBeenCalled()
   })
+
+  it('clamps a negative jump to the first page', async () => {
+    const onPageChange = vi.fn()
+    const user = userEvent.setup()
+    render(<Pagination page={5} totalPages={100} onPageChange={onPageChange} />)
+    await user.type(screen.getByRole('spinbutton', { name: 'Ir para a página' }), '-5')
+    await user.click(screen.getByRole('button', { name: 'Ir' }))
+    expect(onPageChange).toHaveBeenCalledWith(1)
+  })
+
+  it('does not call onPageChange when totalPages is below 1', async () => {
+    const onPageChange = vi.fn()
+    const user = userEvent.setup()
+    render(<Pagination page={1} totalPages={0} onPageChange={onPageChange} />)
+    await user.type(screen.getByRole('spinbutton', { name: 'Ir para a página' }), '5')
+    await user.click(screen.getByRole('button', { name: 'Ir' }))
+    expect(onPageChange).not.toHaveBeenCalled()
+  })
 })

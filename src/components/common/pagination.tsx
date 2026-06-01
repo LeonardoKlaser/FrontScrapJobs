@@ -51,6 +51,7 @@ export function Pagination({ page, totalPages, onPageChange, className }: Pagina
 
   const handleJump = (e: FormEvent) => {
     e.preventDefault()
+    if (totalPages < 1) return
     const trimmed = jumpValue.trim()
     if (trimmed === '') return
     const parsed = Number(trimmed)
@@ -101,7 +102,7 @@ export function Pagination({ page, totalPages, onPageChange, className }: Pagina
                 className={cn(
                   'min-w-8',
                   item === page
-                    ? 'bg-primary/10 text-primary hover:bg-primary/15'
+                    ? 'bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary'
                     : 'text-muted-foreground'
                 )}
                 onClick={() => onPageChange(item)}
@@ -132,13 +133,15 @@ export function Pagination({ page, totalPages, onPageChange, className }: Pagina
         </Button>
       </div>
 
-      <form onSubmit={handleJump} className="flex items-center gap-1.5">
+      <form noValidate onSubmit={handleJump} className="flex items-center gap-1.5">
         <span aria-hidden="true" className="whitespace-nowrap text-sm text-muted-foreground">
           {t('latestJobs.goToPage')}
         </span>
         <Input
           type="number"
           inputMode="numeric"
+          min={1}
+          max={totalPages}
           value={jumpValue}
           onChange={(e) => setJumpValue(e.target.value)}
           aria-label={t('latestJobs.goToPage')}
