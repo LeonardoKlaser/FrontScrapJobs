@@ -12,6 +12,7 @@ export function getPageItems(
   totalPages: number,
   siblingCount = 1
 ): (number | 'ellipsis')[] {
+  if (totalPages < 1) return []
   const anchors = new Set<number>()
   anchors.add(1)
   anchors.add(totalPages)

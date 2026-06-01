@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { getPageItems, Pagination } from '@/components/common/pagination'
 
@@ -120,7 +120,9 @@ describe('Pagination', () => {
     const onPageChange = vi.fn()
     const user = userEvent.setup()
     render(<Pagination page={5} totalPages={100} onPageChange={onPageChange} />)
-    await user.type(screen.getByRole('spinbutton', { name: 'Ir para a página' }), '-5')
+    fireEvent.change(screen.getByRole('spinbutton', { name: 'Ir para a página' }), {
+      target: { value: '-5' }
+    })
     await user.click(screen.getByRole('button', { name: 'Ir' }))
     expect(onPageChange).toHaveBeenCalledWith(1)
   })
