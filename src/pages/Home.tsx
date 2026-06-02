@@ -60,7 +60,7 @@ import { useCreateApplication, useUpdateApplication } from '@/hooks/useApplicati
 import { STATUS_COLORS } from '@/models/application'
 import type { ApplicationStatus } from '@/models/application'
 
-type SortField = 'title' | 'company' | 'location' | 'matched' | 'created_at'
+type SortField = 'title' | 'company' | 'location' | 'created_at'
 type SortDir = 'asc' | 'desc' | null
 
 function SortIcon({
@@ -564,7 +564,7 @@ export function Home() {
             </Popover>
 
             <Button
-              variant="outline"
+              variant={matchedOnly ? 'default' : 'outline'}
               size="sm"
               aria-pressed={matchedOnly}
               onClick={() => handleMatchedOnlyChange(!matchedOnly)}
