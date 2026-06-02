@@ -35,6 +35,8 @@
     "matchBadge": "Match",
     "filterCompany": "Company",
     "filterCompanyAll": "All companies",
+    "filterCompanySearch": "Search company...",
+    "filterCompanyEmpty": "No companies",
     "filterLocation": "Location",
     "filterLocationAll": "All",
     "filterLocationNational": "National",

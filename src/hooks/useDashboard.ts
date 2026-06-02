@@ -14,7 +14,7 @@ export function useLatestJobs(params: {
   search?: string
   matched_only?: boolean
   regions?: string[]
-  company?: string
+  company?: string[]
   location?: string
   sort?: string
   dir?: string

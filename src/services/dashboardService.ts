@@ -22,7 +22,7 @@ export const dashboardService = {
     search?: string
     matched_only?: boolean
     regions?: string[]
-    company?: string
+    company?: string[]
     location?: string
     sort?: string
     dir?: string
@@ -30,11 +30,12 @@ export const dashboardService = {
     limit?: number
   }): Promise<JobsResponse> => {
     try {
-      // O backend lê `regions` como CSV (BR,REMOTE) num único query param —
+      // O backend lê `regions`/`company` como CSV num único query param —
       // serializamos aqui em vez de deixar o axios mandar regions[]=...
-      const { regions, ...rest } = params
+      const { regions, company, ...rest } = params
       const query: Record<string, unknown> = { ...rest }
       if (regions && regions.length > 0) query.regions = regions.join(',')
+      if (company && company.length > 0) query.company = company.join(',')
       const { data } = await api.get('/api/dashboard/jobs', { params: query })
       return data
     } catch (error) {

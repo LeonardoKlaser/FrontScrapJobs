@@ -18,7 +18,8 @@ import {
   ListFilter,
   X,
   Eye,
-  ClipboardCheck
+  ClipboardCheck,
+  Check
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -157,7 +158,9 @@ export function Home() {
   const [matchedOnly, setMatchedOnly] = useState(true)
 
   // Filters — todos aplicados server-side (Fase 2).
-  const [filterCompany, setFilterCompany] = useState('__all__')
+  // Empresa é multi-select (OR entre as escolhidas); vazio = todas.
+  const [filterCompanies, setFilterCompanies] = useState<string[]>([])
+  const [companySearch, setCompanySearch] = useState('')
   // Região é multi-rótulo: BR/US_CA/EUROPE/REMOTE/OTHER (OR entre si).
   const [filterRegions, setFilterRegions] = useState<string[]>([])
   const [filterLocationText, setFilterLocationText] = useState('')
@@ -192,7 +195,7 @@ export function Home() {
     days,
     matched_only: matchedOnly,
     regions: filterRegions,
-    company: filterCompany === '__all__' ? undefined : filterCompany,
+    company: filterCompanies,
     location: debouncedLocation || undefined,
     sort: sortField ?? undefined,
     dir: sortField ? (sortDir ?? undefined) : undefined,
@@ -276,18 +279,26 @@ export function Home() {
     setPage(1)
   }
 
+  const toggleCompany = (company: string) => {
+    setFilterCompanies((prev) =>
+      prev.includes(company) ? prev.filter((c) => c !== company) : [...prev, company]
+    )
+    setPage(1)
+  }
+
   const resetFilters = () => {
-    setFilterCompany('__all__')
+    setFilterCompanies([])
+    setCompanySearch('')
     setFilterRegions([])
     setFilterLocationText('')
     setPage(1)
   }
 
   const hasActiveFilters =
-    filterCompany !== '__all__' || filterRegions.length > 0 || filterLocationText !== ''
+    filterCompanies.length > 0 || filterRegions.length > 0 || filterLocationText !== ''
 
   const activeFilterCount =
-    (filterCompany !== '__all__' ? 1 : 0) +
+    (filterCompanies.length > 0 ? 1 : 0) +
     (filterRegions.length > 0 ? 1 : 0) +
     (filterLocationText.trim() ? 1 : 0)
 
@@ -461,26 +472,43 @@ export function Home() {
                 <div className="space-y-2">
                   <Label className="text-xs text-muted-foreground">
                     {t('latestJobs.filterCompany')}
+                    {filterCompanies.length > 0 && ` (${filterCompanies.length})`}
                   </Label>
-                  <Select
-                    value={filterCompany}
-                    onValueChange={(v) => {
-                      setFilterCompany(v)
-                      setPage(1)
-                    }}
-                  >
-                    <SelectTrigger className="w-full h-9">
-                      <SelectValue placeholder={t('latestJobs.filterCompanyAll')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="__all__">{t('latestJobs.filterCompanyAll')}</SelectItem>
-                      {uniqueCompanies.map((company) => (
-                        <SelectItem key={company} value={company}>
-                          {company}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  {uniqueCompanies.length > 6 && (
+                    <Input
+                      placeholder={t('latestJobs.filterCompanySearch')}
+                      value={companySearch}
+                      onChange={(e) => setCompanySearch(e.target.value)}
+                      className="h-8"
+                    />
+                  )}
+                  <div className="max-h-40 overflow-y-auto rounded-md border border-border/60 p-1">
+                    {uniqueCompanies.length === 0 ? (
+                      <p className="px-2 py-1.5 text-xs text-muted-foreground">
+                        {t('latestJobs.filterCompanyEmpty')}
+                      </p>
+                    ) : (
+                      uniqueCompanies
+                        .filter((c) => c.toLowerCase().includes(companySearch.trim().toLowerCase()))
+                        .map((company) => {
+                          const active = filterCompanies.includes(company)
+                          return (
+                            <button
+                              key={company}
+                              type="button"
+                              onClick={() => toggleCompany(company)}
+                              aria-pressed={active}
+                              className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm hover:bg-muted"
+                            >
+                              <span className="flex h-4 w-4 shrink-0 items-center justify-center">
+                                {active && <Check className="h-3.5 w-3.5 text-primary" />}
+                              </span>
+                              <span className="truncate">{company}</span>
+                            </button>
+                          )
+                        })
+                    )}
+                  </div>
                 </div>
 
                 <div className="space-y-2">
