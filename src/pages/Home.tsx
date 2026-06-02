@@ -183,6 +183,19 @@ export function Home() {
   const { data: companiesData } = useJobCompanies(days)
   const uniqueCompanies = companiesData ?? []
 
+  // Lista do filtro de empresa: selecionadas SEMPRE no topo (fixadas, removíveis
+  // mesmo que saiam da faceta ao trocar período, ou sejam escondidas pela busca)
+  // + as da faceta que casam a busca e ainda não estão selecionadas. Sem fixar as
+  // selecionadas, uma escolha fora da faceta ficava filtrando sem botão pra
+  // desmarcar (só "Limpar filtros" zerava tudo).
+  const companyQuery = companySearch.trim().toLowerCase()
+  const visibleCompanies = [
+    ...filterCompanies,
+    ...uniqueCompanies.filter(
+      (c) => !filterCompanies.includes(c) && c.toLowerCase().includes(companyQuery)
+    )
+  ]
+
   const {
     data: jobsData,
     isLoading: isJobsLoading,
@@ -482,31 +495,33 @@ export function Home() {
                       className="h-8"
                     />
                   )}
-                  <div className="max-h-40 overflow-y-auto rounded-md border border-border/60 p-1">
-                    {uniqueCompanies.length === 0 ? (
+                  <div
+                    role="group"
+                    aria-label={t('latestJobs.filterCompany')}
+                    className="max-h-40 overflow-y-auto rounded-md border border-border/60 p-1"
+                  >
+                    {visibleCompanies.length === 0 ? (
                       <p className="px-2 py-1.5 text-xs text-muted-foreground">
                         {t('latestJobs.filterCompanyEmpty')}
                       </p>
                     ) : (
-                      uniqueCompanies
-                        .filter((c) => c.toLowerCase().includes(companySearch.trim().toLowerCase()))
-                        .map((company) => {
-                          const active = filterCompanies.includes(company)
-                          return (
-                            <button
-                              key={company}
-                              type="button"
-                              onClick={() => toggleCompany(company)}
-                              aria-pressed={active}
-                              className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm hover:bg-muted"
-                            >
-                              <span className="flex h-4 w-4 shrink-0 items-center justify-center">
-                                {active && <Check className="h-3.5 w-3.5 text-primary" />}
-                              </span>
-                              <span className="truncate">{company}</span>
-                            </button>
-                          )
-                        })
+                      visibleCompanies.map((company) => {
+                        const active = filterCompanies.includes(company)
+                        return (
+                          <button
+                            key={company}
+                            type="button"
+                            onClick={() => toggleCompany(company)}
+                            aria-pressed={active}
+                            className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm hover:bg-muted"
+                          >
+                            <span className="flex h-4 w-4 shrink-0 items-center justify-center">
+                              {active && <Check className="h-3.5 w-3.5 text-primary" />}
+                            </span>
+                            <span className="truncate">{company}</span>
+                          </button>
+                        )
+                      })
                     )}
                   </div>
                 </div>
