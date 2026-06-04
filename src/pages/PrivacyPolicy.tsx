@@ -106,6 +106,10 @@ export default function PrivacyPolicy() {
             </ul>
           </Section>
 
+          <Section title={t('s_whatsapp_title')}>
+            <p>{t('s_whatsapp_content')}</p>
+          </Section>
+
           <Section title={t('s5_title')}>
             <p>{t('s5_content')}</p>
           </Section>

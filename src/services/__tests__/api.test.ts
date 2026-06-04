@@ -87,6 +87,24 @@ describe('api', () => {
     }
   })
 
+  it('does not redirect on 401 for digest magic-link path /d/:token', async () => {
+    window.location.pathname = '/d/sometoken'
+    mock.onGet('/api/test').reply(401)
+
+    await expect(api.get('/api/test')).rejects.toThrow()
+
+    expect(window.location.href).toBe('')
+  })
+
+  it('still redirects on 401 for non-public protected path', async () => {
+    window.location.pathname = '/app/curriculum'
+    mock.onGet('/api/test').reply(401)
+
+    await expect(api.get('/api/test')).rejects.toThrow()
+
+    expect(window.location.href).toBe('/login?from=%2Fapp%2Fcurriculum')
+  })
+
   it('redirects to /app/renew on 403 subscription_expired', async () => {
     mock.onGet('/api/test').reply(403, { error: 'subscription_expired' })
 

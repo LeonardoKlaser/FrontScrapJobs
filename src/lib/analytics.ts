@@ -60,3 +60,23 @@ export function trackTrial(event: TrialEvent, payload: Record<string, unknown> =
     console.warn('analytics push failed', err)
   }
 }
+
+// Digest events: mede o funil da magic-link do WhatsApp (abrir digest, iniciar/
+// concluir analise, clicar na vaga, pedir otimizacao de CV, voltar pro WhatsApp).
+export type DigestEvent =
+  | 'digest_opened'
+  | 'analysis_started_from_digest'
+  | 'analysis_completed_from_digest'
+  | 'external_link_clicked'
+  | 'cv_optimize_requested'
+  | 'back_to_whatsapp_clicked'
+
+export function trackDigest(event: DigestEvent, payload: Record<string, unknown> = {}): void {
+  if (typeof window === 'undefined') return
+  try {
+    window.dataLayer = window.dataLayer || []
+    window.dataLayer.push({ ...payload, event })
+  } catch (err) {
+    console.warn('analytics push failed', err)
+  }
+}

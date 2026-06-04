@@ -29,7 +29,9 @@ export const authService = {
   }> => {
     // Backend SignUp espera `user_name` (não `name`) e CPF/celular só com
     // dígitos. O backend já normaliza defensivamente, mas mandamos limpo
-    // pra evitar surpresa em logs e validações intermediárias.
+    // pra evitar surpresa em logs e validações intermediárias. Opt-in de
+    // WhatsApp NÃO entra no signup (T9.x): é feito sempre na página de conta
+    // via o fluxo Request → Verify do WhatsAppAccountController.
     const { data: response } = await api.post('/signup', {
       user_name: data.name,
       email: data.email,

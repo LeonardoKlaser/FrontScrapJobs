@@ -1,0 +1,46 @@
+{
+  "banner": {
+    "title": "Suas vagas e seu currículo no WhatsApp",
+    "description": "Receba alertas de vagas no celular e converse com o assistente pra otimizar seu currículo na hora.",
+    "cta": "Ativar WhatsApp",
+    "dismiss": "Dispensar"
+  },
+  "modal": {
+    "title": "Ativar o WhatsApp",
+    "description": "Informe seu número para receber vagas e conversar com o assistente pelo WhatsApp.",
+    "numberLabel": "Número de WhatsApp",
+    "numberPlaceholder": "(11) 99999-9999",
+    "submit": "Enviar código",
+    "cancel": "Cancelar",
+    "success": "WhatsApp ativado com sucesso!",
+    "error": "Não foi possível ativar o WhatsApp. Tente novamente.",
+    "privacyNote": "Ao ativar, você concorda com o uso do WhatsApp como descrito na nossa <privacy>Política de Privacidade</privacy>.",
+    "codeStep": {
+      "title": "Digite o código",
+      "description": "Enviamos um código de 6 dígitos para {{number}}. Pode levar até 1 minuto.",
+      "codeLabel": "Código de verificação",
+      "codePlaceholder": "123456",
+      "codeSubmit": "Confirmar",
+      "resend": "Reenviar código",
+      "changeNumber": "Mudar número",
+      "resentToast": "Código reenviado.",
+      "codeInvalid": "Código incorreto. Verifique e tente de novo.",
+      "noPending": "Seu código expirou. Reenvie para receber um novo.",
+      "numberTaken": "Este número já está vinculado a outra conta."
+    }
+  },
+  "section": {
+    "title": "Notificações",
+    "description": "Escolha por onde quer receber os alertas de vagas.",
+    "channelLabel": "Canal preferido",
+    "channelEmail": "E-mail",
+    "channelWhatsApp": "WhatsApp",
+    "currentChannel": "Canal atual",
+    "notOptedInHint": "Ative o WhatsApp primeiro para poder escolhê-lo como canal.",
+    "optInButton": "Ativar WhatsApp",
+    "numberLabel": "Número cadastrado",
+    "changeSuccess": "Canal atualizado com sucesso!",
+    "changeError": "Não foi possível atualizar o canal.",
+    "notOptedInError": "Ative o WhatsApp primeiro para usá-lo como canal."
+  }
+}

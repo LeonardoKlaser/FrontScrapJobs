@@ -35,8 +35,11 @@
     {"name": "Resend", "role": "E-mail delivery (fallback)", "country": "United States"},
     {"name": "PDFMonkey", "role": "Resume PDF generation", "country": "France (European Union)"},
     {"name": "AWS S3", "role": "Operational image storage", "country": "United States"},
-    {"name": "Railway", "role": "Application and database hosting", "country": "United States"}
+    {"name": "Railway", "role": "Application and database hosting", "country": "United States"},
+    {"name": "Meta (WhatsApp)", "role": "Sending job alerts via WhatsApp (only for users who opt in to this channel)", "country": "United States"}
   ],
+  "s_whatsapp_title": "WhatsApp alerts (optional)",
+  "s_whatsapp_content": "If you opt in to receive job alerts via WhatsApp, your mobile number and the exchanged messages are processed by Meta Platforms, Inc. (WhatsApp) as a sub-processor, solely to deliver those notifications. This is optional, requires your explicit consent (opt-in), and can be turned off at any time in your account settings, switching the channel back to e-mail.",
   "s5_title": "5. International Data Transfer",
   "s5_content": "In compliance with Art. 33 of the Brazilian LGPD, personal data is transferred to: United States (OpenAI, AWS SES, Resend, AWS S3, Railway) and France (PDFMonkey). By using ScrapJobs, you consent to these transfers necessary for service delivery.",
   "s6_title": "6. Storage and Security",

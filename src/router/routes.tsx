@@ -74,6 +74,7 @@ const ResetPassword = lazyWithRetry(() => import('@/pages/ResetPassword'))
 const CheckoutPage = lazyWithRetry(() => import('@/pages/checkout'))
 const PaymentConfirmationPage = lazyWithRetry(() => import('@/pages/paymentConfirmation'))
 const Feedback = lazyWithRetry(() => import('@/pages/Feedback'))
+const DigestPage = lazyWithRetry(() => import('@/pages/DigestPage'))
 const RenewSubscription = lazyWithRetry(() => import('@/pages/RenewSubscription'))
 const AdminDashboard = lazyWithRetry(() => import('@/pages/adminDashboard'))
 const TermsOfService = lazyWithRetry(() => import('@/pages/TermsOfService'))
@@ -295,5 +296,6 @@ export const createRouter = (queryClient: QueryClient) =>
         }
       ]
     },
+    { path: PATHS.digestPath, element: <DigestPage /> },
     { path: PATHS.notFound, element: <NotFound /> }
   ])

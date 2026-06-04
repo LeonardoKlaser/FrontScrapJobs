@@ -1,0 +1,16 @@
+{
+  "heading": "Suas vagas de hoje",
+  "subheading": "Encontramos essas vagas pra você. Analise seu currículo direto por aqui.",
+  "alreadyAnalyzed": "✓ já analisei",
+  "notAcceptingBadge": "⚠️ vaga não está mais aceitando",
+  "viewJob": "Ver vaga",
+  "analyze": "Analisar",
+  "invalidTitle": "Link inválido ou expirou",
+  "invalidDescription": "Esse link de vagas não é mais válido. Volte ao WhatsApp para receber um novo.",
+  "invalidCta": "Ir para o site",
+  "renewTitle": "Assinatura expirada",
+  "renewDescription": "Sua assinatura expirou, então não foi possível analisar a vaga. Renove para voltar a usar as análises.",
+  "renewCta": "Renovar assinatura",
+  "renewDismiss": "Agora não",
+  "backToWhatsapp": "Voltar pro WhatsApp"
+}
