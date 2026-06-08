@@ -15,6 +15,20 @@ if (typeof globalThis.ResizeObserver === 'undefined') {
   globalThis.ResizeObserver = ResizeObserverPolyfill as unknown as typeof ResizeObserver
 }
 
+// Polyfill IntersectionObserver for framer-motion's useInView under jsdom.
+class IntersectionObserverPolyfill {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+  takeRecords() {
+    return []
+  }
+}
+if (typeof globalThis.IntersectionObserver === 'undefined') {
+  globalThis.IntersectionObserver =
+    IntersectionObserverPolyfill as unknown as typeof IntersectionObserver
+}
+
 // jsdom nao implementa Pointer Capture nem scrollIntoView — Radix Select usa ambos.
 if (typeof Element !== 'undefined') {
   if (!Element.prototype.hasPointerCapture) {

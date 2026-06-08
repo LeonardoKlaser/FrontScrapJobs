@@ -1,18 +1,13 @@
 import { useLayoutEffect } from 'react'
-import { AudienceSection } from '@/components/landingPage/audience-section'
 import { CtaFinalSection } from '@/components/landingPage/cta-final-section'
 import { FaqSection } from '@/components/landingPage/faq-section'
+import { FeatureBlocksSection } from '@/components/landingPage/feature-blocks-section'
 import { Footer } from '@/components/landingPage/footer'
-import { HeroSection } from '@/components/landingPage/hero-section'
-import { HowItWorksSection } from '@/components/landingPage/how-it-works-section'
+import { HeroDemoSection } from '@/components/landingPage/hero-demo-section'
+import { HowItWorksStrip } from '@/components/landingPage/how-it-works-strip'
 import { LandingNavbar } from '@/components/landingPage/navbar'
 import { PricingSection } from '@/components/landingPage/pricing-section'
-import { ProblemSection } from '@/components/landingPage/problem-section'
-import { ValueFeaturesSection } from '@/components/landingPage/value-features-section'
-import { SavingsCalculatorSection } from '@/components/landingPage/savings-calculator-section'
-import { SocialProofSection } from '@/components/landingPage/social-proof-section'
-import { StatsCounterSection } from '@/components/landingPage/stats-counter-section'
-import { TestimonialsSection } from '@/components/landingPage/testimonials-section'
+import { ProofBandSection } from '@/components/landingPage/proof-band-section'
 
 export function Landing() {
   useLayoutEffect(() => {
@@ -25,17 +20,12 @@ export function Landing() {
   }, [])
 
   return (
-    <div className="bg-emerald-100/30">
+    <div className="bg-white">
       <LandingNavbar />
-      <HeroSection />
-      <AudienceSection />
-      <ProblemSection />
-      <HowItWorksSection />
-      <ValueFeaturesSection />
-      <SocialProofSection />
-      <StatsCounterSection />
-      <TestimonialsSection />
-      <SavingsCalculatorSection />
+      <HeroDemoSection />
+      <ProofBandSection />
+      <FeatureBlocksSection />
+      <HowItWorksStrip />
       <PricingSection />
       <FaqSection />
       <CtaFinalSection />

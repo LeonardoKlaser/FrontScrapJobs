@@ -80,3 +80,17 @@ export function trackDigest(event: DigestEvent, payload: Record<string, unknown>
     console.warn('analytics push failed', err)
   }
 }
+
+// Landing page events: mede a conversao da nova LP (clique nos CTAs por secao e
+// troca de chip de area no hero demo). GTM ja esta carregado no index.html.
+export type LandingEvent = 'lp_cta_click' | 'lp_area_chip'
+
+export function trackLanding(event: LandingEvent, payload: Record<string, unknown> = {}): void {
+  if (typeof window === 'undefined') return
+  try {
+    window.dataLayer = window.dataLayer || []
+    window.dataLayer.push({ ...payload, event })
+  } catch (err) {
+    console.warn('analytics push failed', err)
+  }
+}

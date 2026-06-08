@@ -5,8 +5,12 @@ export const LANDING_CTA_CLASS =
 // genericos (navbar, hero, cta final, how-it-works) — ao inves de mandar
 // pro /signup direto, leva o visitante pra escolha de plano.
 export function scrollToPricing() {
-  const el = document.getElementById('pricing')
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
+  scrollToId('pricing')
+}
+
+// Rola suavemente ate qualquer secao da landing pelo id. Usado pelas ancoras
+// da navbar (howItWorks, pricing, faq).
+export function scrollToId(id: string) {
+  const el = document.getElementById(id)
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }

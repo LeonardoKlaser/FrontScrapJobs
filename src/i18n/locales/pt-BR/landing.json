@@ -1,171 +1,98 @@
 {
-  "hero": {
-    "eyebrow": "MONITORANDO +{{sites}} EMPRESAS · 24/7",
-    "eyebrowFallback": "MONITORANDO · 24/7",
-    "heading1": "Vagas remotas e internacionais nas gigantes de tecnologia. Sem o trabalho de procurar.",
-    "heading2": "Antes de todo mundo.",
-    "subheading": "Radar automático para devs, PMs, designers e data engineers. Google, Stripe, AWS, Nubank — +60 career pages monitoradas, vagas direto no seu inbox.",
-    "cta": "Receba vagas antes de todo mundo",
-    "loginPrompt": "Já tem uma conta?",
-    "loginLink": "Fazer login",
-    "microcopy": "Configure em 2 min. Inclui 7 dias grátis.",
-    "mockupDisclaimer": "Visualização ilustrativa. Empresas exibidas pertencem a seus respectivos proprietários."
-  },
-  "audience": {
-    "eyebrow": "FEITO PARA VOCÊ?",
-    "title": "Transparência antes de tudo",
-    "subtitle": "ScrapJobs não é para todo mundo — e isso é proposital.",
-    "forTitle": "Para quem é",
-    "forItems": [
-      "Devs, SREs e Data Engineers que querem vagas de empresas inovadoras",
-      "Product Managers, Designers e Sales B2B no ecossistema tech",
-      "Quem quer monitorar career pages de empresas como Google, Nubank, iFood, Mercado Livre",
-      "Profissionais que valorizam ser os primeiros a saber de uma vaga"
-    ],
-    "notForTitle": "Para quem NÃO é",
-    "notForItems": [
-      "Quem busca vagas em varejo, logística, saúde ou setor público",
-      "Quem procura posições operacionais ou atendimento ao cliente",
-      "Quem quer um agregador genérico tipo LinkedIn ou Indeed",
-      "Quem espera encontrar qualquer empresa — monitoramos apenas empresas de tecnologia selecionadas"
-    ],
-    "note": "Focamos em qualidade, não quantidade. Menos ruído, mais oportunidades certas."
-  },
   "navbar": {
-    "features": "Funcionalidades",
     "howItWorks": "Como funciona",
-    "pricing": "Preços",
+    "pricing": "Planos",
     "faq": "FAQ",
-    "cta": "Comece agora"
+    "login": "Entrar",
+    "cta": "Começar agora"
   },
   "labels": {
-    "features": "FUNCIONALIDADES",
     "howItWorks": "COMO FUNCIONA",
     "pricing": "PLANOS",
-    "faq": "FAQ",
-    "productVisualization": "PRODUTO",
-    "calculator": "ECONOMIA"
+    "faq": "FAQ"
   },
-  "features": {
-    "title": "Uma Vantagem Injusta para Sua Carreira",
-    "subtitle": "Ferramentas poderosas para automatizar sua busca de emprego",
-    "scraping": {
-      "title": "Vagas Novas Antes de Todo Mundo",
-      "description": "Monitoramos as páginas de carreira das suas empresas-alvo 6x por dia. Scraping inteligente com 3 estratégias diferentes — nenhuma vaga escapa."
+  "hero": {
+    "eyebrow": "● Ao vivo — monitorando {{sites}} empresas agora",
+    "eyebrowFallback": "● Ao vivo — monitorando as melhores empresas tech",
+    "heading1": "Vagas novas,",
+    "heading2": "antes de todo mundo",
+    "subheading": "Vigiamos as páginas de carreira das melhores empresas tech. Escolha sua área e veja o que coletamos hoje:",
+    "areas": {
+      "dev": "Dev",
+      "produto": "Produto",
+      "design": "Design",
+      "dados": "Dados",
+      "infra": "Infra & QA"
     },
-    "alerts": {
-      "title": "Alertas que Filtram o Ruído",
-      "description": "Defina palavras-chave do seu perfil. Só receba vagas que fazem sentido para você, direto no email — sem spam."
-    },
-    "ai": {
-      "title": "IA que Reescreve Seu Currículo",
-      "description": "Score de compatibilidade, keywords ATS faltando e sugestões com texto pronto para colar. Não é conselho genérico — é o seu currículo adaptado para cada vaga."
-    },
-    "monitoring": {
-      "title": "Acompanhe Suas Candidaturas",
-      "description": "Kanban visual para organizar todo o processo: da candidatura à oferta. Saiba exatamente onde cada oportunidade está."
+    "todayCount": "+ {{count}} vagas novas hoje nas empresas monitoradas",
+    "emptyArea": "Nada novo nas últimas horas em {{area}} — espia outra área",
+    "cta": "Quero meu radar",
+    "microcopy": "7 dias grátis · sem cartão de crédito",
+    "loginPrompt": "Já tem conta?",
+    "loginLink": "Fazer login",
+    "ago": {
+      "hours": "há {{count}}h",
+      "days": "há {{count}}d"
     }
   },
-  "howItWorks": {
-    "title": "Comece em 3 Passos Simples",
-    "step1": {
-      "title": "1. Escolha suas Empresas",
-      "description": "Selecione as empresas onde você sonha em trabalhar."
-    },
-    "step2": {
-      "title": "2. Defina seus Filtros",
-      "description": "Especifique os cargos e palavras-chave que correspondem ao seu perfil."
-    },
-    "step3": {
-      "title": "3. Receba e Otimize",
-      "description": "Vagas novas chegam no seu email. Clique para ver a análise de IA e aplique as sugestões direto no seu currículo."
-    },
-    "cta": "Começar a monitorar vagas"
+  "proofBand": {
+    "title": "Monitoramos as empresas que você ama",
+    "sites": "sites monitorados",
+    "jobs": "vagas coletadas"
   },
-  "problem": {
-    "headline": "A realidade de quem busca emprego hoje",
-    "subheading": "E provavelmente a sua também.",
-    "pain1": "dos currículos são descartados por robôs (ATS) antes de um humano ver",
-    "pain2": "por semana perdidas buscando vagas manualmente em dezenas de sites",
-    "pain3": "das vagas ideais são preenchidas antes de você sequer descobrir"
+  "howItWorksNew": {
+    "headline": "Do cadastro à entrevista em 4 passos",
+    "step1Title": "Cadastre seu CV",
+    "step2Title": "Receba alertas das suas empresas",
+    "step3Title": "A IA cruza vaga e currículo",
+    "step4Title": "Aplique com o PDF otimizado"
   },
-  "testimonials": {
-    "eyebrow": "HISTÓRIAS REAIS",
-    "headline": "Quem chega primeiro",
-    "headlineGradient": "tem mais chance.",
-    "sub": "Candidatos que usaram o ScrapJobs para sair na frente. Veja o que eles estão dizendo.",
-    "rating": "5 de 5 estrelas",
-    "items": [
-      {
-        "name": "Mariana Silva",
-        "role": "Backend Pleno · Go",
-        "body1": "Eu abria umas 6 páginas de carreira todo dia e esquecia metade. Agora chega no email e eu escolho o que responder. ",
-        "body2Bold": "Já tô em processo em duas empresas.",
-        "date": "12 fev 2026",
-        "badge": "Em entrevista",
-        "badgeVariant": "interviewing"
-      },
-      {
-        "name": "Rafael Costa",
-        "role": "Frontend Sênior",
-        "body1": "Apliquei pra uma vaga no mesmo dia que ela saiu, fiquei sabendo pelo email. Antes eu só descobria quando já tinha uns mil candidatos. ",
-        "body2Bold": "Dessa vez me chamaram pra conversar.",
-        "date": "5 mar 2026",
-        "badge": "Contratado",
-        "badgeVariant": "hired"
-      },
-      {
-        "name": "Camila Oliveira",
-        "role": "Product Designer",
-        "body1": "Os sites de vaga jogam tudo junto e o filtro é péssimo. Aqui eu escolho as empresas que me interessam de verdade. ",
-        "body2Bold": "Recebo menos vaga, mas todas fazem sentido pra mim.",
-        "date": "18 mar 2026",
-        "badge": "Em entrevista",
-        "badgeVariant": "interviewing"
-      },
-      {
-        "name": "Lucas Mendes",
-        "role": "DevOps Engineer · AWS",
-        "body1": "Monitorava 4 career pages manualmente e sempre perdia o timing. Com o ScrapJobs soube de uma vaga na hora que saiu e apliquei no mesmo dia. ",
-        "body2Bold": "Duas semanas depois recebi a proposta.",
-        "date": "22 jan 2026",
-        "badge": "Contratado",
-        "badgeVariant": "hired"
-      }
-    ]
+  "featureBlocks": {
+    "ats": {
+      "overline": "ANÁLISE ATS",
+      "heading": "Saiba por que seu CV é descartado — antes de enviar",
+      "sub": "A IA compara seu currículo com a vaga e mostra exatamente o que falta pra passar no filtro.",
+      "cta": "Analisar meu CV"
+    },
+    "pdf": {
+      "overline": "CV SOB MEDIDA",
+      "heading": "Um currículo otimizado pra cada vaga",
+      "sub": "Gere um PDF ajustado às palavras-chave da vaga em um clique.",
+      "cta": "Gerar meu currículo"
+    }
   },
   "faq": {
-    "title": "Perguntas Frequentes",
-    "security": {
-      "question": "Meus dados de currículo estão seguros?",
-      "answer": "Sim, usamos criptografia de ponta a ponta e seguimos as melhores práticas de segurança. Seus dados nunca são compartilhados com terceiros e você tem controle total sobre suas informações."
-    },
-    "ai": {
-      "question": "Como funciona a análise de IA?",
-      "answer": "Nossa IA compara as palavras-chave e requisitos da vaga com as habilidades e experiências do seu currículo, gerando um score de compatibilidade e sugestões personalizadas para melhorar suas chances."
-    },
-    "cancel": {
-      "question": "Posso cancelar a qualquer momento?",
-      "answer": "Sim, você pode cancelar sua assinatura a qualquer momento, sem complicações. Não há taxas de cancelamento ou períodos de carência."
-    },
-    "limits": {
-      "question": "Quantas empresas posso monitorar?",
-      "answer": "Depende do seu plano! Cada plano tem um limite diferente — confira a tabela de planos acima."
-    },
-    "ctaTitle": "Pronto para Acelerar sua Carreira?",
-    "ctaDescription": "Deixe a busca de emprego manual no passado. Concentre sua energia no que realmente importa: preparar-se para as entrevistas e conseguir o emprego dos seus sonhos.",
-    "ctaButton": "Começar a Automatizar"
-  },
-  "productVisualization": {
-    "title": "Análise de IA Direto no Seu Email",
-    "description": "Receba uma análise detalhada de compatibilidade entre seu currículo e cada vaga, com score, pontos fortes e sugestões de melhoria.",
-    "emailSubtitle": "Nova oportunidade encontrada!",
-    "jobDescription": "Descrição da Vaga:",
-    "bullet1": "Score de compatibilidade: saiba em segundos se a vaga é pra você",
-    "bullet2": "Pontos fortes e gaps: entenda exatamente onde você se encaixa",
-    "bullet3": "Sugestões para o currículo: ajuste seu CV para cada vaga automaticamente",
-    "applyNow": "Ver Vaga Completa",
-    "emailAlt": "Email de análise do ScrapJobs com score de compatibilidade 85/100"
+    "title": "Perguntas frequentes",
+    "items": [
+      {
+        "q": "As vagas são reais? De onde vêm?",
+        "a": "Sim. Coletamos direto das páginas de carreira das próprias empresas, várias vezes ao dia. Nada de agregador — a vaga aparece aqui assim que sai na fonte."
+      },
+      {
+        "q": "O ScrapJobs é pra mim?",
+        "a": "Se você é dev, PM, designer ou trabalha com dados em tech, sim. Não somos um agregador genérico de vagas de varejo ou operacional."
+      },
+      {
+        "q": "Qual a diferença pro LinkedIn e agregadores?",
+        "a": "Pegamos a vaga direto da fonte, sem o atraso dos agregadores. E a IA mostra por que seu CV é descartado nos filtros ATS antes de você aplicar."
+      },
+      {
+        "q": "Como a IA analisa meu currículo?",
+        "a": "Ela compara seu CV com a vaga, aponta as palavras-chave que faltam e gera um PDF otimizado pra aquela vaga."
+      },
+      {
+        "q": "Meus dados estão seguros?",
+        "a": "Sim. Seguimos a LGPD: seus dados são usados só pra cruzar vagas e gerar seu currículo, e você pode apagá-los quando quiser."
+      },
+      {
+        "q": "Posso cancelar quando quiser?",
+        "a": "Pode. Sem fidelidade — cancele a qualquer momento direto no painel."
+      },
+      {
+        "q": "Quantas empresas posso monitorar?",
+        "a": "Depende do plano. O teste grátis já libera o radar pra você sentir como funciona."
+      }
+    ]
   },
   "footer": {
     "terms": "Termos de Serviço",
@@ -173,33 +100,16 @@
     "copyright": "© {{year}} ScrapJobs. Todos os direitos reservados.",
     "disclaimer": "As marcas, logotipos e nomes de empresas exibidos pertencem aos seus respectivos proprietários e são usados apenas para identificação. O ScrapJobs não possui afiliação, patrocínio ou endosso dessas empresas."
   },
-  "socialProof": {
-    "subtitle": "Monitorando oportunidades das maiores empresas, como:"
-  },
-  "calculator": {
-    "title": "Quanto vale o seu",
-    "titleHighlight": "tempo?",
-    "description": "ScrapJobs economiza até 50 horas de busca massante por novas vagas de trabalho",
-    "salaryLabel": "Insira seu salário abaixo",
-    "hourlyRate": "Seu valor/hora",
-    "hoursSaved": "Horas economizadas/mês",
-    "yourSavings": "Você economiza",
-    "planCost": "ScrapJobs custa",
-    "roi": "{{value}}x o investimento",
-    "perMonth": "/mês",
-    "currencySymbol": "R$",
-    "hoursPerMonth": "220",
-    "hoursUnit": "50h"
-  },
   "ctaFinal": {
     "title": "Descubra vagas que",
-    "titleHighlight": "ninguém viu",
+    "cta": "Começar agora",
     "subtitle": "Vagas das empresas que você escolheu, no seu email — minutos depois de saírem.",
-    "cta": "Começar agora"
+    "titleHighlight": "ninguém viu ainda"
   },
   "pricing": {
-    "title": "Monitoramento de vagas que trabalha por você",
-    "subtitle": "Escolha o plano que cabe na sua busca. Cancele quando quiser.",
+    "title": "Comece grátis hoje",
+    "subtitle": "7 dias de teste, sem cartão. Cancele quando quiser.",
+    "lgpd": "Seus dados protegidos — LGPD",
     "loading": "Carregando planos...",
     "monthly": "Mensal",
     "popular": "Mais Popular",
@@ -223,8 +133,7 @@
   },
   "lgpd": {
     "badge": "Em conformidade com LGPD e GDPR",
-    "encryption": "Seus dados são protegidos com criptografia de ponta a ponta",
-    "noSharing": "Nunca compartilhamos seus dados com terceiros"
+    "encryption": "Seus dados são protegidos com criptografia de ponta a ponta"
   },
   "stats": {
     "sitesAnalyzed": "Sites monitorados",
@@ -232,93 +141,58 @@
     "trustLine": "Dados reais da nossa plataforma, atualizados em tempo real"
   },
   "valueFeatures": {
-    "radar": {
-      "overline": "Monitoramento Direto",
-      "headline": "Vagas direto da fonte.",
-      "headlineGradient": "Antes de virarem disputadas",
-      "body1": "Enquanto todo mundo briga por vagas recicladas nos murais de vagas, o ScrapJobs monitora diretamente o site de carreiras das empresas que você escolheu. Sem intermediários. Sem filtros de terceiros.",
-      "body2": "A vaga apareceu no site da Nubank às 9h.",
-      "body2Bold": "Às 9h01 você já sabia.",
-      "body2End": "Quem depende da Gupy só vai ver amanhã.",
-      "sourceBadge": "Direto do site oficial da empresa — sem intermediários",
-      "analyzeButton": "Analisar com IA",
-      "viewAnalysis": "Ver análise",
-      "newBadge": "NOVO",
-      "matchBadge": "match",
-      "mockDisclaimer": "Exemplos ilustrativos. Marcas pertencem a seus proprietários."
-    },
     "ats": {
-      "scoreLabel": "Compatibilidade ATS",
-      "keywordsTitle": "Palavras-chave ATS",
-      "strengthsTitle": "Pontos Fortes",
-      "gapsTitle": "Lacunas e Melhorias",
-      "suggestionsTitle": "Sugestões para o Currículo",
-      "suggestionsCount": "1 de 3 selecionadas",
-      "finalTitle": "Considerações Finais",
-      "scoreSummary": "O candidato demonstra forte experiência em backend com Java e Spring Boot, mas faltam detalhes em pagamentos e liderança técnica.",
-      "scoreBadge": "Médio",
-      "strength1Title": "Experiência em microserviços com Java e Spring Boot",
-      "strength1Desc": "Base para a arquitetura da vaga, incluindo sistemas distribuídos escaláveis.",
-      "strength2Title": "Conhecimento prático em Kubernetes e CI/CD",
-      "strength2Desc": "Importante para alta disponibilidade e pipeline de deploy seguro.",
-      "gap1Title": "Falta experiência com sistemas de pagamentos e autorização.",
-      "gap1Desc": "Ciclos de pagamento e fintech críticos para a vaga.",
-      "gap2Title": "Sem comprovação de liderança técnica e mentoria.",
-      "gap2Desc": "Requisito fundamental para o cargo senior.",
-      "suggestion1Text": "Inclua palavras-chave de pagamentos e liderança técnica.",
-      "suggestion1Section": "Resumo Profissional",
-      "suggestion1Example": "Software Developer focado em backend e ambientes cloud, com experiência em microserviços Java Spring Boot...",
-      "suggestion2Text": "Reforce arquitetura e sistemas de alta disponibilidade.",
-      "suggestion2Section": "Experiência",
-      "sendEmailButton": "Enviar por email",
-      "redoButton": "Refazer",
       "applyButton": "Aplicar 1 Sugestão",
-      "finalText": "Foque em alinhar sua experiência com palavras-chave da área de pagamentos e fintech, além de evidenciar liderança técnica.",
-      "overline": "Análise com IA",
-      "headline": "Descubra por que você",
-      "headlineGradient": "está sendo rejeitado.",
       "body1": "Faça upload do seu currículo atual. Em segundos, a IA cruza o seu perfil com a vaga e entrega um diagnóstico completo: score ATS, keywords que faltam e gaps que estão a sabotar as suas candidaturas.",
       "body2": "Chega de adivinhar.",
-      "body2Bold": "Agora você sabe exatamente o que corrigir."
+      "body2Bold": "Agora você sabe exatamente o que corrigir.",
+      "finalText": "Foque em alinhar sua experiência com palavras-chave da área de pagamentos e fintech, além de evidenciar liderança técnica.",
+      "finalTitle": "Considerações Finais",
+      "gap1Desc": "Ciclos de pagamento e fintech críticos para a vaga.",
+      "gap1Title": "Falta experiência com sistemas de pagamentos e autorização.",
+      "gap2Desc": "Requisito fundamental para o cargo senior.",
+      "gap2Title": "Sem comprovação de liderança técnica e mentoria.",
+      "gapsTitle": "Lacunas e Melhorias",
+      "headline": "Descubra por que você",
+      "headlineGradient": "está sendo rejeitado.",
+      "keywordsTitle": "Palavras-chave ATS",
+      "overline": "Análise com IA",
+      "redoButton": "Refazer",
+      "scoreBadge": "Médio",
+      "scoreSummary": "O candidato demonstra forte experiência em backend com Java e Spring Boot, mas faltam detalhes em pagamentos e liderança técnica.",
+      "sendEmailButton": "Enviar por email",
+      "strength1Desc": "Base para a arquitetura da vaga, incluindo sistemas distribuídos escaláveis.",
+      "strength1Title": "Experiência em microserviços com Java e Spring Boot",
+      "strength2Desc": "Importante para alta disponibilidade e pipeline de deploy seguro.",
+      "strength2Title": "Conhecimento prático em Kubernetes e CI/CD",
+      "strengthsTitle": "Pontos Fortes",
+      "suggestion1Example": "Software Developer focado em backend e ambientes cloud, com experiência em microserviços Java Spring Boot...",
+      "suggestion1Section": "Resumo Profissional",
+      "suggestion1Text": "Inclua palavras-chave de pagamentos e liderança técnica.",
+      "suggestion2Section": "Experiência",
+      "suggestion2Text": "Reforce arquitetura e sistemas de alta disponibilidade.",
+      "suggestionsCount": "1 de 3 selecionadas",
+      "suggestionsTitle": "Sugestões para o Currículo"
     },
     "pdf": {
-      "overline": "Geração Inteligente",
-      "headline": "Um currículo perfeito",
-      "headlineGradient": "para cada vaga. Sem esforço.",
+      "aiOptimizedTitle": "Currículo otimizado pela IA",
       "body1": "A IA pega nos gaps, sugere as palavras-chave certas e reconstrói as suas frases para passar no filtro ATS. Você escolhe o que aplicar e baixa o PDF — pronto para enviar.",
       "body2": "Sem reescrever nada do zero.",
       "body2Bold": "Um clique entre você e a candidatura perfeita.",
-      "aiOptimizedTitle": "Currículo otimizado pela IA",
-      "scoreBefore": "Médio",
-      "scoreAfter": "Excelente",
+      "emailHint": "Ou envie a análise completa por email",
+      "generateButton": "Gerar PDF Otimizado",
+      "headline": "Um currículo perfeito",
+      "headlineGradient": "para cada vaga. Sem esforço.",
+      "overline": "Geração Inteligente",
       "pill1": "+8 keywords ATS",
       "pill2": "Resumo reescrito",
       "pill3": "Experiência otimizada",
-      "templatePrompt": "Escolha o template para exportar:",
-      "templateModerno": "Moderno",
+      "scoreAfter": "Excelente",
+      "scoreBefore": "Médio",
       "templateClassico": "Clássico",
       "templateCriativo": "Criativo",
-      "generateButton": "Gerar PDF Otimizado",
-      "emailHint": "Ou envie a análise completa por email"
+      "templateModerno": "Moderno",
+      "templatePrompt": "Escolha o template para exportar:"
     }
-  },
-  "howItWorksNew": {
-    "overline": "Como funciona",
-    "headline": "Do zero à candidatura perfeita.",
-    "headlineGradient": "Em menos de 1 minuto.",
-    "step1Title": "Cadastre seu currículo",
-    "step1Description": "Faça upload do seu PDF. Seus dados são preenchidos automaticamente.",
-    "step2Title": "Receba alertas de vagas",
-    "step2Description": "Assim que uma vaga for postada nas empresas que você monitora, você é notificado.",
-    "step3Title": "IA cruza vaga + currículo",
-    "step3Description": "Score ATS, keywords faltando e gaps — tudo analisado em segundos.",
-    "step4Title": "Exporte e aplique",
-    "step4Description": "Baixe o CV otimizado para a vaga e candidate-se antes de todos.",
-    "cta": "Começar agora"
-  },
-  "socialProofNew": {
-    "title": "Monitoramos as empresas que você ama.",
-    "subtitle": "Adicionamos novas empresas toda semana. Não encontrou a sua? Nos diga.",
-    "disclaimer": "Logos exibidos são marcas registradas de seus respectivos proprietários. Monitoramos páginas públicas de carreiras — sem afiliação oficial."
   }
 }

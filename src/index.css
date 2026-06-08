@@ -288,21 +288,6 @@
   animation: float 4s ease-in-out infinite;
 }
 
-@keyframes glow-pulse {
-  0%, 100% {
-    opacity: 0.15;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.25;
-    transform: scale(1.05);
-  }
-}
-
-.animate-glow-pulse {
-  animation: glow-pulse 5s ease-in-out infinite;
-}
-
 @keyframes slide-in-right {
   from {
     opacity: 0;
@@ -406,26 +391,14 @@
   :not(.dark) .hover-lift:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
+}
 
-  .bg-stripes {
-    background-image: repeating-linear-gradient(
-      45deg,
-      rgba(16, 185, 129, 0.06) 0px,
-      rgba(16, 185, 129, 0.06) 1px,
-      transparent 1px,
-      transparent 14px
-    );
-    background-color: #ffffff;
-  }
-
-  .bg-stripes-dark {
-    background-image: repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.04) 0px,
-      rgba(255, 255, 255, 0.04) 1px,
-      transparent 1px,
-      transparent 14px
-    );
-    background-color: #0a0a0b;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

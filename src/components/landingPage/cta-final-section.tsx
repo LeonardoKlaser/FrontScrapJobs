@@ -2,7 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 import { SectionWrapper } from './section-wrapper'
-import { LANDING_CTA_CLASS, scrollToPricing } from './landing-cta'
+import { LANDING_CTA_CLASS, scrollToId } from './landing-cta'
+import { trackLanding } from '@/lib/analytics'
 
 export function CtaFinalSection() {
   const { t } = useTranslation('landing')
@@ -17,7 +18,15 @@ export function CtaFinalSection() {
 
         <p className="text-base text-zinc-500">{t('ctaFinal.subtitle')}</p>
 
-        <Button variant="glow" size="lg" className={LANDING_CTA_CLASS} onClick={scrollToPricing}>
+        <Button
+          variant="glow"
+          size="lg"
+          className={LANDING_CTA_CLASS}
+          onClick={() => {
+            trackLanding('lp_cta_click', { section: 'final' })
+            scrollToId('pricing')
+          }}
+        >
           {t('ctaFinal.cta')}
           <ArrowRight className="w-5 h-5 ml-1" />
         </Button>

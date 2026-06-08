@@ -10,7 +10,7 @@ import { SectionWrapper } from './section-wrapper'
 export function FaqSection() {
   const { t } = useTranslation('landing')
 
-  const faqKeys = ['security', 'ai', 'cancel', 'limits'] as const
+  const items = t('faq.items', { returnObjects: true }) as { q: string; a: string }[]
 
   return (
     <SectionWrapper id="faq">
@@ -29,13 +29,13 @@ export function FaqSection() {
             collapsible
             className="grid md:grid-cols-2 gap-x-6 gap-y-0 mt-8 text-left"
           >
-            {faqKeys.map((key, index) => (
-              <AccordionItem key={key} value={`item-${index}`} className="border-b border-zinc-200">
+            {items.map((item, i) => (
+              <AccordionItem key={i} value={`item-${i}`} className="border-b border-zinc-200">
                 <AccordionTrigger className="text-base font-medium text-zinc-900 py-4 hover:bg-zinc-50 px-2 rounded hover:no-underline">
-                  {t(`faq.${key}.question`)}
+                  {item.q}
                 </AccordionTrigger>
                 <AccordionContent className="text-[15px] text-zinc-500 leading-relaxed pb-4 px-2">
-                  {t(`faq.${key}.answer`)}
+                  {item.a}
                 </AccordionContent>
               </AccordionItem>
             ))}
