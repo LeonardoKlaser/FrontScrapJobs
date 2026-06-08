@@ -5,13 +5,13 @@ import { createBrowserRouter, Navigate, Outlet } from 'react-router'
 import { MainLayout } from '@/layouts/MainLayout'
 import { PublicLayout } from '@/layouts/PublicLayout'
 import { authLoader } from './loaders/authLoader'
-import { guestLoader } from './loaders/guestLoader'
 import { PATHS } from './paths'
 import i18n from '@/i18n'
 
 import type { QueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useUser } from '@/hooks/useUser'
+import { GuestGate } from '@/components/common/guest-gate'
 import { LoadingSection } from '@/components/common/loading-section'
 
 // Apos um deploy, o index.html cacheado pelo browser ainda referencia chunks
@@ -111,10 +111,40 @@ export const createRouter = (queryClient: QueryClient) =>
       element: <PublicLayout />,
       children: [
         { index: true, element: <Landing /> },
-        { path: PATHS.login, element: <Login />, loader: guestLoader(queryClient) },
-        { path: PATHS.signup, element: <Signup />, loader: guestLoader(queryClient) },
-        { path: 'forgot-password', element: <ForgotPassword />, loader: guestLoader(queryClient) },
-        { path: 'reset-password', element: <ResetPassword />, loader: guestLoader(queryClient) },
+        // GuestGate renderiza na hora e checa auth em background (sem o GET
+        // /api/me bloqueante do antigo guestLoader, que travava no cold start).
+        {
+          path: PATHS.login,
+          element: (
+            <GuestGate>
+              <Login />
+            </GuestGate>
+          )
+        },
+        {
+          path: PATHS.signup,
+          element: (
+            <GuestGate>
+              <Signup />
+            </GuestGate>
+          )
+        },
+        {
+          path: 'forgot-password',
+          element: (
+            <GuestGate>
+              <ForgotPassword />
+            </GuestGate>
+          )
+        },
+        {
+          path: 'reset-password',
+          element: (
+            <GuestGate>
+              <ResetPassword />
+            </GuestGate>
+          )
+        },
         { path: 'terms', element: <TermsOfService /> },
         { path: 'privacy', element: <PrivacyPolicy /> },
         {

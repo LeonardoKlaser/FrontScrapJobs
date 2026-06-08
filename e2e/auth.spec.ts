@@ -38,7 +38,7 @@ test.describe('Autenticacao', () => {
     await page.goto('/app')
     await page.waitForURL('/app')
 
-    // Flip the mock to unauthenticated BEFORE clicking Sair, so guestLoader
+    // Flip the mock to unauthenticated BEFORE clicking Sair, so the GuestGate
     // on /login sees a 401 from /api/me and doesn't redirect back to /app.
     await page.unrouteAll({ behavior: 'ignoreErrors' })
     await mockAPI({ authenticated: false })
