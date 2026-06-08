@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { ArrowRightIcon, Loader2Icon, MailIcon, LockIcon, Eye, EyeOff } from 'lucide-react'
 import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
+import { PATHS } from '@/router/paths'
 
 export function AuthForm() {
   const { login, loading, error } = useAuth()
@@ -51,7 +52,7 @@ export function AuthForm() {
           <Label htmlFor="password" className="text-muted-foreground">
             {t('password', 'Senha')}
           </Label>
-          <Link to="/forgot-password" className="text-xs text-primary hover:underline">
+          <Link to={PATHS.forgotPassword} className="text-xs text-primary hover:underline">
             {t('forgotPassword', 'Esqueci minha senha')}
           </Link>
         </div>
