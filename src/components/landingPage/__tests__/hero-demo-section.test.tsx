@@ -76,6 +76,17 @@ describe('HeroDemoSection', () => {
     expect(screen.getByText('Eng D').closest('[aria-hidden="true"]')).not.toBeNull()
   })
 
+  it('shows "agora" instead of "há 0h" for a just-scraped job', async () => {
+    vi.spyOn(svc.publicJobsService, 'getRecentJobs').mockResolvedValue({
+      jobs: [{ title: 'Fresh', company: 'Nubank', logo_url: '', posted_hours_ago: 0 }],
+      today_count: 0
+    })
+    renderHero()
+    await screen.findByText('Fresh')
+    expect(screen.getByText('agora')).toBeInTheDocument()
+    expect(screen.queryByText('há 0h')).not.toBeInTheDocument()
+  })
+
   it('never blurs the card when only one job comes back', async () => {
     vi.spyOn(svc.publicJobsService, 'getRecentJobs').mockResolvedValue({
       jobs: [{ title: 'Solo', company: 'Nubank', logo_url: '', posted_hours_ago: 1 }],

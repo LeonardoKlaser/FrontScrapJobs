@@ -31,14 +31,14 @@
     "loginPrompt": "Already have an account?",
     "loginLink": "Sign in",
     "ago": {
+      "now": "just now",
       "hours": "{{count}}h ago",
       "days": "{{count}}d ago"
     }
   },
   "proofBand": {
-    "title": "We monitor the companies you love",
     "sites": "monitored sites",
-    "jobs": "jobs collected"
+    "jobs": "open jobs right now"
   },
   "howItWorksNew": {
     "headline": "From sign-up to interview in 4 steps",

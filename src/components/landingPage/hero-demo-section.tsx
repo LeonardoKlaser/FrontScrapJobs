@@ -13,7 +13,9 @@ import { trackLanding } from '@/lib/analytics'
 import { PATHS } from '@/router/paths'
 
 // Altura minima compartilhada pelos 3 estados (skeleton/grid/fallback) pra CLS~0.
-const DEMO_MIN_H = 'min-h-[320px]'
+// Dimensionada pra caber o grid real (mobile: 3 cards/1 col = 3 linhas; sm+: 4
+// cards/2 cols = 2 linhas) sem deixar um vao grande ate o CTA abaixo.
+const DEMO_MIN_H = 'min-h-[224px] sm:min-h-[152px]'
 
 // Mobile (<sm) mostra no maximo 3 cards (o 3o borrado); a partir de sm o grid
 // vira 2 colunas e mostra 4 (o 4o borrado). Spec 3.2 — evita empurrar o CTA pra

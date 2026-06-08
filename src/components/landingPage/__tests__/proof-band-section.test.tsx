@@ -27,7 +27,7 @@ describe('ProofBandSection', () => {
     render(<ProofBandSection />)
     expect(screen.getByText('87')).toBeInTheDocument()
     expect(screen.getByText('sites monitorados')).toBeInTheDocument()
-    expect(screen.getByText('vagas coletadas')).toBeInTheDocument()
+    expect(screen.getByText('vagas abertas agora')).toBeInTheDocument()
     // 142000 formatted by Intl for pt-BR is "142.000"; locale may vary in jsdom
     expect(screen.getByText(/142[.,]?000/)).toBeInTheDocument()
   })

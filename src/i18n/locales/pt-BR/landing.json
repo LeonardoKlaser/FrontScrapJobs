@@ -31,14 +31,14 @@
     "loginPrompt": "Já tem conta?",
     "loginLink": "Fazer login",
     "ago": {
+      "now": "agora",
       "hours": "há {{count}}h",
       "days": "há {{count}}d"
     }
   },
   "proofBand": {
-    "title": "Monitoramos as empresas que você ama",
     "sites": "sites monitorados",
-    "jobs": "vagas coletadas"
+    "jobs": "vagas abertas agora"
   },
   "howItWorksNew": {
     "headline": "Do cadastro à entrevista em 4 passos",

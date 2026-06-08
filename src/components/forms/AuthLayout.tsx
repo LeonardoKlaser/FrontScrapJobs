@@ -38,13 +38,15 @@ export function AuthLayout({ hero, children }: AuthLayoutProps) {
 
   return (
     <div className="flex min-h-screen bg-white">
-      {/* Painel esquerdo — hero (escondido no mobile) */}
+      {/* Painel esquerdo — hero (escondido no mobile). Back-link fica em fluxo
+          normal no topo (nao absoluto) pra nunca sobrepor o logo do hero; o hero
+          centraliza no espaco restante e rola se ficar mais alto que a viewport. */}
       <div
-        className="relative hidden flex-col justify-center border-r border-zinc-200 bg-zinc-50
-          px-12 lg:flex lg:w-1/2 xl:px-20"
+        className="hidden flex-col border-r border-zinc-200 bg-zinc-50 px-12 py-8
+          lg:flex lg:w-1/2 xl:px-20"
       >
-        <div className="absolute left-12 top-6 z-10 xl:left-20">{backLink}</div>
-        {hero}
+        {backLink}
+        <div className="flex min-h-0 flex-1 items-center overflow-y-auto py-6">{hero}</div>
       </div>
 
       {/* Lado do formulario */}

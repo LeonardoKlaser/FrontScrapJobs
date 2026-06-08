@@ -11,7 +11,9 @@ export function JobCard({ job, blurred = false }: JobCardProps) {
   const ago =
     job.posted_hours_ago >= 24
       ? t('hero.ago.days', { count: Math.floor(job.posted_hours_ago / 24) })
-      : t('hero.ago.hours', { count: job.posted_hours_ago })
+      : job.posted_hours_ago <= 0
+        ? t('hero.ago.now')
+        : t('hero.ago.hours', { count: job.posted_hours_ago })
 
   return (
     <div
@@ -25,10 +27,11 @@ export function JobCard({ job, blurred = false }: JobCardProps) {
         {job.logo_url ? (
           <img
             src={job.logo_url}
-            alt=""
+            alt={job.company}
             width={36}
             height={36}
-            className="h-9 w-9 shrink-0 rounded-lg object-cover"
+            className="h-9 w-9 shrink-0 rounded-lg border border-zinc-200 bg-white object-contain
+              p-1"
           />
         ) : (
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-sm font-bold text-emerald-700">

@@ -21,6 +21,18 @@ export function useCountUp({
       return
     }
 
+    // Respeita prefers-reduced-motion: o CSS ja zera animacoes, mas animacao via
+    // requestAnimationFrame nao e coberta por isso — entao mostramos o valor final
+    // direto, sem contar de 0 ate o alvo.
+    const reduceMotion =
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduceMotion) {
+      setValue(target)
+      return
+    }
+
     const start = performance.now()
     let rafId: number | null = null
 

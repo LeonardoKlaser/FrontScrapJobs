@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/common/logo'
-import logotipo01 from '@/assets/Logotipo ScrapJobs 01.png'
 import { scrollToId } from './landing-cta'
 import { trackLanding } from '@/lib/analytics'
 import { PATHS } from '@/router/paths'
@@ -31,11 +30,9 @@ export function LandingNavbar() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
-        {scrolled ? (
-          <img src={logotipo01} alt="ScrapJobs" className="h-7" />
-        ) : (
-          <Logo size={28} showText textClassName="text-xl" />
-        )}
+        {/* Mesmo componente nos 2 estados pra garantir tamanho identico — no
+            scroll so inverte o texto pra branco (fundo verde). */}
+        <Logo size={28} showText textClassName="text-xl" inverted={scrolled} />
 
         <div className="hidden items-center gap-6 md:flex">
           <button type="button" onClick={() => scrollToId('howItWorks')} className={anchorClass}>
