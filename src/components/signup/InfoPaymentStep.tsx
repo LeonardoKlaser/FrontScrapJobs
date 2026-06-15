@@ -67,6 +67,7 @@ export function InfoPaymentStep({ sessionId, onSuccess, onBack }: InfoPaymentSte
         password: data.password,
         tax: data.tax
       })
+      sessionStorage.setItem('pending_checkout_email', data.email.trim().toLowerCase())
       onSuccess(result)
     } catch (err: unknown) {
       const resp = (

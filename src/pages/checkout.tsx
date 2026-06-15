@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { PlanSummary } from '@/components/checkout/plan-summary'
 import { PaymentForm } from '@/components/checkout/payment-form'
-import { useParams, Link } from 'react-router'
+import { useParams, useSearchParams, Link } from 'react-router'
 import { usePlans } from '@/hooks/usePlans'
 import { PATHS } from '@/router/paths'
 import { Spinner } from '@/components/ui/spinner'
@@ -14,8 +14,10 @@ import { trackCheckout } from '@/lib/analytics'
 export default function CheckoutPage() {
   const { t } = useTranslation('plans')
   const params = useParams()
+  const [searchParams] = useSearchParams()
   const { data: plans, isLoading: plansLoading, isError } = usePlans()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const pendingId = searchParams.get('pending_id')
 
   const planId = parseInt(params.planId || '', 10)
 
@@ -86,7 +88,12 @@ export default function CheckoutPage() {
             <PlanSummary plan={plan} />
           </div>
           <div className="animate-fade-in-up lg:col-span-2 [animation-delay:200ms]">
-            <PaymentForm plan={plan} isLoading={isSubmitting} setIsLoading={setIsSubmitting} />
+            <PaymentForm
+              plan={plan}
+              isLoading={isSubmitting}
+              setIsLoading={setIsSubmitting}
+              pendingId={pendingId}
+            />
           </div>
         </div>
       </div>
