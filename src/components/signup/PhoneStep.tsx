@@ -92,6 +92,12 @@ export function PhoneStep({ onSubmit, loading, error }: PhoneStepProps) {
           />
         </div>
         {errors.phone && <p className="text-xs text-destructive">{errors.phone.message}</p>}
+        <p className="text-xs text-muted-foreground">
+          {t(
+            'signup.whatsappHint',
+            'Voce recebera alertas de vagas e podera conversar com o Norte, sua IA de carreira.'
+          )}
+        </p>
       </div>
 
       {error && (

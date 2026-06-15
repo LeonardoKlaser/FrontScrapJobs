@@ -23,7 +23,9 @@ export function PricingSection() {
   }, [plans])
 
   const handleStartTrial = () => navigate(PATHS.signup)
-  const handleSubscribeDirect = (planId: number) => navigate(PATHS.checkout(String(planId)))
+  const handleSubscribeDirect = (id: number) => {
+    navigate(`${PATHS.signup}?plan=${id}`)
+  }
 
   if (isLoading) {
     return (

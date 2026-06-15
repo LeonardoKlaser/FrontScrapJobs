@@ -21,6 +21,7 @@ export function SignupWizard() {
   const [step, setStep] = useState<Step>('phone')
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [phoneMasked, setPhoneMasked] = useState('')
+  const [lastPhone, setLastPhone] = useState({ name: '', phone: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -36,6 +37,7 @@ export function SignupWizard() {
         })
         setSessionId(result.signup_session_id)
         setPhoneMasked(result.phone_masked)
+        setLastPhone({ name, phone })
         setStep('verify')
       } catch (err: unknown) {
         const msg =
@@ -102,8 +104,23 @@ export function SignupWizard() {
   )
 
   const handleResend = useCallback(async () => {
-    // Re-init not implemented — user goes back to phone step
-  }, [])
+    if (!lastPhone.name || !lastPhone.phone) return
+    setLoading(true)
+    setError(null)
+    try {
+      const result = await signupService.init({
+        name: lastPhone.name,
+        phone: lastPhone.phone,
+        plan_id: planId || undefined
+      })
+      setSessionId(result.signup_session_id)
+      setPhoneMasked(result.phone_masked)
+    } catch {
+      setError(t('signup.resendError', 'Erro ao reenviar. Tente novamente.'))
+    } finally {
+      setLoading(false)
+    }
+  }, [lastPhone, planId, t])
 
   const handleCompleteSuccess = useCallback(
     (response: { id?: number; action?: string; pending_id?: string; plan?: Plan }) => {
@@ -162,6 +179,7 @@ export function SignupWizard() {
       {step === 'info' && sessionId && (
         <InfoPaymentStep
           sessionId={sessionId}
+          isPaidPlan={planId > 0}
           onSuccess={handleCompleteSuccess}
           onBack={() => {
             setStep('verify')

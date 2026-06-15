@@ -33,11 +33,17 @@ type InfoStepInput = z.infer<typeof infoStepSchema>
 
 interface InfoPaymentStepProps {
   sessionId: string
+  isPaidPlan?: boolean
   onSuccess: (response: SignupCompleteResponse) => void
   onBack: () => void
 }
 
-export function InfoPaymentStep({ sessionId, onSuccess, onBack }: InfoPaymentStepProps) {
+export function InfoPaymentStep({
+  sessionId,
+  isPaidPlan,
+  onSuccess,
+  onBack
+}: InfoPaymentStepProps) {
   const { t } = useTranslation('auth')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -194,7 +200,9 @@ export function InfoPaymentStep({ sessionId, onSuccess, onBack }: InfoPaymentSte
             <Loader2Icon className="h-4 w-4 animate-spin" />
           ) : (
             <>
-              {t('signup.finish', 'Finalizar cadastro')}
+              {isPaidPlan
+                ? t('signup.goToPayment', 'Ir para pagamento')
+                : t('signup.startTrial', 'Comecar trial gratis')}
               <ArrowRightIcon className="ml-1 h-4 w-4" />
             </>
           )}
