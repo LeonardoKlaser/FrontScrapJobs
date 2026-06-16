@@ -85,6 +85,9 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
 
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const pollingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // Guarda o email do polling pra que o botão "verificar novamente" do estado de
+  // timeout consiga retomar a verificação sem o user reenviar o pagamento.
+  const pollingEmailRef = useRef<string>('')
 
   useEffect(() => {
     return () => {
@@ -118,6 +121,8 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
   }, [currentUser])
 
   const startPolling = (email: string) => {
+    pollingEmailRef.current = email
+    setCardError('')
     setPollingStatus('polling')
     let consecutiveErrors = 0
 
@@ -171,9 +176,11 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
           months: pixMonths
         })
       } catch (err) {
-        const isAxiosErr = axios.isAxiosError(err)
-        const errorMessage = isAxiosErr ? err.response?.data?.message : undefined
-        toast.error(errorMessage || tCommon('status.error'))
+        // Os erros do path pending (plano divergente 400, lock 409, sessão expirada
+        // 404) vêm só com {error}, sem {message} — ler ambos pra mostrar a mensagem
+        // específica do backend em vez do toast genérico.
+        const data = axios.isAxiosError(err) ? err.response?.data : undefined
+        toast.error(data?.message || data?.error || tCommon('status.error'))
       }
       return
     }
@@ -346,10 +353,22 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
           <p className="text-sm text-muted-foreground text-center max-w-md">
             {t('paymentForm.paymentTimeout')}
           </p>
+          {pollingEmailRef.current && (
+            <button
+              type="button"
+              onClick={() => startPolling(pollingEmailRef.current)}
+              className={
+                'mt-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold' +
+                ' text-primary-foreground transition-colors hover:bg-primary/90'
+              }
+            >
+              {t('paymentForm.timeoutCheckAgain')}
+            </button>
+          )}
           <button
             type="button"
             onClick={() => navigate(isAuthenticated ? PATHS.app.home : PATHS.landing)}
-            className={'mt-2 text-sm font-medium text-primary underline-offset-4 hover:underline'}
+            className={'text-sm font-medium text-primary underline-offset-4 hover:underline'}
           >
             {t('paymentForm.timeoutGoHome')}
           </button>

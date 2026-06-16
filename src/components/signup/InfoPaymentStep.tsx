@@ -16,7 +16,10 @@ import {
   EyeOff
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
+import { toast } from 'sonner'
 import { formatCPF } from '@/lib/format'
+import { PATHS } from '@/router/paths'
 import { signupService } from '@/services/signupService'
 import type { SignupCompleteResponse } from '@/services/signupService'
 
@@ -45,6 +48,7 @@ export function InfoPaymentStep({
   onBack
 }: InfoPaymentStepProps) {
   const { t } = useTranslation('auth')
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
@@ -83,6 +87,11 @@ export function InfoPaymentStep({
       )?.response?.data
       if (resp?.error === 'email_ou_cpf_ja_cadastrado') {
         setError(t('signup.emailOrCpfExists', 'E-mail ou CPF já cadastrado.'))
+      } else if (resp?.error === 'phone_already_registered') {
+        // Corrida TOCTOU: o número foi registrado entre o init e o complete.
+        // Caminho é login, não retry (espelha o handle no PhoneStep/wizard).
+        toast.info(resp?.message || t('signup.phoneExists', 'Número já cadastrado. Faça login.'))
+        navigate(`${PATHS.login}?from=${encodeURIComponent(PATHS.app.home)}`)
       } else if (resp?.error === 'phone_not_verified') {
         setError(t('signup.phoneNotVerified', 'Telefone não verificado. Volte e verifique.'))
       } else {

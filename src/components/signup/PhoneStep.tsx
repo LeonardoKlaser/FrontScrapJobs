@@ -10,10 +10,18 @@ import { formatPhoneBR } from '@/lib/format'
 
 const phoneStepSchema = z.object({
   name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
+  // Espelha utils.IsValidBRCellphone do backend: exatamente 11 dígitos (DDD + 9 +
+  // 8 dígitos), com o 3º dígito = '9'. Sem isso, um número de 10 dígitos passava no
+  // front e era rejeitado pelo backend com um 400 genérico "telefone inválido".
   phone: z
     .string()
     .transform((v) => v.replace(/\D/g, ''))
-    .pipe(z.string().min(10, 'Telefone inválido').max(11, 'Telefone inválido'))
+    .pipe(
+      z
+        .string()
+        .length(11, 'Informe DDD + celular (11 dígitos)')
+        .refine((v) => v[2] === '9', 'Celular deve ter o 9 após o DDD')
+    )
 })
 
 type PhoneStepInput = z.infer<typeof phoneStepSchema>

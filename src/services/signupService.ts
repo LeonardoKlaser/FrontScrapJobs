@@ -18,9 +18,10 @@ export interface SignupVerifyRequest {
 }
 
 export interface SignupVerifyResponse {
+  // Sucesso (200) só retorna verified:true. Erros (código inválido, sessão
+  // expirada, tentativas esgotadas) vêm como HTTP não-2xx e o axios rejeita —
+  // o caller lê o corpo via err.response.data, não daqui.
   verified: boolean
-  attempts_remaining?: number
-  error?: string
 }
 
 export interface SignupCompleteRequest {
@@ -37,6 +38,10 @@ export interface SignupCompleteResponse {
   action?: 'payment_required'
   pending_id?: string
   plan?: Plan
+  // Trial path: o backend emite o JWT no cookie. Se a assinatura do token falhar,
+  // retorna 201 com login_required=true (sem cookie) — o caller precisa mandar o
+  // user pro login em vez de cair no /app e bater no interceptor 401.
+  login_required?: boolean
 }
 
 export const signupService = {

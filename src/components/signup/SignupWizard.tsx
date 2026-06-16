@@ -1,13 +1,26 @@
 import { useState, useCallback } from 'react'
 import { useSearchParams, useNavigate } from 'react-router'
 import { useQueryClient } from '@tanstack/react-query'
-import type { Plan } from '@/models/plan'
 import { signupService } from '@/services/signupService'
+import type { SignupCompleteResponse } from '@/services/signupService'
 import { PhoneStep } from './PhoneStep'
 import { VerifyCodeStep } from './VerifyCodeStep'
 import { InfoPaymentStep } from './InfoPaymentStep'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import { PATHS } from '@/router/paths'
+
+// extractApiError lê o corpo de erro padrão do backend de uma rejeição do axios
+// sem espalhar casts inline por cada handler.
+interface ApiErrorData {
+  error?: string
+  message?: string
+  attempts_remaining?: number
+}
+
+function extractApiError(err: unknown): ApiErrorData {
+  return (err as { response?: { data?: ApiErrorData } })?.response?.data ?? {}
+}
 
 type Step = 'phone' | 'verify' | 'info'
 
@@ -40,26 +53,24 @@ export function SignupWizard() {
         setLastPhone({ name, phone })
         setStep('verify')
       } catch (err: unknown) {
-        const msg =
-          (
-            err as {
-              response?: {
-                data?: { error?: string; message?: string }
-              }
-            }
-          )?.response?.data?.message ||
-          (
-            err as {
-              response?: { data?: { error?: string } }
-            }
-          )?.response?.data?.error ||
-          t('signup.initError', 'Erro ao enviar código. Tente novamente.')
-        setError(msg)
+        const data = extractApiError(err)
+        // Número já cadastrado: o caminho é login, não retry. Mostra a mensagem e
+        // redireciona preservando o retorno (espelha o checkout em payment-form).
+        if (data.error === 'phone_already_registered') {
+          toast.info(data.message || t('signup.phoneExists', 'Número já cadastrado. Faça login.'))
+          navigate(`${PATHS.login}?from=${encodeURIComponent(PATHS.signup)}`)
+          return
+        }
+        setError(
+          data.message ||
+            data.error ||
+            t('signup.initError', 'Erro ao enviar código. Tente novamente.')
+        )
       } finally {
         setLoading(false)
       }
     },
-    [planId, t]
+    [planId, navigate, t]
   )
 
   const handleVerifySubmit = useCallback(
@@ -74,23 +85,22 @@ export function SignupWizard() {
         })
         if (result.verified) {
           setStep('info')
-        } else {
-          setError(
-            t('signup.invalidCode', 'Código inválido. {{remaining}} tentativas restantes.', {
-              remaining: result.attempts_remaining
-            })
-          )
         }
       } catch (err: unknown) {
-        const data = (
-          err as {
-            response?: { data?: { error?: string } }
-          }
-        )?.response?.data
-        if (data?.error === 'session_expired') {
+        // Código errado vem como HTTP 400 {error:"invalid_code", attempts_remaining} —
+        // o axios rejeita, então tratamos aqui (não no valor resolvido). Sem este
+        // case, um typo caía no genérico e o user nunca via as tentativas restantes.
+        const data = extractApiError(err)
+        if (data.error === 'invalid_code') {
+          setError(
+            t('signup.invalidCode', 'Código inválido. {{remaining}} tentativas restantes.', {
+              remaining: data.attempts_remaining ?? 0
+            })
+          )
+        } else if (data.error === 'session_expired') {
           setError(t('signup.sessionExpired', 'Sessão expirada. Comece novamente.'))
           setStep('phone')
-        } else if (data?.error === 'max_attempts') {
+        } else if (data.error === 'max_attempts') {
           setError(t('signup.maxAttempts', 'Tentativas esgotadas. Comece novamente.'))
           setStep('phone')
         } else {
@@ -115,24 +125,37 @@ export function SignupWizard() {
       })
       setSessionId(result.signup_session_id)
       setPhoneMasked(result.phone_masked)
-    } catch {
-      setError(t('signup.resendError', 'Erro ao reenviar. Tente novamente.'))
+    } catch (err: unknown) {
+      // Mesma recuperação do submit inicial: se o número virou "já cadastrado"
+      // (registro em outra aba) leva pro login em vez de prender o user no reenvio.
+      const data = extractApiError(err)
+      if (data.error === 'phone_already_registered') {
+        toast.info(data.message || t('signup.phoneExists', 'Número já cadastrado. Faça login.'))
+        navigate(`${PATHS.login}?from=${encodeURIComponent(PATHS.app.home)}`)
+        return
+      }
+      setError(data.message || t('signup.resendError', 'Erro ao reenviar. Tente novamente.'))
     } finally {
       setLoading(false)
     }
-  }, [lastPhone, planId, t])
+  }, [lastPhone, planId, navigate, t])
 
   const handleCompleteSuccess = useCallback(
-    (response: { id?: number; action?: string; pending_id?: string; plan?: Plan }) => {
+    (response: SignupCompleteResponse) => {
       if (response.action === 'payment_required' && response.pending_id) {
         const checkoutPlanId = response.plan?.id || planId
         navigate(`${PATHS.checkout(String(checkoutPlanId))}?pending_id=${response.pending_id}`)
+      } else if (response.login_required) {
+        // Trial criado mas sem cookie (assinatura do JWT falhou no backend). Mandar
+        // pro /app cairia direto no interceptor 401 — leva pro login com contexto.
+        toast.info(t('signup.accountCreatedLogin', 'Conta criada! Faça login para continuar.'))
+        navigate(`${PATHS.login}?from=${encodeURIComponent(PATHS.app.home)}`)
       } else {
         queryClient.invalidateQueries({ queryKey: ['user'] })
         navigate(PATHS.app.home)
       }
     },
-    [navigate, queryClient, planId]
+    [navigate, queryClient, planId, t]
   )
 
   const stepNumber = step === 'phone' ? 1 : step === 'verify' ? 2 : 3
