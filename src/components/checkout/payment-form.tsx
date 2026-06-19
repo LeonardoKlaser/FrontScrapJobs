@@ -2,16 +2,19 @@ import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Spinner } from '@/components/ui/spinner'
-import { AlertCircle, ArrowLeft } from 'lucide-react'
+import { AlertCircle, ArrowLeft, QrCode, CreditCard } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import type { Plan } from '@/models/plan'
 import {
   createPayment,
+  createPaymentWithPending,
   checkPaymentStatus,
   tokenizeCard,
   TokenizationError
 } from '@/services/paymentService'
 import type { CardData } from '@/services/paymentService'
 import type { PixPaymentResult } from '@/services/pixService'
+import { createPixAnonymousWithPending } from '@/services/pixAnonymousService'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
@@ -32,9 +35,10 @@ interface PaymentFormProps {
   plan: Plan
   isLoading: boolean
   setIsLoading: (loading: boolean) => void
+  pendingId?: string | null
 }
 
-export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps) {
+export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: PaymentFormProps) {
   const { t } = useTranslation('plans')
   const { t: tCommon } = useTranslation('common')
   const navigate = useNavigate()
@@ -44,7 +48,9 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
   const { data: currentUser, isLoading: userLoading } = useUser()
   const isAuthenticated = !!currentUser
 
-  const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(isAuthenticated ? 2 : 1)
+  const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(pendingId || isAuthenticated ? 2 : 1)
+
+  const pendingEmail = pendingId ? sessionStorage.getItem('pending_checkout_email') || '' : ''
   const [cardError, setCardError] = useState('')
   const [pollingStatus, setPollingStatus] = useState<'idle' | 'polling' | 'timeout'>('idle')
   // Default 'card' preserva fluxo existente. Toggle aparece so quando user
@@ -79,6 +85,9 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
 
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const pollingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // Guarda o email do polling pra que o botão "verificar novamente" do estado de
+  // timeout consiga retomar a verificação sem o user reenviar o pagamento.
+  const pollingEmailRef = useRef<string>('')
 
   useEffect(() => {
     return () => {
@@ -112,6 +121,8 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
   }, [currentUser])
 
   const startPolling = (email: string) => {
+    pollingEmailRef.current = email
+    setCardError('')
     setPollingStatus('polling')
     let consecutiveErrors = 0
 
@@ -152,6 +163,28 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
   }
 
   const handlePixSubmit = async () => {
+    if (pendingId) {
+      try {
+        const result = await createPixAnonymousWithPending({
+          pending_id: pendingId,
+          plan_id: plan.id,
+          months: pixMonths
+        })
+        setPixResult(result)
+        trackCheckout('checkout_pix_qr_generated', {
+          plan_id: plan.id,
+          months: pixMonths
+        })
+      } catch (err) {
+        // Os erros do path pending (plano divergente 400, lock 409, sessão expirada
+        // 404) vêm só com {error}, sem {message} — ler ambos pra mostrar a mensagem
+        // específica do backend em vez do toast genérico.
+        const data = axios.isAxiosError(err) ? err.response?.data : undefined
+        toast.error(data?.message || data?.error || tCommon('status.error'))
+      }
+      return
+    }
+
     // Lowercase + trim aqui pra que o que enviamos pro backend bata com o que
     // o backend grava em reg_completed:{email}. Sem isso, polling fica preso
     // pra users que digitaram email com maiusculas.
@@ -219,6 +252,28 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
     setCardError('')
 
     try {
+      if (pendingId) {
+        const token = await tokenizeCard(cardData)
+        const result = await createPaymentWithPending(plan.id, {
+          pending_id: pendingId,
+          card_token: token.id,
+          zip_code: addressData.zipCode.replace(/\D/g, ''),
+          street: addressData.street,
+          number: addressData.number,
+          neighborhood: addressData.neighborhood,
+          city: addressData.city,
+          state: addressData.state
+        })
+
+        if (result.status === 'processing') {
+          startPolling(pendingEmail)
+        } else {
+          setCardError(tCommon('status.error'))
+          setIsLoading(false)
+        }
+        return
+      }
+
       const token = await tokenizeCard(cardData)
 
       const result = await createPayment(plan.id, {
@@ -298,10 +353,22 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
           <p className="text-sm text-muted-foreground text-center max-w-md">
             {t('paymentForm.paymentTimeout')}
           </p>
+          {pollingEmailRef.current && (
+            <button
+              type="button"
+              onClick={() => startPolling(pollingEmailRef.current)}
+              className={
+                'mt-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold' +
+                ' text-primary-foreground transition-colors hover:bg-primary/90'
+              }
+            >
+              {t('paymentForm.timeoutCheckAgain')}
+            </button>
+          )}
           <button
             type="button"
             onClick={() => navigate(isAuthenticated ? PATHS.app.home : PATHS.landing)}
-            className={'mt-2 text-sm font-medium text-primary underline-offset-4 hover:underline'}
+            className={'text-sm font-medium text-primary underline-offset-4 hover:underline'}
           >
             {t('paymentForm.timeoutGoHome')}
           </button>
@@ -327,21 +394,24 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
   return (
     <Card className="w-full border-border/50">
       <CardHeader className="flex flex-row items-start gap-3 space-y-0">
-        {!pixResult && currentStep > 1 && !(isAuthenticated && currentStep === 2) && (
-          <button
-            type="button"
-            onClick={handleBack}
-            disabled={isLoading}
-            aria-label={t('paymentForm.prevStep')}
-            className={
-              'mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full' +
-              ' text-muted-foreground transition-colors hover:bg-muted hover:text-foreground' +
-              ' disabled:cursor-not-allowed disabled:opacity-50'
-            }
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </button>
-        )}
+        {!pixResult &&
+          currentStep > 1 &&
+          !(isAuthenticated && currentStep === 2) &&
+          !(pendingId && currentStep === 2) && (
+            <button
+              type="button"
+              onClick={handleBack}
+              disabled={isLoading}
+              aria-label={t('paymentForm.prevStep')}
+              className={
+                'mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full' +
+                ' text-muted-foreground transition-colors hover:bg-muted hover:text-foreground' +
+                ' disabled:cursor-not-allowed disabled:opacity-50'
+              }
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </button>
+          )}
         <div className="flex-1 space-y-1.5">
           <CardTitle className="text-2xl tracking-tight">{t('paymentForm.title')}</CardTitle>
           <CardDescription>{t('paymentForm.description')}</CardDescription>
@@ -357,13 +427,15 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
           </div>
         )}
 
-        {!pixResult && (
+        {!pixResult && !(pendingId && paymentMethod === 'pix') && (
           <CheckoutStepper
-            currentStep={currentStep}
+            currentStep={pendingId ? currentStep - 1 : currentStep}
             labels={
               paymentMethod === 'pix'
                 ? [t('checkout.stepData')]
-                : [t('checkout.stepData'), t('checkout.stepAddress'), t('checkout.stepPayment')]
+                : pendingId
+                  ? [t('checkout.stepAddress'), t('checkout.stepPayment')]
+                  : [t('checkout.stepData'), t('checkout.stepAddress'), t('checkout.stepPayment')]
             }
           />
         )}
@@ -374,7 +446,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
             planId={plan.id}
             // Lowercased pra bater com a chave reg_completed gravada pelo
             // webhook (CreatePixPaymentAnonymous normaliza no backend).
-            userEmail={formData.email.trim().toLowerCase()}
+            userEmail={pendingId ? pendingEmail : formData.email.trim().toLowerCase()}
             onExpired={() => {
               // Reset do mutation pra que isPending/error nao carreguem state
               // stale do submit anterior caso user re-submeta com QR expirado.
@@ -440,7 +512,59 @@ export function PaymentForm({ plan, isLoading, setIsLoading }: PaymentFormProps)
           />
         )}
 
-        {!pixResult && currentStep === 2 && (
+        {!pixResult && currentStep === 2 && pendingId && (
+          <div className="mb-6 space-y-3">
+            <p className="text-sm font-medium text-foreground">{t('checkout.paymentMethod')}</p>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setPaymentMethod('pix')
+                  handlePixSubmit()
+                }}
+                disabled={isLoading}
+                className={cn(
+                  'flex flex-col items-start gap-1.5 rounded-lg border',
+                  'p-4 text-left transition-all',
+                  paymentMethod === 'pix'
+                    ? 'border-emerald-500 bg-emerald-500/5'
+                    : 'border-border hover:border-muted-foreground/30'
+                )}
+              >
+                <div className="flex items-center gap-2">
+                  <QrCode className="h-4 w-4" />
+                  <span className="text-sm font-medium">{t('checkout.pixOption')}</span>
+                </div>
+                <span className="text-xs text-muted-foreground">
+                  {t('checkout.pixDescription')}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setPaymentMethod('card')}
+                disabled={isLoading}
+                className={cn(
+                  'flex flex-col items-start gap-1.5 rounded-lg border',
+                  'p-4 text-left transition-all',
+                  paymentMethod === 'card'
+                    ? 'border-primary bg-primary/5'
+                    : 'border-border hover:border-muted-foreground/30'
+                )}
+              >
+                <div className="flex items-center gap-2">
+                  <CreditCard className="h-4 w-4" />
+                  <span className="text-sm font-medium">{t('checkout.cardOption')}</span>
+                </div>
+                <span className="text-xs text-muted-foreground">
+                  {t('checkout.cardDescription')}
+                </span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {!pixResult && currentStep === 2 && (!pendingId || paymentMethod === 'card') && (
           <AddressStep
             addressData={addressData}
             setAddressData={setAddressData}

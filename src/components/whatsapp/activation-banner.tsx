@@ -23,6 +23,7 @@ export function ActivationBanner() {
   })
 
   // Beta fechado: só mostra pra quem está na allowlist (whatsapp_enabled).
+  // Users que fizeram signup multi_step já têm whatsapp_opted_in=true.
   if (!user || !user.whatsapp_enabled || user.whatsapp_opted_in || dismissed) return null
 
   const handleDismiss = () => {

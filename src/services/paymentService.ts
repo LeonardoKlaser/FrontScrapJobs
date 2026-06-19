@@ -120,6 +120,25 @@ export async function createPayment(
   return response.data
 }
 
+export interface CreatePaymentWithPendingRequest {
+  pending_id: string
+  card_token: string
+  zip_code: string
+  street: string
+  number: string
+  neighborhood: string
+  city: string
+  state: string
+}
+
+export async function createPaymentWithPending(
+  planId: number,
+  data: CreatePaymentWithPendingRequest
+): Promise<PaymentResult> {
+  const response = await api.post<PaymentResult>(`/api/payments/create/${planId}`, data)
+  return response.data
+}
+
 export async function checkPaymentStatus(email: string): Promise<PaymentStatusResult> {
   const response = await api.get<PaymentStatusResult>('/api/payments/status', {
     params: { email }

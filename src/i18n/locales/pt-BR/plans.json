@@ -89,6 +89,7 @@
     "processingDescription": "Estamos confirmando seu pagamento. Isso pode levar alguns segundos.",
     "paymentTimeout": "O pagamento está sendo processado. Se você recebeu o e-mail de confirmação, ignore esta tela. Caso contrário, aguarde alguns minutos antes de tentar novamente — não recarregue a página agora pra evitar cobrança duplicada. Em caso de dúvida, contate suporte@scrapjobs.com.br.",
     "timeoutGoHome": "Voltar para o início",
+    "timeoutCheckAgain": "Já paguei, verificar novamente",
     "cardError": "Erro no cartão. Verifique os dados e tente novamente.",
     "nextStep": "Próximo",
     "prevStep": "Voltar para o passo anterior",

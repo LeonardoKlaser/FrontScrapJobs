@@ -1,9 +1,9 @@
-import { SignupForm } from '@/components/forms/Signup'
 import { AuthLayout } from '@/components/forms/AuthLayout'
 import { AuthHero } from '@/components/forms/AuthHero'
 import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { PATHS } from '@/router/paths'
+import { SignupWizard } from '@/components/signup/SignupWizard'
 
 export default function Signup() {
   const { t } = useTranslation('auth')
@@ -38,8 +38,14 @@ export default function Signup() {
         }
       ]}
       stats={[
-        { value: '500+', label: t('hero.jobsMonitored', 'vagas monitoradas') },
-        { value: '50+', label: t('hero.companiesTracked', 'empresas rastreadas') },
+        {
+          value: '500+',
+          label: t('hero.jobsMonitored', 'vagas monitoradas')
+        },
+        {
+          value: '50+',
+          label: t('hero.companiesTracked', 'empresas rastreadas')
+        },
         {
           value: `7 ${t('signup.days', 'dias')}`,
           label: t('signup.freeTrial', 'grátis'),
@@ -52,13 +58,13 @@ export default function Signup() {
   return (
     <AuthLayout hero={hero}>
       <h2 className="mb-1 text-xl font-semibold text-zinc-900 lg:mb-2">
-        {t('signup.title', 'Crie sua conta grátis')}
+        {t('signup.title', 'Crie sua conta')}
       </h2>
       <p className="mb-8 text-sm text-zinc-500">
-        {t('signup.subtitle', '7 dias grátis. Sem cartão. Sem compromisso.')}
+        {t('signup.subtitle', 'Verifique seu WhatsApp para começar.')}
       </p>
 
-      <SignupForm />
+      <SignupWizard />
 
       <p className="mt-6 text-center text-sm text-zinc-500">
         {t('signup.hasAccount', 'Já tem uma conta?')}{' '}

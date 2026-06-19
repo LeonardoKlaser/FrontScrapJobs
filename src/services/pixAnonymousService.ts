@@ -15,3 +15,16 @@ export async function createPixAnonymous(data: PixAnonymousRequest): Promise<Pix
   const response = await api.post<PixPaymentResult>('/api/payments/create-pix-anonymous', data)
   return response.data
 }
+
+export interface PixAnonymousWithPendingRequest {
+  pending_id: string
+  plan_id: number
+  months: 1 | 3
+}
+
+export async function createPixAnonymousWithPending(
+  data: PixAnonymousWithPendingRequest
+): Promise<PixPaymentResult> {
+  const response = await api.post<PixPaymentResult>('/api/payments/create-pix-anonymous', data)
+  return response.data
+}
