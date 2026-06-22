@@ -37,7 +37,9 @@ api.interceptors.response.use(
         path.startsWith('/checkout/') ||
         path === '/payment-confirmation' ||
         // pagina publica de digest (magic-link): nao redireciona pro login
-        path.startsWith('/d/')
+        path.startsWith('/d/') ||
+        // pagina publica de onboarding (magic-link): nao redireciona pro login
+        path.startsWith('/onboarding/')
       if (!isPublic) {
         isRedirecting = true
         // i18next eh um singleton — pegamos a instancia global em vez de

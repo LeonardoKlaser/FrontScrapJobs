@@ -75,6 +75,7 @@ const CheckoutPage = lazyWithRetry(() => import('@/pages/checkout'))
 const PaymentConfirmationPage = lazyWithRetry(() => import('@/pages/paymentConfirmation'))
 const Feedback = lazyWithRetry(() => import('@/pages/Feedback'))
 const DigestPage = lazyWithRetry(() => import('@/pages/DigestPage'))
+const OnboardingCompaniesPage = lazyWithRetry(() => import('@/pages/OnboardingCompanies'))
 const RenewSubscription = lazyWithRetry(() => import('@/pages/RenewSubscription'))
 const AdminDashboard = lazyWithRetry(() => import('@/pages/adminDashboard'))
 const TermsOfService = lazyWithRetry(() => import('@/pages/TermsOfService'))
@@ -327,5 +328,6 @@ export const createRouter = (queryClient: QueryClient) =>
       ]
     },
     { path: PATHS.digestPath, element: <DigestPage /> },
+    { path: PATHS.onboardingPath, element: <OnboardingCompaniesPage /> },
     { path: PATHS.notFound, element: <NotFound /> }
   ])

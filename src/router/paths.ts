@@ -14,6 +14,10 @@ export const PATHS = {
   // navegacao (magic-link publico). Manter ambos sincronizados se o pattern mudar.
   digestPath: '/d/:token',
   digest: (token: string) => `/d/${token}`,
+  // onboardingPath e o pattern pra router config; onboarding(token) e o helper
+  // de navegacao (magic-link publico). Manter ambos sincronizados se o pattern mudar.
+  onboardingPath: '/onboarding/:token',
+  onboarding: (token: string) => `/onboarding/${token}`,
   app: {
     home: '/app',
     curriculum: '/app/curriculum',
