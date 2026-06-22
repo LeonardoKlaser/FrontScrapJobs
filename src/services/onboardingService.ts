@@ -1,4 +1,23 @@
+import axios from 'axios'
 import { api } from './api'
+
+export class OnboardingExpiredError extends Error {
+  constructor() {
+    super('expired')
+    this.name = 'OnboardingExpiredError'
+  }
+}
+
+export class OnboardingLimitExceededError extends Error {
+  sitesLimit: number
+  sitesUsed: number
+  constructor(sitesLimit: number, sitesUsed: number) {
+    super('limit_exceeded')
+    this.name = 'OnboardingLimitExceededError'
+    this.sitesLimit = sitesLimit
+    this.sitesUsed = sitesUsed
+  }
+}
 
 // snake_case pra espelhar o JSON do backend (GET /api/onboarding/:token).
 export interface OnboardingPreviewJob {
@@ -48,17 +67,32 @@ export interface OnboardingSubscribeResponse {
 }
 
 export async function getOnboardingPage(token: string): Promise<OnboardingPageResponse> {
-  const { data } = await api.get<OnboardingPageResponse>(`/api/onboarding/${token}`)
-  return data
+  try {
+    const { data } = await api.get<OnboardingPageResponse>(`/api/onboarding/${token}`)
+    return data
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response?.status === 404) {
+      throw new OnboardingExpiredError()
+    }
+    throw err
+  }
 }
 
 export async function subscribeOnboarding(
   token: string,
   payload: OnboardingSubscribeRequest
 ): Promise<OnboardingSubscribeResponse> {
-  const { data } = await api.post<OnboardingSubscribeResponse>(
-    `/api/onboarding/${token}/subscribe`,
-    payload
-  )
-  return data
+  try {
+    const { data } = await api.post<OnboardingSubscribeResponse>(
+      `/api/onboarding/${token}/subscribe`,
+      payload
+    )
+    return data
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response?.status === 422) {
+      const body = err.response.data as { sites_limit?: number; sites_used?: number }
+      throw new OnboardingLimitExceededError(body.sites_limit ?? 0, body.sites_used ?? 0)
+    }
+    throw err
+  }
 }

@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useParams } from 'react-router'
-import axios from 'axios'
-import { AlertTriangle, CheckCircle } from 'lucide-react'
+import { AlertTriangle, CheckCircle, Info } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { CompanyCard } from '@/components/onboarding/CompanyCard'
 import { useOnboardingPage, useOnboardingSubscribe } from '@/hooks/useOnboarding'
+import { OnboardingExpiredError, OnboardingLimitExceededError } from '@/services/onboardingService'
 
 function LoadingSkeleton() {
   return (
@@ -45,15 +45,16 @@ function ErrorScreen() {
   )
 }
 
-function SuccessScreen() {
+function LimitFullScreen() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
       <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
-        <CheckCircle className="h-7 w-7 text-primary" />
+        <Info className="h-7 w-7 text-primary" />
       </div>
-      <h1 className="text-xl font-semibold">Inscrições confirmadas!</h1>
+      <h1 className="text-xl font-semibold">Limite de empresas atingido</h1>
       <p className="max-w-xs text-sm text-muted-foreground">
-        Volte ao WhatsApp para continuar recebendo suas vagas.
+        Seu plano já está usando todas as vagas de empresas disponíveis. Atualize seu plano para
+        acompanhar mais empresas.
       </p>
     </div>
   )
@@ -67,22 +68,25 @@ export default function OnboardingCompaniesPage() {
   const [selectedIds, setSelectedIds] = useState<number[]>([])
   const [submitError, setSubmitError] = useState<string | null>(null)
 
-  const isExpired = isError && axios.isAxiosError(error) && error.response?.status === 404
+  const isExpired = isError && error instanceof OnboardingExpiredError
 
   const available = data ? Math.max(data.plan_site_limit - data.sites_used, 0) : 0
   const limitReached = selectedIds.length >= available
 
-  const toggleSite = (siteId: number) => {
-    setSelectedIds((prev) => {
-      if (prev.includes(siteId)) {
-        return prev.filter((id) => id !== siteId)
-      }
-      if (prev.length >= available) {
-        return prev
-      }
-      return [...prev, siteId]
-    })
-  }
+  const toggleSite = useCallback(
+    (siteId: number) => {
+      setSelectedIds((prev) => {
+        if (prev.includes(siteId)) {
+          return prev.filter((id) => id !== siteId)
+        }
+        if (prev.length >= available) {
+          return prev
+        }
+        return [...prev, siteId]
+      })
+    },
+    [available]
+  )
 
   const handleSubmit = () => {
     if (selectedIds.length === 0) return
@@ -91,7 +95,7 @@ export default function OnboardingCompaniesPage() {
       { site_ids: selectedIds },
       {
         onError: (err) => {
-          if (axios.isAxiosError(err) && err.response?.status === 422) {
+          if (err instanceof OnboardingLimitExceededError) {
             setSubmitError(
               'Limite do seu plano excedido. Reduza a quantidade de empresas selecionadas.'
             )
@@ -104,9 +108,31 @@ export default function OnboardingCompaniesPage() {
   }
 
   if (subscribeMutation.isSuccess) {
+    const result = subscribeMutation.data
+    const subscribedCount = result.subscribed?.length ?? 0
+    const skippedCount = result.skipped?.length ?? 0
+
     return (
       <main className="mx-auto flex min-h-screen w-full max-w-4xl flex-col px-4 py-8">
-        <SuccessScreen />
+        <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+            <CheckCircle className="h-7 w-7 text-primary" />
+          </div>
+          <h1 className="text-xl font-semibold">Inscrições confirmadas!</h1>
+          <p className="max-w-xs text-sm text-muted-foreground">
+            {subscribedCount > 0 && (
+              <>
+                Você foi inscrito em {subscribedCount} empresa{subscribedCount > 1 ? 's' : ''}.{' '}
+              </>
+            )}
+            {skippedCount > 0 && (
+              <>
+                {skippedCount} já estava{skippedCount > 1 ? 'm' : ''} na sua lista.{' '}
+              </>
+            )}
+            Volte ao WhatsApp — já estamos buscando vagas pra você.
+          </p>
+        </div>
       </main>
     )
   }
@@ -118,7 +144,9 @@ export default function OnboardingCompaniesPage() {
       {isExpired && <ExpiredScreen />}
       {isError && !isExpired && <ErrorScreen />}
 
-      {data && (
+      {data && available === 0 && <LimitFullScreen />}
+
+      {data && available > 0 && (
         <>
           <header className="flex flex-col gap-1">
             <h1 className="text-xl font-semibold tracking-tight">
