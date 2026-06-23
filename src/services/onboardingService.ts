@@ -37,7 +37,7 @@ export interface OnboardingCompany {
 }
 
 export interface OnboardingPreferences {
-  area: string
+  area: string[]
   seniority: string[]
   locations: string[]
 }
