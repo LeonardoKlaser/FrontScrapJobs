@@ -64,7 +64,8 @@ api.interceptors.response.use(
       window.location.pathname !== '/app/renew' &&
       // a pagina de digest (magic-link) trata subscription_expired localmente —
       // nao redireciona pra evitar tirar o usuario do digest abruptamente
-      !window.location.pathname.startsWith('/d/')
+      !window.location.pathname.startsWith('/d/') &&
+      !window.location.pathname.startsWith('/onboarding/')
     ) {
       isRedirecting = true
       window.location.href = '/app/renew'
