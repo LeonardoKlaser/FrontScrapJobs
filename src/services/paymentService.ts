@@ -150,3 +150,47 @@ export async function cancelSubscription(): Promise<CancelSubscriptionResult> {
   const response = await api.delete<CancelSubscriptionResult>('/api/subscription/cancel')
   return response.data
 }
+
+// --- AbacatePay ---
+
+export interface CreateSubscriptionRequest {
+  name: string
+  email: string
+  password: string
+  tax: string
+  cellphone: string
+}
+
+export interface SubscriptionResult {
+  checkout_url: string
+}
+
+export async function createSubscription(
+  planId: number,
+  data: CreateSubscriptionRequest
+): Promise<SubscriptionResult> {
+  const response = await api.post<SubscriptionResult>(`/api/payments/subscribe/${planId}`, data)
+  return response.data
+}
+
+export interface CreatePixQuarterlyRequest {
+  name: string
+  email: string
+  password: string
+  tax: string
+  cellphone: string
+  plan_id: number
+}
+
+export interface PixQuarterlyResult {
+  qr_code: string
+  qr_code_url: string
+  expires_at: string
+}
+
+export async function createPixQuarterly(
+  data: CreatePixQuarterlyRequest
+): Promise<PixQuarterlyResult> {
+  const response = await api.post<PixQuarterlyResult>('/api/payments/pix-quarterly', data)
+  return response.data
+}

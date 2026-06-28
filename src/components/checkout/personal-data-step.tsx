@@ -424,9 +424,14 @@ export function PersonalDataStep({
         >
           {isLoading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
-          ) : paymentMethod === 'pix' ? (
+          ) : paymentMethod === 'pix' && pixMonths === 3 ? (
             <>
               {t('checkout.generateQR')}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </>
+          ) : paymentMethod === 'pix' && pixMonths === 1 ? (
+            <>
+              {t('checkout.goToPayment')}
               <ArrowRight className="ml-2 h-4 w-4" />
             </>
           ) : (
