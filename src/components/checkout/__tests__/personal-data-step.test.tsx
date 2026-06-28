@@ -206,8 +206,15 @@ describe('PersonalDataStep — payment method selection', () => {
     expect(screen.queryByText(/Trimestral/)).not.toBeInTheDocument()
   })
 
-  it('mostra "Gerar QR Code PIX" como label do botão quando PIX selecionado', () => {
-    renderStep({ paymentMethod: 'pix' })
+  it('mostra "Ir para pagamento" quando PIX mensal selecionado', () => {
+    renderStep({ paymentMethod: 'pix', pixMonths: 1 })
+    expect(
+      screen.getByRole('button', { name: /Ir para pagamento|Go to payment/ })
+    ).toBeInTheDocument()
+  })
+
+  it('mostra "Gerar QR Code PIX" quando PIX trimestral selecionado', () => {
+    renderStep({ paymentMethod: 'pix', pixMonths: 3 })
     expect(
       screen.getByRole('button', { name: /Gerar QR Code PIX|Generate PIX QR Code/ })
     ).toBeInTheDocument()
@@ -233,10 +240,12 @@ describe('PersonalDataStep — payment method selection', () => {
     const user = userEvent.setup()
     const { onNext } = renderStep({
       paymentMethod: 'pix',
-      formData: { tax: '123' } // CPF muito curto
+      formData: { tax: '123' }
     })
 
-    const submitBtn = screen.getByRole('button', { name: /Gerar QR Code PIX|Generate PIX QR Code/ })
+    const submitBtn = screen.getByRole('button', {
+      name: /Ir para pagamento|Go to payment/
+    })
     await user.click(submitBtn)
 
     expect(onNext).not.toHaveBeenCalled()
@@ -247,10 +256,12 @@ describe('PersonalDataStep — payment method selection', () => {
     const user = userEvent.setup()
     const { onNext } = renderStep({
       paymentMethod: 'pix',
-      formData: { tax: '529.982.247-25' } // CPF valido mascarado
+      formData: { tax: '529.982.247-25' }
     })
 
-    const submitBtn = screen.getByRole('button', { name: /Gerar QR Code PIX|Generate PIX QR Code/ })
+    const submitBtn = screen.getByRole('button', {
+      name: /Ir para pagamento|Go to payment/
+    })
     await user.click(submitBtn)
 
     expect(onNext).toHaveBeenCalled()

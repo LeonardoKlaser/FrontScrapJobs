@@ -11,13 +11,14 @@
     "stepPayment": "Pagamento",
     "paymentMethod": "Método de pagamento",
     "pixOption": "PIX",
-    "pixDescription": "Pagamento único, sem renovação automática",
+    "pixDescription": "Pagamento via PIX",
     "cardOption": "Cartão de Crédito",
     "cardDescription": "Renovação automática mensal. Cancele quando quiser.",
     "pixPeriodLabel": "Período",
-    "pixMonthly": "Mensal — {{price}}/mês",
+    "pixMonthly": "Mensal — {{price}}/mês (renovação automática)",
     "pixQuarterly": "Trimestral — {{price}} (economia de {{discount}}%)",
-    "generateQR": "Gerar QR Code PIX"
+    "generateQR": "Gerar QR Code PIX",
+    "goToPayment": "Ir para pagamento"
   },
   "pixQrCode": {
     "title": "Escaneie o QR Code",

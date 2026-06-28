@@ -30,6 +30,7 @@ import { trackCheckout, trackTrial } from '@/lib/analytics'
 import { useSaveLead } from '@/hooks/useSaveLead'
 import { useUser } from '@/hooks/useUser'
 import { usePixAnonymous } from '@/hooks/usePixAnonymous'
+import { useAbacatePaySubscription, useAbacatePayPixQuarterly } from '@/hooks/useAbacatePay'
 
 interface PaymentFormProps {
   plan: Plan
@@ -60,6 +61,8 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
   const [pixMonths, setPixMonths] = useState<1 | 3>(1)
   const [pixResult, setPixResult] = useState<PixPaymentResult | null>(null)
   const pixMutation = usePixAnonymous()
+  const subscriptionMutation = useAbacatePaySubscription()
+  const pixQuarterlyMutation = useAbacatePayPixQuarterly()
   const [formData, setFormData] = useState<PersonalFormData>(() => ({
     name: currentUser?.user_name ?? '',
     email: currentUser?.email ?? '',
@@ -176,22 +179,14 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
           months: pixMonths
         })
       } catch (err) {
-        // Os erros do path pending (plano divergente 400, lock 409, sessão expirada
-        // 404) vêm só com {error}, sem {message} — ler ambos pra mostrar a mensagem
-        // específica do backend em vez do toast genérico.
         const data = axios.isAxiosError(err) ? err.response?.data : undefined
         toast.error(data?.message || data?.error || tCommon('status.error'))
       }
       return
     }
 
-    // Lowercase + trim aqui pra que o que enviamos pro backend bata com o que
-    // o backend grava em reg_completed:{email}. Sem isso, polling fica preso
-    // pra users que digitaram email com maiusculas.
     const normalizedEmail = formData.email.trim().toLowerCase()
 
-    // saveLead com mesmo dedup-key do path de cartao — anônimos que geram QR
-    // mas nao pagam ficam visiveis pra recovery emails. Fire-and-forget.
     const leadKey = `${formData.name}|${normalizedEmail}|${formData.phone}|${plan.id}`
     if (leadKey !== lastLeadKeyRef.current) {
       lastLeadKeyRef.current = leadKey
@@ -213,22 +208,65 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
       )
     }
 
+    const taxDigits = (formData.tax || '').replace(/\D/g, '')
+    const cellDigits = formData.phone.replace(/\D/g, '')
+
+    if (pixMonths === 1) {
+      try {
+        const result = await subscriptionMutation.mutateAsync({
+          planId: plan.id,
+          data: {
+            name: formData.name,
+            email: normalizedEmail,
+            password: formData.password,
+            tax: taxDigits,
+            cellphone: cellDigits
+          }
+        })
+        trackCheckout('checkout_abacatepay_redirect', {
+          plan_id: plan.id,
+          cycle: 'monthly'
+        })
+        window.location.href = result.checkout_url
+      } catch (err) {
+        const isAxiosErr = axios.isAxiosError(err)
+        const errorCode = isAxiosErr ? err.response?.data?.error : undefined
+        const errorMessage = isAxiosErr ? err.response?.data?.message : undefined
+        const status = isAxiosErr ? (err.response?.status ?? 0) : 0
+        trackCheckout('checkout_subscription_create_failed', {
+          plan_id: plan.id,
+          error_code: errorCode ?? 'unknown',
+          status
+        })
+        if (errorCode === 'email_already_registered' || errorCode === 'tax_already_registered') {
+          toast.info(errorMessage || t('paymentForm.userExistsRedirect'))
+          navigate(`${PATHS.login}?from=${encodeURIComponent(`/checkout/${plan.id}`)}`)
+          return
+        }
+        toast.error(errorMessage || tCommon('status.error'))
+      }
+      return
+    }
+
     try {
-      const result = await pixMutation.mutateAsync({
+      const result = await pixQuarterlyMutation.mutateAsync({
         name: formData.name,
         email: normalizedEmail,
         password: formData.password,
-        tax: (formData.tax || '').replace(/\D/g, ''),
-        cellphone: formData.phone.replace(/\D/g, ''),
-        plan_id: plan.id,
-        months: pixMonths
+        tax: taxDigits,
+        cellphone: cellDigits,
+        plan_id: plan.id
       })
-      setPixResult(result)
-      trackCheckout('checkout_pix_qr_generated', { plan_id: plan.id, months: pixMonths })
+      setPixResult({
+        qr_code: result.qr_code,
+        qr_code_url: result.qr_code_url,
+        expires_at: result.expires_at
+      })
+      trackCheckout('checkout_pix_qr_generated', {
+        plan_id: plan.id,
+        months: 3
+      })
     } catch (err) {
-      // Backend retorna 409 com error code pra duplicatas; em vez de toast
-      // generico, redireciona pra /login preservando o checkout no from — UX
-      // espelha o fluxo de cartao em handleCardSubmit.
       const isAxiosErr = axios.isAxiosError(err)
       const errorCode = isAxiosErr ? err.response?.data?.error : undefined
       const errorMessage = isAxiosErr ? err.response?.data?.message : undefined
@@ -448,9 +486,8 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
             // webhook (CreatePixPaymentAnonymous normaliza no backend).
             userEmail={pendingId ? pendingEmail : formData.email.trim().toLowerCase()}
             onExpired={() => {
-              // Reset do mutation pra que isPending/error nao carreguem state
-              // stale do submit anterior caso user re-submeta com QR expirado.
               pixMutation.reset()
+              pixQuarterlyMutation.reset()
               setPixResult(null)
             }}
             redirectAfterConfirm={
@@ -465,7 +502,12 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
           <PersonalDataStep
             formData={formData}
             setFormData={setFormData}
-            isLoading={isLoading || pixMutation.isPending}
+            isLoading={
+              isLoading ||
+              pixMutation.isPending ||
+              subscriptionMutation.isPending ||
+              pixQuarterlyMutation.isPending
+            }
             planId={plan.id}
             isAuthenticated={isAuthenticated}
             paymentMethod={paymentMethod}
