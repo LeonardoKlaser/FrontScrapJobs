@@ -161,13 +161,17 @@ export interface CreateSubscriptionRequest {
   cellphone: string
 }
 
+export interface CreateSubscriptionWithPendingRequest {
+  pending_id: string
+}
+
 export interface SubscriptionResult {
   checkout_url: string
 }
 
 export async function createSubscription(
   planId: number,
-  data: CreateSubscriptionRequest
+  data: CreateSubscriptionRequest | CreateSubscriptionWithPendingRequest
 ): Promise<SubscriptionResult> {
   const response = await api.post<SubscriptionResult>(`/api/payments/subscribe/${planId}`, data)
   return response.data
@@ -182,6 +186,11 @@ export interface CreatePixQuarterlyRequest {
   plan_id: number
 }
 
+export interface CreatePixQuarterlyWithPendingRequest {
+  pending_id: string
+  plan_id: number
+}
+
 export interface PixQuarterlyResult {
   qr_code: string
   qr_code_url: string
@@ -189,7 +198,7 @@ export interface PixQuarterlyResult {
 }
 
 export async function createPixQuarterly(
-  data: CreatePixQuarterlyRequest
+  data: CreatePixQuarterlyRequest | CreatePixQuarterlyWithPendingRequest
 ): Promise<PixQuarterlyResult> {
   const response = await api.post<PixQuarterlyResult>('/api/payments/pix-quarterly', data)
   return response.data

@@ -9,6 +9,7 @@ import { InfoPaymentStep } from './InfoPaymentStep'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { PATHS } from '@/router/paths'
+import { usePlans } from '@/hooks/usePlans'
 
 // extractApiError lê o corpo de erro padrão do backend de uma rejeição do axios
 // sem espalhar casts inline por cada handler.
@@ -30,6 +31,9 @@ export function SignupWizard() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const planId = Number(searchParams.get('plan')) || 0
+
+  const { data: plans } = usePlans()
+  const plan = plans?.find((p) => p.id === planId) ?? null
 
   const [step, setStep] = useState<Step>('phone')
   const [sessionId, setSessionId] = useState<string | null>(null)
@@ -142,12 +146,7 @@ export function SignupWizard() {
 
   const handleCompleteSuccess = useCallback(
     (response: SignupCompleteResponse) => {
-      if (response.action === 'payment_required' && response.pending_id) {
-        const checkoutPlanId = response.plan?.id || planId
-        navigate(`${PATHS.checkout(String(checkoutPlanId))}?pending_id=${response.pending_id}`)
-      } else if (response.login_required) {
-        // Trial criado mas sem cookie (assinatura do JWT falhou no backend). Mandar
-        // pro /app cairia direto no interceptor 401 — leva pro login com contexto.
+      if (response.login_required) {
         toast.info(t('signup.accountCreatedLogin', 'Conta criada! Faça login para continuar.'))
         navigate(`${PATHS.login}?from=${encodeURIComponent(PATHS.app.home)}`)
       } else {
@@ -155,7 +154,7 @@ export function SignupWizard() {
         navigate(PATHS.app.home)
       }
     },
-    [navigate, queryClient, planId, t]
+    [navigate, queryClient, t]
   )
 
   const stepNumber = step === 'phone' ? 1 : step === 'verify' ? 2 : 3
@@ -203,6 +202,7 @@ export function SignupWizard() {
         <InfoPaymentStep
           sessionId={sessionId}
           isPaidPlan={planId > 0}
+          plan={plan}
           onSuccess={handleCompleteSuccess}
           onBack={() => {
             setStep('verify')

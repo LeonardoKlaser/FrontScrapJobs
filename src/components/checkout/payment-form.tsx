@@ -2,8 +2,13 @@ import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Spinner } from '@/components/ui/spinner'
-import { AlertCircle, ArrowLeft, QrCode, CreditCard } from 'lucide-react'
+import { AlertCircle, ArrowLeft, QrCode } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { quarterlyDiscountPct } from '@/lib/pricing'
+
+function formatCurrencyBRL(value: number): string {
+  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+}
 import type { Plan } from '@/models/plan'
 import {
   createPayment,
@@ -14,7 +19,6 @@ import {
 } from '@/services/paymentService'
 import type { CardData } from '@/services/paymentService'
 import type { PixPaymentResult } from '@/services/pixService'
-import { createPixAnonymousWithPending } from '@/services/pixAnonymousService'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
@@ -54,10 +58,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
   const pendingEmail = pendingId ? sessionStorage.getItem('pending_checkout_email') || '' : ''
   const [cardError, setCardError] = useState('')
   const [pollingStatus, setPollingStatus] = useState<'idle' | 'polling' | 'timeout'>('idle')
-  // Default 'card' preserva fluxo existente. Toggle aparece so quando user
-  // anonimo — autenticado renovando ja tem PaymentMethod no DB e fluxo
-  // proprio (nao usa este componente pra renovar PIX).
-  const [paymentMethod, setPaymentMethod] = useState<'pix' | 'card'>('card')
+  const [paymentMethod, setPaymentMethod] = useState<'pix' | 'card'>('pix')
   const [pixMonths, setPixMonths] = useState<1 | 3>(1)
   const [pixResult, setPixResult] = useState<PixPaymentResult | null>(null)
   const pixMutation = usePixAnonymous()
@@ -166,62 +167,47 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
   }
 
   const handlePixSubmit = async () => {
-    if (pendingId) {
-      try {
-        const result = await createPixAnonymousWithPending({
-          pending_id: pendingId,
-          plan_id: plan.id,
-          months: pixMonths
-        })
-        setPixResult(result)
-        trackCheckout('checkout_pix_qr_generated', {
-          plan_id: plan.id,
-          months: pixMonths
-        })
-      } catch (err) {
-        const data = axios.isAxiosError(err) ? err.response?.data : undefined
-        toast.error(data?.message || data?.error || tCommon('status.error'))
-      }
-      return
-    }
+    const normalizedEmail = pendingId
+      ? pendingEmail
+      : formData.email.trim().toLowerCase()
 
-    const normalizedEmail = formData.email.trim().toLowerCase()
-
-    const leadKey = `${formData.name}|${normalizedEmail}|${formData.phone}|${plan.id}`
-    if (leadKey !== lastLeadKeyRef.current) {
-      lastLeadKeyRef.current = leadKey
-      saveLead(
-        {
-          name: formData.name,
-          email: normalizedEmail,
-          phone: formData.phone,
-          plan_id: plan.id
-        },
-        {
-          onError: (err) => {
-            console.error('saveLead failed (pix path)', err)
-            trackCheckout('checkout_lead_save_failed', {
-              message: err instanceof Error ? err.message : 'unknown'
-            })
+    if (!pendingId) {
+      const leadKey = `${formData.name}|${normalizedEmail}|${formData.phone}|${plan.id}`
+      if (leadKey !== lastLeadKeyRef.current) {
+        lastLeadKeyRef.current = leadKey
+        saveLead(
+          {
+            name: formData.name,
+            email: normalizedEmail,
+            phone: formData.phone,
+            plan_id: plan.id
+          },
+          {
+            onError: (err) => {
+              console.error('saveLead failed (pix path)', err)
+              trackCheckout('checkout_lead_save_failed', {
+                message: err instanceof Error ? err.message : 'unknown'
+              })
+            }
           }
-        }
-      )
+        )
+      }
     }
-
-    const taxDigits = (formData.tax || '').replace(/\D/g, '')
-    const cellDigits = formData.phone.replace(/\D/g, '')
 
     if (pixMonths === 1) {
       try {
+        const data = pendingId
+          ? { pending_id: pendingId }
+          : {
+              name: formData.name,
+              email: normalizedEmail,
+              password: formData.password,
+              tax: (formData.tax || '').replace(/\D/g, ''),
+              cellphone: formData.phone.replace(/\D/g, '')
+            }
         const result = await subscriptionMutation.mutateAsync({
           planId: plan.id,
-          data: {
-            name: formData.name,
-            email: normalizedEmail,
-            password: formData.password,
-            tax: taxDigits,
-            cellphone: cellDigits
-          }
+          data
         })
         trackCheckout('checkout_abacatepay_redirect', {
           plan_id: plan.id,
@@ -249,14 +235,17 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
     }
 
     try {
-      const result = await pixQuarterlyMutation.mutateAsync({
-        name: formData.name,
-        email: normalizedEmail,
-        password: formData.password,
-        tax: taxDigits,
-        cellphone: cellDigits,
-        plan_id: plan.id
-      })
+      const data = pendingId
+        ? { pending_id: pendingId, plan_id: plan.id }
+        : {
+            name: formData.name,
+            email: normalizedEmail,
+            password: formData.password,
+            tax: (formData.tax || '').replace(/\D/g, ''),
+            cellphone: formData.phone.replace(/\D/g, ''),
+            plan_id: plan.id
+          }
+      const result = await pixQuarterlyMutation.mutateAsync(data)
       setPixResult({
         qr_code: result.qr_code,
         qr_code_url: result.qr_code_url,
@@ -555,54 +544,77 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
         )}
 
         {!pixResult && currentStep === 2 && pendingId && (
-          <div className="mb-6 space-y-3">
-            <p className="text-sm font-medium text-foreground">{t('checkout.paymentMethod')}</p>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setPaymentMethod('pix')
-                  handlePixSubmit()
-                }}
-                disabled={isLoading}
-                className={cn(
-                  'flex flex-col items-start gap-1.5 rounded-lg border',
-                  'p-4 text-left transition-all',
-                  paymentMethod === 'pix'
-                    ? 'border-emerald-500 bg-emerald-500/5'
-                    : 'border-border hover:border-muted-foreground/30'
-                )}
-              >
-                <div className="flex items-center gap-2">
-                  <QrCode className="h-4 w-4" />
-                  <span className="text-sm font-medium">{t('checkout.pixOption')}</span>
+          <div className="mb-6 space-y-4">
+            {plan.quarterly_price_cents != null && (
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-foreground">
+                  {t('checkout.pixPeriodLabel')}
+                </p>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <button
+                    type="button"
+                    onClick={() => setPixMonths(1)}
+                    disabled={
+                      isLoading ||
+                      subscriptionMutation.isPending ||
+                      pixQuarterlyMutation.isPending
+                    }
+                    className={cn(
+                      'rounded-md border px-3 py-2 text-sm transition-all',
+                      pixMonths === 1
+                        ? 'border-emerald-500 bg-emerald-500/5 font-medium'
+                        : 'border-border hover:border-muted-foreground/30'
+                    )}
+                  >
+                    {t('checkout.pixMonthly', { price: formatCurrencyBRL(plan.price) })}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPixMonths(3)}
+                    disabled={
+                      isLoading ||
+                      subscriptionMutation.isPending ||
+                      pixQuarterlyMutation.isPending
+                    }
+                    className={cn(
+                      'rounded-md border px-3 py-2 text-sm transition-all',
+                      pixMonths === 3
+                        ? 'border-emerald-500 bg-emerald-500/5 font-medium'
+                        : 'border-border hover:border-muted-foreground/30'
+                    )}
+                  >
+                    {t('checkout.pixQuarterly', {
+                      price: formatCurrencyBRL(plan.quarterly_price_cents / 100),
+                      discount: quarterlyDiscountPct(plan)
+                    })}
+                  </button>
                 </div>
-                <span className="text-xs text-muted-foreground">
-                  {t('checkout.pixDescription')}
-                </span>
-              </button>
+              </div>
+            )}
 
-              <button
-                type="button"
-                onClick={() => setPaymentMethod('card')}
-                disabled={isLoading}
-                className={cn(
-                  'flex flex-col items-start gap-1.5 rounded-lg border',
-                  'p-4 text-left transition-all',
-                  paymentMethod === 'card'
-                    ? 'border-primary bg-primary/5'
-                    : 'border-border hover:border-muted-foreground/30'
-                )}
-              >
-                <div className="flex items-center gap-2">
-                  <CreditCard className="h-4 w-4" />
-                  <span className="text-sm font-medium">{t('checkout.cardOption')}</span>
-                </div>
-                <span className="text-xs text-muted-foreground">
-                  {t('checkout.cardDescription')}
-                </span>
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setPaymentMethod('pix')
+                handlePixSubmit()
+              }}
+              disabled={
+                isLoading ||
+                subscriptionMutation.isPending ||
+                pixQuarterlyMutation.isPending
+              }
+              className={cn(
+                'flex w-full items-center justify-center gap-2 rounded-lg border',
+                'border-emerald-500 bg-emerald-500/5 p-4 text-sm font-medium',
+                'transition-all hover:bg-emerald-500/10',
+                'disabled:cursor-not-allowed disabled:opacity-50'
+              )}
+            >
+              <QrCode className="h-4 w-4" />
+              {pixMonths === 1
+                ? t('checkout.goToPayment')
+                : t('checkout.generateQR')}
+            </button>
           </div>
         )}
 
