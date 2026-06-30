@@ -12,8 +12,8 @@ import {
   LockIcon,
   PhoneIcon,
   ArrowRight,
-  QrCode,
-  CreditCard,
+
+
   Loader2
 } from 'lucide-react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -333,47 +333,7 @@ export function PersonalDataStep({
       </fieldset>
 
       <div className="space-y-3 pt-4 border-t border-border/50">
-        <p className="text-sm font-medium text-foreground">{t('checkout.paymentMethod')}</p>
-
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <button
-            type="button"
-            onClick={() => onPaymentMethodChange('pix')}
-            disabled={isLoading}
-            className={cn(
-              'flex flex-col items-start gap-1.5 rounded-lg border p-4 text-left transition-all',
-              paymentMethod === 'pix'
-                ? 'border-emerald-500 bg-emerald-500/5'
-                : 'border-border hover:border-muted-foreground/30'
-            )}
-          >
-            <div className="flex items-center gap-2">
-              <QrCode className="h-4 w-4" />
-              <span className="text-sm font-medium">{t('checkout.pixOption')}</span>
-            </div>
-            <span className="text-xs text-muted-foreground">{t('checkout.pixDescription')}</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onPaymentMethodChange('card')}
-            disabled={isLoading}
-            className={cn(
-              'flex flex-col items-start gap-1.5 rounded-lg border p-4 text-left transition-all',
-              paymentMethod === 'card'
-                ? 'border-primary bg-primary/5'
-                : 'border-border hover:border-muted-foreground/30'
-            )}
-          >
-            <div className="flex items-center gap-2">
-              <CreditCard className="h-4 w-4" />
-              <span className="text-sm font-medium">{t('checkout.cardOption')}</span>
-            </div>
-            <span className="text-xs text-muted-foreground">{t('checkout.cardDescription')}</span>
-          </button>
-        </div>
-
-        {paymentMethod === 'pix' && plan.quarterly_price_cents != null && (
+        {plan.quarterly_price_cents != null && (
           <div className="space-y-2 pl-1">
             <p className="text-xs font-medium text-muted-foreground">
               {t('checkout.pixPeriodLabel')}
@@ -424,9 +384,14 @@ export function PersonalDataStep({
         >
           {isLoading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
-          ) : paymentMethod === 'pix' ? (
+          ) : paymentMethod === 'pix' && pixMonths === 3 ? (
             <>
               {t('checkout.generateQR')}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </>
+          ) : paymentMethod === 'pix' && pixMonths === 1 ? (
+            <>
+              {t('checkout.goToPayment')}
               <ArrowRight className="ml-2 h-4 w-4" />
             </>
           ) : (

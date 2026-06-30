@@ -11,13 +11,14 @@
     "stepPayment": "Payment",
     "paymentMethod": "Payment method",
     "pixOption": "PIX",
-    "pixDescription": "One-time payment, no auto-renewal",
+    "pixDescription": "Pay via PIX",
     "cardOption": "Credit Card",
     "cardDescription": "Monthly auto-renewal. Cancel anytime.",
     "pixPeriodLabel": "Period",
-    "pixMonthly": "Monthly — {{price}}/mo",
+    "pixMonthly": "Monthly — {{price}}/mo (auto-renewal)",
     "pixQuarterly": "Quarterly — {{price}} (save {{discount}}%)",
-    "generateQR": "Generate PIX QR Code"
+    "generateQR": "Generate PIX QR Code",
+    "goToPayment": "Go to payment"
   },
   "pixQrCode": {
     "title": "Scan the QR Code",
