@@ -18,7 +18,14 @@
     "pixMonthly": "Mensal — {{price}}/mês (renovação automática)",
     "pixQuarterly": "Trimestral — {{price}} (economia de {{discount}}%)",
     "generateQR": "Gerar QR Code PIX",
-    "goToPayment": "Ir para pagamento"
+    "goToPayment": "Ir para pagamento",
+    "methodCardTitle": "Assinar com cartão de crédito",
+    "methodCardDesc": "R$ {{price}}/mês · 7 dias grátis · renovação automática · cancela quando quiser",
+    "methodPixTitle": "Pagar com PIX",
+    "methodPixDesc": "R$ {{price}}/mês · renovação manual · avisamos antes de vencer",
+    "continueLabel": "Continuar",
+    "goToCardCheckout": "Ir para pagamento",
+    "generateMonthlyQR": "Gerar QR Code PIX"
   },
   "pixQrCode": {
     "title": "Escaneie o QR Code",

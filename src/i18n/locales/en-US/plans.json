@@ -18,7 +18,14 @@
     "pixMonthly": "Monthly — {{price}}/mo (auto-renewal)",
     "pixQuarterly": "Quarterly — {{price}} (save {{discount}}%)",
     "generateQR": "Generate PIX QR Code",
-    "goToPayment": "Go to payment"
+    "goToPayment": "Go to payment",
+    "methodCardTitle": "Subscribe with credit card",
+    "methodCardDesc": "$ {{price}}/mo · 7-day free trial · auto-renewal · cancel anytime",
+    "methodPixTitle": "Pay with PIX",
+    "methodPixDesc": "$ {{price}}/mo · manual renewal · we'll remind you before it's due",
+    "continueLabel": "Continue",
+    "goToCardCheckout": "Go to payment",
+    "generateMonthlyQR": "Generate PIX QR Code"
   },
   "pixQrCode": {
     "title": "Scan the QR Code",
