@@ -1,14 +1,15 @@
 import { useMutation } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
 import {
-  createSubscription,
-  createPixQuarterly,
+  createSubscribePix,
+  createSubscribeCard,
+  createPixMonthly,
   type CreateSubscriptionRequest,
   type CreateSubscriptionWithPendingRequest,
   type SubscriptionResult,
-  type CreatePixQuarterlyRequest,
-  type CreatePixQuarterlyWithPendingRequest,
-  type PixQuarterlyResult
+  type CreatePixMonthlyRequest,
+  type CreatePixMonthlyWithPendingRequest,
+  type PixMonthlyResult
 } from '@/services/paymentService'
 
 interface AbacatePayErrorBody {
@@ -16,24 +17,35 @@ interface AbacatePayErrorBody {
   message?: string
 }
 
-export function useAbacatePaySubscription() {
+export function useAbacatePaySubscribePix() {
   return useMutation<
     SubscriptionResult,
     AxiosError<AbacatePayErrorBody>,
     { planId: number; data: CreateSubscriptionRequest | CreateSubscriptionWithPendingRequest }
   >({
-    mutationKey: ['abacatepay-subscription'],
-    mutationFn: ({ planId, data }) => createSubscription(planId, data)
+    mutationKey: ['abacatepay-subscribe-pix'],
+    mutationFn: ({ planId, data }) => createSubscribePix(planId, data)
   })
 }
 
-export function useAbacatePayPixQuarterly() {
+export function useAbacatePaySubscribeCard() {
   return useMutation<
-    PixQuarterlyResult,
+    SubscriptionResult,
     AxiosError<AbacatePayErrorBody>,
-    CreatePixQuarterlyRequest | CreatePixQuarterlyWithPendingRequest
+    { planId: number; data: CreateSubscriptionRequest | CreateSubscriptionWithPendingRequest }
   >({
-    mutationKey: ['abacatepay-pix-quarterly'],
-    mutationFn: (req) => createPixQuarterly(req)
+    mutationKey: ['abacatepay-subscribe-card'],
+    mutationFn: ({ planId, data }) => createSubscribeCard(planId, data)
+  })
+}
+
+export function useAbacatePayPixMonthly() {
+  return useMutation<
+    PixMonthlyResult,
+    AxiosError<AbacatePayErrorBody>,
+    CreatePixMonthlyRequest | CreatePixMonthlyWithPendingRequest
+  >({
+    mutationKey: ['abacatepay-pix-monthly'],
+    mutationFn: (req) => createPixMonthly(req)
   })
 }
