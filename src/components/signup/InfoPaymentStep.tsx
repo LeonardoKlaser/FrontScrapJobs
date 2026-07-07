@@ -209,7 +209,7 @@ export function InfoPaymentStep({
     return (
       <div className="flex w-full flex-col gap-5">
         <p className="text-sm font-medium text-foreground">
-          {tPlans('checkout.pixPeriodLabel', 'Como você prefere pagar?')}
+          {tPlans('checkout.chooseMethodLabel', 'Como você prefere pagar?')}
         </p>
 
         <div className="flex flex-col gap-3">

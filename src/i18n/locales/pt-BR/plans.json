@@ -20,10 +20,10 @@
     "generateQR": "Gerar QR Code PIX",
     "goToPayment": "Ir para pagamento",
     "methodCardTitle": "Assinar com cartão de crédito",
-    "methodCardDesc": "R$ {{price}}/mês · 7 dias grátis · renovação automática · cancela quando quiser",
+    "methodCardDesc": "{{price}}/mês · 7 dias grátis · renovação automática · cancela quando quiser",
     "methodPixTitle": "Pagar com PIX",
-    "methodPixDesc": "R$ {{price}}/mês · renovação manual · avisamos antes de vencer",
-    "continueLabel": "Continuar",
+    "methodPixDesc": "{{price}}/mês · renovação manual · avisamos antes de vencer",
+    "chooseMethodLabel": "Como você prefere pagar?",
     "goToCardCheckout": "Ir para pagamento",
     "generateMonthlyQR": "Gerar QR Code PIX"
   },
