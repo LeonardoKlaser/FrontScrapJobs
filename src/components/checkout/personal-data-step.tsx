@@ -41,6 +41,12 @@ interface PersonalDataStepProps {
   isLoading: boolean
   planId: number
   isAuthenticated: boolean
+  // true quando currentUser.tax ja esta cadastrado no backend. Anonimo sempre
+  // manda false (precisa preencher). Autenticado grandfathered (pre-coleta de
+  // CPF) tambem manda false pra continuar vendo/validando o campo — sem isso
+  // ele fica travado com "CPF invalido" no submit sem UI de recuperacao.
+  // Optional com default false: default fail-safe eh pedir CPF, nao pular.
+  hasTaxOnFile?: boolean
   onNext: () => void
 }
 
@@ -50,6 +56,7 @@ export function PersonalDataStep({
   isLoading,
   planId,
   isAuthenticated,
+  hasTaxOnFile = false,
   onNext
 }: PersonalDataStepProps) {
   const { t } = useTranslation('plans')
@@ -148,11 +155,11 @@ export function PersonalDataStep({
       newErrors.phone = tAuth('validation.phoneInvalid')
     }
 
-    // CPF obrigatorio apenas em fluxo anonimo, mesma logica do password acima:
-    // tanto cartao (assinatura AbacatePay) quanto PIX mensal exigem tax no
-    // backend pra registro novo, mas usuario autenticado renovando ja tem tax
-    // cadastrado (backend usa o valor salvo, igual faz com password vazio).
-    if (!isAuthenticated) {
+    // CPF obrigatorio quando ainda nao ha tax cadastrado: fluxo anonimo
+    // sempre, e autenticado grandfathered (pre-coleta de CPF) tambem — tanto
+    // cartao (assinatura AbacatePay) quanto PIX mensal exigem tax no backend.
+    // Autenticado com tax ja cadastrado nem chega nesta step (auto-avanca).
+    if (!hasTaxOnFile) {
       const taxDigits = (formData.tax || '').replace(/\D/g, '')
       if (taxDigits.length !== 11) {
         newErrors.tax = t('paymentForm.cpfInvalid')
@@ -290,9 +297,10 @@ export function PersonalDataStep({
           {errors.phone && <p className="text-xs text-destructive">{errors.phone}</p>}
         </div>
 
-        {/* CPF só renderiza pra fluxo anônimo (criando conta), mesmo padrão do
-            password acima — autenticado renovando já tem tax cadastrado. */}
-        {!isAuthenticated && (
+        {/* CPF renderiza pra fluxo anônimo (criando conta) e pra autenticado
+            grandfathered sem tax cadastrado (pré-coleta de CPF) — autenticado
+            com tax já cadastrado nem chega nesta step (auto-avança). */}
+        {!hasTaxOnFile && (
           <div className="space-y-2">
             <Label htmlFor="tax" className="text-muted-foreground">
               {t('paymentForm.cpfLabel')}

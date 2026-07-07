@@ -57,8 +57,15 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
   // conversao do trial vs checkout direto.
   const { data: currentUser, isLoading: userLoading } = useUser()
   const isAuthenticated = !!currentUser
+  // Users antigos (pré-coleta de CPF) tem currentUser.tax undefined. Sem essa
+  // flag eles pulariam pro step 2 sem nunca ver o campo de CPF, e o submit
+  // caia no backend com "CPF inválido" sem UI de recuperação (ver finding
+  // critico da migração AbacatePay).
+  const hasTax = !!currentUser?.tax
 
-  const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(pendingId || isAuthenticated ? 2 : 1)
+  const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(
+    pendingId || (isAuthenticated && hasTax) ? 2 : 1
+  )
 
   const pendingEmail = pendingId ? sessionStorage.getItem('pending_checkout_email') || '' : ''
   const [cardError, setCardError] = useState('')
@@ -124,7 +131,10 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
     })
     // setCurrentStep fora do updater de setFormData (updater deve ser puro;
     // setState dentro de setState quebra StrictMode double-invocation).
-    if (didPrefill) {
+    // So auto-avanca se o user ja tem tax cadastrado — grandfathered sem CPF
+    // fica no step 1 pra preencher (backend exige tax valido em ambos os
+    // paths AbacatePay, card e pix).
+    if (didPrefill && currentUser.tax) {
       setCurrentStep((s) => (s === 1 ? 2 : s))
     }
   }, [currentUser])
@@ -472,6 +482,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
             isLoading={isLoading || pixMutation.isPending}
             planId={plan.id}
             isAuthenticated={isAuthenticated}
+            hasTaxOnFile={hasTax}
             onNext={() => {
               // Fire-and-forget — falha de save NAO pode bloquear o checkout.
               // Email normalizado (lower+trim) pra simetria com o payload de
