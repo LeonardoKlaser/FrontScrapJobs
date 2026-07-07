@@ -169,15 +169,26 @@ export interface SubscriptionResult {
   checkout_url: string
 }
 
-export async function createSubscription(
+export async function createSubscribePix(
   planId: number,
   data: CreateSubscriptionRequest | CreateSubscriptionWithPendingRequest
 ): Promise<SubscriptionResult> {
-  const response = await api.post<SubscriptionResult>(`/api/payments/subscribe/${planId}`, data)
+  const response = await api.post<SubscriptionResult>(`/api/payments/subscribe-pix/${planId}`, data)
   return response.data
 }
 
-export interface CreatePixQuarterlyRequest {
+export async function createSubscribeCard(
+  planId: number,
+  data: CreateSubscriptionRequest | CreateSubscriptionWithPendingRequest
+): Promise<SubscriptionResult> {
+  const response = await api.post<SubscriptionResult>(
+    `/api/payments/subscribe-card/${planId}`,
+    data
+  )
+  return response.data
+}
+
+export interface CreatePixMonthlyRequest {
   name: string
   email: string
   password: string
@@ -186,20 +197,20 @@ export interface CreatePixQuarterlyRequest {
   plan_id: number
 }
 
-export interface CreatePixQuarterlyWithPendingRequest {
+export interface CreatePixMonthlyWithPendingRequest {
   pending_id: string
   plan_id: number
 }
 
-export interface PixQuarterlyResult {
+export interface PixMonthlyResult {
   qr_code: string
   qr_code_url: string
   expires_at: string
 }
 
-export async function createPixQuarterly(
-  data: CreatePixQuarterlyRequest | CreatePixQuarterlyWithPendingRequest
-): Promise<PixQuarterlyResult> {
-  const response = await api.post<PixQuarterlyResult>('/api/payments/pix-quarterly', data)
+export async function createPixMonthly(
+  data: CreatePixMonthlyRequest | CreatePixMonthlyWithPendingRequest
+): Promise<PixMonthlyResult> {
+  const response = await api.post<PixMonthlyResult>('/api/payments/pix-monthly', data)
   return response.data
 }
