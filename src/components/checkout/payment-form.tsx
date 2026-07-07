@@ -118,7 +118,8 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
         name: currentUser.user_name,
         email: currentUser.email,
         password: '',
-        phone: currentUser.cellphone ?? ''
+        phone: currentUser.cellphone ?? '',
+        tax: currentUser.tax ?? ''
       }
     })
     // setCurrentStep fora do updater de setFormData (updater deve ser puro;
