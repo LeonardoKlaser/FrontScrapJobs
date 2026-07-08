@@ -190,6 +190,11 @@ export default function EmpresasPage() {
   const remainingSlots = Math.max(0, maxSites - subscribedCount)
 
   const handleCompanyClick = (company: SiteCareer) => {
+    // Payload de Ultra vazam is_subscribed: false (dado de plano regular) — abrir o
+    // RegistrationModal pra esses usuários mostraria o fluxo de "não inscrito" com
+    // botão de assinar, que bate em POST /userSite e falha/confunde. O toggle de
+    // exclusão já é a única affordance esperada em modo Ultra, então no-op aqui.
+    if (isUltraMode) return
     setSelectedCompany(company)
     setPopupOpen(true)
   }
@@ -383,71 +388,93 @@ export default function EmpresasPage() {
 
         {/* Company grid */}
         <div className="grid grid-cols-2 min-[480px]:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-          {filteredCompanies?.map((company, index) => (
-            <button
-              key={company.site_id}
-              className={`animate-fade-in-up hover-lift group relative flex flex-col items-center gap-2 sm:gap-3 rounded-lg border border-border/50 bg-card p-3 sm:p-5 text-center transition-all duration-150 hover:border-primary/20 hover:bg-card/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                isUltraMode && company.is_excluded ? 'opacity-60' : ''
-              }`}
-              style={{ animationDelay: `${150 + index * 40}ms` }}
-              onClick={() => handleCompanyClick(company)}
-            >
-              {isUltraMode ? (
+          {filteredCompanies?.map((company, index) => {
+            // Conteúdo compartilhado entre modo Ultra (estático, sem trigger de modal)
+            // e modo regular (envolto pelo <button> que abre o RegistrationModal).
+            const cardContent = (
+              <>
+                <div className="flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center rounded-lg bg-muted/30 p-2">
+                  {company.logo_url ? (
+                    <img
+                      src={company.logo_url}
+                      alt={`${company.site_name} logo`}
+                      className="max-h-full max-w-full object-contain"
+                    />
+                  ) : (
+                    <Building2 className="size-6 text-muted-foreground" />
+                  )}
+                </div>
                 <span
-                  role="button"
-                  tabIndex={0}
-                  aria-label={
-                    company.is_excluded
-                      ? t('ultra.unignoreCompany', { defaultValue: 'Voltar a monitorar' })
-                      : t('ultra.ignoreCompany', { defaultValue: 'Ignorar essa empresa' })
-                  }
-                  onClick={(e) => handleToggleExclusion(e, company.site_id, !!company.is_excluded)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
+                  data-testid="company-name"
+                  className="text-sm font-medium text-foreground leading-tight"
+                >
+                  {company.site_name}
+                </span>
+              </>
+            )
+
+            return (
+              // Card não é mais interativo (era <button>) pra evitar interativo
+              // aninhado com o toggle de exclusão / trigger do modal abaixo — cada
+              // um agora é seu próprio <button> independente.
+              <div
+                key={company.site_id}
+                className={`animate-fade-in-up hover-lift group relative flex flex-col items-center gap-2 sm:gap-3 rounded-lg border border-border/50 bg-card p-3 sm:p-5 text-center transition-all duration-150 hover:border-primary/20 hover:bg-card/80 ${
+                  isUltraMode && company.is_excluded ? 'opacity-60' : ''
+                }`}
+                style={{ animationDelay: `${150 + index * 40}ms` }}
+              >
+                {isUltraMode ? (
+                  <button
+                    type="button"
+                    aria-label={
+                      company.is_excluded
+                        ? t('ultra.unignoreCompany', { defaultValue: 'Voltar a monitorar' })
+                        : t('ultra.ignoreCompany', { defaultValue: 'Ignorar essa empresa' })
+                    }
+                    onClick={(e) =>
                       handleToggleExclusion(e, company.site_id, !!company.is_excluded)
                     }
-                  }}
-                  className={`absolute -top-2 -right-2 flex items-center justify-center rounded-full p-1 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                    company.is_excluded
-                      ? 'bg-muted text-muted-foreground'
-                      : 'bg-primary text-primary-foreground'
-                  }`}
-                >
-                  {company.is_excluded ? (
-                    <EyeOff className="size-3" />
-                  ) : (
-                    <CheckCircle className="size-3" />
-                  )}
-                </span>
-              ) : (
-                company.is_subscribed && (
-                  <Badge className="absolute -top-2 -right-2 px-1.5 py-0.5 text-xs">
-                    <CheckCircle className="size-3" />
-                  </Badge>
-                )
-              )}
-              <div className="flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center rounded-lg bg-muted/30 p-2">
-                {company.logo_url ? (
-                  <img
-                    src={company.logo_url}
-                    alt={`${company.site_name} logo`}
-                    className="max-h-full max-w-full object-contain"
-                  />
+                    className={`absolute -top-2 -right-2 flex items-center justify-center rounded-full p-1 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                      company.is_excluded
+                        ? 'bg-muted text-muted-foreground'
+                        : 'bg-primary text-primary-foreground'
+                    }`}
+                  >
+                    {company.is_excluded ? (
+                      <EyeOff className="size-3" />
+                    ) : (
+                      <CheckCircle className="size-3" />
+                    )}
+                  </button>
                 ) : (
-                  <Building2 className="size-6 text-muted-foreground" />
+                  company.is_subscribed && (
+                    <Badge className="absolute -top-2 -right-2 px-1.5 py-0.5 text-xs">
+                      <CheckCircle className="size-3" />
+                    </Badge>
+                  )
+                )}
+                {isUltraMode ? (
+                  <>
+                    {cardContent}
+                    {company.is_excluded && (
+                      <span className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                        {t('ultra.ignoredLabel', { defaultValue: 'Ignorada' })}
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    className="flex flex-col items-center gap-2 sm:gap-3 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg"
+                    onClick={() => handleCompanyClick(company)}
+                  >
+                    {cardContent}
+                  </button>
                 )}
               </div>
-              <span className="text-sm font-medium text-foreground leading-tight">
-                {company.site_name}
-              </span>
-              {isUltraMode && company.is_excluded && (
-                <span className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-                  {t('ultra.ignoredLabel', { defaultValue: 'Ignorada' })}
-                </span>
-              )}
-            </button>
-          ))}
+            )
+          })}
         </div>
 
         {/* Empty state */}

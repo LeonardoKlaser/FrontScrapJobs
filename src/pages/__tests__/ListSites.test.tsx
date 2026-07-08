@@ -93,11 +93,10 @@ const fixtureUltra: SiteCareer[] = [
 ]
 
 function getRenderedNames() {
-  const buttons = screen.getAllByRole('button')
-  return buttons
-    .map((b) => b.textContent ?? '')
-    .filter((text) => ['Ácme', 'azure', 'Beta', 'Zoom'].some((n) => text.includes(n)))
-    .map((text) => ['Ácme', 'azure', 'Beta', 'Zoom'].find((n) => text.includes(n)) as string)
+  // Cada card tem exatamente um <span data-testid="company-name">, regardless
+  // de modo Ultra (div estática) ou regular (dentro do <button> que abre o
+  // modal) — mais robusto que varrer role=button, que só cobre o caso regular.
+  return screen.getAllByTestId('company-name').map((el) => el.textContent ?? '')
 }
 
 describe('ListSitesPage sort', () => {
