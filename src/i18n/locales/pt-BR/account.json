@@ -66,14 +66,7 @@
     "cancelSuccess": "Assinatura cancelada com sucesso",
     "cancelError": "Erro ao cancelar assinatura",
     "alreadyCanceled": "Sua assinatura já está cancelada ou não foi encontrada.",
-    "cancelContact": "Está com algum problema? Fale com a gente antes:",
-    "availablePlans": "Trocar de plano",
-    "availablePlansDescription": "Escolha outro plano para sua assinatura.",
-    "currentPlanBadge": "Plano atual",
-    "switchTo": "Trocar para este plano",
-    "switching": "Trocando...",
-    "switchSuccess": "Plano alterado com sucesso!",
-    "switchError": "Erro ao trocar de plano. Tente novamente."
+    "cancelContact": "Está com algum problema? Fale com a gente antes:"
   },
   "ultra": {
     "downgrade": {

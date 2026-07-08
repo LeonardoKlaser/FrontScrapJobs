@@ -66,14 +66,7 @@
     "cancelSuccess": "Subscription cancelled successfully",
     "cancelError": "Failed to cancel subscription",
     "alreadyCanceled": "Your subscription is already canceled or was not found.",
-    "cancelContact": "Having a problem? Talk to us first:",
-    "availablePlans": "Switch plan",
-    "availablePlansDescription": "Choose another plan for your subscription.",
-    "currentPlanBadge": "Current plan",
-    "switchTo": "Switch to this plan",
-    "switching": "Switching...",
-    "switchSuccess": "Plan changed successfully!",
-    "switchError": "Failed to switch plan. Please try again."
+    "cancelContact": "Having a problem? Talk to us first:"
   },
   "ultra": {
     "downgrade": {
