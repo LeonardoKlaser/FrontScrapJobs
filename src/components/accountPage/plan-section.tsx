@@ -28,6 +28,10 @@ import { cancelSubscription } from '@/services/paymentService'
 import { Spinner } from '@/components/ui/spinner'
 import { toast } from 'sonner'
 import type { User } from '@/models/user'
+import type { Plan } from '@/models/plan'
+import { usePlans } from '@/hooks/usePlans'
+import { useChangePlan } from '@/hooks/useChangePlan'
+import { DowngradeUltraModal } from '@/components/DowngradeUltraModal'
 
 interface PlanSectionProps {
   user: User | undefined
@@ -39,6 +43,10 @@ export function PlanSection({ user }: PlanSectionProps) {
   const queryClient = useQueryClient()
   const [showCancelDialog, setShowCancelDialog] = useState(false)
   const [isCanceling, setIsCanceling] = useState(false)
+  const { data: plans } = usePlans()
+  const changePlanMutation = useChangePlan()
+  const [showUltraDowngrade, setShowUltraDowngrade] = useState(false)
+  const [pendingTarget, setPendingTarget] = useState<Plan | null>(null)
 
   const handleCancelSubscription = async () => {
     setIsCanceling(true)
@@ -60,6 +68,44 @@ export function PlanSection({ user }: PlanSectionProps) {
       setIsCanceling(false)
     }
   }
+
+  const doChangePlan = (targetPlan: Plan) => {
+    changePlanMutation.mutate(targetPlan.id, {
+      onSuccess: () => {
+        toast.success(t('plan.switchSuccess'))
+      },
+      onError: () => {
+        toast.error(t('plan.switchError'))
+      }
+    })
+  }
+
+  // handleSwitchPlan: downgrade saindo do Ultra (currentPlan.is_ultra e o
+  // destino nao e Ultra) exige confirmação explícita no DowngradeUltraModal
+  // antes de disparar a troca — sair do Ultra desliga a cobertura automática.
+  const handleSwitchPlan = (targetPlan: Plan) => {
+    if (user?.plan?.is_ultra && !targetPlan.is_ultra) {
+      setPendingTarget(targetPlan)
+      setShowUltraDowngrade(true)
+      return
+    }
+    doChangePlan(targetPlan)
+  }
+
+  const handleConfirmUltraDowngrade = () => {
+    if (pendingTarget) {
+      doChangePlan(pendingTarget)
+    }
+    setShowUltraDowngrade(false)
+    setPendingTarget(null)
+  }
+
+  const handleCancelUltraDowngrade = () => {
+    setShowUltraDowngrade(false)
+    setPendingTarget(null)
+  }
+
+  const switchablePlans = (plans ?? []).filter((p) => !p.is_trial && p.id !== user?.plan?.id)
 
   const hasActiveSubscription =
     user?.expires_at && new Date(user.expires_at) > new Date() && !user?.subscription_canceled
@@ -217,6 +263,47 @@ export function PlanSection({ user }: PlanSectionProps) {
           </CardFooter>
         )}
       </Card>
+
+      {hasActiveSubscription && switchablePlans.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">{t('plan.availablePlans')}</CardTitle>
+            <CardDescription>{t('plan.availablePlansDescription')}</CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-3 sm:grid-cols-2">
+            {switchablePlans.map((planOption) => (
+              <div
+                key={planOption.id}
+                className="flex items-center justify-between rounded-lg border border-border/50 bg-muted/30 p-4"
+              >
+                <div>
+                  <p className="text-sm font-medium text-foreground">{planOption.name}</p>
+                  <p className="text-xs text-muted-foreground">{planOption.price.toFixed(2)}</p>
+                </div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={changePlanMutation.isPending}
+                  onClick={() => handleSwitchPlan(planOption)}
+                >
+                  {changePlanMutation.isPending ? (
+                    <Spinner className="h-4 w-4" />
+                  ) : (
+                    t('plan.switchTo')
+                  )}
+                </Button>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      <DowngradeUltraModal
+        open={showUltraDowngrade}
+        onConfirm={handleConfirmUltraDowngrade}
+        onCancel={handleCancelUltraDowngrade}
+        isConfirming={changePlanMutation.isPending}
+      />
 
       <Dialog open={showCancelDialog} onOpenChange={setShowCancelDialog}>
         <DialogContent>
