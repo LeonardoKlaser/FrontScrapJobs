@@ -15,6 +15,11 @@ export interface SiteCareer {
   locations?: SiteLocation[]
   seniority_levels?: string[]
   created_at: string
+  // is_excluded so existe no payload pra usuarios Ultra (todos os sites sao
+  // monitorados automaticamente; exclusao e op-out). A PRESENCA da chave (nao
+  // o valor) e o sinal de modo Ultra — is_subscribed vaza como false pro Ultra
+  // e nao deve ser usado pra essa deteccao. Ver contrato da Task 9.
+  is_excluded?: boolean
 }
 
 export interface UserSiteRequest {

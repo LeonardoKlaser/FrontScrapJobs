@@ -119,6 +119,17 @@ export const siteCareerService = {
     })
   },
 
+  // excludeSite/unexcludeSite: exclusivo pra usuarios Ultra (op-out de
+  // monitoramento automatico). Backend espera site_id como string no body do
+  // POST; retorna 409 ErrExclusionNotApplicable se o user nao for Ultra.
+  excludeSite: async (siteId: number): Promise<void> => {
+    await api.post('/api/user-sites/exclude', { site_id: String(siteId) })
+  },
+
+  unexcludeSite: async (siteId: number): Promise<void> => {
+    await api.delete(`/api/user-sites/exclude/${siteId}`)
+  },
+
   sandboxScrape: async (config: SiteConfigFormData) => {
     const cleanedData = Object.fromEntries(
       Object.entries(config).map(([key, value]) => [key, value === '' ? null : value])

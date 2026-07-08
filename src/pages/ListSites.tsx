@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
+import type { MouseEvent, KeyboardEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ArrowUpDown, Building2, CheckCircle, Radar, Search, X } from 'lucide-react'
+import { ArrowUpDown, Building2, CheckCircle, EyeOff, Radar, Search, X } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -16,13 +17,16 @@ import type { SiteCareer } from '@/models/siteCareer'
 import {
   useRegisterUserSite,
   useUnregisterUserSite,
-  useUpdateUserSiteFilters
+  useUpdateUserSiteFilters,
+  useExcludeSite,
+  useUnexcludeSite
 } from '@/hooks/useRegisterUserSite'
 import { useUser } from '@/hooks/useUser'
 import { FilterPills } from '@/components/common/filter-pills'
 import { EmptyState } from '@/components/common/empty-state'
 import { RequestSiteBanner } from '@/components/sites/request-site-banner'
 import { RequestSiteForm } from '@/components/sites/request-site-form'
+import { UltraBanner } from '@/components/sites/ultra-banner'
 import { toast } from 'sonner'
 import { AppPageHeader } from '@/components/common/app-page-header'
 import { RegionChip } from '@/components/ui/region-chip'
@@ -65,12 +69,17 @@ export default function EmpresasPage() {
     return 'alphabetical'
   })
 
+  // Modo Ultra e detectado pela PRESENCA da chave is_excluded no payload, nao
+  // pelo valor de is_subscribed (que vaza como false pro Ultra). Ver contrato
+  // da Task 9 / guardrail do reviewer.
+  const isUltraMode = useMemo(() => data?.some((c) => c.is_excluded !== undefined) ?? false, [data])
+
   useEffect(() => {
-    if (!hasAutoSelected.current && data && data.some((c) => c.is_subscribed)) {
+    if (!isUltraMode && !hasAutoSelected.current && data && data.some((c) => c.is_subscribed)) {
       setFilter('subscribed')
       hasAutoSelected.current = true
     }
-  }, [data])
+  }, [data, isUltraMode])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -80,23 +89,36 @@ export default function EmpresasPage() {
   const { mutate: registerUserToSite, isPending: isRegisteringUser } = useRegisterUserSite()
   const { mutate: unregisterUser } = useUnregisterUserSite()
   const { mutate: updateFilters, isPending: isUpdatingFilters } = useUpdateUserSiteFilters()
+  const { mutate: excludeSite } = useExcludeSite()
+  const { mutate: unexcludeSite } = useUnexcludeSite()
 
-  const filters = [
-    { key: 'all', label: t('filterAll') },
-    { key: 'subscribed', label: t('filterSubscribed') },
-    { key: 'not_subscribed', label: t('filterAvailable') }
-  ] as const
+  const filters = isUltraMode
+    ? ([
+        { key: 'all', label: t('ultra.filterAll', { defaultValue: 'Todas' }) },
+        { key: 'monitored', label: t('ultra.filterMonitored', { defaultValue: 'Monitoradas' }) },
+        { key: 'ignored', label: t('ultra.filterIgnored', { defaultValue: 'Ignoradas' }) }
+      ] as const)
+    : ([
+        { key: 'all', label: t('filterAll') },
+        { key: 'subscribed', label: t('filterSubscribed') },
+        { key: 'not_subscribed', label: t('filterAvailable') }
+      ] as const)
 
   const baseForRegionCounts = useMemo(() => {
     if (!data) return []
     return data
       .filter((company) => company.site_name.toLowerCase().includes(searchTerm.toLowerCase()))
       .filter((company) => {
+        if (isUltraMode) {
+          if (filter === 'monitored') return !company.is_excluded
+          if (filter === 'ignored') return !!company.is_excluded
+          return true
+        }
         if (filter === 'subscribed') return company.is_subscribed
         if (filter === 'not_subscribed') return !company.is_subscribed
         return true
       })
-  }, [data, searchTerm, filter])
+  }, [data, searchTerm, filter, isUltraMode])
 
   const filteredCompanies = useMemo(() => {
     if (!data) return undefined
@@ -157,13 +179,32 @@ export default function EmpresasPage() {
     return data?.filter((company) => company.is_subscribed).length ?? 0
   }, [data])
 
+  const excludedCount = useMemo(() => {
+    if (!isUltraMode) return 0
+    return data?.filter((company) => company.is_excluded).length ?? 0
+  }, [data, isUltraMode])
+
   const totalCount = data?.length ?? 0
+  const totalCovered = totalCount - excludedCount
   const maxSites = user?.plan?.max_sites ?? 3
   const remainingSlots = Math.max(0, maxSites - subscribedCount)
 
   const handleCompanyClick = (company: SiteCareer) => {
     setSelectedCompany(company)
     setPopupOpen(true)
+  }
+
+  const handleToggleExclusion = (
+    event: MouseEvent | KeyboardEvent,
+    siteId: number,
+    isExcluded: boolean
+  ) => {
+    event.stopPropagation()
+    if (isExcluded) {
+      unexcludeSite(siteId)
+    } else {
+      excludeSite(siteId)
+    }
   }
 
   const handleRegister = (targetWords: string[], locationFilters: string[]) => {
@@ -220,6 +261,13 @@ export default function EmpresasPage() {
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-10">
         <p className="text-sm text-muted-foreground">{t('description')}</p>
 
+        {/* Ultra banner: so aparece quando is_excluded esta presente no payload */}
+        {isUltraMode && (
+          <div className="animate-fade-in-up [animation-delay:25ms]">
+            <UltraBanner totalCovered={totalCovered} />
+          </div>
+        )}
+
         {/* Stats row */}
         <div className="animate-fade-in-up grid grid-cols-3 gap-3 sm:gap-4 max-w-lg mx-auto [animation-delay:50ms]">
           <div className="text-center">
@@ -227,12 +275,24 @@ export default function EmpresasPage() {
             <p className="text-xs text-muted-foreground">{t('stats.companies')}</p>
           </div>
           <div className="text-center border-x border-border/50">
-            <p className="text-2xl font-display font-bold text-primary">{subscribedCount}</p>
-            <p className="text-xs text-muted-foreground">{t('stats.subscribed')}</p>
+            <p className="text-2xl font-display font-bold text-primary">
+              {isUltraMode ? totalCovered : subscribedCount}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {isUltraMode
+                ? t('ultra.filterMonitored', { defaultValue: 'Monitoradas' })
+                : t('stats.subscribed')}
+            </p>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-display font-bold text-foreground">{remainingSlots}</p>
-            <p className="text-xs text-muted-foreground">{t('stats.freeSlots')}</p>
+            <p className="text-2xl font-display font-bold text-foreground">
+              {isUltraMode ? excludedCount : remainingSlots}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {isUltraMode
+                ? t('ultra.filterIgnored', { defaultValue: 'Ignoradas' })
+                : t('stats.freeSlots')}
+            </p>
           </div>
         </div>
 
@@ -326,14 +386,46 @@ export default function EmpresasPage() {
           {filteredCompanies?.map((company, index) => (
             <button
               key={company.site_id}
-              className="animate-fade-in-up hover-lift group relative flex flex-col items-center gap-2 sm:gap-3 rounded-lg border border-border/50 bg-card p-3 sm:p-5 text-center transition-all duration-150 hover:border-primary/20 hover:bg-card/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className={`animate-fade-in-up hover-lift group relative flex flex-col items-center gap-2 sm:gap-3 rounded-lg border border-border/50 bg-card p-3 sm:p-5 text-center transition-all duration-150 hover:border-primary/20 hover:bg-card/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                isUltraMode && company.is_excluded ? 'opacity-60' : ''
+              }`}
               style={{ animationDelay: `${150 + index * 40}ms` }}
               onClick={() => handleCompanyClick(company)}
             >
-              {company.is_subscribed && (
-                <Badge className="absolute -top-2 -right-2 px-1.5 py-0.5 text-xs">
-                  <CheckCircle className="size-3" />
-                </Badge>
+              {isUltraMode ? (
+                <span
+                  role="button"
+                  tabIndex={0}
+                  aria-label={
+                    company.is_excluded
+                      ? t('ultra.unignoreCompany', { defaultValue: 'Voltar a monitorar' })
+                      : t('ultra.ignoreCompany', { defaultValue: 'Ignorar essa empresa' })
+                  }
+                  onClick={(e) => handleToggleExclusion(e, company.site_id, !!company.is_excluded)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      handleToggleExclusion(e, company.site_id, !!company.is_excluded)
+                    }
+                  }}
+                  className={`absolute -top-2 -right-2 flex items-center justify-center rounded-full p-1 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                    company.is_excluded
+                      ? 'bg-muted text-muted-foreground'
+                      : 'bg-primary text-primary-foreground'
+                  }`}
+                >
+                  {company.is_excluded ? (
+                    <EyeOff className="size-3" />
+                  ) : (
+                    <CheckCircle className="size-3" />
+                  )}
+                </span>
+              ) : (
+                company.is_subscribed && (
+                  <Badge className="absolute -top-2 -right-2 px-1.5 py-0.5 text-xs">
+                    <CheckCircle className="size-3" />
+                  </Badge>
+                )
               )}
               <div className="flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center rounded-lg bg-muted/30 p-2">
                 {company.logo_url ? (
@@ -349,6 +441,11 @@ export default function EmpresasPage() {
               <span className="text-sm font-medium text-foreground leading-tight">
                 {company.site_name}
               </span>
+              {isUltraMode && company.is_excluded && (
+                <span className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                  {t('ultra.ignoredLabel', { defaultValue: 'Ignorada' })}
+                </span>
+              )}
             </button>
           ))}
         </div>

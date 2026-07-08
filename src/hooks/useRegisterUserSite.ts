@@ -43,3 +43,24 @@ export function useUnregisterUserSite() {
     }
   })
 }
+
+// Ultra-only: op-out/op-in de monitoramento automatico por site.
+export function useExcludeSite() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (siteId: number) => siteCareerService.excludeSite(siteId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['siteCareerList'] })
+    }
+  })
+}
+
+export function useUnexcludeSite() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (siteId: number) => siteCareerService.unexcludeSite(siteId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['siteCareerList'] })
+    }
+  })
+}
