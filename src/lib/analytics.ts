@@ -81,9 +81,9 @@ export function trackDigest(event: DigestEvent, payload: Record<string, unknown>
   }
 }
 
-// Landing page events: mede a conversao da nova LP (clique nos CTAs por secao e
-// troca de chip de area no hero demo). GTM ja esta carregado no index.html.
-export type LandingEvent = 'lp_cta_click' | 'lp_area_chip'
+// Landing page events: mede a conversao da LP (clique nos CTAs por secao:
+// navbar | hero | capabilities | final). GTM ja esta carregado no index.html.
+export type LandingEvent = 'lp_cta_click'
 
 export function trackLanding(event: LandingEvent, payload: Record<string, unknown> = {}): void {
   if (typeof window === 'undefined') return
