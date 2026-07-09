@@ -77,32 +77,24 @@
     "title": "Perguntas frequentes",
     "items": [
       {
+        "q": "O Norte é um robô?",
+        "a": "É um assistente com IA — mas treinado pra falar como gente e resolver de verdade. Se você quiser, ou se ele travar, uma pessoa de verdade assume a conversa."
+      },
+      {
+        "q": "Vocês têm meu número? É seguro?",
+        "a": "Só usamos seu WhatsApp pra te mandar as vagas e conversar sobre sua busca. Sem spam, você sai quando quiser, e seguimos a LGPD."
+      },
+      {
+        "q": "E se eu não usar WhatsApp?",
+        "a": "Sem problema. O Norte também fala por email, e o painel web tem tudo."
+      },
+      {
         "q": "As vagas são reais? De onde vêm?",
-        "a": "Sim. Coletamos direto das páginas de carreira das próprias empresas, várias vezes ao dia. Nada de agregador — a vaga aparece aqui assim que sai na fonte."
-      },
-      {
-        "q": "O ScrapJobs é pra mim?",
-        "a": "Se você é dev, PM, designer ou trabalha com dados em tech, sim. Não somos um agregador genérico de vagas de varejo ou operacional."
-      },
-      {
-        "q": "Qual a diferença pro LinkedIn e agregadores?",
-        "a": "Pegamos a vaga direto da fonte, sem o atraso dos agregadores. E a IA mostra por que seu CV é descartado nos filtros ATS antes de você aplicar."
-      },
-      {
-        "q": "Como a IA analisa meu currículo?",
-        "a": "Ela compara seu CV com a vaga, aponta as palavras-chave que faltam e gera um PDF otimizado pra aquela vaga."
-      },
-      {
-        "q": "Meus dados estão seguros?",
-        "a": "Sim. Seguimos a LGPD: seus dados são usados só pra cruzar vagas e gerar seu currículo, e você pode apagá-los quando quiser."
+        "a": "Sim. Coletamos direto das páginas de carreira das próprias empresas, várias vezes ao dia. Nada de agregador — a vaga aparece assim que sai na fonte."
       },
       {
         "q": "Posso cancelar quando quiser?",
         "a": "Pode. Sem fidelidade — cancele a qualquer momento direto no painel."
-      },
-      {
-        "q": "Quantas empresas posso monitorar?",
-        "a": "Depende do plano. O teste grátis já libera o radar pra você sentir como funciona."
       }
     ]
   },
@@ -113,10 +105,10 @@
     "disclaimer": "As marcas, logotipos e nomes de empresas exibidos pertencem aos seus respectivos proprietários e são usados apenas para identificação. O ScrapJobs não possui afiliação, patrocínio ou endosso dessas empresas."
   },
   "ctaFinal": {
-    "title": "Descubra vagas que",
-    "cta": "Começar agora",
-    "subtitle": "Vagas das empresas que você escolheu, no seu email — minutos depois de saírem.",
-    "titleHighlight": "ninguém viu ainda"
+    "title": "Deixa o Norte cuidar da busca",
+    "titleHighlight": "por você",
+    "subtitle": "Enquanto você toca o resto da vida, ele vigia as vagas e prepara seu CV.",
+    "cta": "Começar grátis"
   },
   "pricing": {
     "title": "Comece grátis hoje",

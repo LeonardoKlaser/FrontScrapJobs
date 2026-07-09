@@ -8,20 +8,18 @@ describe('FaqSection', () => {
     expect(screen.getByText('Perguntas frequentes')).toBeInTheDocument()
   })
 
-  it('renders all 7 questions from the faq.items array', () => {
+  it('renders all 5 questions from the faq.items array', () => {
     render(<FaqSection />)
+    expect(screen.getByText('O Norte é um robô?')).toBeInTheDocument()
+    expect(screen.getByText('Vocês têm meu número? É seguro?')).toBeInTheDocument()
+    expect(screen.getByText('E se eu não usar WhatsApp?')).toBeInTheDocument()
     expect(screen.getByText('As vagas são reais? De onde vêm?')).toBeInTheDocument()
-    expect(screen.getByText('O ScrapJobs é pra mim?')).toBeInTheDocument()
-    expect(screen.getByText('Qual a diferença pro LinkedIn e agregadores?')).toBeInTheDocument()
-    expect(screen.getByText('Como a IA analisa meu currículo?')).toBeInTheDocument()
-    expect(screen.getByText('Meus dados estão seguros?')).toBeInTheDocument()
     expect(screen.getByText('Posso cancelar quando quiser?')).toBeInTheDocument()
-    expect(screen.getByText('Quantas empresas posso monitorar?')).toBeInTheDocument()
   })
 
-  it('renders 7 accordion triggers (one per item)', () => {
+  it('renders 5 accordion triggers (one per item)', () => {
     render(<FaqSection />)
-    expect(screen.getAllByRole('button')).toHaveLength(7)
+    expect(screen.getAllByRole('button')).toHaveLength(5)
   })
 
   it('forwards the #faq anchor id to the section', () => {

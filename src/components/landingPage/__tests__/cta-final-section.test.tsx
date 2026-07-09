@@ -9,14 +9,14 @@ beforeEach(() => vi.restoreAllMocks())
 describe('CtaFinalSection', () => {
   it('renders the final CTA copy', () => {
     render(<CtaFinalSection />)
-    expect(screen.getByText('Começar agora')).toBeInTheDocument()
+    expect(screen.getByText('Começar grátis')).toBeInTheDocument()
   })
 
   it('tracks section:final on click and scrolls to pricing', () => {
     const track = vi.spyOn(analytics, 'trackLanding').mockImplementation(() => {})
     const scroll = vi.spyOn(landingCta, 'scrollToId').mockImplementation(() => {})
     render(<CtaFinalSection />)
-    fireEvent.click(screen.getByRole('button', { name: /Começar agora/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Começar grátis/ }))
     expect(track).toHaveBeenCalledWith('lp_cta_click', { section: 'final' })
     expect(scroll).toHaveBeenCalledWith('pricing')
   })

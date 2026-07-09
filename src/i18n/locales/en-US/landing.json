@@ -77,32 +77,24 @@
     "title": "Frequently asked questions",
     "items": [
       {
+        "q": "Is Norte a bot?",
+        "a": "It's an AI assistant — but built to talk like a person and actually get things done. Whenever you want, or if it gets stuck, a real human takes over."
+      },
+      {
+        "q": "Do you have my number? Is it safe?",
+        "a": "We only use your WhatsApp to send openings and talk about your search. No spam, you can opt out anytime, and we follow Brazil's LGPD."
+      },
+      {
+        "q": "What if I don't use WhatsApp?",
+        "a": "No problem. Norte also works over email, and the web dashboard has everything."
+      },
+      {
         "q": "Are the jobs real? Where do they come from?",
-        "a": "Yes. We collect them straight from the companies' own career pages, several times a day. No aggregator — the job shows up here as soon as it goes live at the source."
-      },
-      {
-        "q": "Is ScrapJobs for me?",
-        "a": "If you're a dev, PM, designer, or work with data in tech, yes. We're not a generic aggregator for retail or operational jobs."
-      },
-      {
-        "q": "How is it different from LinkedIn and aggregators?",
-        "a": "We grab the job straight from the source, without the aggregator delay. And the AI shows why your CV gets discarded by ATS filters before you apply."
-      },
-      {
-        "q": "How does the AI analyze my resume?",
-        "a": "It compares your CV with the job, points out the missing keywords, and generates a PDF optimized for that job."
-      },
-      {
-        "q": "Is my data safe?",
-        "a": "Yes. We follow the LGPD: your data is used only to match jobs and generate your resume, and you can delete it whenever you want."
+        "a": "Yes. We pull straight from the companies' own career pages, several times a day. No aggregator — the opening shows up as soon as it's posted."
       },
       {
         "q": "Can I cancel anytime?",
-        "a": "You can. No lock-in — cancel anytime right from the dashboard."
-      },
-      {
-        "q": "How many companies can I monitor?",
-        "a": "It depends on the plan. The free trial already unlocks the radar so you can feel how it works."
+        "a": "Yes. No lock-in — cancel whenever you want from the dashboard."
       }
     ]
   },
@@ -113,10 +105,10 @@
     "disclaimer": "The brands, logos, and company names displayed belong to their respective owners and are used for identification purposes only. ScrapJobs has no affiliation, sponsorship, or endorsement from these companies."
   },
   "ctaFinal": {
-    "title": "Discover jobs",
-    "cta": "Get started",
-    "subtitle": "Jobs from the companies you picked, in your inbox — minutes after they go live.",
-    "titleHighlight": "no one has seen yet"
+    "title": "Let Norte run the search",
+    "titleHighlight": "for you",
+    "subtitle": "While you get on with life, it watches the openings and prepares your CV.",
+    "cta": "Start free"
   },
   "pricing": {
     "title": "Start free today",
