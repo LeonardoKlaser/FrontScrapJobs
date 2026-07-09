@@ -39,20 +39,6 @@
     "step3Title": "O Norte te avisa das vagas novas",
     "step4Title": "Peça análise e CV otimizado no chat"
   },
-  "featureBlocks": {
-    "ats": {
-      "overline": "ANÁLISE ATS",
-      "heading": "Saiba por que seu CV é descartado — antes de enviar",
-      "sub": "A IA compara seu currículo com a vaga e mostra exatamente o que falta pra passar no filtro.",
-      "cta": "Analisar meu CV"
-    },
-    "pdf": {
-      "overline": "CV SOB MEDIDA",
-      "heading": "Um currículo otimizado pra cada vaga",
-      "sub": "Gere um PDF ajustado às palavras-chave da vaga em um clique.",
-      "cta": "Gerar meu currículo"
-    }
-  },
   "norteDoes": {
     "overline": "Seu parceiro de carreira",
     "title": "O que o Norte faz por você",
@@ -143,60 +129,5 @@
     "sitesAnalyzed": "Sites monitorados",
     "jobsCollected": "Vagas coletadas",
     "trustLine": "Dados reais da nossa plataforma, atualizados em tempo real"
-  },
-  "valueFeatures": {
-    "ats": {
-      "applyButton": "Aplicar 1 Sugestão",
-      "body1": "Faça upload do seu currículo atual. Em segundos, a IA cruza o seu perfil com a vaga e entrega um diagnóstico completo: score ATS, keywords que faltam e gaps que estão a sabotar as suas candidaturas.",
-      "body2": "Chega de adivinhar.",
-      "body2Bold": "Agora você sabe exatamente o que corrigir.",
-      "finalText": "Foque em alinhar sua experiência com palavras-chave da área de pagamentos e fintech, além de evidenciar liderança técnica.",
-      "finalTitle": "Considerações Finais",
-      "gap1Desc": "Ciclos de pagamento e fintech críticos para a vaga.",
-      "gap1Title": "Falta experiência com sistemas de pagamentos e autorização.",
-      "gap2Desc": "Requisito fundamental para o cargo senior.",
-      "gap2Title": "Sem comprovação de liderança técnica e mentoria.",
-      "gapsTitle": "Lacunas e Melhorias",
-      "headline": "Descubra por que você",
-      "headlineGradient": "está sendo rejeitado.",
-      "keywordsTitle": "Palavras-chave ATS",
-      "overline": "Análise com IA",
-      "redoButton": "Refazer",
-      "scoreBadge": "Médio",
-      "scoreSummary": "O candidato demonstra forte experiência em backend com Java e Spring Boot, mas faltam detalhes em pagamentos e liderança técnica.",
-      "sendEmailButton": "Enviar por email",
-      "strength1Desc": "Base para a arquitetura da vaga, incluindo sistemas distribuídos escaláveis.",
-      "strength1Title": "Experiência em microserviços com Java e Spring Boot",
-      "strength2Desc": "Importante para alta disponibilidade e pipeline de deploy seguro.",
-      "strength2Title": "Conhecimento prático em Kubernetes e CI/CD",
-      "strengthsTitle": "Pontos Fortes",
-      "suggestion1Example": "Software Developer focado em backend e ambientes cloud, com experiência em microserviços Java Spring Boot...",
-      "suggestion1Section": "Resumo Profissional",
-      "suggestion1Text": "Inclua palavras-chave de pagamentos e liderança técnica.",
-      "suggestion2Section": "Experiência",
-      "suggestion2Text": "Reforce arquitetura e sistemas de alta disponibilidade.",
-      "suggestionsCount": "1 de 3 selecionadas",
-      "suggestionsTitle": "Sugestões para o Currículo"
-    },
-    "pdf": {
-      "aiOptimizedTitle": "Currículo otimizado pela IA",
-      "body1": "A IA pega nos gaps, sugere as palavras-chave certas e reconstrói as suas frases para passar no filtro ATS. Você escolhe o que aplicar e baixa o PDF — pronto para enviar.",
-      "body2": "Sem reescrever nada do zero.",
-      "body2Bold": "Um clique entre você e a candidatura perfeita.",
-      "emailHint": "Ou envie a análise completa por email",
-      "generateButton": "Gerar PDF Otimizado",
-      "headline": "Um currículo perfeito",
-      "headlineGradient": "para cada vaga. Sem esforço.",
-      "overline": "Geração Inteligente",
-      "pill1": "+8 keywords ATS",
-      "pill2": "Resumo reescrito",
-      "pill3": "Experiência otimizada",
-      "scoreAfter": "Excelente",
-      "scoreBefore": "Médio",
-      "templateClassico": "Clássico",
-      "templateCriativo": "Criativo",
-      "templateModerno": "Moderno",
-      "templatePrompt": "Escolha o template para exportar:"
-    }
   }
 }
