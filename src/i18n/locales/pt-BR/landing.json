@@ -63,6 +63,16 @@
     "pdfTitle": "Reescreve seu CV pra cada vaga",
     "pdfBody": "Um PDF sob medida, com as palavras-chave certas da vaga — sem você reescrever nada do zero. É só pedir no chat."
   },
+  "multicanal": {
+    "title": "No canal que você preferir",
+    "subtitle": "O WhatsApp é a forma mais rápida de falar com o Norte — mas não é a única.",
+    "whatsappTitle": "WhatsApp",
+    "whatsappBody": "Converse, receba vagas e peça seu CV — no zap que você já usa.",
+    "emailTitle": "Email",
+    "emailBody": "Prefere não usar WhatsApp? Ele manda o resumo das vagas por email.",
+    "webTitle": "Painel web",
+    "webBody": "Controle total: histórico, currículos e configurações num só lugar."
+  },
   "faq": {
     "title": "Perguntas frequentes",
     "items": [

@@ -63,6 +63,16 @@
     "pdfTitle": "Rewrites your CV for each role",
     "pdfBody": "A tailored PDF with the role's right keywords — without rewriting anything from scratch. Just ask in the chat."
   },
+  "multicanal": {
+    "title": "Whatever channel you prefer",
+    "subtitle": "WhatsApp is the fastest way to talk to Norte — but it's not the only one.",
+    "whatsappTitle": "WhatsApp",
+    "whatsappBody": "Chat, get openings and request your CV — on the app you already use.",
+    "emailTitle": "Email",
+    "emailBody": "Rather not use WhatsApp? Norte sends the openings digest by email.",
+    "webTitle": "Web dashboard",
+    "webBody": "Full control: history, résumés and settings in one place."
+  },
   "faq": {
     "title": "Frequently asked questions",
     "items": [
