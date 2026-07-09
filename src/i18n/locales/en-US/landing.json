@@ -53,6 +53,16 @@
       "cta": "Generate my resume"
     }
   },
+  "norteDoes": {
+    "overline": "Your career partner",
+    "title": "What Norte does for you",
+    "alertTitle": "Flags new openings before everyone else",
+    "alertBody": "Straight from the companies' own career pages, not an aggregator. You only get what fits your field — no daily digging.",
+    "matchTitle": "Shows why your résumé gets dropped",
+    "matchBody": "The AI compares your résumé to the role and reveals the match, what you already have and what's missing to clear the ATS filter — before you apply.",
+    "pdfTitle": "Rewrites your CV for each role",
+    "pdfBody": "A tailored PDF with the role's right keywords — without rewriting anything from scratch. Just ask in the chat."
+  },
   "faq": {
     "title": "Frequently asked questions",
     "items": [

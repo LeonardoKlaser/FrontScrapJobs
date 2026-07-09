@@ -53,6 +53,16 @@
       "cta": "Gerar meu currículo"
     }
   },
+  "norteDoes": {
+    "overline": "Seu parceiro de carreira",
+    "title": "O que o Norte faz por você",
+    "alertTitle": "Avisa das vagas antes de todo mundo",
+    "alertBody": "Direto da página de carreira das empresas, não de agregador. Você recebe só o que é da sua área — sem garimpar o dia inteiro.",
+    "matchTitle": "Mostra por que seu CV é descartado",
+    "matchBody": "A IA compara seu currículo com a vaga e revela o match, o que você já tem e o que falta pra passar no filtro ATS — antes de você aplicar.",
+    "pdfTitle": "Reescreve seu CV pra cada vaga",
+    "pdfBody": "Um PDF sob medida, com as palavras-chave certas da vaga — sem você reescrever nada do zero. É só pedir no chat."
+  },
   "faq": {
     "title": "Perguntas frequentes",
     "items": [
