@@ -33,11 +33,11 @@
     "jobs": "open jobs right now"
   },
   "howItWorksNew": {
-    "headline": "From sign-up to interview in 4 steps",
-    "step1Title": "Upload your CV",
-    "step2Title": "Get alerts from your companies",
-    "step3Title": "AI matches job and resume",
-    "step4Title": "Apply with the optimized PDF"
+    "headline": "From \"hi\" to the right role, in 4 steps",
+    "step1Title": "Create your account and connect WhatsApp",
+    "step2Title": "Pick the companies you want to watch",
+    "step3Title": "Norte flags new openings for you",
+    "step4Title": "Ask for analysis and a tailored CV in the chat"
   },
   "featureBlocks": {
     "ats": {
