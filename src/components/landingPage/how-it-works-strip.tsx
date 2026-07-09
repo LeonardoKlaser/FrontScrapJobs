@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
-import { FileText, Bell, BrainCircuit, Download } from 'lucide-react'
+import { UserPlus, Building2, Bell, FileCheck } from 'lucide-react'
 
-const STEP_ICONS = [FileText, Bell, BrainCircuit, Download] as const
+const STEP_ICONS = [UserPlus, Building2, Bell, FileCheck] as const
 
 export function HowItWorksStrip() {
   const { t } = useTranslation('landing')
