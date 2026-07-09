@@ -12,11 +12,10 @@
     "faq": "FAQ"
   },
   "hero": {
-    "eyebrow": "● Live — monitoring {{sites}} companies right now",
-    "eyebrowFallback": "● Live — monitoring the best tech companies",
-    "heading1": "New jobs,",
-    "heading2": "before everyone else",
-    "subheading": "We watch the career pages of the best tech companies. Pick your area and see what we collected today:",
+    "eyebrow": "● Now on WhatsApp",
+    "heading1": "Norte runs your job hunt.",
+    "heading2": "On your WhatsApp.",
+    "subheading": "It watches the openings at the companies you pick, reviews your résumé and sends you a tailored CV for each one — all in a chat.",
     "areas": {
       "dev": "Dev",
       "produto": "Product",
@@ -24,73 +23,64 @@
       "dados": "Data",
       "infra": "Infra & QA"
     },
-    "todayCount": "+ {{count}} new jobs today at the monitored companies",
-    "emptyArea": "Nothing new in the last few hours in {{area}} — check another area",
-    "cta": "I want my radar",
-    "microcopy": "7 days free · no credit card",
+    "cta": "Start free",
+    "microcopy": "7-day free trial · no credit card",
     "loginPrompt": "Already have an account?",
-    "loginLink": "Sign in",
-    "ago": {
-      "now": "just now",
-      "hours": "{{count}}h ago",
-      "days": "{{count}}d ago"
-    }
+    "loginLink": "Log in"
   },
   "proofBand": {
     "sites": "monitored sites",
     "jobs": "open jobs right now"
   },
   "howItWorksNew": {
-    "headline": "From sign-up to interview in 4 steps",
-    "step1Title": "Upload your CV",
-    "step2Title": "Get alerts from your companies",
-    "step3Title": "AI matches job and resume",
-    "step4Title": "Apply with the optimized PDF"
+    "headline": "From \"hi\" to the right role, in 4 steps",
+    "step1Title": "Create your account and connect WhatsApp",
+    "step2Title": "Pick the companies you want to watch",
+    "step3Title": "Norte flags new openings for you",
+    "step4Title": "Ask for analysis and a tailored CV in the chat"
   },
-  "featureBlocks": {
-    "ats": {
-      "overline": "ATS ANALYSIS",
-      "heading": "Find out why your CV gets discarded — before you send it",
-      "sub": "The AI compares your resume with the job and shows exactly what's missing to pass the filter.",
-      "cta": "Analyze my CV"
-    },
-    "pdf": {
-      "overline": "TAILORED CV",
-      "heading": "A resume optimized for every job",
-      "sub": "Generate a PDF tuned to the job's keywords in one click.",
-      "cta": "Generate my resume"
-    }
+  "norteDoes": {
+    "overline": "Your career partner",
+    "title": "What Norte does for you",
+    "alertTitle": "Flags new openings before everyone else",
+    "alertBody": "Straight from the companies' own career pages, not an aggregator. You only get what fits your field — no daily digging.",
+    "matchTitle": "Shows why your résumé gets dropped",
+    "matchBody": "The AI compares your résumé to the role and reveals the match, what you already have and what's missing to clear the ATS filter — before you apply.",
+    "pdfTitle": "Rewrites your CV for each role",
+    "pdfBody": "A tailored PDF with the role's right keywords — without rewriting anything from scratch. Just ask in the chat."
+  },
+  "multicanal": {
+    "title": "Whatever channel you prefer",
+    "subtitle": "WhatsApp is the fastest way to talk to Norte — but it's not the only one.",
+    "whatsappTitle": "WhatsApp",
+    "whatsappBody": "Chat, get openings and request your CV — on the app you already use.",
+    "emailTitle": "Email",
+    "emailBody": "Rather not use WhatsApp? Norte sends the openings digest by email.",
+    "webTitle": "Web dashboard",
+    "webBody": "Full control: history, résumés and settings in one place."
   },
   "faq": {
     "title": "Frequently asked questions",
     "items": [
       {
+        "q": "Is Norte a bot?",
+        "a": "It's an AI assistant — but built to talk like a person and actually get things done. Whenever you want, or if it gets stuck, a real human takes over."
+      },
+      {
+        "q": "Do you have my number? Is it safe?",
+        "a": "We only use your WhatsApp to send openings and talk about your search. No spam, you can opt out anytime, and we follow Brazil's LGPD."
+      },
+      {
+        "q": "What if I don't use WhatsApp?",
+        "a": "No problem. Norte also works over email, and the web dashboard has everything."
+      },
+      {
         "q": "Are the jobs real? Where do they come from?",
-        "a": "Yes. We collect them straight from the companies' own career pages, several times a day. No aggregator — the job shows up here as soon as it goes live at the source."
-      },
-      {
-        "q": "Is ScrapJobs for me?",
-        "a": "If you're a dev, PM, designer, or work with data in tech, yes. We're not a generic aggregator for retail or operational jobs."
-      },
-      {
-        "q": "How is it different from LinkedIn and aggregators?",
-        "a": "We grab the job straight from the source, without the aggregator delay. And the AI shows why your CV gets discarded by ATS filters before you apply."
-      },
-      {
-        "q": "How does the AI analyze my resume?",
-        "a": "It compares your CV with the job, points out the missing keywords, and generates a PDF optimized for that job."
-      },
-      {
-        "q": "Is my data safe?",
-        "a": "Yes. We follow the LGPD: your data is used only to match jobs and generate your resume, and you can delete it whenever you want."
+        "a": "Yes. We pull straight from the companies' own career pages, several times a day. No aggregator — the opening shows up as soon as it's posted."
       },
       {
         "q": "Can I cancel anytime?",
-        "a": "You can. No lock-in — cancel anytime right from the dashboard."
-      },
-      {
-        "q": "How many companies can I monitor?",
-        "a": "It depends on the plan. The free trial already unlocks the radar so you can feel how it works."
+        "a": "Yes. No lock-in — cancel whenever you want from the dashboard."
       }
     ]
   },
@@ -101,10 +91,10 @@
     "disclaimer": "The brands, logos, and company names displayed belong to their respective owners and are used for identification purposes only. ScrapJobs has no affiliation, sponsorship, or endorsement from these companies."
   },
   "ctaFinal": {
-    "title": "Discover jobs",
-    "cta": "Get started",
-    "subtitle": "Jobs from the companies you picked, in your inbox — minutes after they go live.",
-    "titleHighlight": "no one has seen yet"
+    "title": "Let Norte run the search",
+    "titleHighlight": "for you",
+    "subtitle": "While you get on with life, it watches the openings and prepares your CV.",
+    "cta": "Start free"
   },
   "pricing": {
     "title": "Start free today",
@@ -139,60 +129,5 @@
     "sitesAnalyzed": "Monitored sites",
     "jobsCollected": "Jobs collected",
     "trustLine": "Real data from our platform, updated in real time"
-  },
-  "valueFeatures": {
-    "ats": {
-      "applyButton": "Apply 1 Suggestion",
-      "body1": "Upload your current resume. In seconds, our AI cross-references your profile with the job and delivers a complete diagnosis: ATS score, missing keywords, and gaps that are sabotaging your applications.",
-      "body2": "Stop guessing.",
-      "body2Bold": "Now you know exactly what to fix.",
-      "finalText": "Focus on aligning your experience with payment and fintech keywords, and highlighting technical leadership.",
-      "finalTitle": "Final Considerations",
-      "gap1Desc": "Payment cycles and fintech are critical for this role.",
-      "gap1Title": "Missing experience with payment systems and authorization.",
-      "gap2Desc": "Fundamental requirement for the senior position.",
-      "gap2Title": "No evidence of technical leadership and mentoring.",
-      "gapsTitle": "Gaps & Improvements",
-      "headline": "Find out why you're",
-      "headlineGradient": "being rejected.",
-      "keywordsTitle": "ATS Keywords",
-      "overline": "AI Analysis",
-      "redoButton": "Redo",
-      "scoreBadge": "Average",
-      "scoreSummary": "The candidate demonstrates strong backend experience with Java and Spring Boot, but lacks details in payments and technical leadership.",
-      "sendEmailButton": "Send by email",
-      "strength1Desc": "Foundation for the job's architecture, including scalable distributed systems.",
-      "strength1Title": "Experience with microservices using Java and Spring Boot",
-      "strength2Desc": "Important for high availability and secure deployment pipelines.",
-      "strength2Title": "Hands-on knowledge of Kubernetes and CI/CD",
-      "strengthsTitle": "Strengths",
-      "suggestion1Example": "Software Developer focused on backend and cloud environments, with experience in Java Spring Boot microservices...",
-      "suggestion1Section": "Professional Summary",
-      "suggestion1Text": "Include payment and technical leadership keywords.",
-      "suggestion2Section": "Experience",
-      "suggestion2Text": "Reinforce architecture and high-availability systems.",
-      "suggestionsCount": "1 of 3 selected",
-      "suggestionsTitle": "Resume Suggestions"
-    },
-    "pdf": {
-      "aiOptimizedTitle": "AI-optimized resume",
-      "body1": "The AI takes the gaps, suggests the right keywords, and rebuilds your sentences to pass the ATS filter. You choose what to apply and download the PDF — ready to send.",
-      "body2": "No rewriting from scratch.",
-      "body2Bold": "One click between you and the perfect application.",
-      "emailHint": "Or send the full analysis by email",
-      "generateButton": "Generate Optimized PDF",
-      "headline": "A perfect resume",
-      "headlineGradient": "for every job. Effortlessly.",
-      "overline": "Smart Generation",
-      "pill1": "+8 ATS keywords",
-      "pill2": "Summary rewritten",
-      "pill3": "Experience optimized",
-      "scoreAfter": "Excellent",
-      "scoreBefore": "Average",
-      "templateClassico": "Classic",
-      "templateCriativo": "Creative",
-      "templateModerno": "Modern",
-      "templatePrompt": "Choose a template to export:"
-    }
   }
 }
