@@ -12,11 +12,10 @@
     "faq": "FAQ"
   },
   "hero": {
-    "eyebrow": "● Live — monitoring {{sites}} companies right now",
-    "eyebrowFallback": "● Live — monitoring the best tech companies",
-    "heading1": "New jobs,",
-    "heading2": "before everyone else",
-    "subheading": "We watch the career pages of the best tech companies. Pick your area and see what we collected today:",
+    "eyebrow": "● Now on WhatsApp",
+    "heading1": "Norte runs your job hunt.",
+    "heading2": "On your WhatsApp.",
+    "subheading": "It watches the openings at the companies you pick, reviews your résumé and sends you a tailored CV for each one — all in a chat.",
     "areas": {
       "dev": "Dev",
       "produto": "Product",
@@ -24,17 +23,10 @@
       "dados": "Data",
       "infra": "Infra & QA"
     },
-    "todayCount": "+ {{count}} new jobs today at the monitored companies",
-    "emptyArea": "Nothing new in the last few hours in {{area}} — check another area",
-    "cta": "I want my radar",
-    "microcopy": "7 days free · no credit card",
+    "cta": "Start free",
+    "microcopy": "7-day free trial · no credit card",
     "loginPrompt": "Already have an account?",
-    "loginLink": "Sign in",
-    "ago": {
-      "now": "just now",
-      "hours": "{{count}}h ago",
-      "days": "{{count}}d ago"
-    }
+    "loginLink": "Log in"
   },
   "proofBand": {
     "sites": "monitored sites",

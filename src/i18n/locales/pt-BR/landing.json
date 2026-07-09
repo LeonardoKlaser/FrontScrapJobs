@@ -12,11 +12,10 @@
     "faq": "FAQ"
   },
   "hero": {
-    "eyebrow": "● Ao vivo — monitorando {{sites}} empresas agora",
-    "eyebrowFallback": "● Ao vivo — monitorando as melhores empresas tech",
-    "heading1": "Vagas novas,",
-    "heading2": "antes de todo mundo",
-    "subheading": "Vigiamos as páginas de carreira das melhores empresas tech. Escolha sua área e veja o que coletamos hoje:",
+    "eyebrow": "● Agora no WhatsApp",
+    "heading1": "O Norte cuida da sua busca de vaga.",
+    "heading2": "No seu WhatsApp.",
+    "subheading": "Ele vigia as vagas das empresas que você escolhe, analisa seu currículo e te manda o CV otimizado pra cada uma — tudo numa conversa.",
     "areas": {
       "dev": "Dev",
       "produto": "Produto",
@@ -24,17 +23,10 @@
       "dados": "Dados",
       "infra": "Infra & QA"
     },
-    "todayCount": "+ {{count}} vagas novas hoje nas empresas monitoradas",
-    "emptyArea": "Nada novo nas últimas horas em {{area}} — espia outra área",
-    "cta": "Quero meu radar",
+    "cta": "Começar grátis",
     "microcopy": "7 dias grátis · sem cartão de crédito",
     "loginPrompt": "Já tem conta?",
-    "loginLink": "Fazer login",
-    "ago": {
-      "now": "agora",
-      "hours": "há {{count}}h",
-      "days": "há {{count}}d"
-    }
+    "loginLink": "Fazer login"
   },
   "proofBand": {
     "sites": "sites monitorados",
