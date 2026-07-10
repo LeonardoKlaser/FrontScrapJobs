@@ -67,5 +67,13 @@
     "cancelError": "Erro ao cancelar assinatura",
     "alreadyCanceled": "Sua assinatura já está cancelada ou não foi encontrada.",
     "cancelContact": "Está com algum problema? Fale com a gente antes:"
+  },
+  "ultra": {
+    "downgrade": {
+      "title": "Sair do Ultra?",
+      "body": "Ao sair do Ultra, você não receberá mais vagas automaticamente. Você precisará se inscrever manualmente em até 40 empresas. Fale com o Norte no WhatsApp para configurar seu novo plano, é rápido.",
+      "confirm": "Confirmar downgrade",
+      "cancel": "Cancelar"
+    }
   }
 }

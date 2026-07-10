@@ -67,5 +67,13 @@
     "cancelError": "Failed to cancel subscription",
     "alreadyCanceled": "Your subscription is already canceled or was not found.",
     "cancelContact": "Having a problem? Talk to us first:"
+  },
+  "ultra": {
+    "downgrade": {
+      "title": "Leave Ultra?",
+      "body": "By leaving Ultra, you will no longer receive jobs automatically. You will need to manually apply to up to 40 companies. Talk to Norte on WhatsApp to set up your new plan — it's quick.",
+      "confirm": "Confirm downgrade",
+      "cancel": "Cancel"
+    }
   }
 }

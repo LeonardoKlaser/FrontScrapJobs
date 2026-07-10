@@ -29,6 +29,15 @@
     "OTHER": "Other"
   },
   "emptySearch": "No company found for \"{{term}}\"",
+  "ultra": {
+    "banner": "You're on Ultra — all {{count}} companies on ScrapJobs are monitored automatically. New companies are added as soon as we integrate them.",
+    "filterAll": "All",
+    "filterMonitored": "Monitored",
+    "filterIgnored": "Ignored",
+    "ignoreCompany": "Ignore this company",
+    "unignoreCompany": "Resume monitoring",
+    "ignoredLabel": "Ignored"
+  },
   "requestBanner": {
     "text": "Didn't find your company?",
     "cta": "Request monitoring"

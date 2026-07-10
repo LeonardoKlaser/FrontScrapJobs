@@ -129,6 +129,7 @@
     "title": "Escolha seu plano",
     "description": "Renove seu plano para continuar acessando todas as funcionalidades do ScrapJobs.",
     "sites": "{{count}} empresas monitoradas",
+    "allSites": "Todas as empresas monitoradas",
     "analyses": "{{count}} análises de IA/mês",
     "unlimitedAnalyses": "Análises de IA ilimitadas",
     "perMonth": "/mês",
