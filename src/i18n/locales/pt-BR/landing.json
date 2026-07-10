@@ -12,11 +12,10 @@
     "faq": "FAQ"
   },
   "hero": {
-    "eyebrow": "● Ao vivo — monitorando {{sites}} empresas agora",
-    "eyebrowFallback": "● Ao vivo — monitorando as melhores empresas tech",
-    "heading1": "Vagas novas,",
-    "heading2": "antes de todo mundo",
-    "subheading": "Vigiamos as páginas de carreira das melhores empresas tech. Escolha sua área e veja o que coletamos hoje:",
+    "eyebrow": "● Agora no WhatsApp",
+    "heading1": "O Norte cuida da sua busca de vaga.",
+    "heading2": "No seu WhatsApp.",
+    "subheading": "Ele vigia as vagas das empresas que você escolhe, analisa seu currículo e te manda o CV otimizado pra cada uma — tudo numa conversa.",
     "areas": {
       "dev": "Dev",
       "produto": "Produto",
@@ -24,73 +23,64 @@
       "dados": "Dados",
       "infra": "Infra & QA"
     },
-    "todayCount": "+ {{count}} vagas novas hoje nas empresas monitoradas",
-    "emptyArea": "Nada novo nas últimas horas em {{area}} — espia outra área",
-    "cta": "Quero meu radar",
+    "cta": "Começar grátis",
     "microcopy": "7 dias grátis · sem cartão de crédito",
     "loginPrompt": "Já tem conta?",
-    "loginLink": "Fazer login",
-    "ago": {
-      "now": "agora",
-      "hours": "há {{count}}h",
-      "days": "há {{count}}d"
-    }
+    "loginLink": "Fazer login"
   },
   "proofBand": {
     "sites": "sites monitorados",
     "jobs": "vagas abertas agora"
   },
   "howItWorksNew": {
-    "headline": "Do cadastro à entrevista em 4 passos",
-    "step1Title": "Cadastre seu CV",
-    "step2Title": "Receba alertas das suas empresas",
-    "step3Title": "A IA cruza vaga e currículo",
-    "step4Title": "Aplique com o PDF otimizado"
+    "headline": "Do \"oi\" à vaga certa, em 4 passos",
+    "step1Title": "Crie a conta e conecte o WhatsApp",
+    "step2Title": "Escolha as empresas que quer vigiar",
+    "step3Title": "O Norte te avisa das vagas novas",
+    "step4Title": "Peça análise e CV otimizado no chat"
   },
-  "featureBlocks": {
-    "ats": {
-      "overline": "ANÁLISE ATS",
-      "heading": "Saiba por que seu CV é descartado — antes de enviar",
-      "sub": "A IA compara seu currículo com a vaga e mostra exatamente o que falta pra passar no filtro.",
-      "cta": "Analisar meu CV"
-    },
-    "pdf": {
-      "overline": "CV SOB MEDIDA",
-      "heading": "Um currículo otimizado pra cada vaga",
-      "sub": "Gere um PDF ajustado às palavras-chave da vaga em um clique.",
-      "cta": "Gerar meu currículo"
-    }
+  "norteDoes": {
+    "overline": "Seu parceiro de carreira",
+    "title": "O que o Norte faz por você",
+    "alertTitle": "Avisa das vagas antes de todo mundo",
+    "alertBody": "Direto da página de carreira das empresas, não de agregador. Você recebe só o que é da sua área — sem garimpar o dia inteiro.",
+    "matchTitle": "Mostra por que seu CV é descartado",
+    "matchBody": "A IA compara seu currículo com a vaga e revela o match, o que você já tem e o que falta pra passar no filtro ATS — antes de você aplicar.",
+    "pdfTitle": "Reescreve seu CV pra cada vaga",
+    "pdfBody": "Um PDF sob medida, com as palavras-chave certas da vaga — sem você reescrever nada do zero. É só pedir no chat."
+  },
+  "multicanal": {
+    "title": "No canal que você preferir",
+    "subtitle": "O WhatsApp é a forma mais rápida de falar com o Norte — mas não é a única.",
+    "whatsappTitle": "WhatsApp",
+    "whatsappBody": "Converse, receba vagas e peça seu CV — no zap que você já usa.",
+    "emailTitle": "Email",
+    "emailBody": "Prefere não usar WhatsApp? Ele manda o resumo das vagas por email.",
+    "webTitle": "Painel web",
+    "webBody": "Controle total: histórico, currículos e configurações num só lugar."
   },
   "faq": {
     "title": "Perguntas frequentes",
     "items": [
       {
+        "q": "O Norte é um robô?",
+        "a": "É um assistente com IA — mas treinado pra falar como gente e resolver de verdade. Se você quiser, ou se ele travar, uma pessoa de verdade assume a conversa."
+      },
+      {
+        "q": "Vocês têm meu número? É seguro?",
+        "a": "Só usamos seu WhatsApp pra te mandar as vagas e conversar sobre sua busca. Sem spam, você sai quando quiser, e seguimos a LGPD."
+      },
+      {
+        "q": "E se eu não usar WhatsApp?",
+        "a": "Sem problema. O Norte também fala por email, e o painel web tem tudo."
+      },
+      {
         "q": "As vagas são reais? De onde vêm?",
-        "a": "Sim. Coletamos direto das páginas de carreira das próprias empresas, várias vezes ao dia. Nada de agregador — a vaga aparece aqui assim que sai na fonte."
-      },
-      {
-        "q": "O ScrapJobs é pra mim?",
-        "a": "Se você é dev, PM, designer ou trabalha com dados em tech, sim. Não somos um agregador genérico de vagas de varejo ou operacional."
-      },
-      {
-        "q": "Qual a diferença pro LinkedIn e agregadores?",
-        "a": "Pegamos a vaga direto da fonte, sem o atraso dos agregadores. E a IA mostra por que seu CV é descartado nos filtros ATS antes de você aplicar."
-      },
-      {
-        "q": "Como a IA analisa meu currículo?",
-        "a": "Ela compara seu CV com a vaga, aponta as palavras-chave que faltam e gera um PDF otimizado pra aquela vaga."
-      },
-      {
-        "q": "Meus dados estão seguros?",
-        "a": "Sim. Seguimos a LGPD: seus dados são usados só pra cruzar vagas e gerar seu currículo, e você pode apagá-los quando quiser."
+        "a": "Sim. Coletamos direto das páginas de carreira das próprias empresas, várias vezes ao dia. Nada de agregador — a vaga aparece assim que sai na fonte."
       },
       {
         "q": "Posso cancelar quando quiser?",
         "a": "Pode. Sem fidelidade — cancele a qualquer momento direto no painel."
-      },
-      {
-        "q": "Quantas empresas posso monitorar?",
-        "a": "Depende do plano. O teste grátis já libera o radar pra você sentir como funciona."
       }
     ]
   },
@@ -101,10 +91,10 @@
     "disclaimer": "As marcas, logotipos e nomes de empresas exibidos pertencem aos seus respectivos proprietários e são usados apenas para identificação. O ScrapJobs não possui afiliação, patrocínio ou endosso dessas empresas."
   },
   "ctaFinal": {
-    "title": "Descubra vagas que",
-    "cta": "Começar agora",
-    "subtitle": "Vagas das empresas que você escolheu, no seu email — minutos depois de saírem.",
-    "titleHighlight": "ninguém viu ainda"
+    "title": "Deixa o Norte cuidar da busca",
+    "titleHighlight": "por você",
+    "subtitle": "Enquanto você toca o resto da vida, ele vigia as vagas e prepara seu CV.",
+    "cta": "Começar grátis"
   },
   "pricing": {
     "title": "Comece grátis hoje",
@@ -139,60 +129,5 @@
     "sitesAnalyzed": "Sites monitorados",
     "jobsCollected": "Vagas coletadas",
     "trustLine": "Dados reais da nossa plataforma, atualizados em tempo real"
-  },
-  "valueFeatures": {
-    "ats": {
-      "applyButton": "Aplicar 1 Sugestão",
-      "body1": "Faça upload do seu currículo atual. Em segundos, a IA cruza o seu perfil com a vaga e entrega um diagnóstico completo: score ATS, keywords que faltam e gaps que estão a sabotar as suas candidaturas.",
-      "body2": "Chega de adivinhar.",
-      "body2Bold": "Agora você sabe exatamente o que corrigir.",
-      "finalText": "Foque em alinhar sua experiência com palavras-chave da área de pagamentos e fintech, além de evidenciar liderança técnica.",
-      "finalTitle": "Considerações Finais",
-      "gap1Desc": "Ciclos de pagamento e fintech críticos para a vaga.",
-      "gap1Title": "Falta experiência com sistemas de pagamentos e autorização.",
-      "gap2Desc": "Requisito fundamental para o cargo senior.",
-      "gap2Title": "Sem comprovação de liderança técnica e mentoria.",
-      "gapsTitle": "Lacunas e Melhorias",
-      "headline": "Descubra por que você",
-      "headlineGradient": "está sendo rejeitado.",
-      "keywordsTitle": "Palavras-chave ATS",
-      "overline": "Análise com IA",
-      "redoButton": "Refazer",
-      "scoreBadge": "Médio",
-      "scoreSummary": "O candidato demonstra forte experiência em backend com Java e Spring Boot, mas faltam detalhes em pagamentos e liderança técnica.",
-      "sendEmailButton": "Enviar por email",
-      "strength1Desc": "Base para a arquitetura da vaga, incluindo sistemas distribuídos escaláveis.",
-      "strength1Title": "Experiência em microserviços com Java e Spring Boot",
-      "strength2Desc": "Importante para alta disponibilidade e pipeline de deploy seguro.",
-      "strength2Title": "Conhecimento prático em Kubernetes e CI/CD",
-      "strengthsTitle": "Pontos Fortes",
-      "suggestion1Example": "Software Developer focado em backend e ambientes cloud, com experiência em microserviços Java Spring Boot...",
-      "suggestion1Section": "Resumo Profissional",
-      "suggestion1Text": "Inclua palavras-chave de pagamentos e liderança técnica.",
-      "suggestion2Section": "Experiência",
-      "suggestion2Text": "Reforce arquitetura e sistemas de alta disponibilidade.",
-      "suggestionsCount": "1 de 3 selecionadas",
-      "suggestionsTitle": "Sugestões para o Currículo"
-    },
-    "pdf": {
-      "aiOptimizedTitle": "Currículo otimizado pela IA",
-      "body1": "A IA pega nos gaps, sugere as palavras-chave certas e reconstrói as suas frases para passar no filtro ATS. Você escolhe o que aplicar e baixa o PDF — pronto para enviar.",
-      "body2": "Sem reescrever nada do zero.",
-      "body2Bold": "Um clique entre você e a candidatura perfeita.",
-      "emailHint": "Ou envie a análise completa por email",
-      "generateButton": "Gerar PDF Otimizado",
-      "headline": "Um currículo perfeito",
-      "headlineGradient": "para cada vaga. Sem esforço.",
-      "overline": "Geração Inteligente",
-      "pill1": "+8 keywords ATS",
-      "pill2": "Resumo reescrito",
-      "pill3": "Experiência otimizada",
-      "scoreAfter": "Excelente",
-      "scoreBefore": "Médio",
-      "templateClassico": "Clássico",
-      "templateCriativo": "Criativo",
-      "templateModerno": "Moderno",
-      "templatePrompt": "Escolha o template para exportar:"
-    }
   }
 }

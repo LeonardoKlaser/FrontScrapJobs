@@ -10,9 +10,4 @@ describe('trackLanding', () => {
     trackLanding('lp_cta_click', { section: 'hero' })
     expect(window.dataLayer).toEqual([{ section: 'hero', event: 'lp_cta_click' }])
   })
-
-  it('pushes an area chip event', () => {
-    trackLanding('lp_area_chip', { area: 'dev' })
-    expect(window.dataLayer?.[0]).toMatchObject({ area: 'dev', event: 'lp_area_chip' })
-  })
 })

@@ -1,11 +1,12 @@
 import { useLayoutEffect } from 'react'
 import { CtaFinalSection } from '@/components/landingPage/cta-final-section'
 import { FaqSection } from '@/components/landingPage/faq-section'
-import { FeatureBlocksSection } from '@/components/landingPage/feature-blocks-section'
 import { Footer } from '@/components/landingPage/footer'
-import { HeroDemoSection } from '@/components/landingPage/hero-demo-section'
+import { HeroNorteSection } from '@/components/landingPage/hero-norte-section'
 import { HowItWorksStrip } from '@/components/landingPage/how-it-works-strip'
 import { LandingNavbar } from '@/components/landingPage/navbar'
+import { MulticanalSection } from '@/components/landingPage/multicanal-section'
+import { NorteCapabilitiesSection } from '@/components/landingPage/norte-capabilities-section'
 import { PricingSection } from '@/components/landingPage/pricing-section'
 import { ProofBandSection } from '@/components/landingPage/proof-band-section'
 
@@ -22,10 +23,11 @@ export function Landing() {
   return (
     <div className="bg-white">
       <LandingNavbar />
-      <HeroDemoSection />
+      <HeroNorteSection />
       <ProofBandSection />
-      <FeatureBlocksSection />
       <HowItWorksStrip />
+      <NorteCapabilitiesSection />
+      <MulticanalSection />
       <PricingSection />
       <FaqSection />
       <CtaFinalSection />
