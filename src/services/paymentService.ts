@@ -150,3 +150,67 @@ export async function cancelSubscription(): Promise<CancelSubscriptionResult> {
   const response = await api.delete<CancelSubscriptionResult>('/api/subscription/cancel')
   return response.data
 }
+
+// --- AbacatePay ---
+
+export interface CreateSubscriptionRequest {
+  name: string
+  email: string
+  password: string
+  tax: string
+  cellphone: string
+}
+
+export interface CreateSubscriptionWithPendingRequest {
+  pending_id: string
+}
+
+export interface SubscriptionResult {
+  checkout_url: string
+}
+
+export async function createSubscribePix(
+  planId: number,
+  data: CreateSubscriptionRequest | CreateSubscriptionWithPendingRequest
+): Promise<SubscriptionResult> {
+  const response = await api.post<SubscriptionResult>(`/api/payments/subscribe-pix/${planId}`, data)
+  return response.data
+}
+
+export async function createSubscribeCard(
+  planId: number,
+  data: CreateSubscriptionRequest | CreateSubscriptionWithPendingRequest
+): Promise<SubscriptionResult> {
+  const response = await api.post<SubscriptionResult>(
+    `/api/payments/subscribe-card/${planId}`,
+    data
+  )
+  return response.data
+}
+
+export interface CreatePixMonthlyRequest {
+  name: string
+  email: string
+  password: string
+  tax: string
+  cellphone: string
+  plan_id: number
+}
+
+export interface CreatePixMonthlyWithPendingRequest {
+  pending_id: string
+  plan_id: number
+}
+
+export interface PixMonthlyResult {
+  qr_code: string
+  qr_code_url: string
+  expires_at: string
+}
+
+export async function createPixMonthly(
+  data: CreatePixMonthlyRequest | CreatePixMonthlyWithPendingRequest
+): Promise<PixMonthlyResult> {
+  const response = await api.post<PixMonthlyResult>('/api/payments/pix-monthly', data)
+  return response.data
+}

@@ -13,7 +13,9 @@ import {
   ArrowRightIcon,
   Loader2Icon,
   Eye,
-  EyeOff
+  EyeOff,
+  QrCode,
+  CreditCard
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -22,6 +24,16 @@ import { formatCPF } from '@/lib/format'
 import { PATHS } from '@/router/paths'
 import { signupService } from '@/services/signupService'
 import type { SignupCompleteResponse } from '@/services/signupService'
+import { cn } from '@/lib/utils'
+import { useAbacatePaySubscribeCard, useAbacatePayPixMonthly } from '@/hooks/useAbacatePay'
+import { PixPaymentStep } from '@/components/checkout/pix-payment-step'
+import type { PixPaymentResult } from '@/services/pixService'
+import type { Plan } from '@/models/plan'
+import { trackCheckout } from '@/lib/analytics'
+
+function formatCurrencyBRL(value: number): string {
+  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+}
 
 const infoStepSchema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -34,9 +46,12 @@ const infoStepSchema = z.object({
 
 type InfoStepInput = z.infer<typeof infoStepSchema>
 
+type PaymentMethodChoice = 'card' | 'pix'
+
 interface InfoPaymentStepProps {
   sessionId: string
   isPaidPlan?: boolean
+  plan?: Plan | null
   onSuccess: (response: SignupCompleteResponse) => void
   onBack: () => void
 }
@@ -44,14 +59,23 @@ interface InfoPaymentStepProps {
 export function InfoPaymentStep({
   sessionId,
   isPaidPlan,
+  plan,
   onSuccess,
   onBack
 }: InfoPaymentStepProps) {
   const { t } = useTranslation('auth')
+  const { t: tPlans } = useTranslation('plans')
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
+
+  const [pendingId, setPendingId] = useState<string | null>(null)
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodChoice>('card')
+  const [pixResult, setPixResult] = useState<PixPaymentResult | null>(null)
+
+  const subscribeCardMutation = useAbacatePaySubscribeCard()
+  const pixMonthlyMutation = useAbacatePayPixMonthly()
 
   const {
     register,
@@ -78,7 +102,12 @@ export function InfoPaymentStep({
         tax: data.tax
       })
       sessionStorage.setItem('pending_checkout_email', data.email.trim().toLowerCase())
-      onSuccess(result)
+
+      if (result.action === 'payment_required' && result.pending_id) {
+        setPendingId(result.pending_id)
+      } else {
+        onSuccess(result)
+      }
     } catch (err: unknown) {
       const resp = (
         err as {
@@ -88,8 +117,6 @@ export function InfoPaymentStep({
       if (resp?.error === 'email_ou_cpf_ja_cadastrado') {
         setError(t('signup.emailOrCpfExists', 'E-mail ou CPF já cadastrado.'))
       } else if (resp?.error === 'phone_already_registered') {
-        // Corrida TOCTOU: o número foi registrado entre o init e o complete.
-        // Caminho é login, não retry (espelha o handle no PhoneStep/wizard).
         toast.info(resp?.message || t('signup.phoneExists', 'Número já cadastrado. Faça login.'))
         navigate(`${PATHS.login}?from=${encodeURIComponent(PATHS.app.home)}`)
       } else if (resp?.error === 'phone_not_verified') {
@@ -102,6 +129,171 @@ export function InfoPaymentStep({
     } finally {
       setLoading(false)
     }
+  }
+
+  const handlePaymentError = (err: unknown, planId: number) => {
+    const resp = (err as { response?: { data?: { error?: string; message?: string } } })?.response
+      ?.data
+    if (resp?.error === 'email_already_registered' || resp?.error === 'tax_already_registered') {
+      toast.info(resp?.message || 'Conta já existe. Faça login.')
+      navigate(`${PATHS.login}?from=${encodeURIComponent(`/checkout/${planId}`)}`)
+      return
+    }
+    if (resp?.error === 'pix_auto_disabled') {
+      toast.error('PIX automático ainda não está disponível.')
+      return
+    }
+    toast.error(resp?.message || resp?.error || 'Erro ao processar pagamento')
+  }
+
+  const handlePayment = async () => {
+    if (!pendingId || !plan) return
+
+    if (paymentMethod === 'card') {
+      try {
+        const result = await subscribeCardMutation.mutateAsync({
+          planId: plan.id,
+          data: { pending_id: pendingId }
+        })
+        trackCheckout('checkout_abacatepay_redirect', {
+          plan_id: plan.id,
+          method: 'card'
+        })
+        window.location.href = result.checkout_url
+      } catch (err) {
+        handlePaymentError(err, plan.id)
+      }
+      return
+    }
+
+    // PIX mensal
+    try {
+      const result = await pixMonthlyMutation.mutateAsync({
+        pending_id: pendingId,
+        plan_id: plan.id
+      })
+      setPixResult({
+        qr_code: result.qr_code,
+        qr_code_url: result.qr_code_url,
+        expires_at: result.expires_at
+      })
+      trackCheckout('checkout_pix_qr_generated', {
+        plan_id: plan.id,
+        months: 1
+      })
+    } catch (err) {
+      handlePaymentError(err, plan.id)
+    }
+  }
+
+  if (pixResult && plan) {
+    const pendingEmail = sessionStorage.getItem('pending_checkout_email') || ''
+    return (
+      <PixPaymentStep
+        pixResult={pixResult}
+        planId={plan.id}
+        userEmail={pendingEmail}
+        onExpired={() => {
+          pixMonthlyMutation.reset()
+          setPixResult(null)
+        }}
+        redirectAfterConfirm={`${PATHS.paymentConfirmation}?plan=${encodeURIComponent(plan.name)}`}
+      />
+    )
+  }
+
+  if (pendingId && plan) {
+    const isProcessing = subscribeCardMutation.isPending || pixMonthlyMutation.isPending
+    const priceStr = formatCurrencyBRL(plan.price)
+
+    return (
+      <div className="flex w-full flex-col gap-5">
+        <p className="text-sm font-medium text-foreground">
+          {tPlans('checkout.chooseMethodLabel', 'Como você prefere pagar?')}
+        </p>
+
+        <div className="flex flex-col gap-3">
+          <button
+            type="button"
+            onClick={() => setPaymentMethod('card')}
+            disabled={isProcessing}
+            className={cn(
+              'flex flex-col items-start gap-1 rounded-md border px-4 py-3 text-left transition-all',
+              paymentMethod === 'card'
+                ? 'border-emerald-500 bg-emerald-500/5'
+                : 'border-border hover:border-muted-foreground/30'
+            )}
+          >
+            <div className="flex items-center gap-2 font-medium">
+              <CreditCard className="h-4 w-4" />
+              {tPlans('checkout.methodCardTitle', 'Assinar com cartão de crédito')}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {tPlans('checkout.methodCardDesc', {
+                price: priceStr,
+                defaultValue: `R$ ${priceStr}/mês · 7 dias grátis · renovação automática · cancela quando quiser`
+              })}
+            </p>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setPaymentMethod('pix')}
+            disabled={isProcessing}
+            className={cn(
+              'flex flex-col items-start gap-1 rounded-md border px-4 py-3 text-left transition-all',
+              paymentMethod === 'pix'
+                ? 'border-emerald-500 bg-emerald-500/5'
+                : 'border-border hover:border-muted-foreground/30'
+            )}
+          >
+            <div className="flex items-center gap-2 font-medium">
+              <QrCode className="h-4 w-4" />
+              {tPlans('checkout.methodPixTitle', 'Pagar com PIX')}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {tPlans('checkout.methodPixDesc', {
+                price: priceStr,
+                defaultValue: `R$ ${priceStr}/mês · renovação manual · avisamos antes de vencer`
+              })}
+            </p>
+          </button>
+        </div>
+
+        <Button
+          type="button"
+          variant="glow"
+          size="lg"
+          className="w-full font-semibold"
+          disabled={isProcessing}
+          onClick={handlePayment}
+        >
+          {isProcessing ? (
+            <Loader2Icon className="h-4 w-4 animate-spin" />
+          ) : (
+            <>
+              {paymentMethod === 'card' ? (
+                <CreditCard className="mr-2 h-4 w-4" />
+              ) : (
+                <QrCode className="mr-2 h-4 w-4" />
+              )}
+              {paymentMethod === 'card'
+                ? tPlans('checkout.goToCardCheckout', 'Ir para pagamento')
+                : tPlans('checkout.generateMonthlyQR', 'Gerar QR Code PIX')}
+            </>
+          )}
+        </Button>
+
+        <button
+          type="button"
+          onClick={() => setPendingId(null)}
+          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeftIcon className="mr-1 inline h-3 w-3" />
+          {t('signup.back', 'Voltar')}
+        </button>
+      </div>
+    )
   }
 
   return (

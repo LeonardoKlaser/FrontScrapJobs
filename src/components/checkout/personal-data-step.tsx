@@ -12,8 +12,6 @@ import {
   LockIcon,
   PhoneIcon,
   ArrowRight,
-  QrCode,
-  CreditCard,
   Loader2
 } from 'lucide-react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -22,9 +20,6 @@ import { PATHS } from '@/router/paths'
 import { trackCheckout } from '@/lib/analytics'
 import { formatPhoneBR } from '@/lib/format'
 import { useValidateCheckout } from '@/hooks/useValidateCheckout'
-import { cn } from '@/lib/utils'
-import { quarterlyDiscountPct } from '@/lib/pricing'
-import type { Plan } from '@/models/plan'
 
 export interface PersonalFormData {
   name: string
@@ -46,16 +41,13 @@ interface PersonalDataStepProps {
   isLoading: boolean
   planId: number
   isAuthenticated: boolean
+  // true quando currentUser.tax ja esta cadastrado no backend. Anonimo sempre
+  // manda false (precisa preencher). Autenticado grandfathered (pre-coleta de
+  // CPF) tambem manda false pra continuar vendo/validando o campo — sem isso
+  // ele fica travado com "CPF invalido" no submit sem UI de recuperacao.
+  // Optional com default false: default fail-safe eh pedir CPF, nao pular.
+  hasTaxOnFile?: boolean
   onNext: () => void
-  paymentMethod: 'pix' | 'card'
-  onPaymentMethodChange: (method: 'pix' | 'card') => void
-  pixMonths: 1 | 3
-  onPixMonthsChange: (months: 1 | 3) => void
-  plan: Plan
-}
-
-function formatCurrencyBRL(value: number): string {
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 }
 
 export function PersonalDataStep({
@@ -64,12 +56,8 @@ export function PersonalDataStep({
   isLoading,
   planId,
   isAuthenticated,
-  onNext,
-  paymentMethod,
-  onPaymentMethodChange,
-  pixMonths,
-  onPixMonthsChange,
-  plan
+  hasTaxOnFile = false,
+  onNext
 }: PersonalDataStepProps) {
   const { t } = useTranslation('plans')
   const { t: tAuth } = useTranslation('auth')
@@ -167,8 +155,11 @@ export function PersonalDataStep({
       newErrors.phone = tAuth('validation.phoneInvalid')
     }
 
-    // CPF obrigatorio apenas pro fluxo PIX (cartao coleta na step 3).
-    if (paymentMethod === 'pix') {
+    // CPF obrigatorio quando ainda nao ha tax cadastrado: fluxo anonimo
+    // sempre, e autenticado grandfathered (pre-coleta de CPF) tambem — tanto
+    // cartao (assinatura AbacatePay) quanto PIX mensal exigem tax no backend.
+    // Autenticado com tax ja cadastrado nem chega nesta step (auto-avanca).
+    if (!hasTaxOnFile) {
       const taxDigits = (formData.tax || '').replace(/\D/g, '')
       if (taxDigits.length !== 11) {
         newErrors.tax = t('paymentForm.cpfInvalid')
@@ -306,7 +297,10 @@ export function PersonalDataStep({
           {errors.phone && <p className="text-xs text-destructive">{errors.phone}</p>}
         </div>
 
-        {paymentMethod === 'pix' && (
+        {/* CPF renderiza pra fluxo anônimo (criando conta) e pra autenticado
+            grandfathered sem tax cadastrado (pré-coleta de CPF) — autenticado
+            com tax já cadastrado nem chega nesta step (auto-avança). */}
+        {!hasTaxOnFile && (
           <div className="space-y-2">
             <Label htmlFor="tax" className="text-muted-foreground">
               {t('paymentForm.cpfLabel')}
@@ -332,87 +326,6 @@ export function PersonalDataStep({
         )}
       </fieldset>
 
-      <div className="space-y-3 pt-4 border-t border-border/50">
-        <p className="text-sm font-medium text-foreground">{t('checkout.paymentMethod')}</p>
-
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <button
-            type="button"
-            onClick={() => onPaymentMethodChange('pix')}
-            disabled={isLoading}
-            className={cn(
-              'flex flex-col items-start gap-1.5 rounded-lg border p-4 text-left transition-all',
-              paymentMethod === 'pix'
-                ? 'border-emerald-500 bg-emerald-500/5'
-                : 'border-border hover:border-muted-foreground/30'
-            )}
-          >
-            <div className="flex items-center gap-2">
-              <QrCode className="h-4 w-4" />
-              <span className="text-sm font-medium">{t('checkout.pixOption')}</span>
-            </div>
-            <span className="text-xs text-muted-foreground">{t('checkout.pixDescription')}</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onPaymentMethodChange('card')}
-            disabled={isLoading}
-            className={cn(
-              'flex flex-col items-start gap-1.5 rounded-lg border p-4 text-left transition-all',
-              paymentMethod === 'card'
-                ? 'border-primary bg-primary/5'
-                : 'border-border hover:border-muted-foreground/30'
-            )}
-          >
-            <div className="flex items-center gap-2">
-              <CreditCard className="h-4 w-4" />
-              <span className="text-sm font-medium">{t('checkout.cardOption')}</span>
-            </div>
-            <span className="text-xs text-muted-foreground">{t('checkout.cardDescription')}</span>
-          </button>
-        </div>
-
-        {paymentMethod === 'pix' && plan.quarterly_price_cents != null && (
-          <div className="space-y-2 pl-1">
-            <p className="text-xs font-medium text-muted-foreground">
-              {t('checkout.pixPeriodLabel')}
-            </p>
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <button
-                type="button"
-                onClick={() => onPixMonthsChange(1)}
-                disabled={isLoading}
-                className={cn(
-                  'rounded-md border px-3 py-2 text-sm transition-all',
-                  pixMonths === 1
-                    ? 'border-emerald-500 bg-emerald-500/5 font-medium'
-                    : 'border-border hover:border-muted-foreground/30'
-                )}
-              >
-                {t('checkout.pixMonthly', { price: formatCurrencyBRL(plan.price) })}
-              </button>
-              <button
-                type="button"
-                onClick={() => onPixMonthsChange(3)}
-                disabled={isLoading}
-                className={cn(
-                  'rounded-md border px-3 py-2 text-sm transition-all',
-                  pixMonths === 3
-                    ? 'border-emerald-500 bg-emerald-500/5 font-medium'
-                    : 'border-border hover:border-muted-foreground/30'
-                )}
-              >
-                {t('checkout.pixQuarterly', {
-                  price: formatCurrencyBRL(plan.quarterly_price_cents / 100),
-                  discount: quarterlyDiscountPct(plan)
-                })}
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-
       <div className="space-y-4">
         <Button
           type="button"
@@ -424,11 +337,6 @@ export function PersonalDataStep({
         >
           {isLoading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
-          ) : paymentMethod === 'pix' ? (
-            <>
-              {t('checkout.generateQR')}
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </>
           ) : (
             <>
               {t('paymentForm.nextStep')}
