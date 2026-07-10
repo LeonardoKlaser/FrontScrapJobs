@@ -396,7 +396,7 @@ export default function RenewSubscription() {
               </div>
 
               {/* 2. Plan cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {sortedPlans.map((plan, index) => {
                   const isPopular = index === midIndex
                   const isSelected = plan.id === effectivePlanId
@@ -446,7 +446,9 @@ export default function RenewSubscription() {
                         <li className="flex items-center gap-2 text-sm">
                           <Check className="h-4 w-4 shrink-0 text-emerald-500" />
                           <span className="text-muted-foreground">
-                            {t('renew.sites', { count: plan.max_sites })}
+                            {plan.is_ultra
+                              ? t('renew.allSites')
+                              : t('renew.sites', { count: plan.max_sites })}
                           </span>
                         </li>
                         <li className="flex items-center gap-2 text-sm">
