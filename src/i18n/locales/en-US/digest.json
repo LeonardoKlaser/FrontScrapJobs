@@ -1,10 +1,11 @@
 {
   "heading": "Your jobs for today",
-  "subheading": "We found these jobs for you. Analyze your resume right here.",
+  "subheading": "We found these jobs for you. Request an analysis via WhatsApp.",
   "alreadyAnalyzed": "✓ already analyzed",
   "notAcceptingBadge": "⚠️ job no longer accepting applications",
   "viewJob": "View job",
   "analyze": "Analyze",
+  "analyzeViaWhatsapp": "Analyze via WhatsApp",
   "invalidTitle": "Invalid or expired link",
   "invalidDescription": "This jobs link is no longer valid. Go back to WhatsApp to get a new one.",
   "invalidCta": "Go to the site",

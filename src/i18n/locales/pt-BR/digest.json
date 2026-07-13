@@ -1,10 +1,11 @@
 {
   "heading": "Suas vagas de hoje",
-  "subheading": "Encontramos essas vagas pra você. Analise seu currículo direto por aqui.",
+  "subheading": "Encontramos essas vagas pra você. Peça uma análise pelo WhatsApp.",
   "alreadyAnalyzed": "✓ já analisei",
   "notAcceptingBadge": "⚠️ vaga não está mais aceitando",
   "viewJob": "Ver vaga",
   "analyze": "Analisar",
+  "analyzeViaWhatsapp": "Analisar pelo WhatsApp",
   "invalidTitle": "Link inválido ou expirou",
   "invalidDescription": "Esse link de vagas não é mais válido. Volte ao WhatsApp para receber um novo.",
   "invalidCta": "Ir para o site",

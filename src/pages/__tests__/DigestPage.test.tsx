@@ -11,23 +11,6 @@ vi.mock('@/hooks/useDigestSession', () => ({
   useDigestSession: vi.fn()
 }))
 
-// Mocka as hooks de analise pra que o AnalysisDialog renderize sem rede real.
-// Referencias estaveis (definidas fora) pra nao causar re-render em loop.
-const analyzeJobReturn = { mutate: vi.fn(), isError: false, error: null, reset: vi.fn() }
-const analysisHistoryReturn = { data: { has_analysis: false }, isLoading: false }
-const sendEmailReturn = { mutate: vi.fn(), isPending: false, isSuccess: false }
-const curriculumReturn = { data: [] }
-
-vi.mock('@/hooks/useAnalysis', () => ({
-  useAnalyzeJob: () => analyzeJobReturn,
-  useAnalysisHistory: () => analysisHistoryReturn,
-  useSendAnalysisEmail: () => sendEmailReturn
-}))
-
-vi.mock('@/hooks/useCurriculum', () => ({
-  useCurriculum: () => curriculumReturn
-}))
-
 function wrap(ui: ReactNode) {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
   return (
@@ -104,7 +87,7 @@ describe('DigestPage', () => {
     expect(badges).toHaveLength(1)
   })
 
-  it('disables Analisar and shows the "nao aceitando" badge when job_live is false', () => {
+  it('shows WhatsApp deep link only for live jobs and "nao aceitando" badge for dead ones', () => {
     vi.mocked(useDigestSession).mockReturnValue({
       data: sessionFixture,
       isLoading: false,
@@ -119,34 +102,22 @@ describe('DigestPage', () => {
     expect(liveCard).not.toBeNull()
     expect(deadCard).not.toBeNull()
 
-    const liveAnalisar = within(liveCard as HTMLElement).getByRole('button', { name: /analisar/i })
-    const deadAnalisar = within(deadCard as HTMLElement).getByRole('button', { name: /analisar/i })
+    const liveWaLink = within(liveCard as HTMLElement).getByRole('link', {
+      name: /analisar pelo whatsapp/i
+    })
+    expect(liveWaLink).toHaveAttribute(
+      'href',
+      expect.stringContaining('wa.me/5511999999999')
+    )
 
-    expect(liveAnalisar).toBeEnabled()
-    expect(deadAnalisar).toBeDisabled()
+    expect(
+      within(deadCard as HTMLElement).queryByRole('link', { name: /analisar pelo whatsapp/i })
+    ).toBeNull()
 
-    // badge de vaga morta so no card morto
     expect(
       within(deadCard as HTMLElement).getByText(/não está mais aceitando/i)
     ).toBeInTheDocument()
     expect(within(liveCard as HTMLElement).queryByText(/não está mais aceitando/i)).toBeNull()
-  })
-
-  it('opens the AnalysisDialog when clicking Analisar on a live job', async () => {
-    vi.mocked(useDigestSession).mockReturnValue({
-      data: sessionFixture,
-      isLoading: false,
-      isError: false,
-      error: null
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } as any)
-    render(wrap(<DigestPage />))
-
-    const liveCard = screen.getByText('Engenheiro de Software').closest('[data-slot="card"]')
-    const analisar = within(liveCard as HTMLElement).getByRole('button', { name: /analisar/i })
-    await userEvent.click(analisar)
-
-    expect(await screen.findByRole('dialog')).toBeInTheDocument()
   })
 
   it('renders the invalid-link screen on error', () => {

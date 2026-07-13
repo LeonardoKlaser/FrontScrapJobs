@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import {
   ExternalLink,
   MapPin,
-  Target,
   AlertTriangle,
   CheckCircle,
   MessageCircle
@@ -12,7 +11,6 @@ import {
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { AnalysisDialog } from '@/components/analysis/analysis-dialog'
 import { useDigestSession } from '@/hooks/useDigestSession'
 import type { DigestJobSnapshot } from '@/services/digestService'
 import { trackDigest } from '@/lib/analytics'
@@ -69,15 +67,20 @@ function RenewBanner({ onDismiss }: { onDismiss: () => void }) {
 
 function JobCard({
   job,
-  onAnalyze,
+  norteNumber,
   onViewJob
 }: {
   job: DigestJobSnapshot
-  onAnalyze: (jobId: number) => void
+  norteNumber: string | undefined
   onViewJob: (jobId: number | null) => void
 }) {
   const { t } = useTranslation('digest')
-  const canAnalyze = job.job_live && job.job_id !== null
+
+  const analyzeText =
+    `Analise meu currículo pra vaga de ${job.title} na ${job.company}`
+  const waLink = norteNumber
+    ? `https://wa.me/${norteNumber}?text=${encodeURIComponent(analyzeText)}`
+    : undefined
 
   return (
     <Card className="gap-3 px-4 py-4">
@@ -120,16 +123,21 @@ function JobCard({
             {t('viewJob')}
           </a>
         </Button>
-        <Button
-          variant="glow"
-          size="sm"
-          className="gap-1.5"
-          disabled={!canAnalyze}
-          onClick={() => job.job_id !== null && onAnalyze(job.job_id)}
-        >
-          <Target className="h-3.5 w-3.5" />
-          {t('analyze')}
-        </Button>
+        {waLink && job.job_live && (
+          <Button asChild variant="glow" size="sm" className="gap-1.5">
+            <a
+              href={waLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackDigest('analysis_via_whatsapp', { job_id: job.job_id })
+              }
+            >
+              <MessageCircle className="h-3.5 w-3.5" />
+              {t('analyzeViaWhatsapp')}
+            </a>
+          </Button>
+        )}
       </div>
     </Card>
   )
@@ -140,22 +148,15 @@ export default function DigestPage() {
   const { t } = useTranslation('digest')
   const { data, isLoading, isError } = useDigestSession(token)
 
-  const [selectedJobId, setSelectedJobId] = useState<number | null>(null)
   const [showRenew, setShowRenew] = useState(false)
   const openedRef = useRef(false)
 
-  // digest_opened uma unica vez, quando os dados carregam.
   useEffect(() => {
     if (data && !openedRef.current) {
       openedRef.current = true
       trackDigest('digest_opened', { count: data.jobs.length })
     }
   }, [data])
-
-  const handleAnalyze = (jobId: number) => {
-    trackDigest('analysis_started_from_digest', { job_id: jobId })
-    setSelectedJobId(jobId)
-  }
 
   const handleViewJob = (jobId: number | null) => {
     trackDigest('external_link_clicked', { job_id: jobId })
@@ -181,7 +182,7 @@ export default function DigestPage() {
               <JobCard
                 key={job.notification_id}
                 job={job}
-                onAnalyze={handleAnalyze}
+                norteNumber={data.norte_number}
                 onViewJob={handleViewJob}
               />
             ))}
@@ -204,20 +205,6 @@ export default function DigestPage() {
           )}
         </>
       )}
-
-      <AnalysisDialog
-        jobId={selectedJobId}
-        open={selectedJobId !== null}
-        onClose={() => setSelectedJobId(null)}
-        onSubscriptionExpired={() => {
-          setSelectedJobId(null)
-          setShowRenew(true)
-        }}
-        onAnalysisCompleted={() =>
-          trackDigest('analysis_completed_from_digest', { job_id: selectedJobId })
-        }
-        onOptimizeRequested={() => trackDigest('cv_optimize_requested', { job_id: selectedJobId })}
-      />
     </main>
   )
 }
