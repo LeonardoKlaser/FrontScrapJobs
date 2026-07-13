@@ -18,10 +18,11 @@ import { PersonalDataStep, type PersonalFormData } from '../personal-data-step'
 interface RenderOptions {
   formData?: Partial<PersonalFormData>
   isAuthenticated?: boolean
+  hasTaxOnFile?: boolean
 }
 
 function renderStep(opts: RenderOptions = {}) {
-  const { formData = {}, isAuthenticated = false } = opts
+  const { formData = {}, isAuthenticated = false, hasTaxOnFile = false } = opts
   const data: PersonalFormData = {
     name: 'Marcia',
     email: 'marcia@test.com',
@@ -41,6 +42,7 @@ function renderStep(opts: RenderOptions = {}) {
           isLoading={false}
           planId={2}
           isAuthenticated={isAuthenticated}
+          hasTaxOnFile={hasTaxOnFile}
           onNext={onNext}
         />
       </MemoryRouter>
@@ -120,7 +122,7 @@ describe('PersonalDataStep', () => {
     mockValidate.mockResolvedValue({ email_exists: true, tax_exists: false })
 
     const user = userEvent.setup()
-    const { onNext } = renderStep({ isAuthenticated: true })
+    const { onNext } = renderStep({ isAuthenticated: true, hasTaxOnFile: true })
 
     const emailInput = screen.getByLabelText(/e-?mail/i)
     emailInput.focus()

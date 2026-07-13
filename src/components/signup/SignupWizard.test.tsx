@@ -51,7 +51,8 @@ vi.mock('react-router', () => ({
 }))
 
 vi.mock('@tanstack/react-query', () => ({
-  useQueryClient: () => ({ invalidateQueries: vi.fn() })
+  useQueryClient: () => ({ invalidateQueries: vi.fn() }),
+  useQuery: () => ({ data: [], isLoading: false })
 }))
 
 const toastInfo = vi.fn()

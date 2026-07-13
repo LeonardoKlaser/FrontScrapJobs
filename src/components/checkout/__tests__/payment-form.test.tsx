@@ -68,6 +68,7 @@ describe('PaymentForm', () => {
       user_name: 'Marcia',
       email: 'marcia@test.com',
       cellphone: '11999999999',
+      tax: '39053344705',
       is_admin: false,
       plan: undefined
     }
