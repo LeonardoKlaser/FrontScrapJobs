@@ -25,6 +25,7 @@ import { useUser } from '@/hooks/useUser'
 import { useLatestJobs } from '@/hooks/useDashboard'
 import { useExtractPdf } from '@/hooks/usePdf'
 import { useCreateCurriculum, useCurriculum } from '@/hooks/useCurriculum'
+import { useCompleteWebOnboarding } from '@/hooks/useOnboarding'
 import { trackTrial } from '@/lib/analytics'
 import { safeHref } from '@/utils/url'
 import { toast } from 'sonner'
@@ -399,6 +400,7 @@ function Step3Jobs({ onDismiss }: Step3Props) {
   const jobs = jobsData?.jobs?.slice(0, 5) ?? []
   const totalCount = jobsData?.total_count ?? 0
   const fired = useRef(false)
+  const completeOnboarding = useCompleteWebOnboarding()
 
   // Funil de conversao precisa do evento "step 3 viewed" só quando o user
   // efetivamente VIU o conteudo (nao loading skeleton ou error state). Sem o
@@ -415,6 +417,16 @@ function Step3Jobs({ onDismiss }: Step3Props) {
     : totalCount > 0
       ? t('step3.found', { count: totalCount })
       : t('step3.noJobs')
+
+  const handleComplete = () => {
+    completeOnboarding.mutate(undefined, {
+      onError: (err) => {
+        console.error('onboarding completion persistence failed', err)
+        toast.error(t('step3.completionError'))
+      },
+      onSuccess: onDismiss
+    })
+  }
 
   return (
     <div className="space-y-5">
@@ -455,7 +467,13 @@ function Step3Jobs({ onDismiss }: Step3Props) {
       ) : null}
 
       <div className="flex justify-end">
-        <Button size="sm" variant="glow" onClick={onDismiss} className="gap-1.5">
+        <Button
+          size="sm"
+          variant="glow"
+          onClick={handleComplete}
+          disabled={completeOnboarding.isPending}
+          className="gap-1.5"
+        >
           {t('step3.goToDashboard')}
           <ArrowRight className="h-4 w-4" />
         </Button>

@@ -96,3 +96,7 @@ export async function subscribeOnboarding(
     throw err
   }
 }
+
+export async function completeWebOnboarding(): Promise<void> {
+  await api.post('/api/user/onboarding/complete')
+}

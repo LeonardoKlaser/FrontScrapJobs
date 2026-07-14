@@ -1,10 +1,12 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
+  completeWebOnboarding,
   getOnboardingPage,
   subscribeOnboarding,
   OnboardingExpiredError,
   type OnboardingSubscribeRequest
 } from '@/services/onboardingService'
+import type { User } from '@/models/user'
 
 export function useOnboardingPage(token: string | undefined) {
   return useQuery({
@@ -20,5 +22,25 @@ export function useOnboardingSubscribe(token: string | undefined) {
   return useMutation({
     mutationFn: (payload: OnboardingSubscribeRequest) =>
       subscribeOnboarding(token as string, payload)
+  })
+}
+
+export function useCompleteWebOnboarding() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: completeWebOnboarding,
+    retry: 2,
+    onSuccess: () => {
+      queryClient.setQueryData<User>(['user'], (current) =>
+        current
+          ? {
+              ...current,
+              onboarding_completed: true,
+              onboarding_completed_via: current.onboarding_completed_via ?? 'web'
+            }
+          : current
+      )
+    }
   })
 }

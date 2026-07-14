@@ -55,6 +55,7 @@ import { ActivationBanner } from '@/components/whatsapp/activation-banner'
 import { AnalysisDialog } from '@/components/analysis/analysis-dialog'
 import { PATHS } from '@/router/paths'
 import { safeHref } from '@/utils/url'
+import { shouldStartWebOnboarding } from '@/lib/onboarding'
 import { toast } from 'sonner'
 import { ApplicationStatusDropdown } from '@/components/common/application-status-dropdown'
 import { useCreateApplication, useUpdateApplication } from '@/hooks/useApplications'
@@ -318,16 +319,25 @@ export function Home() {
 
   // Latch the wizard the FIRST time both `user` and dashboard `data` have
   // resolved: if the user starts in the "needs onboarding" state, keep the
-  // wizard mounted until explicit dismiss (without this, monitoredUrls flips
-  // length>0 mid-flow at Step 2 and the wizard unmounts losing Step 3).
+  // wizard mounted until explicit dismiss or conclusão canônica (without this,
+  // monitoredUrls flips length>0 mid-flow at Step 2 and the wizard unmounts
+  // losing Step 3).
   //
   // Declared before the early returns below — otherwise hook count differs
   // between the loading render and the resolved render (React error #310).
   const [wizardLatched, setWizardLatched] = useState<boolean | null>(null)
   const [wizardDismissed, setWizardDismissed] = useState(false)
   useEffect(() => {
-    if (wizardLatched !== null) return
     if (user === undefined || data === undefined) return
+
+    // A conclusão vinda do servidor é autoritativa mesmo depois do latch. Isso
+    // cobre o usuário que termina no WhatsApp e volta para uma aba web já aberta.
+    if (user.onboarding_completed === true) {
+      if (wizardLatched !== false) setWizardLatched(false)
+      return
+    }
+
+    if (wizardLatched !== null) return
     try {
       if (window.localStorage.getItem('sj_onboarding_dismissed_v1') === '1') {
         setWizardLatched(false)
@@ -336,7 +346,9 @@ export function Home() {
     } catch {
       // Storage unavailable — proceed without persisted dismiss flag
     }
-    setWizardLatched((data.user_monitored_urls?.length ?? 0) === 0)
+    setWizardLatched(
+      shouldStartWebOnboarding(user.onboarding_completed, data.user_monitored_urls?.length ?? 0)
+    )
   }, [user, data, wizardLatched])
 
   const addCompanyButton = (

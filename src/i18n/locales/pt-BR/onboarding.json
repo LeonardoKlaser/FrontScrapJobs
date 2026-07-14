@@ -30,6 +30,7 @@
     "found_other": "Encontramos {{count}} vagas nas empresas que você escolheu!",
     "noJobs": "Ainda não temos vagas das suas empresas, mas já estamos monitorando!",
     "viewJob": "Ver",
-    "goToDashboard": "Ir para o dashboard"
+    "goToDashboard": "Ir para o dashboard",
+    "completionError": "Não conseguimos salvar a conclusão. Tente novamente."
   }
 }
