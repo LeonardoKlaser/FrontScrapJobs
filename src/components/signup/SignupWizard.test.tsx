@@ -5,7 +5,7 @@ import { SignupWizard } from './SignupWizard'
 import { signupService } from '@/services/signupService'
 
 // Steps stubbados: expõem botões que disparam os callbacks do wizard, isolando a
-// lógica de tratamento de erro/sucesso (C1, M5, A3) sem react-hook-form/auto-submit.
+// lógica de tratamento de erro (C1, A3) sem react-hook-form/auto-submit.
 vi.mock('./PhoneStep', () => ({
   PhoneStep: ({
     onSubmit,
@@ -35,9 +35,7 @@ vi.mock('./VerifyCodeStep', () => ({
   )
 }))
 vi.mock('./InfoPaymentStep', () => ({
-  InfoPaymentStep: ({ onSuccess }: { onSuccess: (r: unknown) => void }) => (
-    <button onClick={() => onSuccess({ login_required: true })}>do-complete</button>
-  )
+  InfoPaymentStep: ({ plan }: { plan: { id: number } }) => <p>payment-plan-{plan.id}</p>
 }))
 
 vi.mock('@/services/signupService', () => ({
@@ -45,18 +43,36 @@ vi.mock('@/services/signupService', () => ({
 }))
 
 const navigateMock = vi.fn()
+let searchParams = new URLSearchParams('plan=2')
 vi.mock('react-router', () => ({
   useNavigate: () => navigateMock,
-  useSearchParams: () => [new URLSearchParams(''), vi.fn()]
+  useSearchParams: () => [searchParams, vi.fn()]
 }))
 
-vi.mock('@tanstack/react-query', () => ({
-  useQueryClient: () => ({ invalidateQueries: vi.fn() }),
-  useQuery: () => ({ data: [], isLoading: false })
+vi.mock('@/hooks/usePlans', () => ({
+  usePlans: () => ({
+    data: [
+      {
+        id: 2,
+        name: 'Profissional',
+        price: 29.9,
+        is_trial: false,
+        features: [],
+        max_sites: 5,
+        max_ai_analyses: 10,
+        max_pdf_extractions: 10,
+        max_suggestion_applies: 10,
+        max_pdf_generations: 10
+      }
+    ],
+    isLoading: false
+  })
 }))
 
 const toastInfo = vi.fn()
-vi.mock('sonner', () => ({ toast: { info: (...a: unknown[]) => toastInfo(...a), error: vi.fn() } }))
+vi.mock('sonner', () => ({
+  toast: { info: (...a: unknown[]) => toastInfo(...a), error: vi.fn() }
+}))
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -72,6 +88,7 @@ const initMock = signupService.init as Mock
 const verifyMock = signupService.verifyPhone as Mock
 
 beforeEach(() => {
+  searchParams = new URLSearchParams('plan=2')
   navigateMock.mockReset()
   toastInfo.mockReset()
   initMock.mockReset()
@@ -82,7 +99,10 @@ afterEach(cleanup)
 describe('SignupWizard', () => {
   // C1: código errado chega como rejeição 400 — wizard deve mostrar attempts_remaining.
   it('mostra tentativas restantes quando o código é inválido (400 invalid_code)', async () => {
-    initMock.mockResolvedValue({ signup_session_id: 's1', phone_masked: '(**) *****-9999' })
+    initMock.mockResolvedValue({
+      signup_session_id: 's1',
+      phone_masked: '(**) *****-9999'
+    })
     verifyMock.mockRejectedValue({
       response: { data: { error: 'invalid_code', attempts_remaining: 3 } }
     })
@@ -96,25 +116,37 @@ describe('SignupWizard', () => {
     expect(err).toHaveTextContent(/tentativas restantes/)
   })
 
-  // M5: trial criado sem cookie (login_required) → redireciona pro login.
-  it('redireciona pro login quando complete retorna login_required', async () => {
+  it('carrega a etapa de pagamento apenas para o plano comercial selecionado', async () => {
     initMock.mockResolvedValue({ signup_session_id: 's1', phone_masked: 'x' })
     verifyMock.mockResolvedValue({ verified: true })
 
     render(<SignupWizard />)
     fireEvent.click(screen.getByText('do-phone'))
     fireEvent.click(await screen.findByText('do-verify'))
-    fireEvent.click(await screen.findByText('do-complete'))
 
-    await waitFor(() =>
-      expect(navigateMock).toHaveBeenCalledWith(expect.stringContaining('/login'))
-    )
+    expect(await screen.findByText('payment-plan-2')).toBeInTheDocument()
+    expect(initMock).toHaveBeenCalledWith(expect.objectContaining({ plan_id: 2 }))
+  })
+
+  it('bloqueia cadastro direto sem plano e direciona para a tabela de preços', () => {
+    searchParams = new URLSearchParams('')
+
+    render(<SignupWizard />)
+    expect(screen.queryByText('do-phone')).not.toBeInTheDocument()
+    fireEvent.click(screen.getByText('Ver planos'))
+
+    expect(navigateMock).toHaveBeenCalledWith('/#pricing')
   })
 
   // A3: número já cadastrado (409) no init → toast + redireciona pro login (não retry).
   it('redireciona pro login quando o telefone já está cadastrado (409)', async () => {
     initMock.mockRejectedValue({
-      response: { data: { error: 'phone_already_registered', message: 'Número já cadastrado.' } }
+      response: {
+        data: {
+          error: 'phone_already_registered',
+          message: 'Número já cadastrado.'
+        }
+      }
     })
 
     render(<SignupWizard />)

@@ -22,6 +22,7 @@ export type CheckoutEvent =
   | 'checkout_pix_qr_generated'
   | 'checkout_pix_create_failed'
   | 'checkout_abacatepay_redirect'
+  | 'checkout_plan_change_scheduled'
   | 'checkout_subscription_create_failed'
 
 export function trackCheckout(event: CheckoutEvent, payload: Record<string, unknown> = {}): void {
@@ -72,6 +73,7 @@ export type DigestEvent =
   | 'external_link_clicked'
   | 'cv_optimize_requested'
   | 'back_to_whatsapp_clicked'
+  | 'analysis_via_whatsapp'
 
 export function trackDigest(event: DigestEvent, payload: Record<string, unknown> = {}): void {
   if (typeof window === 'undefined') return

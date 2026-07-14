@@ -88,7 +88,7 @@ export function PersonalDataStep({
         setEmailExistsOnServer(data.email_exists)
       } catch (err) {
         if (axios.isCancel(err)) return
-        // Não bloqueia o usuário; o gate final é o createPayment.
+        // Não bloqueia o usuário; o gate final é a criação do checkout AbacatePay.
         // Limpa flag stale: se a request anterior tinha email_exists=true e
         // agora a request falha pra um email diferente, o aviso fica errado.
         if (inFlightEmailRef.current === email) {

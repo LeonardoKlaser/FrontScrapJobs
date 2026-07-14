@@ -59,6 +59,7 @@ function makeUser(overrides: Partial<User> = {}): User {
     email: 'test@x.com',
     is_admin: false,
     plan: undefined,
+    subscription_status: 'active',
     ...overrides
   }
 }
@@ -80,6 +81,7 @@ describe('TrialBanner', () => {
   it('returns null when user has paid (payment_method present)', () => {
     mockUseUser.data = makeUser({
       payment_method: 'credit_card',
+      subscription_status: 'active',
       is_trial_active: false,
       expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
     })
@@ -90,6 +92,8 @@ describe('TrialBanner', () => {
   it('shows countdown banner when trial is active', () => {
     const trialEnd = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString()
     mockUseUser.data = makeUser({
+      subscription_status: 'trialing',
+      payment_method: 'card',
       is_trial_active: true,
       trial_ends_at: trialEnd,
       expires_at: trialEnd
@@ -110,6 +114,8 @@ describe('TrialBanner', () => {
     try {
       const trialEnd = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
       mockUseUser.data = makeUser({
+        subscription_status: 'trialing',
+        payment_method: 'card',
         is_trial_active: true,
         trial_ends_at: trialEnd,
         expires_at: trialEnd
@@ -126,6 +132,8 @@ describe('TrialBanner', () => {
   it('shows paywall banner when trial expired (no payment_method, expires_at past)', () => {
     const past = new Date(Date.now() - 1000).toISOString()
     mockUseUser.data = makeUser({
+      subscription_status: 'trialing',
+      payment_method: 'card',
       is_trial_active: false,
       trial_ends_at: past,
       expires_at: past
@@ -139,6 +147,8 @@ describe('TrialBanner', () => {
   it('navigates to /app/renew when "Assinar agora" clicked', async () => {
     const past = new Date(Date.now() - 1000).toISOString()
     mockUseUser.data = makeUser({
+      subscription_status: 'trialing',
+      payment_method: 'card',
       is_trial_active: false,
       trial_ends_at: past,
       expires_at: past
@@ -154,6 +164,8 @@ describe('TrialBanner', () => {
   it('fires paywall_view trackTrial event once when paywall appears', () => {
     const past = new Date(Date.now() - 1000).toISOString()
     mockUseUser.data = makeUser({
+      subscription_status: 'trialing',
+      payment_method: 'card',
       is_trial_active: false,
       trial_ends_at: past,
       expires_at: past
@@ -166,6 +178,8 @@ describe('TrialBanner', () => {
   it('does NOT fire paywall_view a second time within same session (sessionStorage flag)', () => {
     const past = new Date(Date.now() - 1000).toISOString()
     mockUseUser.data = makeUser({
+      subscription_status: 'trialing',
+      payment_method: 'card',
       is_trial_active: false,
       trial_ends_at: past,
       expires_at: past
@@ -185,6 +199,8 @@ describe('TrialBanner', () => {
     // futuro mas trial_ends_at NULL. Antes do fix, banner amber renderizava
     // erradamente "Seu trial acabou".
     mockUseUser.data = makeUser({
+      subscription_status: 'trialing',
+      payment_method: 'card',
       is_trial_active: false,
       trial_ends_at: undefined,
       expires_at: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString()
@@ -224,6 +240,8 @@ describe('TrialBanner', () => {
   it('does not fire paywall_view when only trial countdown is showing', () => {
     const trialEnd = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString()
     mockUseUser.data = makeUser({
+      subscription_status: 'trialing',
+      payment_method: 'card',
       is_trial_active: true,
       trial_ends_at: trialEnd,
       expires_at: trialEnd
@@ -237,6 +255,8 @@ describe('TrialBanner', () => {
     mockPathname = '/app/renew'
     const past = new Date(Date.now() - 1000).toISOString()
     mockUseUser.data = makeUser({
+      subscription_status: 'trialing',
+      payment_method: 'card',
       is_trial_active: false,
       trial_ends_at: past,
       expires_at: past

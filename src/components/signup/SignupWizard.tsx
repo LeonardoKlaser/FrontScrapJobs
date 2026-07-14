@@ -1,8 +1,6 @@
 import { useState, useCallback } from 'react'
 import { useSearchParams, useNavigate } from 'react-router'
-import { useQueryClient } from '@tanstack/react-query'
 import { signupService } from '@/services/signupService'
-import type { SignupCompleteResponse } from '@/services/signupService'
 import { PhoneStep } from './PhoneStep'
 import { VerifyCodeStep } from './VerifyCodeStep'
 import { InfoPaymentStep } from './InfoPaymentStep'
@@ -29,11 +27,11 @@ export function SignupWizard() {
   const { t } = useTranslation('auth')
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
   const planId = Number(searchParams.get('plan')) || 0
 
-  const { data: plans } = usePlans()
+  const { data: plans, isLoading: plansLoading } = usePlans()
   const plan = plans?.find((p) => p.id === planId) ?? null
+  const isCommercialPlan = (planId === 2 || planId === 6) && plan != null && !plan.is_trial
 
   const [step, setStep] = useState<Step>('phone')
   const [sessionId, setSessionId] = useState<string | null>(null)
@@ -50,7 +48,7 @@ export function SignupWizard() {
         const result = await signupService.init({
           name,
           phone,
-          plan_id: planId || undefined
+          plan_id: planId
         })
         setSessionId(result.signup_session_id)
         setPhoneMasked(result.phone_masked)
@@ -125,7 +123,7 @@ export function SignupWizard() {
       const result = await signupService.init({
         name: lastPhone.name,
         phone: lastPhone.phone,
-        plan_id: planId || undefined
+        plan_id: planId
       })
       setSessionId(result.signup_session_id)
       setPhoneMasked(result.phone_masked)
@@ -144,21 +142,33 @@ export function SignupWizard() {
     }
   }, [lastPhone, planId, navigate, t])
 
-  const handleCompleteSuccess = useCallback(
-    (response: SignupCompleteResponse) => {
-      if (response.login_required) {
-        toast.info(t('signup.accountCreatedLogin', 'Conta criada! Faça login para continuar.'))
-        navigate(`${PATHS.login}?from=${encodeURIComponent(PATHS.app.home)}`)
-      } else {
-        queryClient.invalidateQueries({ queryKey: ['user'] })
-        navigate(PATHS.app.home)
-      }
-    },
-    [navigate, queryClient, t]
-  )
-
   const stepNumber = step === 'phone' ? 1 : step === 'verify' ? 2 : 3
   const totalSteps = 3
+
+  if (plansLoading) {
+    return (
+      <p className="text-sm text-muted-foreground">
+        {t('signup.loadingPlans', 'Carregando planos...')}
+      </p>
+    )
+  }
+
+  if (!isCommercialPlan || !plan) {
+    return (
+      <div className="rounded-lg border border-border bg-muted/30 p-5 text-center">
+        <p className="text-sm text-muted-foreground">
+          {t('signup.choosePlanFirst', 'Escolha um plano antes de criar sua conta.')}
+        </p>
+        <button
+          type="button"
+          className="mt-3 font-medium text-primary hover:underline"
+          onClick={() => navigate(`${PATHS.landing}#pricing`)}
+        >
+          {t('signup.viewPlans', 'Ver planos')}
+        </button>
+      </div>
+    )
+  }
 
   return (
     <div className="w-full">
@@ -201,9 +211,7 @@ export function SignupWizard() {
       {step === 'info' && sessionId && (
         <InfoPaymentStep
           sessionId={sessionId}
-          isPaidPlan={planId > 0}
           plan={plan}
-          onSuccess={handleCompleteSuccess}
           onBack={() => {
             setStep('verify')
             setError(null)

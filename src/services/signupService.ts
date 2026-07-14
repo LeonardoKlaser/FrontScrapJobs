@@ -4,7 +4,7 @@ import type { Plan } from '@/models/plan'
 export interface SignupInitRequest {
   name: string
   phone: string
-  plan_id?: number
+  plan_id: number
 }
 
 export interface SignupInitResponse {
@@ -32,16 +32,9 @@ export interface SignupCompleteRequest {
 }
 
 export interface SignupCompleteResponse {
-  id?: number
-  user_name?: string
-  email?: string
-  action?: 'payment_required'
-  pending_id?: string
-  plan?: Plan
-  // Trial path: o backend emite o JWT no cookie. Se a assinatura do token falhar,
-  // retorna 201 com login_required=true (sem cookie) — o caller precisa mandar o
-  // user pro login em vez de cair no /app e bater no interceptor 401.
-  login_required?: boolean
+  action: 'payment_required'
+  pending_id: string
+  plan: Plan
 }
 
 export const signupService = {

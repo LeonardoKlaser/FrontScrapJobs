@@ -61,8 +61,10 @@ export function PlanSection({ user }: PlanSectionProps) {
     }
   }
 
+  const isRecurringCard = user?.payment_method === 'card' || user?.payment_method === 'credit_card'
   const hasActiveSubscription =
-    user?.expires_at && new Date(user.expires_at) > new Date() && !user?.subscription_canceled
+    isRecurringCard &&
+    (user?.subscription_status === 'active' || user?.subscription_status === 'trialing')
 
   const currentUsage = user?.monitored_sites_count ?? 0
   const maxUsage = user?.plan?.max_sites ?? 0

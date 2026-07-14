@@ -1,13 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
-import {
-  ExternalLink,
-  MapPin,
-  AlertTriangle,
-  CheckCircle,
-  MessageCircle
-} from 'lucide-react'
+import { ExternalLink, MapPin, AlertTriangle, CheckCircle, MessageCircle } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -76,8 +70,7 @@ function JobCard({
 }) {
   const { t } = useTranslation('digest')
 
-  const analyzeText =
-    `Analise meu currículo pra vaga de ${job.title} na ${job.company}`
+  const analyzeText = `Analise meu currículo pra vaga de ${job.title} na ${job.company}`
   const waLink = norteNumber
     ? `https://wa.me/${norteNumber}?text=${encodeURIComponent(analyzeText)}`
     : undefined
@@ -129,9 +122,7 @@ function JobCard({
               href={waLink}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() =>
-                trackDigest('analysis_via_whatsapp', { job_id: job.job_id })
-              }
+              onClick={() => trackDigest('analysis_via_whatsapp', { job_id: job.job_id })}
             >
               <MessageCircle className="h-3.5 w-3.5" />
               {t('analyzeViaWhatsapp')}

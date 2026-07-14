@@ -105,10 +105,7 @@ describe('DigestPage', () => {
     const liveWaLink = within(liveCard as HTMLElement).getByRole('link', {
       name: /analisar pelo whatsapp/i
     })
-    expect(liveWaLink).toHaveAttribute(
-      'href',
-      expect.stringContaining('wa.me/5511999999999')
-    )
+    expect(liveWaLink).toHaveAttribute('href', expect.stringContaining('wa.me/5511999999999'))
 
     expect(
       within(deadCard as HTMLElement).queryByRole('link', { name: /analisar pelo whatsapp/i })

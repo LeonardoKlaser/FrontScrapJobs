@@ -24,7 +24,7 @@
       "infra": "Infra & QA"
     },
     "cta": "Começar grátis",
-    "microcopy": "7 dias grátis · sem cartão de crédito",
+    "microcopy": "7 dias de trial no cartão · PIX libera 1 mês",
     "loginPrompt": "Já tem conta?",
     "loginLink": "Fazer login"
   },
@@ -107,17 +107,6 @@
     "perMonth": "/mês",
     "savingsAnchor": "Economize até {{hours}} horas de busca maçante por mês",
     "guarantee": "Cancele a qualquer momento. Sem fidelidade, sem letras miúdas.",
-    "trialBadge": "Comece Aqui",
-    "trialTitle": "Trial",
-    "trialSubtitle": "7 dias grátis",
-    "trialCta": "Experimentar grátis",
-    "trialFeatures": {
-      "sites": "1 site monitorado",
-      "analyses": "3 análises de IA",
-      "extractions": "3 currículos extraídos",
-      "suggestions": "3 sugestões aplicadas",
-      "pdfs": "3 PDFs gerados"
-    },
     "paidCta": "Assinar agora",
     "paidSubtext": "Acesso imediato a todas as funcionalidades."
   },

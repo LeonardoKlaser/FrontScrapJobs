@@ -1,22 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router'
+import { useQueryClient } from '@tanstack/react-query'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Spinner } from '@/components/ui/spinner'
-import { AlertCircle, ArrowLeft, CreditCard, QrCode } from 'lucide-react'
+import { ArrowLeft, CreditCard, QrCode } from 'lucide-react'
 import { cn } from '@/lib/utils'
-
-function formatCurrencyBRL(value: number): string {
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-}
 import type { Plan } from '@/models/plan'
-import {
-  createPayment,
-  createPaymentWithPending,
-  checkPaymentStatus,
-  tokenizeCard,
-  TokenizationError
-} from '@/services/paymentService'
-import type { CardData } from '@/services/paymentService'
 import type { PixPaymentResult } from '@/services/pixService'
 import axios from 'axios'
 import { toast } from 'sonner'
@@ -25,33 +14,26 @@ import { PATHS } from '@/router/paths'
 import { CheckoutStepper } from './checkout-stepper'
 import { PersonalDataStep } from './personal-data-step'
 import type { PersonalFormData } from './personal-data-step'
-import { CardPaymentStep } from './card-payment-step'
-import type { AddressData, DocumentData } from './card-payment-step'
-import { AddressStep } from './address-step'
 import { PixPaymentStep } from './pix-payment-step'
-import { trackCheckout, trackTrial } from '@/lib/analytics'
+import { trackCheckout } from '@/lib/analytics'
 import { useSaveLead } from '@/hooks/useSaveLead'
 import { useUser } from '@/hooks/useUser'
-import { usePixAnonymous } from '@/hooks/usePixAnonymous'
 import { useAbacatePaySubscribeCard, useAbacatePayPixMonthly } from '@/hooks/useAbacatePay'
 
-// Feature flag pro fluxo legado Pagar.me (tokenizacao de cartao + endereco).
-// Desligado na Task 11b — cartao agora eh checkout hospedado AbacatePay. Uma
-// constante (em vez do literal `false` inline) evita o lint
-// no-constant-binary-expression nos blocos JSX desativados abaixo.
-const LEGACY_PAGARME_CARD_FLOW_ENABLED = false
+function formatCurrencyBRL(value: number): string {
+  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+}
 
 interface PaymentFormProps {
   plan: Plan
-  isLoading: boolean
-  setIsLoading: (loading: boolean) => void
   pendingId?: string | null
 }
 
-export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: PaymentFormProps) {
+export function PaymentForm({ plan, pendingId }: PaymentFormProps) {
   const { t } = useTranslation('plans')
   const { t: tCommon } = useTranslation('common')
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   // user data eh undefined em fluxo anonimo (landing → /checkout); presente quando
   // user vem de /app/renew apos trial expirar. from_trial separa metricas de
   // conversao do trial vs checkout direto.
@@ -63,18 +45,16 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
   // critico da migração AbacatePay).
   const hasTax = !!currentUser?.tax
 
-  const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(
+  const [currentStep, setCurrentStep] = useState<1 | 2>(
     pendingId || (isAuthenticated && hasTax) ? 2 : 1
   )
 
   const pendingEmail = pendingId ? sessionStorage.getItem('pending_checkout_email') || '' : ''
-  const [cardError, setCardError] = useState('')
-  const [pollingStatus, setPollingStatus] = useState<'idle' | 'polling' | 'timeout'>('idle')
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'pix'>('card')
   const [pixResult, setPixResult] = useState<PixPaymentResult | null>(null)
-  const pixMutation = usePixAnonymous()
   const subscribeCardMutation = useAbacatePaySubscribeCard()
   const pixMonthlyMutation = useAbacatePayPixMonthly()
+  const isPaymentPending = subscribeCardMutation.isPending || pixMonthlyMutation.isPending
   const [formData, setFormData] = useState<PersonalFormData>(() => ({
     name: currentUser?.user_name ?? '',
     email: currentUser?.email ?? '',
@@ -84,32 +64,10 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
     phone: currentUser?.cellphone ?? '',
     tax: ''
   }))
-  const [addressData, setAddressData] = useState<AddressData>({
-    zipCode: '',
-    street: '',
-    number: '',
-    neighborhood: '',
-    city: '',
-    state: ''
-  })
-
   const { mutate: saveLead } = useSaveLead()
   // Dedup: evita inflar attempts no banco quando user clica Next/Back/Next.
   // Re-fire só se algum campo do payload mudou desde o último envio.
   const lastLeadKeyRef = useRef<string>('')
-
-  const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null)
-  const pollingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  // Guarda o email do polling pra que o botão "verificar novamente" do estado de
-  // timeout consiga retomar a verificação sem o user reenviar o pagamento.
-  const pollingEmailRef = useRef<string>('')
-
-  useEffect(() => {
-    return () => {
-      if (pollingRef.current) clearInterval(pollingRef.current)
-      if (pollingTimeoutRef.current) clearTimeout(pollingTimeoutRef.current)
-    }
-  }, [])
 
   useEffect(() => {
     if (!currentUser) return
@@ -139,48 +97,6 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
     }
   }, [currentUser])
 
-  const startPolling = (email: string) => {
-    pollingEmailRef.current = email
-    setCardError('')
-    setPollingStatus('polling')
-    let consecutiveErrors = 0
-
-    pollingRef.current = setInterval(async () => {
-      try {
-        const result = await checkPaymentStatus(email)
-        consecutiveErrors = 0
-
-        if (result.status === 'confirmed') {
-          if (pollingRef.current) clearInterval(pollingRef.current)
-          if (pollingTimeoutRef.current) clearTimeout(pollingTimeoutRef.current)
-          setIsLoading(false)
-          trackCheckout('checkout_payment_confirmed', { plan_id: plan.id })
-          const fromTrial = !!currentUser?.trial_ends_at && !currentUser?.payment_method
-          trackTrial('payment_complete', { plan_id: plan.id, from_trial: fromTrial })
-          navigate(`${PATHS.paymentConfirmation}?plan=${encodeURIComponent(plan.name)}`)
-        }
-        // not_found e processing: continua polling até o timeout de 2 min
-        // (webhook pode estar atrasado ou Redis pode ter evicted a key temporariamente)
-      } catch (err) {
-        consecutiveErrors++
-        console.error('payment status check failed', err)
-        if (consecutiveErrors >= 3) {
-          if (pollingRef.current) clearInterval(pollingRef.current)
-          if (pollingTimeoutRef.current) clearTimeout(pollingTimeoutRef.current)
-          setPollingStatus('timeout')
-          setCardError(tCommon('status.error'))
-          setIsLoading(false)
-        }
-      }
-    }, 3000)
-
-    pollingTimeoutRef.current = setTimeout(() => {
-      if (pollingRef.current) clearInterval(pollingRef.current)
-      setPollingStatus('timeout')
-      setIsLoading(false)
-    }, 120000)
-  }
-
   // Trata erros das mutations AbacatePay (subscribe-card e pix-monthly) —
   // ambas retornam o mesmo shape de erro {error, message}.
   const handlePaymentError = (err: unknown, method: 'card' | 'pix') => {
@@ -208,6 +124,10 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
       toast.error(errorMessage || 'PIX automático ainda não está disponível.')
       return
     }
+    if (errorCode === 'active_card_subscription') {
+      toast.info(errorMessage || 'Você já possui uma assinatura de cartão ativa.')
+      return
+    }
     toast.error(errorMessage || tCommon('status.error'))
   }
 
@@ -231,6 +151,16 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
           planId: plan.id,
           data
         })
+        if (result.plan_change_scheduled) {
+          trackCheckout('checkout_plan_change_scheduled', { plan_id: plan.id })
+          toast.success('Troca de plano agendada para o próximo ciclo de cobrança.')
+          await queryClient.invalidateQueries({ queryKey: ['user'] })
+          navigate(PATHS.app.account)
+          return
+        }
+        if (!result.checkout_url) {
+          throw new Error('Checkout não retornado pelo provedor de pagamento.')
+        }
         trackCheckout('checkout_abacatepay_redirect', {
           plan_id: plan.id,
           method: 'card'
@@ -268,136 +198,6 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
     }
   }
 
-  const handleCardSubmit = async (cardData: CardData, docData: DocumentData) => {
-    setIsLoading(true)
-    setCardError('')
-
-    try {
-      if (pendingId) {
-        const token = await tokenizeCard(cardData)
-        const result = await createPaymentWithPending(plan.id, {
-          pending_id: pendingId,
-          card_token: token.id,
-          zip_code: addressData.zipCode.replace(/\D/g, ''),
-          street: addressData.street,
-          number: addressData.number,
-          neighborhood: addressData.neighborhood,
-          city: addressData.city,
-          state: addressData.state
-        })
-
-        if (result.status === 'processing') {
-          startPolling(pendingEmail)
-        } else {
-          setCardError(tCommon('status.error'))
-          setIsLoading(false)
-        }
-        return
-      }
-
-      const token = await tokenizeCard(cardData)
-
-      const result = await createPayment(plan.id, {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        tax: docData.cpfCnpj.replace(/\D/g, ''),
-        // Telefone agora vem do step 1 (formData), não mais do step 2.
-        cellphone: formData.phone.replace(/\D/g, ''),
-        card_token: token.id,
-        zip_code: addressData.zipCode.replace(/\D/g, ''),
-        street: addressData.street,
-        number: addressData.number,
-        neighborhood: addressData.neighborhood,
-        city: addressData.city,
-        state: addressData.state
-      })
-
-      if (result.status === 'processing') {
-        startPolling(formData.email)
-      } else {
-        setCardError(tCommon('status.error'))
-        setIsLoading(false)
-      }
-    } catch (err) {
-      let message: string
-      if (err instanceof TokenizationError) {
-        message = err.message
-      } else if (axios.isAxiosError(err) && err.response) {
-        const errorCode = err.response.data?.error
-        const backendMessage = err.response.data?.message
-        switch (errorCode) {
-          case 'email_already_registered':
-          case 'tax_already_registered':
-            message = backendMessage ?? 'Faça login para renovar sua assinatura'
-            break
-          case 'email_mismatch':
-            message = backendMessage ?? 'O email não bate com a conta logada'
-            break
-          case 'session_expired':
-            // Redirect to login preserving the from path
-            navigate(`/login?from=${encodeURIComponent(`/checkout/${plan.id}`)}`)
-            return
-          default:
-            message = backendMessage ?? errorCode ?? tCommon('status.error')
-        }
-      } else if (err instanceof Error) {
-        message = err.message
-      } else {
-        message = tCommon('status.error')
-      }
-      setCardError(message)
-      setIsLoading(false)
-    }
-  }
-
-  if (pollingStatus === 'polling') {
-    return (
-      <Card className="w-full border-border/50">
-        <CardContent className="flex flex-col items-center justify-center py-16 space-y-4">
-          <Spinner className="h-10 w-10 text-primary" />
-          <h3 className="text-lg font-semibold">{t('paymentForm.processingPayment')}</h3>
-          <p className="text-sm text-muted-foreground text-center max-w-md">
-            {t('paymentForm.processingDescription')}
-          </p>
-        </CardContent>
-      </Card>
-    )
-  }
-
-  if (pollingStatus === 'timeout') {
-    return (
-      <Card className="w-full border-border/50">
-        <CardContent className="flex flex-col items-center justify-center py-16 space-y-4">
-          <AlertCircle className="h-10 w-10 text-yellow-500" />
-          <h3 className="text-lg font-semibold">{t('paymentForm.processingPayment')}</h3>
-          <p className="text-sm text-muted-foreground text-center max-w-md">
-            {t('paymentForm.paymentTimeout')}
-          </p>
-          {pollingEmailRef.current && (
-            <button
-              type="button"
-              onClick={() => startPolling(pollingEmailRef.current)}
-              className={
-                'mt-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold' +
-                ' text-primary-foreground transition-colors hover:bg-primary/90'
-              }
-            >
-              {t('paymentForm.timeoutCheckAgain')}
-            </button>
-          )}
-          <button
-            type="button"
-            onClick={() => navigate(isAuthenticated ? PATHS.app.home : PATHS.landing)}
-            className={'text-sm font-medium text-primary underline-offset-4 hover:underline'}
-          >
-            {t('paymentForm.timeoutGoHome')}
-          </button>
-        </CardContent>
-      </Card>
-    )
-  }
-
   if (userLoading) {
     return (
       <Card className="w-full border-border/50">
@@ -409,7 +209,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
   }
 
   const handleBack = () => {
-    setCurrentStep((s) => Math.max(1, s - 1) as 1 | 2 | 3)
+    setCurrentStep((s) => Math.max(1, s - 1) as 1 | 2)
   }
 
   return (
@@ -422,7 +222,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
             <button
               type="button"
               onClick={handleBack}
-              disabled={isLoading}
+              disabled={isPaymentPending}
               aria-label={t('paymentForm.prevStep')}
               className={
                 'mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full' +
@@ -459,11 +259,9 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
           <PixPaymentStep
             pixResult={pixResult}
             planId={plan.id}
-            // Lowercased pra bater com a chave reg_completed gravada pelo
-            // webhook (CreatePixPaymentAnonymous normaliza no backend).
+            // O backend normaliza a chave de confirmação por e-mail.
             userEmail={pendingId ? pendingEmail : formData.email.trim().toLowerCase()}
             onExpired={() => {
-              pixMutation.reset()
               pixMonthlyMutation.reset()
               setPixResult(null)
             }}
@@ -479,7 +277,7 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
           <PersonalDataStep
             formData={formData}
             setFormData={setFormData}
-            isLoading={isLoading || pixMutation.isPending}
+            isLoading={isPaymentPending}
             planId={plan.id}
             isAuthenticated={isAuthenticated}
             hasTaxOnFile={hasTax}
@@ -537,7 +335,9 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
                   {t('checkout.methodCardTitle')}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {t('checkout.methodCardDesc', { price: formatCurrencyBRL(plan.price) })}
+                  {t('checkout.methodCardDesc', {
+                    price: formatCurrencyBRL(plan.price)
+                  })}
                 </p>
               </button>
 
@@ -557,7 +357,9 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
                   {t('checkout.methodPixTitle')}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {t('checkout.methodPixDesc', { price: formatCurrencyBRL(plan.price) })}
+                  {t('checkout.methodPixDesc', {
+                    price: formatCurrencyBRL(plan.price)
+                  })}
                 </p>
               </button>
             </div>
@@ -589,36 +391,6 @@ export function PaymentForm({ plan, isLoading, setIsLoading, pendingId }: Paymen
               )}
             </button>
           </div>
-        )}
-
-        {/* Legado Pagar.me (tokenizacao de cartao + endereco) — desativado.
-            Cartao agora eh checkout hospedado AbacatePay (redirect acima),
-            sem coleta de endereco no frontend. Mantido desligado (nao
-            removido) pra nao perder handleCardSubmit/estado associado —
-            ver Task 11b. */}
-        {LEGACY_PAGARME_CARD_FLOW_ENABLED && (
-          <AddressStep
-            addressData={addressData}
-            setAddressData={setAddressData}
-            isLoading={isLoading}
-            onNext={() => {
-              trackCheckout('checkout_step3_view')
-              setCurrentStep(3)
-            }}
-          />
-        )}
-
-        {LEGACY_PAGARME_CARD_FLOW_ENABLED && (
-          <CardPaymentStep
-            isLoading={isLoading}
-            error={cardError}
-            userName={formData.name}
-            userEmail={formData.email}
-            userTax={currentUser?.tax ?? ''}
-            isAuthenticated={isAuthenticated}
-            planId={plan.id}
-            onSubmit={handleCardSubmit}
-          />
         )}
       </CardContent>
     </Card>

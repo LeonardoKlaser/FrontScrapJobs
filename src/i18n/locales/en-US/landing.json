@@ -24,7 +24,7 @@
       "infra": "Infra & QA"
     },
     "cta": "Start free",
-    "microcopy": "7-day free trial · no credit card",
+    "microcopy": "7-day card trial · PIX unlocks 1 month",
     "loginPrompt": "Already have an account?",
     "loginLink": "Log in"
   },
@@ -107,17 +107,6 @@
     "perMonth": "/mo",
     "savingsAnchor": "Save up to {{hours}} hours of tedious job searching per month",
     "guarantee": "Cancel anytime. No lock-in, no fine print.",
-    "trialBadge": "Start Here",
-    "trialTitle": "Trial",
-    "trialSubtitle": "7 days free",
-    "trialCta": "Try for free",
-    "trialFeatures": {
-      "sites": "1 monitored site",
-      "analyses": "3 AI analyses",
-      "extractions": "3 CV extractions",
-      "suggestions": "3 suggestions applied",
-      "pdfs": "3 PDFs generated"
-    },
     "paidCta": "Subscribe now",
     "paidSubtext": "Immediate access to all features."
   },

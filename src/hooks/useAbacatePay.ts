@@ -8,6 +8,7 @@ import {
   type CreateSubscriptionWithPendingRequest,
   type SubscriptionResult,
   type CreatePixMonthlyRequest,
+  type CreatePixMonthlyAuthenticatedRequest,
   type CreatePixMonthlyWithPendingRequest,
   type PixMonthlyResult
 } from '@/services/paymentService'
@@ -43,7 +44,9 @@ export function useAbacatePayPixMonthly() {
   return useMutation<
     PixMonthlyResult,
     AxiosError<AbacatePayErrorBody>,
-    CreatePixMonthlyRequest | CreatePixMonthlyWithPendingRequest
+    | CreatePixMonthlyRequest
+    | CreatePixMonthlyAuthenticatedRequest
+    | CreatePixMonthlyWithPendingRequest
   >({
     mutationKey: ['abacatepay-pix-monthly'],
     mutationFn: (req) => createPixMonthly(req)

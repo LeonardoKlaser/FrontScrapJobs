@@ -34,8 +34,8 @@ export default function Login() {
 
       <p className="mt-6 text-center text-sm text-zinc-500">
         {t('login.noAccount', 'Primeira missão por aqui?')}{' '}
-        <Link to={PATHS.signup} className="font-medium text-primary hover:underline">
-          {t('login.startTrial', 'Comece grátis por 7 dias')}
+        <Link to={`${PATHS.landing}#pricing`} className="font-medium text-primary hover:underline">
+          {t('login.startTrial', 'Ver planos')}
         </Link>
       </p>
     </AuthLayout>

@@ -1,7 +1,6 @@
 import { PATHS } from '@/router/paths'
 import { authService } from '@/services/authService'
-import type { LoginInput, SignupInput } from '@/validators/auth'
-import { trackTrial } from '@/lib/analytics'
+import type { LoginInput } from '@/validators/auth'
 import { useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { useState, useCallback } from 'react'
@@ -68,51 +67,6 @@ export function useAuth() {
     [queryClient, navigate, searchParams]
   )
 
-  const signup = useCallback(
-    async (data: SignupInput): Promise<boolean> => {
-      setLoading(true)
-      setError(null)
-      try {
-        await authService.signup(data)
-        // clear() wipa cache do user anterior (caso alguém crie conta nova com
-        // outro user logado no mesmo browser — cenário comum: dev/QA testando).
-        // authLoader vai fetchQuery(['user']) na navegação pra /app, então o
-        // /api/me da conta nova ja entra sem race com o cache antigo.
-        queryClient.clear()
-        trackTrial('signup_complete')
-        navigate(PATHS.app.home)
-        return true
-      } catch (e: unknown) {
-        let reason = 'unknown'
-        if (axios.isAxiosError(e)) {
-          if (e.response?.status === 409) {
-            // Mensagem genérica (anti-enumeration): backend retorna o mesmo
-            // texto pra email OU CPF duplicado, então repassamos sem inferir
-            // qual campo colidiu. Fallback caso o body venha sem `error`.
-            setError(e.response?.data?.error ?? 'Email ou CPF já cadastrado')
-            reason = 'duplicate_email'
-          } else {
-            setError(e.response?.data?.error ?? 'Erro ao criar conta')
-            reason = `http_${e.response?.status ?? 'network'}`
-          }
-        } else if (e instanceof Error) {
-          setError(e.message)
-          reason = 'js_error'
-        } else {
-          setError('Erro inesperado')
-        }
-        // signup_failed permite medir taxa de conversao do form (denominador
-        // pra signup_complete). Sem isso, queda em signup_complete fica
-        // ambígua: API quebrada ou form com problema?
-        trackTrial('signup_failed', { reason })
-        return false
-      } finally {
-        setLoading(false)
-      }
-    },
-    [queryClient, navigate]
-  )
-
   const logout = useCallback(async () => {
     try {
       await authService.logout()
@@ -130,5 +84,5 @@ export function useAuth() {
     }
   }, [queryClient, navigate])
 
-  return { loading, error, login, signup, logout }
+  return { loading, error, login, logout }
 }

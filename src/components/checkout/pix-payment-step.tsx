@@ -44,7 +44,7 @@ const POLLING_STUCK_THRESHOLD_MS = 30000
 
 function computeInitialSeconds(expiresAt: string | undefined): number {
   if (!expiresAt) return FALLBACK_EXPIRY_SECONDS
-  // Pagar.me Orders V5 retorna expires_at em ISO 8601 UTC. Se string vier sem
+  // O gateway retorna expires_at em ISO 8601 UTC. Se a string vier sem
   // sufixo de timezone (drift do gateway), `new Date()` interpreta como local
   // — em BR (UTC-3) um QR de 30min apareceria como 3h30. Normaliza pra UTC.
   const normalized = /[zZ]$|[+-]\d{2}:?\d{2}$/.test(expiresAt) ? expiresAt : expiresAt + 'Z'

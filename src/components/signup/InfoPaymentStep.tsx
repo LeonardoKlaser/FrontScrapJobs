@@ -23,7 +23,6 @@ import { toast } from 'sonner'
 import { formatCPF } from '@/lib/format'
 import { PATHS } from '@/router/paths'
 import { signupService } from '@/services/signupService'
-import type { SignupCompleteResponse } from '@/services/signupService'
 import { cn } from '@/lib/utils'
 import { useAbacatePaySubscribeCard, useAbacatePayPixMonthly } from '@/hooks/useAbacatePay'
 import { PixPaymentStep } from '@/components/checkout/pix-payment-step'
@@ -50,19 +49,11 @@ type PaymentMethodChoice = 'card' | 'pix'
 
 interface InfoPaymentStepProps {
   sessionId: string
-  isPaidPlan?: boolean
-  plan?: Plan | null
-  onSuccess: (response: SignupCompleteResponse) => void
+  plan: Plan
   onBack: () => void
 }
 
-export function InfoPaymentStep({
-  sessionId,
-  isPaidPlan,
-  plan,
-  onSuccess,
-  onBack
-}: InfoPaymentStepProps) {
+export function InfoPaymentStep({ sessionId, plan, onBack }: InfoPaymentStepProps) {
   const { t } = useTranslation('auth')
   const { t: tPlans } = useTranslation('plans')
   const navigate = useNavigate()
@@ -103,11 +94,10 @@ export function InfoPaymentStep({
       })
       sessionStorage.setItem('pending_checkout_email', data.email.trim().toLowerCase())
 
-      if (result.action === 'payment_required' && result.pending_id) {
-        setPendingId(result.pending_id)
-      } else {
-        onSuccess(result)
+      if (result.action !== 'payment_required' || !result.pending_id) {
+        throw new Error('Resposta inválida ao preparar pagamento')
       }
+      setPendingId(result.pending_id)
     } catch (err: unknown) {
       const resp = (
         err as {
@@ -159,6 +149,9 @@ export function InfoPaymentStep({
           plan_id: plan.id,
           method: 'card'
         })
+        if (!result.checkout_url) {
+          throw new Error('Checkout de cartão não retornou URL')
+        }
         window.location.href = result.checkout_url
       } catch (err) {
         handlePaymentError(err, plan.id)
@@ -401,9 +394,7 @@ export function InfoPaymentStep({
             <Loader2Icon className="h-4 w-4 animate-spin" />
           ) : (
             <>
-              {isPaidPlan
-                ? t('signup.goToPayment', 'Ir para pagamento')
-                : t('signup.startTrial', 'Comecar trial gratis')}
+              {t('signup.goToPayment', 'Ir para pagamento')}
               <ArrowRightIcon className="ml-1 h-4 w-4" />
             </>
           )}

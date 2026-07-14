@@ -9,18 +9,16 @@ import { AlertCircle, AlertTriangle, Check, CreditCard, QrCode, Zap } from 'luci
 import { Spinner } from '@/components/ui/spinner'
 import { usePlans } from '@/hooks/usePlans'
 import { useUser } from '@/hooks/useUser'
-import { usePixPayment } from '@/hooks/usePixPayment'
+import { useAbacatePayPixMonthly } from '@/hooks/useAbacatePay'
 import { PATHS } from '@/router/paths'
 import { LoadingSection } from '@/components/common/loading-section'
 import { AppPageHeader } from '@/components/common/app-page-header'
 import { PixPaymentStep } from '@/components/checkout/pix-payment-step'
 import type { PixPaymentResult } from '@/services/pixService'
-import type { Plan } from '@/models/plan'
 import { isValidCPF } from '@/lib/validators/cpf'
 import { trackTrial } from '@/lib/analytics'
 import axios from 'axios'
 
-type Period = 'monthly' | 'quarterly'
 type PaymentMethod = 'pix' | 'card'
 
 // localStorage key + shape pra recovery de tab close mid-PIX. Sem persistencia,
@@ -29,13 +27,12 @@ type PaymentMethod = 'pix' | 'card'
 const PIX_STORAGE_KEY = 'sj_pix_in_flight'
 // Bumpar quando shape do PixSnapshot mudar — snapshots de versao diferente
 // sao descartados em vez de hidratar parcial e quebrar a tela em silencio.
-const PIX_SNAPSHOT_VERSION = 1
+const PIX_SNAPSHOT_VERSION = 2
 
 interface PixSnapshot {
   version: number
   result: PixPaymentResult
   planId: number
-  period: Period
   email: string
 }
 
@@ -67,10 +64,9 @@ export default function RenewSubscription() {
   const navigate = useNavigate()
   const { data: plans, isLoading: plansLoading, refetch, isFetching } = usePlans()
   const { data: user } = useUser()
-  const pixMutation = usePixPayment()
+  const pixMutation = useAbacatePayPixMonthly()
 
   const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null)
-  const [period, setPeriod] = useState<Period>('monthly')
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('pix')
   const [pixResult, setPixResult] = useState<PixPaymentResult | null>(null)
   const [error, setError] = useState('')
@@ -115,7 +111,6 @@ export default function RenewSubscription() {
         return
       }
       setSelectedPlanId(stored.planId)
-      setPeriod(stored.period)
       setPixResult(stored.result)
     } catch (err) {
       console.warn('pix recovery failed', err)
@@ -134,7 +129,7 @@ export default function RenewSubscription() {
     selectedPlanId ?? (sortedPlans.length > 0 ? sortedPlans[midIndex]?.id : null)
   const selectedPlan = sortedPlans.find((p) => p.id === effectivePlanId) ?? null
 
-  // Persiste o snapshot quando QR e gerado, casado com (selectedPlan, period, email).
+  // Persiste o snapshot quando QR é gerado, casado com plano e e-mail.
   useEffect(() => {
     if (!pixResult || !selectedPlan || !user?.email) return
     try {
@@ -142,57 +137,19 @@ export default function RenewSubscription() {
         version: PIX_SNAPSHOT_VERSION,
         result: pixResult,
         planId: selectedPlan.id,
-        period,
         email: user.email
       }
       window.localStorage.setItem(PIX_STORAGE_KEY, JSON.stringify(snapshot))
     } catch (err) {
       console.warn('pix persistence failed', err)
     }
-  }, [pixResult, selectedPlan, period, user?.email])
-
-  // Card path nao aceita period — backend so suporta months={1,3} via PIX.
-  // Forca monthly quando user troca pra card pra evitar mostrar preco trimestral
-  // mas cobrar mensal (display vs cobranca divergem). Toggle de quarterly fica
-  // desabilitado nesse modo com tooltip explicativo.
-  useEffect(() => {
-    if (paymentMethod === 'card' && period === 'quarterly') {
-      setPeriod('monthly')
-    }
-  }, [paymentMethod, period])
+  }, [pixResult, selectedPlan, user?.email])
 
   const formatCurrency = (value: number) =>
     new Intl.NumberFormat(i18n.language, {
       style: 'currency',
       currency: 'BRL'
     }).format(value)
-
-  const getQuarterlyCents = (plan: Plan): number | null => {
-    return plan.quarterly_price_cents ?? null
-  }
-
-  const getDisplayPrice = (plan: Plan): number => {
-    if (period === 'quarterly') {
-      const cents = getQuarterlyCents(plan)
-      if (cents !== null) return cents / 100
-      return plan.price * 3
-    }
-    return plan.price
-  }
-
-  const getMonthlyEquivalent = (plan: Plan): string => {
-    const cents = getQuarterlyCents(plan)
-    if (cents === null) return ''
-    const monthlyCents = Math.round(cents / 3)
-    return (monthlyCents / 100).toFixed(2).replace('.', ',')
-  }
-
-  const getDiscountPercent = (plan: Plan): number => {
-    const cents = getQuarterlyCents(plan)
-    if (cents === null || plan.price === 0) return 0
-    const monthlyTotalCents = Math.round(plan.price * 3 * 100)
-    return Math.round(((monthlyTotalCents - cents) / monthlyTotalCents) * 100)
-  }
 
   const validateForm = (): boolean => {
     const errors: Record<string, string> = {}
@@ -222,9 +179,7 @@ export default function RenewSubscription() {
       if (err.response?.status === 401) {
         return t('renew.errors.sessionExpired')
       }
-      // Backend manda mensagem amigavel em PT no campo `error` — usa quando vier
-      // pra evitar mostrar generico quando o backend ja sabe o motivo (ex: "CPF
-      // inválido", "Período inválido. Use 1 ou 3 meses.").
+      // Backend manda mensagem amigável em PT no campo `error`.
       const backendMsg = err.response?.data?.error
       if (typeof backendMsg === 'string' && backendMsg.trim().length > 0) {
         return backendMsg
@@ -247,8 +202,7 @@ export default function RenewSubscription() {
         email: user.email,
         tax: cpf.replace(/\D/g, ''),
         cellphone: phone.replace(/\D/g, ''),
-        plan_id: selectedPlan.id,
-        months: period === 'quarterly' ? 3 : 1
+        plan_id: selectedPlan.id
       },
       {
         onSuccess: (result) => {
@@ -315,7 +269,6 @@ export default function RenewSubscription() {
 
   const loading = pixMutation.isPending
   const submitDisabled = loading || !selectedPlan || !user?.email
-  const quarterlyDisabled = paymentMethod === 'card'
 
   return (
     <>
@@ -349,58 +302,11 @@ export default function RenewSubscription() {
             </div>
           ) : (
             <div className="space-y-8">
-              {/* 1. Period toggle */}
-              <div className="flex flex-col items-center gap-2">
-                <div className="inline-flex rounded-lg border border-border bg-muted/50 p-1">
-                  <button
-                    type="button"
-                    onClick={() => setPeriod('monthly')}
-                    className={
-                      'rounded-md px-4 py-2 text-sm font-medium transition-all' +
-                      (period === 'monthly'
-                        ? ' bg-card text-foreground shadow-sm'
-                        : ' text-muted-foreground hover:text-foreground')
-                    }
-                  >
-                    {t('renew.period.monthly')}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => !quarterlyDisabled && setPeriod('quarterly')}
-                    disabled={quarterlyDisabled}
-                    title={quarterlyDisabled ? t('renew.period.quarterlyPixOnly') : undefined}
-                    className={
-                      'rounded-md px-4 py-2 text-sm font-medium transition-all flex items-center gap-2' +
-                      (quarterlyDisabled
-                        ? ' text-muted-foreground/40 cursor-not-allowed'
-                        : period === 'quarterly'
-                          ? ' bg-card text-foreground shadow-sm'
-                          : ' text-muted-foreground hover:text-foreground')
-                    }
-                  >
-                    {t('renew.period.quarterly')}
-                    {selectedPlan && getDiscountPercent(selectedPlan) > 0 && (
-                      <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs font-bold text-emerald-500">
-                        {t('renew.period.discount', {
-                          percent: getDiscountPercent(selectedPlan)
-                        })}
-                      </span>
-                    )}
-                  </button>
-                </div>
-                {quarterlyDisabled && (
-                  <p className="text-xs text-muted-foreground">
-                    {t('renew.period.quarterlyPixOnly')}
-                  </p>
-                )}
-              </div>
-
-              {/* 2. Plan cards */}
+              {/* 1. Plan cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {sortedPlans.map((plan, index) => {
                   const isPopular = index === midIndex
                   const isSelected = plan.id === effectivePlanId
-                  const displayPrice = getDisplayPrice(plan)
                   return (
                     <button
                       key={plan.id}
@@ -429,17 +335,12 @@ export default function RenewSubscription() {
                         <h3 className="text-xl font-bold text-foreground">{plan.name}</h3>
                         <div className="mt-3 flex items-baseline justify-center gap-1">
                           <span className="font-display text-3xl font-bold leading-none text-foreground">
-                            {formatCurrency(displayPrice)}
+                            {formatCurrency(plan.price)}
                           </span>
                           <span className="text-sm text-muted-foreground">
-                            {period === 'quarterly' ? '/tri' : t('renew.perMonth')}
+                            {t('renew.perMonth')}
                           </span>
                         </div>
-                        {period === 'quarterly' && (
-                          <p className="mt-1 text-xs text-muted-foreground">
-                            {t('renew.perMonthAbbrev', { price: getMonthlyEquivalent(plan) })}
-                          </p>
-                        )}
                       </div>
 
                       <ul className="space-y-2 flex-1">
@@ -456,7 +357,9 @@ export default function RenewSubscription() {
                           <span className="text-muted-foreground">
                             {plan.max_ai_analyses === 0
                               ? t('renew.unlimitedAnalyses')
-                              : t('renew.analyses', { count: plan.max_ai_analyses })}
+                              : t('renew.analyses', {
+                                  count: plan.max_ai_analyses
+                                })}
                           </span>
                         </li>
                       </ul>
@@ -479,7 +382,7 @@ export default function RenewSubscription() {
                 })}
               </div>
 
-              {/* 3. Payment method toggle */}
+              {/* 2. Payment method toggle */}
               <div className="space-y-3">
                 <h3 className="text-sm font-semibold text-foreground">
                   {t('renew.paymentMethod.title')}
@@ -540,7 +443,7 @@ export default function RenewSubscription() {
                 </div>
               </div>
 
-              {/* 4. Conditional form / action */}
+              {/* 3. Conditional form / action */}
               {paymentMethod === 'pix' ? (
                 <div className="space-y-4 rounded-xl border border-border bg-card p-6">
                   {error && (

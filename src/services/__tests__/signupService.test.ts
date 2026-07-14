@@ -33,7 +33,7 @@ describe('signupService', () => {
     expect(result.verified).toBe(true)
   })
 
-  it('complete returns payment_required for paid plans', async () => {
+  it('complete returns payment_required for a commercial plan', async () => {
     mock.onPost('/signup/complete').reply(200, {
       action: 'payment_required',
       pending_id: 'pend-456',
@@ -42,29 +42,12 @@ describe('signupService', () => {
 
     const result = await signupService.complete({
       signup_session_id: 'sess-123',
-      email: 'test@test.com',
+      email: 'billing-fixture@example.test',
       password: '12345678',
       tax: '39053344705'
     })
     expect(result.action).toBe('payment_required')
     expect(result.pending_id).toBe('pend-456')
     expect(result.plan?.id).toBe(2)
-  })
-
-  it('complete returns user data for trial', async () => {
-    mock.onPost('/signup/complete').reply(201, {
-      id: 7,
-      user_name: 'Maria',
-      email: 'test@test.com'
-    })
-
-    const result = await signupService.complete({
-      signup_session_id: 'sess-123',
-      email: 'test@test.com',
-      password: '12345678',
-      tax: '39053344705'
-    })
-    expect(result.id).toBe(7)
-    expect(result.action).toBeUndefined()
   })
 })

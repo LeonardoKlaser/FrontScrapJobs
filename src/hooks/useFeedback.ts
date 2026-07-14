@@ -9,7 +9,7 @@ export function useFeedbackModal() {
 
   const shouldShow = useMemo(() => {
     if (!user) return false
-    if (!user.is_trial_active) return false
+    if (user.subscription_status !== 'trialing' || !user.is_trial_active) return false
     if (user.feedback_given) return false
     if ((user.feedback_modal_shown_count ?? 0) >= 2) return false
 

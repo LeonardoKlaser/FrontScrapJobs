@@ -16,32 +16,6 @@ export const authService = {
     return data
   },
 
-  signup: async (data: {
-    name: string
-    email: string
-    phone: string
-    tax: string
-    password: string
-  }): Promise<{
-    id: number
-    user_name: string
-    email: string
-  }> => {
-    // Backend SignUp espera `user_name` (não `name`) e CPF/celular só com
-    // dígitos. O backend já normaliza defensivamente, mas mandamos limpo
-    // pra evitar surpresa em logs e validações intermediárias. Opt-in de
-    // WhatsApp NÃO entra no signup (T9.x): é feito sempre na página de conta
-    // via o fluxo Request → Verify do WhatsAppAccountController.
-    const { data: response } = await api.post('/signup', {
-      user_name: data.name,
-      email: data.email,
-      phone: data.phone.replace(/\D/g, ''),
-      tax: data.tax.replace(/\D/g, ''),
-      password: data.password
-    })
-    return response
-  },
-
   getMe: async (): Promise<User> => {
     const { data } = await api.get('/api/me')
     return data
@@ -67,12 +41,17 @@ export const authService = {
   },
 
   resetPassword: async (token: string, newPassword: string) => {
-    const { data } = await api.post('/api/reset-password', { token, new_password: newPassword })
+    const { data } = await api.post('/api/reset-password', {
+      token,
+      new_password: newPassword
+    })
     return data
   },
 
   deleteAccount: async (password: string) => {
-    const { data } = await api.delete('/api/user/account', { data: { password } })
+    const { data } = await api.delete('/api/user/account', {
+      data: { password }
+    })
     return data
   }
 }

@@ -1,14 +1,16 @@
 import { vi } from 'vitest'
 import { api } from '@/services/api'
-import { createPayment, checkPaymentStatus, cancelSubscription } from '@/services/paymentService'
-import type { CreatePaymentRequest } from '@/services/paymentService'
+import {
+  cancelSubscription,
+  checkPaymentStatus,
+  createPixMonthly,
+  createSubscribeCard
+} from '@/services/paymentService'
 
 vi.mock('@/services/api', () => ({
   api: {
     get: vi.fn(),
     post: vi.fn(),
-    put: vi.fn(),
-    patch: vi.fn(),
     delete: vi.fn()
   }
 }))
@@ -18,99 +20,77 @@ describe('paymentService', () => {
     vi.clearAllMocks()
   })
 
-  describe('createPayment', () => {
-    const planId = 2
-    const paymentData: CreatePaymentRequest = {
-      name: 'João Silva',
-      email: 'joao@email.com',
-      password: 'senha1234',
-      tax: '123.456.789-00',
-      cellphone: '11999999999',
-      card_token: 'tok_test_xyz',
-      zip_code: '01001000',
-      street: 'Rua das Flores',
-      number: '100',
-      neighborhood: 'Centro',
-      city: 'São Paulo',
-      state: 'SP'
-    }
-
-    it('sends POST /api/payments/create/{planId} with correct data', async () => {
-      const mockResponse = { status: 'processing' }
-      vi.mocked(api.post).mockResolvedValue({ data: mockResponse })
-
-      const result = await createPayment(planId, paymentData)
-
-      expect(api.post).toHaveBeenCalledWith(`/api/payments/create/${planId}`, paymentData)
-      expect(result).toEqual(mockResponse)
+  it('creates an AbacatePay card checkout from a pending registration', async () => {
+    vi.mocked(api.post).mockResolvedValue({
+      data: { checkout_url: 'https://example.test/checkout/card' }
     })
 
-    it('returns processing status from response', async () => {
-      vi.mocked(api.post).mockResolvedValue({ data: { status: 'processing' } })
-
-      const result = await createPayment(planId, paymentData)
-
-      expect(result.status).toBe('processing')
+    const result = await createSubscribeCard(2, {
+      pending_id: 'pending-fixture'
     })
 
-    it('propagates errors from api.post', async () => {
-      vi.mocked(api.post).mockRejectedValue(new Error('Network error'))
-
-      await expect(createPayment(planId, paymentData)).rejects.toThrow('Network error')
+    expect(api.post).toHaveBeenCalledWith('/api/payments/subscribe-card/2', {
+      pending_id: 'pending-fixture'
     })
+    expect(result.checkout_url).toBe('https://example.test/checkout/card')
   })
 
-  describe('checkPaymentStatus', () => {
-    it('sends GET /api/payments/status with email param', async () => {
-      vi.mocked(api.get).mockResolvedValue({ data: { status: 'confirmed' } })
-
-      const result = await checkPaymentStatus('joao@email.com')
-
-      expect(api.get).toHaveBeenCalledWith('/api/payments/status', {
-        params: { email: 'joao@email.com' }
-      })
-      expect(result.status).toBe('confirmed')
+  it('returns a scheduled plan change without requiring another checkout', async () => {
+    vi.mocked(api.post).mockResolvedValue({
+      data: { plan_change_scheduled: true }
     })
 
-    it('returns processing status', async () => {
-      vi.mocked(api.get).mockResolvedValue({ data: { status: 'processing' } })
-
-      const result = await checkPaymentStatus('joao@email.com')
-
-      expect(result.status).toBe('processing')
+    const result = await createSubscribeCard(6, {
+      name: 'Billing Fixture',
+      email: 'billing-fixture@example.test',
+      password: 'fixture-password',
+      tax: '00000000000',
+      cellphone: '11900000000'
     })
 
-    it('returns not_found status', async () => {
-      vi.mocked(api.get).mockResolvedValue({ data: { status: 'not_found' } })
-
-      const result = await checkPaymentStatus('nobody@email.com')
-
-      expect(result.status).toBe('not_found')
-    })
-
-    it('propagates errors from api.get', async () => {
-      vi.mocked(api.get).mockRejectedValue(new Error('Network error'))
-
-      await expect(checkPaymentStatus('joao@email.com')).rejects.toThrow('Network error')
-    })
+    expect(result).toEqual({ plan_change_scheduled: true })
   })
 
-  describe('cancelSubscription', () => {
-    it('sends DELETE /api/subscription/cancel', async () => {
-      vi.mocked(api.delete).mockResolvedValue({
-        data: { message: 'Assinatura cancelada com sucesso' }
-      })
-
-      const result = await cancelSubscription()
-
-      expect(api.delete).toHaveBeenCalledWith('/api/subscription/cancel')
-      expect(result.message).toBe('Assinatura cancelada com sucesso')
+  it('creates a one-month transparent PIX charge', async () => {
+    vi.mocked(api.post).mockResolvedValue({
+      data: {
+        qr_code: 'fixture-pix-code',
+        qr_code_url: 'https://example.test/fixture-pix.png',
+        expires_at: '2026-07-13T15:00:00Z'
+      }
     })
 
-    it('propagates errors from api.delete', async () => {
-      vi.mocked(api.delete).mockRejectedValue(new Error('Unauthorized'))
-
-      await expect(cancelSubscription()).rejects.toThrow('Unauthorized')
+    const result = await createPixMonthly({
+      pending_id: 'pending-fixture',
+      plan_id: 2
     })
+
+    expect(api.post).toHaveBeenCalledWith('/api/payments/pix-monthly', {
+      pending_id: 'pending-fixture',
+      plan_id: 2
+    })
+    expect(result.qr_code).toBe('fixture-pix-code')
+  })
+
+  it('checks payment status using the pending checkout email', async () => {
+    vi.mocked(api.get).mockResolvedValue({ data: { status: 'confirmed' } })
+
+    const result = await checkPaymentStatus('billing-fixture@example.test')
+
+    expect(api.get).toHaveBeenCalledWith('/api/payments/status', {
+      params: { email: 'billing-fixture@example.test' }
+    })
+    expect(result.status).toBe('confirmed')
+  })
+
+  it('cancels the current recurring subscription through the backend', async () => {
+    vi.mocked(api.delete).mockResolvedValue({
+      data: { message: 'Assinatura cancelada com sucesso' }
+    })
+
+    const result = await cancelSubscription()
+
+    expect(api.delete).toHaveBeenCalledWith('/api/subscription/cancel')
+    expect(result.message).toBe('Assinatura cancelada com sucesso')
   })
 })

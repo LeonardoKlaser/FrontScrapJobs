@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { ReactElement } from 'react'
@@ -14,8 +15,28 @@ const mockUseUser = {
   isLoading: false
 }
 
+const subscribeCardMutation = {
+  mutateAsync: vi.fn(),
+  isPending: false
+}
+const pixMonthlyMutation = {
+  mutateAsync: vi.fn(),
+  isPending: false,
+  reset: vi.fn()
+}
+const toastSuccess = vi.fn()
+
 vi.mock('@/hooks/useUser', () => ({
   useUser: () => mockUseUser
+}))
+
+vi.mock('@/hooks/useAbacatePay', () => ({
+  useAbacatePaySubscribeCard: () => subscribeCardMutation,
+  useAbacatePayPixMonthly: () => pixMonthlyMutation
+}))
+
+vi.mock('sonner', () => ({
+  toast: { success: (...args: unknown[]) => toastSuccess(...args), info: vi.fn(), error: vi.fn() }
 }))
 
 // useSaveLead aciona um POST — mock pra evitar que o saveLead tente network
@@ -73,7 +94,7 @@ describe('PaymentForm', () => {
       plan: undefined
     }
 
-    renderWithProviders(<PaymentForm plan={mockPlan} isLoading={false} setIsLoading={vi.fn()} />)
+    renderWithProviders(<PaymentForm plan={mockPlan} />)
 
     // Step 1 ('Seus Dados') NAO renderiza — campos exclusivos dele (nome
     // completo, senha) nao aparecem. Evita depender do label de step 2 (CEP),
@@ -85,7 +106,7 @@ describe('PaymentForm', () => {
   it('starts at step 1 when user is anonymous', () => {
     mockUseUser.data = undefined
 
-    renderWithProviders(<PaymentForm plan={mockPlan} isLoading={false} setIsLoading={vi.fn()} />)
+    renderWithProviders(<PaymentForm plan={mockPlan} />)
 
     expect(screen.getByLabelText(/nome completo/i)).toBeInTheDocument()
   })
@@ -94,9 +115,36 @@ describe('PaymentForm', () => {
     mockUseUser.data = undefined
     mockUseUser.isLoading = true
 
-    renderWithProviders(<PaymentForm plan={mockPlan} isLoading={false} setIsLoading={vi.fn()} />)
+    renderWithProviders(<PaymentForm plan={mockPlan} />)
 
     expect(screen.queryByLabelText(/nome completo/i)).not.toBeInTheDocument()
     expect(screen.queryByLabelText(/^senha/i)).not.toBeInTheDocument()
+  })
+
+  it('handles a scheduled card plan change without opening a second checkout', async () => {
+    mockUseUser.data = {
+      user_name: 'Billing Fixture',
+      email: 'billing-fixture@example.test',
+      cellphone: '11900000000',
+      tax: '00000000000',
+      is_admin: false,
+      plan: { ...mockPlan, id: 6, name: 'Ultra' },
+      payment_method: 'card',
+      subscription_status: 'active'
+    }
+    subscribeCardMutation.mutateAsync.mockResolvedValue({ plan_change_scheduled: true })
+
+    renderWithProviders(<PaymentForm plan={mockPlan} />)
+    await userEvent.click(screen.getByRole('button', { name: /ir para pagamento/i }))
+
+    await waitFor(() => {
+      expect(subscribeCardMutation.mutateAsync).toHaveBeenCalledWith({
+        planId: 2,
+        data: expect.objectContaining({ email: 'billing-fixture@example.test' })
+      })
+      expect(toastSuccess).toHaveBeenCalledWith(
+        'Troca de plano agendada para o próximo ciclo de cobrança.'
+      )
+    })
   })
 })
