@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from 'react'
 
 // useInViewOnce dispara `true` na primeira vez que o elemento entra na viewport e
 // nunca mais volta pra false. Usa um *callback ref* de proposito: ao contrario do
-// useInView do framer-motion (que so liga o IntersectionObserver no mount, com o
+// A implementação liga o IntersectionObserver no mount, com o
 // ref ainda null se o componente faz early-return antes dos dados chegarem), o
 // callback ref roda toda vez que o no monta/desmonta — entao o observer e ligado
 // no momento certo, mesmo que o elemento so apareca depois de um fetch async.

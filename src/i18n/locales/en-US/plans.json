@@ -16,7 +16,6 @@
     "cardDescription": "Monthly auto-renewal. Cancel anytime.",
     "pixPeriodLabel": "Period",
     "pixMonthly": "Monthly — {{price}}/mo (auto-renewal)",
-    "pixQuarterly": "Quarterly — {{price}} (save {{discount}}%)",
     "generateQR": "Generate PIX QR Code",
     "goToPayment": "Go to payment",
     "methodCardTitle": "Subscribe with credit card",
@@ -146,12 +145,6 @@
     "emptyTitle": "No plans available right now",
     "emptyDescription": "We're having trouble loading plans. If the issue persists, contact suporte@scrapjobs.com.br.",
     "emptyRetry": "Try again",
-    "period": {
-      "monthly": "Monthly",
-      "quarterly": "Quarterly",
-      "discount": "Save {{percent}}%",
-      "quarterlyPixOnly": "Quarterly available via PIX only"
-    },
     "paymentMethod": {
       "title": "Payment method",
       "pix": "PIX",

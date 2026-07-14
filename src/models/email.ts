@@ -70,7 +70,7 @@ export interface EmailLifecycleJob {
   updated_at: string
 }
 
-// bounced/suppressed só entram quando o webhook SES/Resend (Phase 2) estiver wirado.
+// bounced/suppressed só entram quando o webhook do provider de e-mail estiver ligado.
 // unknown_post_send é gravado pelo reconciler hourly em rows que ficaram queued
 // mas nunca atingiram sent/failed — preserva o status no painel admin.
 // Mantemos o tipo alinhado ao que o backend realmente grava pra evitar silent

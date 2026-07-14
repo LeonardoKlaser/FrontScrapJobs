@@ -16,7 +16,6 @@
     "cardDescription": "Renovação automática mensal. Cancele quando quiser.",
     "pixPeriodLabel": "Período",
     "pixMonthly": "Mensal — {{price}}/mês (renovação automática)",
-    "pixQuarterly": "Trimestral — {{price}} (economia de {{discount}}%)",
     "generateQR": "Gerar QR Code PIX",
     "goToPayment": "Ir para pagamento",
     "methodCardTitle": "Assinar com cartão de crédito",
@@ -146,12 +145,6 @@
     "emptyTitle": "Nenhum plano disponível no momento",
     "emptyDescription": "Estamos com instabilidade pra carregar os planos. Se persistir, contate suporte@scrapjobs.com.br.",
     "emptyRetry": "Tentar novamente",
-    "period": {
-      "monthly": "Mensal",
-      "quarterly": "Trimestral",
-      "discount": "Economize {{percent}}%",
-      "quarterlyPixOnly": "Trimestral disponível apenas via PIX"
-    },
     "paymentMethod": {
       "title": "Forma de pagamento",
       "pix": "PIX",

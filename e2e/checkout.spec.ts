@@ -10,7 +10,7 @@ test.describe('Checkout — fluxo de 3 steps', () => {
     await page.route('**/api/users/validate-checkout', (route) =>
       route.fulfill({ status: 200, json: { email_exists: false, tax_exists: false } })
     )
-    // Evita flake em CI sem rede — useCepLookup não vai pra rede real.
+    // Evita flake em CI sem rede — a consulta de CEP não vai para a rede real.
     await page.route('**/viacep.com.br/**', (route) =>
       route.fulfill({
         status: 200,

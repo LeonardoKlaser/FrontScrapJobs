@@ -297,7 +297,7 @@ async function setupMocks(page: Page, opts: MockAPIOptions = {}) {
         status: 200,
         json: {
           ...mockAdminSites[0],
-          logo_url: 'https://bucket.s3.amazonaws.com/logos/netflix-test.png'
+          logo_url: 'https://cdn.example.test/logos/netflix-test.png'
         }
       })
     }

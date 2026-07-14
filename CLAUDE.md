@@ -71,7 +71,7 @@ Service files (`authService.ts`, `curriculumService.ts`, …) expose plain async
 
 ### Bundling
 
-Vite manual chunks in `vite.config.ts` split vendor bundles: `vendor-react / router / query / ui / form / axios`. **Keep this list in sync when adding large deps** or they'll end up in the main chunk.
+Vite manual chunks in `vite.config.ts` split vendor bundles: `vendor-router / query / ui / form / axios / monaco / cron`. **Keep this list in sync when adding large deps** or they'll end up in the main chunk.
 
 ### i18n
 
@@ -103,6 +103,6 @@ Four tsconfigs — pick the right one when adding files:
 
 ## Production deploy (Nginx CSP)
 
-`nginx.conf` serves `dist/` with a strict CSP. `connect-src` currently allows `*.scrapjobs.com.br`, `*.pagar.me`, Google Analytics/Tag Manager, Google Ads, Meta Pixel, and a specific S3 bucket. `script-src` mirrors the same list.
+`nginx.conf` serves `dist/` with a strict CSP. `connect-src` currently allows `*.scrapjobs.com.br`, Google Analytics/Tag Manager, Google Ads and Meta Pixel. `script-src` mirrors the browser-side integrations.
 
 **When integrating a new third-party script or API, add its domain to both `script-src` and `connect-src` in `nginx.conf`** — otherwise it'll work in dev but silently fail in prod. `/stats.html` is denied (don't expose bundle analyzer in prod).

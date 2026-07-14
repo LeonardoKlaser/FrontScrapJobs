@@ -1,7 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
 import {
-  createSubscribePix,
   createSubscribeCard,
   createPixMonthly,
   type CreateSubscriptionRequest,
@@ -16,17 +15,6 @@ import {
 interface AbacatePayErrorBody {
   error?: string
   message?: string
-}
-
-export function useAbacatePaySubscribePix() {
-  return useMutation<
-    SubscriptionResult,
-    AxiosError<AbacatePayErrorBody>,
-    { planId: number; data: CreateSubscriptionRequest | CreateSubscriptionWithPendingRequest }
-  >({
-    mutationKey: ['abacatepay-subscribe-pix'],
-    mutationFn: ({ planId, data }) => createSubscribePix(planId, data)
-  })
 }
 
 export function useAbacatePaySubscribeCard() {

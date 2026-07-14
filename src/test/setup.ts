@@ -15,7 +15,7 @@ if (typeof globalThis.ResizeObserver === 'undefined') {
   globalThis.ResizeObserver = ResizeObserverPolyfill as unknown as typeof ResizeObserver
 }
 
-// Polyfill IntersectionObserver for framer-motion's useInView under jsdom.
+// Polyfill IntersectionObserver for useInViewOnce under jsdom.
 class IntersectionObserverPolyfill {
   observe() {}
   unobserve() {}

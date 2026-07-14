@@ -43,14 +43,6 @@ export interface SubscriptionResult {
   plan_change_scheduled?: boolean
 }
 
-export async function createSubscribePix(
-  planId: number,
-  data: CreateSubscriptionRequest | CreateSubscriptionWithPendingRequest
-): Promise<SubscriptionResult> {
-  const response = await api.post<SubscriptionResult>(`/api/payments/subscribe-pix/${planId}`, data)
-  return response.data
-}
-
 export async function createSubscribeCard(
   planId: number,
   data: CreateSubscriptionRequest | CreateSubscriptionWithPendingRequest

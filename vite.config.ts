@@ -19,7 +19,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'vendor-react': ['react', 'react-dom'],
           'vendor-router': ['react-router'],
           'vendor-query': ['@tanstack/react-query'],
           'vendor-ui': [
@@ -27,8 +26,6 @@ export default defineConfig({
             '@radix-ui/react-dropdown-menu',
             '@radix-ui/react-select',
             '@radix-ui/react-accordion',
-            '@radix-ui/react-navigation-menu',
-            '@radix-ui/react-tooltip',
             'radix-ui'
           ],
           'vendor-form': ['react-hook-form', '@hookform/resolvers', 'zod'],
