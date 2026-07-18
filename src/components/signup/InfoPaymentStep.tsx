@@ -166,6 +166,7 @@ export function InfoPaymentStep({ sessionId, plan, onBack }: InfoPaymentStepProp
         plan_id: plan.id
       })
       setPixResult({
+        checkout_id: result.checkout_id,
         qr_code: result.qr_code,
         qr_code_url: result.qr_code_url,
         expires_at: result.expires_at

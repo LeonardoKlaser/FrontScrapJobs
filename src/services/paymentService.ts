@@ -12,9 +12,12 @@ export interface CancelSubscriptionResult {
   message: string
 }
 
-export async function checkPaymentStatus(email: string): Promise<PaymentStatusResult> {
+export async function checkPaymentStatus(
+  email: string,
+  checkoutId?: string
+): Promise<PaymentStatusResult> {
   const response = await api.get<PaymentStatusResult>('/api/payments/status', {
-    params: { email }
+    params: checkoutId ? { checkout_id: checkoutId } : { email }
   })
   return response.data
 }
@@ -39,6 +42,7 @@ export interface CreateSubscriptionWithPendingRequest {
 }
 
 export interface SubscriptionResult {
+  checkout_id?: string
   checkout_url?: string
   plan_change_scheduled?: boolean
 }
@@ -77,6 +81,7 @@ export interface CreatePixMonthlyWithPendingRequest {
 }
 
 export interface PixMonthlyResult {
+  checkout_id?: string
   qr_code: string
   qr_code_url: string
   expires_at: string

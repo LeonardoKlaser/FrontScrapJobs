@@ -1,14 +1,21 @@
-import { render, screen, cleanup, within } from '@testing-library/react'
+import { render, screen, cleanup, within, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { MemoryRouter } from 'react-router'
+import { MemoryRouter, Route, Routes } from 'react-router'
 import type { ReactNode } from 'react'
 import DigestPage from '@/pages/DigestPage'
 import { useDigestSession } from '@/hooks/useDigestSession'
 import type { DigestSessionResponse } from '@/services/digestService'
+import { authService } from '@/services/authService'
 
 vi.mock('@/hooks/useDigestSession', () => ({
   useDigestSession: vi.fn()
+}))
+
+vi.mock('@/services/authService', () => ({
+  authService: {
+    logout: vi.fn()
+  }
 }))
 
 function wrap(ui: ReactNode) {
@@ -16,6 +23,21 @@ function wrap(ui: ReactNode) {
   return (
     <QueryClientProvider client={qc}>
       <MemoryRouter>{ui}</MemoryRouter>
+    </QueryClientProvider>
+  )
+}
+
+function wrapAtDigest(ui: ReactNode) {
+  const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+  return (
+    <QueryClientProvider client={qc}>
+      <MemoryRouter initialEntries={['/d/digest-token']}>
+        <Routes>
+          <Route path="/d/:token" element={ui} />
+          <Route path="/login" element={<p>login destination</p>} />
+          <Route path="/app" element={<p>app destination</p>} />
+        </Routes>
+      </MemoryRouter>
     </QueryClientProvider>
   )
 }
@@ -162,5 +184,57 @@ describe('DigestPage', () => {
 
     const opened = (window.dataLayer ?? []).filter((e) => e.event === 'digest_opened')
     expect(opened).toHaveLength(1)
+  })
+
+  it('does not switch sessions until switch_required is explicitly confirmed', async () => {
+    vi.mocked(authService.logout).mockResolvedValue(undefined)
+    vi.mocked(useDigestSession).mockReturnValue({
+      data: { ...sessionFixture, account_action: 'switch_required' },
+      isLoading: false,
+      isError: false,
+      error: null
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any)
+
+    render(wrapAtDigest(<DigestPage />))
+
+    expect(authService.logout).not.toHaveBeenCalled()
+    await userEvent.click(screen.getByRole('button', { name: /trocar conta e entrar/i }))
+
+    await waitFor(() => expect(authService.logout).toHaveBeenCalledTimes(1))
+    expect(screen.getByText('login destination')).toBeInTheDocument()
+  })
+
+  it('shows a login action for login_required without logging out', () => {
+    vi.mocked(useDigestSession).mockReturnValue({
+      data: { ...sessionFixture, account_action: 'login_required' },
+      isLoading: false,
+      isError: false,
+      error: null
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any)
+
+    render(wrapAtDigest(<DigestPage />))
+
+    expect(screen.getByRole('link', { name: /^entrar$/i })).toHaveAttribute(
+      'href',
+      '/login?from=%2Fd%2Fdigest-token'
+    )
+    expect(authService.logout).not.toHaveBeenCalled()
+  })
+
+  it('shows the app action for same_account', () => {
+    vi.mocked(useDigestSession).mockReturnValue({
+      data: { ...sessionFixture, account_action: 'same_account' },
+      isLoading: false,
+      isError: false,
+      error: null
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any)
+
+    render(wrapAtDigest(<DigestPage />))
+
+    expect(screen.getByRole('link', { name: /abrir o app/i })).toHaveAttribute('href', '/app')
+    expect(authService.logout).not.toHaveBeenCalled()
   })
 })

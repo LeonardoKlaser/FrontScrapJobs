@@ -63,6 +63,9 @@
       "namePlaceholder": "e.g.: Google Careers",
       "urlLabel": "Career Page Base URL",
       "urlPlaceholder": "https://careers.google.com/jobs/results/",
+      "allowedHostsLabel": "Additional allowed hosts",
+      "allowedHostsPlaceholder": "api.example.com\ncdn.example.com",
+      "allowedHostsDescription": "Enter one host per line. The base URL host is added automatically; additional redirects, APIs, and CDNs must be declared.",
       "activeLabel": "Active Monitoring",
       "activeDescription": "The site will be checked automatically each cycle"
     },

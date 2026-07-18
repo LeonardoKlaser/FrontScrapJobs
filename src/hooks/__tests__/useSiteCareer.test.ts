@@ -127,6 +127,7 @@ describe('useUpdateSiteConfig', () => {
       formData: {
         site_name: 'Netflix',
         base_url: 'https://netflix.com',
+        allowed_hosts: [],
         is_active: true,
         scraping_type: 'API',
         job_list_item_selector: '',

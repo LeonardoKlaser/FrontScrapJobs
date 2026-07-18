@@ -185,6 +185,7 @@ export function PaymentForm({ plan, pendingId }: PaymentFormProps) {
           }
       const result = await pixMonthlyMutation.mutateAsync(data)
       setPixResult({
+        checkout_id: result.checkout_id,
         qr_code: result.qr_code,
         qr_code_url: result.qr_code_url,
         expires_at: result.expires_at

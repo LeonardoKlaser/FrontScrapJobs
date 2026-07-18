@@ -112,19 +112,17 @@ export function PixPaymentStep({
     }
   }, [userEmail])
 
-  // Failsafe: se userEmailRef nao resolver em 15s, mostra error state com CTA
-  // pra recarregar. Polling tick (ver computeDelay) faz no-op silencioso quando
-  // email vazio, entao sem esse timeout o user via "aguardando pagamento"
-  // indefinidamente sem saber que esta travado.
+  // Failsafe legado: respostas novas usam checkout_id e não dependem do e-mail.
+  // Snapshots antigos continuam aguardando userEmail por até 15s.
   useEffect(() => {
-    if (userEmailRef.current) return
+    if (pixResult.checkout_id || userEmailRef.current) return
     const timeoutId = setTimeout(() => {
       if (isMountedRef.current && !userEmailRef.current) {
         setEmailMissing(true)
       }
     }, 15000)
     return () => clearTimeout(timeoutId)
-  }, [])
+  }, [pixResult.checkout_id])
 
   const pollingRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -212,12 +210,12 @@ export function PixPaymentStep({
         pollingRef.current = null
         if (!isMountedRef.current) return
         const email = userEmailRef.current
-        if (!email) {
+        if (!email && !pixResult.checkout_id) {
           pollingRef.current = setTimeout(tick, computeDelay())
           return
         }
         try {
-          const result = await checkPaymentStatus(email)
+          const result = await checkPaymentStatus(email, pixResult.checkout_id)
           if (!isMountedRef.current) return
           consecutiveErrorsRef.current = 0
           pollAttemptRef.current++
@@ -243,7 +241,7 @@ export function PixPaymentStep({
       }
       pollingRef.current = setTimeout(tick, computeDelay())
     },
-    [stopPolling, handleConfirmed]
+    [stopPolling, handleConfirmed, pixResult.checkout_id]
   )
 
   // Quando o timer chega a 0, em vez de flipar expired=true imediatamente,
@@ -253,9 +251,9 @@ export function PixPaymentStep({
     if (!isMountedRef.current) return
     setVerifyingFinal(true)
     const email = userEmailRef.current
-    if (email) {
+    if (email || pixResult.checkout_id) {
       try {
-        const result = await checkPaymentStatus(email)
+        const result = await checkPaymentStatus(email, pixResult.checkout_id)
         if (!isMountedRef.current) return
         if (result.status === 'confirmed') {
           handleConfirmed()
@@ -272,7 +270,7 @@ export function PixPaymentStep({
       setVerifyingFinal(false)
       setExpired(true)
     }, POST_EXPIRY_GRACE_MS)
-  }, [handleConfirmed])
+  }, [handleConfirmed, pixResult.checkout_id])
 
   useEffect(() => {
     isMountedRef.current = true
@@ -312,10 +310,10 @@ export function PixPaymentStep({
   const handleManualCheck = async () => {
     if (manualCheckLoading) return
     const email = userEmailRef.current
-    if (!email) return
+    if (!email && !pixResult.checkout_id) return
     setManualCheckLoading(true)
     try {
-      const result = await checkPaymentStatus(email)
+      const result = await checkPaymentStatus(email, pixResult.checkout_id)
       if (!isMountedRef.current) return
       if (result.status === 'confirmed') {
         handleConfirmed()

@@ -92,6 +92,25 @@ describe('AdicionarSitePage (characterization)', () => {
     expect(call[0].logoFile).toBeInstanceOf(File)
   })
 
+  it('normalizes allowed hosts as one hostname per non-empty line', async () => {
+    mockAddSite.mockResolvedValue(undefined)
+    render(wrap(<AdicionarSitePage />))
+
+    await fillBasicCSSForm()
+    await userEvent.type(
+      screen.getByLabelText(/allowedHostsLabel/),
+      ' CDN.Acme.Example.com  \n\napi.acme.example.com\ncdn.acme.example.com'
+    )
+    await attachLogo()
+    await userEvent.click(screen.getByRole('button', { name: /addSite\.submitButton/ }))
+
+    await waitFor(() => expect(mockAddSite).toHaveBeenCalledTimes(1))
+    expect(mockAddSite.mock.calls[0][0].formData.allowed_hosts).toEqual([
+      'cdn.acme.example.com',
+      'api.acme.example.com'
+    ])
+  })
+
   it('scraping type switch: API shows API Config section', async () => {
     render(wrap(<AdicionarSitePage />))
 

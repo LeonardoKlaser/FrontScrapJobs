@@ -54,6 +54,7 @@ function makeSite(partial: Partial<SiteConfig> = {}): SiteConfig {
     id: 57,
     site_name: 'Netflix Careers',
     base_url: 'https://jobs.netflix.com',
+    allowed_hosts: ['cdn.netflix.com', 'api.netflix.com'],
     logo_url: null,
     is_active: true,
     scraping_type: 'API',
@@ -160,6 +161,38 @@ describe('EditSitePage', () => {
     expect(arg.id).toBe(57)
     expect(arg.formData.site_name).toBe('Netflix Careers')
     expect(arg.logoFile).toBeNull()
+  })
+
+  it('loads and serializes the destination allowlist', async () => {
+    const mutateAsync = vi.fn().mockResolvedValue({ id: 57 })
+    vi.mocked(useSite).mockReturnValue({
+      data: makeSite(),
+      isLoading: false,
+      error: null
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any)
+    vi.mocked(useUpdateSiteConfig).mockReturnValue({
+      mutateAsync
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any)
+
+    render(wrap(<EditSitePage />))
+
+    expect(screen.getByLabelText(/allowedHostsLabel/)).toHaveValue(
+      'cdn.netflix.com\napi.netflix.com'
+    )
+    await userEvent.clear(screen.getByLabelText(/allowedHostsLabel/))
+    await userEvent.type(
+      screen.getByLabelText(/allowedHostsLabel/),
+      'Assets.Netflix.com\n\napi.netflix.com'
+    )
+    await userEvent.click(screen.getByRole('button', { name: /Salvar Alterações/ }))
+
+    await waitFor(() => expect(mutateAsync).toHaveBeenCalledTimes(1))
+    expect(mutateAsync.mock.calls[0][0].formData.allowed_hosts).toEqual([
+      'assets.netflix.com',
+      'api.netflix.com'
+    ])
   })
 
   it('on success, navigate to adminSites', async () => {

@@ -25,12 +25,14 @@ type PaymentMethod = 'pix' | 'card'
 // usuario que fecha aba apos gerar QR perde rastro do pedido em flight: pode
 // pagar QR antigo e a sessao nova nunca detecta confirmacao.
 const PIX_STORAGE_KEY = 'sj_pix_in_flight'
-// Bumpar quando shape do PixSnapshot mudar — snapshots de versao diferente
-// sao descartados em vez de hidratar parcial e quebrar a tela em silencio.
+// Não subir a versão pelo checkout_id opcional: snapshots v2 sem o campo
+// precisam continuar válidos e usar o fallback legado por e-mail.
 const PIX_SNAPSHOT_VERSION = 2
 
 interface PixSnapshot {
   version: number
+  // PixPaymentResult preserva checkout_id quando disponível; ausente em
+  // snapshots antigos sem invalidar a recuperação.
   result: PixPaymentResult
   planId: number
   email: string

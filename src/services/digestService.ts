@@ -15,6 +15,7 @@ export interface DigestJobSnapshot {
 export interface DigestSessionResponse {
   jobs: DigestJobSnapshot[]
   norte_number?: string
+  account_action?: 'login_required' | 'same_account' | 'switch_required'
 }
 
 export async function getDigestSession(token: string): Promise<DigestSessionResponse> {

@@ -35,6 +35,7 @@ export interface SiteConfig {
   id: number
   site_name: string
   base_url: string
+  allowed_hosts: string[]
   logo_url: string | null
   is_active: boolean
   scraping_type: 'CSS' | 'API' | 'HEADLESS'

@@ -38,6 +38,7 @@ function makeSite(partial: Partial<SiteConfig>): SiteConfig {
     id: 1,
     site_name: 'Default',
     base_url: 'https://example.com',
+    allowed_hosts: [],
     logo_url: null,
     is_active: true,
     scraping_type: 'CSS',

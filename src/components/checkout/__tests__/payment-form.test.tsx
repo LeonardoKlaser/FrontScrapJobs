@@ -36,7 +36,11 @@ vi.mock('@/hooks/useAbacatePay', () => ({
 }))
 
 vi.mock('sonner', () => ({
-  toast: { success: (...args: unknown[]) => toastSuccess(...args), info: vi.fn(), error: vi.fn() }
+  toast: {
+    success: (...args: unknown[]) => toastSuccess(...args),
+    info: vi.fn(),
+    error: vi.fn()
+  }
 }))
 
 // useSaveLead aciona um POST — mock pra evitar que o saveLead tente network
@@ -51,6 +55,12 @@ vi.mock('@/hooks/useValidateCheckout', () => ({
   useValidateCheckout: () => ({
     mutateAsync: vi.fn().mockResolvedValue({ email_exists: false, tax_exists: false })
   })
+}))
+
+vi.mock('@/components/checkout/pix-payment-step', () => ({
+  PixPaymentStep: ({ pixResult }: { pixResult: { checkout_id?: string; qr_code: string } }) => (
+    <p>pix-checkout:{pixResult.checkout_id ?? 'legacy-email-fallback'}</p>
+  )
 }))
 
 import { PaymentForm } from '../payment-form'
@@ -132,7 +142,9 @@ describe('PaymentForm', () => {
       payment_method: 'card',
       subscription_status: 'active'
     }
-    subscribeCardMutation.mutateAsync.mockResolvedValue({ plan_change_scheduled: true })
+    subscribeCardMutation.mutateAsync.mockResolvedValue({
+      plan_change_scheduled: true
+    })
 
     renderWithProviders(<PaymentForm plan={mockPlan} />)
     await userEvent.click(screen.getByRole('button', { name: /ir para pagamento/i }))
@@ -140,11 +152,36 @@ describe('PaymentForm', () => {
     await waitFor(() => {
       expect(subscribeCardMutation.mutateAsync).toHaveBeenCalledWith({
         planId: 2,
-        data: expect.objectContaining({ email: 'billing-fixture@example.test' })
+        data: expect.objectContaining({
+          email: 'billing-fixture@example.test'
+        })
       })
       expect(toastSuccess).toHaveBeenCalledWith(
         'Troca de plano agendada para o próximo ciclo de cobrança.'
       )
     })
+  })
+
+  it('preserves checkout_id when handing the PIX result to polling', async () => {
+    mockUseUser.data = {
+      user_name: 'Billing Fixture',
+      email: 'billing-fixture@example.test',
+      cellphone: '11900000000',
+      tax: '00000000000',
+      is_admin: false,
+      plan: mockPlan
+    }
+    pixMonthlyMutation.mutateAsync.mockResolvedValue({
+      checkout_id: '0198-checkout-fixture',
+      qr_code: 'fixture-code',
+      qr_code_url: 'data:image/png;base64,fixture',
+      expires_at: '2026-07-18T00:00:00Z'
+    })
+
+    renderWithProviders(<PaymentForm plan={mockPlan} />)
+    await userEvent.click(screen.getByRole('button', { name: /pagar com pix/i }))
+    await userEvent.click(screen.getByRole('button', { name: /gerar qr code pix/i }))
+
+    expect(await screen.findByText('pix-checkout:0198-checkout-fixture')).toBeInTheDocument()
   })
 })

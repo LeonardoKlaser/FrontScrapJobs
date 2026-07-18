@@ -13,5 +13,14 @@
   "renewDescription": "Sua assinatura expirou, então não foi possível analisar a vaga. Renove para voltar a usar as análises.",
   "renewCta": "Renovar assinatura",
   "renewDismiss": "Agora não",
-  "backToWhatsapp": "Voltar pro WhatsApp"
+  "backToWhatsapp": "Voltar pro WhatsApp",
+  "loginRequiredDescription": "Entre para acessar sua conta completa sem alterar esta página de vagas.",
+  "loginRequiredCta": "Entrar",
+  "sameAccountDescription": "Você já está na conta correta para este digest.",
+  "sameAccountCta": "Abrir o app",
+  "switchAccountTitle": "Este digest pertence a outra conta",
+  "switchAccountDescription": "A troca só acontece quando você confirmar. Sua sessão atual não será encerrada automaticamente.",
+  "switchAccountCta": "Trocar conta e entrar",
+  "switchAccountLoading": "Encerrando sessão...",
+  "switchAccountError": "Não foi possível encerrar a sessão atual. Tente novamente."
 }

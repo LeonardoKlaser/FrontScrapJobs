@@ -5,6 +5,7 @@ export type ScrapingType = 'CSS' | 'API' | 'HEADLESS'
 
 export interface SiteConfigFormData {
   base_url: string
+  allowed_hosts: string[]
   site_name: string
   is_active: boolean
   scraping_type: ScrapingType

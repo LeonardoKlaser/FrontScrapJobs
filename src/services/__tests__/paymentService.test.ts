@@ -54,6 +54,7 @@ describe('paymentService', () => {
   it('creates a one-month transparent PIX charge', async () => {
     vi.mocked(api.post).mockResolvedValue({
       data: {
+        checkout_id: '0198-checkout-fixture',
         qr_code: 'fixture-pix-code',
         qr_code_url: 'https://example.test/fixture-pix.png',
         expires_at: '2026-07-13T15:00:00Z'
@@ -70,6 +71,7 @@ describe('paymentService', () => {
       plan_id: 2
     })
     expect(result.qr_code).toBe('fixture-pix-code')
+    expect(result.checkout_id).toBe('0198-checkout-fixture')
   })
 
   it('checks payment status using the pending checkout email', async () => {
@@ -81,6 +83,16 @@ describe('paymentService', () => {
       params: { email: 'billing-fixture@example.test' }
     })
     expect(result.status).toBe('confirmed')
+  })
+
+  it('prioritizes checkout_id over email when the backend returned one', async () => {
+    vi.mocked(api.get).mockResolvedValue({ data: { status: 'processing' } })
+
+    await checkPaymentStatus('billing-fixture@example.test', '0198-checkout-fixture')
+
+    expect(api.get).toHaveBeenCalledWith('/api/payments/status', {
+      params: { checkout_id: '0198-checkout-fixture' }
+    })
   })
 
   it('cancels the current recurring subscription through the backend', async () => {

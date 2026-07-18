@@ -13,5 +13,14 @@
   "renewDescription": "Your subscription expired, so we couldn't analyze the job. Renew to use analyses again.",
   "renewCta": "Renew subscription",
   "renewDismiss": "Not now",
-  "backToWhatsapp": "Back to WhatsApp"
+  "backToWhatsapp": "Back to WhatsApp",
+  "loginRequiredDescription": "Sign in to access your full account without changing this jobs page.",
+  "loginRequiredCta": "Sign in",
+  "sameAccountDescription": "You are already using the account associated with this digest.",
+  "sameAccountCta": "Open the app",
+  "switchAccountTitle": "This digest belongs to another account",
+  "switchAccountDescription": "The account changes only after you confirm. Your current session will not be ended automatically.",
+  "switchAccountCta": "Switch account and sign in",
+  "switchAccountLoading": "Signing out...",
+  "switchAccountError": "We could not end the current session. Please try again."
 }

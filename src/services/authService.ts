@@ -30,7 +30,10 @@ export const authService = {
     return res
   },
 
-  changePassword: async (data: { old_password: string; new_password: string }) => {
+  changePassword: async (data: {
+    old_password: string
+    new_password: string
+  }): Promise<{ message: string; session_revoked?: boolean }> => {
     const { data: res } = await api.post('/api/user/change-password', data)
     return res
   },

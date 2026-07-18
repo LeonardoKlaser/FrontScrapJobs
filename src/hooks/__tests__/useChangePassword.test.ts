@@ -25,7 +25,10 @@ describe('useChangePassword', () => {
   })
 
   it('calls changePassword on mutate', async () => {
-    vi.mocked(authService.changePassword).mockResolvedValue({ success: true })
+    vi.mocked(authService.changePassword).mockResolvedValue({
+      message: 'Senha alterada com sucesso',
+      session_revoked: true
+    })
 
     const { result } = renderHook(() => useChangePassword(), { wrapper: createWrapper() })
 

@@ -69,6 +69,7 @@ function extractErrorMessage(err: unknown, fallback: string): string {
 const DEFAULT_FORM_DATA: SiteConfigFormData = {
   site_name: '',
   base_url: '',
+  allowed_hosts: [],
   is_active: true,
   scraping_type: 'CSS',
   job_list_item_selector: '',
@@ -96,6 +97,7 @@ function siteConfigToFormData(site: SiteConfig): SiteConfigFormData {
   return {
     site_name: site.site_name,
     base_url: site.base_url,
+    allowed_hosts: site.allowed_hosts ?? [],
     is_active: site.is_active,
     scraping_type: site.scraping_type,
     job_list_item_selector: site.job_list_item_selector ?? '',
@@ -139,6 +141,9 @@ export default function SiteConfigForm({
   const [formData, setFormData] = useState<SiteConfigFormData>(
     initialData ? siteConfigToFormData(initialData) : DEFAULT_FORM_DATA
   )
+  const [allowedHostsText, setAllowedHostsText] = useState(
+    initialData?.allowed_hosts?.join('\n') ?? ''
+  )
   const [logoFile, setLogoFile] = useState<File | null>(null)
   const [paginationDelayMs, setPaginationDelayMs] = useState(() =>
     extractPaginationDelay(initialData?.json_data_mappings)
@@ -161,6 +166,17 @@ export default function SiteConfigForm({
 
   const handleInputChange = (field: keyof SiteConfigFormData, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
+  }
+
+  const handleAllowedHostsChange = (rawValue: string) => {
+    setAllowedHostsText(rawValue)
+    const uniqueHosts = new Set(
+      rawValue
+        .split(/\r?\n/)
+        .map((host) => host.trim().toLowerCase())
+        .filter(Boolean)
+    )
+    setFormData((prev) => ({ ...prev, allowed_hosts: [...uniqueHosts] }))
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -256,6 +272,7 @@ export default function SiteConfigForm({
       setSuccess()
       if (mode === 'create') {
         setFormData(DEFAULT_FORM_DATA)
+        setAllowedHostsText('')
         setLogoFile(null)
         setPaginationDelayMs('')
       }
@@ -321,6 +338,20 @@ export default function SiteConfigForm({
                     onChange={(e) => handleInputChange('base_url', e.target.value)}
                     required
                   />
+                </div>
+
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="allowed_hosts">{t('addSite.basicInfo.allowedHostsLabel')}</Label>
+                  <Textarea
+                    id="allowed_hosts"
+                    value={allowedHostsText}
+                    onChange={(event) => handleAllowedHostsChange(event.target.value)}
+                    placeholder={t('addSite.basicInfo.allowedHostsPlaceholder')}
+                    rows={4}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    {t('addSite.basicInfo.allowedHostsDescription')}
+                  </p>
                 </div>
               </div>
 

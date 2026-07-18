@@ -41,14 +41,26 @@ describe('analysisService', () => {
   describe('analyzeJob', () => {
     it('sends POST /api/analyze-job with job_id and curriculum_id', async () => {
       vi.mocked(api.post).mockResolvedValue({ data: mockAnalysis })
+      const randomUUID = vi
+        .spyOn(globalThis.crypto, 'randomUUID')
+        .mockReturnValue('0198cafe-0000-7000-8000-000000000001')
 
       const result = await analysisService.analyzeJob(42, 1)
 
-      expect(api.post).toHaveBeenCalledWith('/api/analyze-job', {
-        job_id: 42,
-        curriculum_id: 1
-      })
+      expect(api.post).toHaveBeenCalledWith(
+        '/api/analyze-job',
+        {
+          job_id: 42,
+          curriculum_id: 1
+        },
+        {
+          headers: {
+            'Idempotency-Key': '0198cafe-0000-7000-8000-000000000001'
+          }
+        }
+      )
       expect(result).toEqual(mockAnalysis)
+      randomUUID.mockRestore()
     })
 
     it('throws on failure', async () => {

@@ -16,6 +16,7 @@ vi.mock('@/services/api', () => ({
 
 const mockFormData: SiteConfigFormData = {
   base_url: 'https://careers.example.com',
+  allowed_hosts: [],
   site_name: 'Example Corp',
   is_active: true,
   scraping_type: 'CSS',

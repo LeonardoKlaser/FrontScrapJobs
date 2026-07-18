@@ -22,10 +22,13 @@ import { toast } from 'sonner'
 import { authService } from '@/services/authService'
 import { useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
+import { useNavigate } from 'react-router'
+import { PATHS } from '@/router/paths'
 
 export function SecuritySection() {
   const { t } = useTranslation('account')
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
   const changePassword = useChangePassword()
   const {
     buttonState,
@@ -58,7 +61,17 @@ export function SecuritySection() {
     changePassword.mutate(
       { old_password: data.old_password, new_password: data.new_password },
       {
-        onSuccess: () => {
+        onSuccess: async (result) => {
+          if (result.session_revoked) {
+            queryClient.clear()
+            try {
+              await authService.logout()
+            } catch {
+              /* best-effort: a troca de senha já revogou o cookie no backend */
+            }
+            navigate(PATHS.login, { replace: true })
+            return
+          }
           setSuccess()
           toast.success(t('security.changeSuccess'))
           reset()

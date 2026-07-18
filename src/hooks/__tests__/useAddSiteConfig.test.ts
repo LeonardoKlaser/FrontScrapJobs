@@ -30,6 +30,7 @@ describe('useAddSiteConfig', () => {
 
     const formData: SiteConfigFormData = {
       base_url: 'https://example.com',
+      allowed_hosts: [],
       site_name: 'Test',
       is_active: true,
       scraping_type: 'CSS',
@@ -69,6 +70,7 @@ describe('useAddSiteConfig', () => {
 
     const formData: SiteConfigFormData = {
       base_url: 'https://example.com',
+      allowed_hosts: [],
       site_name: 'Test',
       is_active: true,
       scraping_type: 'CSS',

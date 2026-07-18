@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { ExternalLink, MapPin, AlertTriangle, CheckCircle, MessageCircle } from 'lucide-react'
 import { Card } from '@/components/ui/card'
@@ -9,6 +9,7 @@ import { useDigestSession } from '@/hooks/useDigestSession'
 import type { DigestJobSnapshot } from '@/services/digestService'
 import { trackDigest } from '@/lib/analytics'
 import { PATHS } from '@/router/paths'
+import { authService } from '@/services/authService'
 
 function LoadingSkeleton() {
   return (
@@ -55,6 +56,57 @@ function RenewBanner({ onDismiss }: { onDismiss: () => void }) {
           {t('renewDismiss')}
         </Button>
       </div>
+    </Card>
+  )
+}
+
+function AccountActionBanner({
+  action,
+  loginHref,
+  switching,
+  switchFailed,
+  onSwitch
+}: {
+  action: 'login_required' | 'same_account' | 'switch_required'
+  loginHref: string
+  switching: boolean
+  switchFailed: boolean
+  onSwitch: () => void
+}) {
+  const { t } = useTranslation('digest')
+
+  if (action === 'same_account') {
+    return (
+      <Card className="gap-3 border-primary/20 bg-primary/5 px-4 py-4">
+        <p className="text-sm text-muted-foreground">{t('sameAccountDescription')}</p>
+        <Button asChild size="sm" variant="outline">
+          <a href={PATHS.app.home}>{t('sameAccountCta')}</a>
+        </Button>
+      </Card>
+    )
+  }
+
+  if (action === 'login_required') {
+    return (
+      <Card className="gap-3 border-primary/20 bg-primary/5 px-4 py-4">
+        <p className="text-sm text-muted-foreground">{t('loginRequiredDescription')}</p>
+        <Button asChild size="sm" variant="outline">
+          <a href={loginHref}>{t('loginRequiredCta')}</a>
+        </Button>
+      </Card>
+    )
+  }
+
+  return (
+    <Card className="gap-3 border-warning/30 bg-warning/5 px-4 py-4">
+      <div>
+        <p className="text-sm font-semibold text-foreground">{t('switchAccountTitle')}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{t('switchAccountDescription')}</p>
+        {switchFailed && <p className="mt-2 text-sm text-destructive">{t('switchAccountError')}</p>}
+      </div>
+      <Button size="sm" variant="outline" disabled={switching} onClick={onSwitch}>
+        {switching ? t('switchAccountLoading') : t('switchAccountCta')}
+      </Button>
     </Card>
   )
 }
@@ -136,10 +188,13 @@ function JobCard({
 
 export default function DigestPage() {
   const { token } = useParams<{ token: string }>()
+  const navigate = useNavigate()
   const { t } = useTranslation('digest')
   const { data, isLoading, isError } = useDigestSession(token)
 
   const [showRenew, setShowRenew] = useState(false)
+  const [switchingAccount, setSwitchingAccount] = useState(false)
+  const [switchAccountFailed, setSwitchAccountFailed] = useState(false)
   const openedRef = useRef(false)
 
   useEffect(() => {
@@ -151,6 +206,22 @@ export default function DigestPage() {
 
   const handleViewJob = (jobId: number | null) => {
     trackDigest('external_link_clicked', { job_id: jobId })
+  }
+
+  const digestPath = token ? PATHS.digest(token) : PATHS.landing
+  const loginHref = `${PATHS.login}?from=${encodeURIComponent(digestPath)}`
+
+  const handleSwitchAccount = async () => {
+    if (switchingAccount) return
+    setSwitchingAccount(true)
+    setSwitchAccountFailed(false)
+    try {
+      await authService.logout()
+      navigate(loginHref)
+    } catch {
+      setSwitchAccountFailed(true)
+      setSwitchingAccount(false)
+    }
   }
 
   return (
@@ -167,6 +238,16 @@ export default function DigestPage() {
           </header>
 
           {showRenew && <RenewBanner onDismiss={() => setShowRenew(false)} />}
+
+          {data.account_action && (
+            <AccountActionBanner
+              action={data.account_action}
+              loginHref={loginHref}
+              switching={switchingAccount}
+              switchFailed={switchAccountFailed}
+              onSwitch={handleSwitchAccount}
+            />
+          )}
 
           <div className="flex flex-col gap-4">
             {data.jobs.map((job) => (

@@ -39,10 +39,19 @@ export interface ResumeAnalysis {
 
 export const analysisService = {
   analyzeJob: async (jobId: number, curriculumId: number): Promise<ResumeAnalysis> => {
-    const { data } = await api.post('/api/analyze-job', {
-      job_id: jobId,
-      curriculum_id: curriculumId
-    })
+    const attemptId = globalThis.crypto.randomUUID()
+    const { data } = await api.post(
+      '/api/analyze-job',
+      {
+        job_id: jobId,
+        curriculum_id: curriculumId
+      },
+      {
+        headers: {
+          'Idempotency-Key': attemptId
+        }
+      }
+    )
     return data
   },
 
