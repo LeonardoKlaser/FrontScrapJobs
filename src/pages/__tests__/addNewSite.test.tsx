@@ -97,10 +97,11 @@ describe('AdicionarSitePage (characterization)', () => {
     render(wrap(<AdicionarSitePage />))
 
     await fillBasicCSSForm()
-    await userEvent.type(
-      screen.getByLabelText(/allowedHostsLabel/),
-      ' CDN.Acme.Example.com  \n\napi.acme.example.com\ncdn.acme.example.com'
-    )
+    fireEvent.change(screen.getByLabelText(/allowedHostsLabel/), {
+      target: {
+        value: ' CDN.Acme.Example.com  \n\napi.acme.example.com\ncdn.acme.example.com'
+      }
+    })
     await attachLogo()
     await userEvent.click(screen.getByRole('button', { name: /addSite\.submitButton/ }))
 
