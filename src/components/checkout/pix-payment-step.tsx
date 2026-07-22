@@ -215,7 +215,10 @@ export function PixPaymentStep({
           return
         }
         try {
-          const result = await checkPaymentStatus(email, pixResult.checkout_id)
+          const result = await checkPaymentStatus({
+            email,
+            checkoutId: pixResult.checkout_id
+          })
           if (!isMountedRef.current) return
           consecutiveErrorsRef.current = 0
           pollAttemptRef.current++
@@ -253,7 +256,10 @@ export function PixPaymentStep({
     const email = userEmailRef.current
     if (email || pixResult.checkout_id) {
       try {
-        const result = await checkPaymentStatus(email, pixResult.checkout_id)
+        const result = await checkPaymentStatus({
+          email,
+          checkoutId: pixResult.checkout_id
+        })
         if (!isMountedRef.current) return
         if (result.status === 'confirmed') {
           handleConfirmed()
@@ -313,7 +319,10 @@ export function PixPaymentStep({
     if (!email && !pixResult.checkout_id) return
     setManualCheckLoading(true)
     try {
-      const result = await checkPaymentStatus(email, pixResult.checkout_id)
+      const result = await checkPaymentStatus({
+        email,
+        checkoutId: pixResult.checkout_id
+      })
       if (!isMountedRef.current) return
       if (result.status === 'confirmed') {
         handleConfirmed()

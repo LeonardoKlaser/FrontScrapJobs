@@ -77,7 +77,9 @@ describe('paymentService', () => {
   it('checks payment status using the pending checkout email', async () => {
     vi.mocked(api.get).mockResolvedValue({ data: { status: 'confirmed' } })
 
-    const result = await checkPaymentStatus('billing-fixture@example.test')
+    const result = await checkPaymentStatus({
+      email: 'billing-fixture@example.test'
+    })
 
     expect(api.get).toHaveBeenCalledWith('/api/payments/status', {
       params: { email: 'billing-fixture@example.test' }
@@ -85,14 +87,35 @@ describe('paymentService', () => {
     expect(result.status).toBe('confirmed')
   })
 
-  it('prioritizes checkout_id over email when the backend returned one', async () => {
+  it('prioritizes checkout_id over email when both are available', async () => {
     vi.mocked(api.get).mockResolvedValue({ data: { status: 'processing' } })
 
-    await checkPaymentStatus('billing-fixture@example.test', '0198-checkout-fixture')
+    await checkPaymentStatus({
+      email: 'billing-fixture@example.test',
+      checkoutId: '0198-checkout-fixture'
+    })
 
     expect(api.get).toHaveBeenCalledWith('/api/payments/status', {
       params: { checkout_id: '0198-checkout-fixture' }
     })
+  })
+
+  it('checks by checkout_id without requiring an email', async () => {
+    vi.mocked(api.get).mockResolvedValue({ data: { status: 'processing' } })
+
+    await checkPaymentStatus({ checkoutId: '0198-checkout-fixture' })
+
+    expect(api.get).toHaveBeenCalledWith('/api/payments/status', {
+      params: { checkout_id: '0198-checkout-fixture' }
+    })
+  })
+
+  it('rejects an empty lookup before making an HTTP request', async () => {
+    await expect(checkPaymentStatus({ email: '  ', checkoutId: '' })).rejects.toThrow(
+      'checkout_id ou email é obrigatório'
+    )
+
+    expect(api.get).not.toHaveBeenCalled()
   })
 
   it('cancels the current recurring subscription through the backend', async () => {

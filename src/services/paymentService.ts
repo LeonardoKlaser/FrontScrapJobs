@@ -8,14 +8,24 @@ export interface PaymentStatusResult {
   status: 'confirmed' | 'processing' | 'not_found'
 }
 
+export interface PaymentStatusLookup {
+  email?: string
+  checkoutId?: string
+}
+
 export interface CancelSubscriptionResult {
   message: string
 }
 
 export async function checkPaymentStatus(
-  email: string,
-  checkoutId?: string
+  lookup: PaymentStatusLookup
 ): Promise<PaymentStatusResult> {
+  const checkoutId = lookup.checkoutId?.trim()
+  const email = lookup.email?.trim()
+  if (!checkoutId && !email) {
+    throw new Error('checkout_id ou email é obrigatório')
+  }
+
   const response = await api.get<PaymentStatusResult>('/api/payments/status', {
     params: checkoutId ? { checkout_id: checkoutId } : { email }
   })
