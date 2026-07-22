@@ -110,6 +110,29 @@ describe('paymentService', () => {
     })
   })
 
+  it('normalizes whitespace around checkout_id before checking payment status', async () => {
+    vi.mocked(api.get).mockResolvedValue({ data: { status: 'processing' } })
+
+    await checkPaymentStatus({ checkoutId: '  0198-checkout-fixture  ' })
+
+    expect(api.get).toHaveBeenCalledWith('/api/payments/status', {
+      params: { checkout_id: '0198-checkout-fixture' }
+    })
+  })
+
+  it('falls back to a normalized email when checkout_id is blank', async () => {
+    vi.mocked(api.get).mockResolvedValue({ data: { status: 'confirmed' } })
+
+    await checkPaymentStatus({
+      email: '  billing-fixture@example.test  ',
+      checkoutId: '   '
+    })
+
+    expect(api.get).toHaveBeenCalledWith('/api/payments/status', {
+      params: { email: 'billing-fixture@example.test' }
+    })
+  })
+
   it('rejects an empty lookup before making an HTTP request', async () => {
     await expect(checkPaymentStatus({ email: '  ', checkoutId: '' })).rejects.toThrow(
       'checkout_id ou email é obrigatório'
