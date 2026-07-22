@@ -91,13 +91,37 @@ const DEFAULT_FORM_DATA: SiteConfigFormData = {
   pagination_url_template: ''
 }
 
+function normalizeHostname(hostname: string): string {
+  return hostname
+    .trim()
+    .toLowerCase()
+    .replace(/^\[|\]$/g, '')
+    .replace(/\.$/, '')
+}
+
+// O backend inclui o hostname da base_url na allowlist persistida, mas no
+// formulário ele é implícito. Exibi-lo como adicional faria uma troca de
+// base_url manter o host antigo autorizado sem intenção do admin.
+function additionalAllowedHosts(site: SiteConfig): string[] {
+  let baseHostname: string
+  try {
+    baseHostname = normalizeHostname(new URL(site.base_url).hostname)
+  } catch {
+    return site.allowed_hosts ?? []
+  }
+
+  return (site.allowed_hosts ?? []).filter(
+    (hostname) => normalizeHostname(hostname) !== baseHostname
+  )
+}
+
 // Converte os campos nullable do SiteConfig (edit) pra strings vazias
 // — React controlled inputs nao aceitam null/undefined.
 function siteConfigToFormData(site: SiteConfig): SiteConfigFormData {
   return {
     site_name: site.site_name,
     base_url: site.base_url,
-    allowed_hosts: site.allowed_hosts ?? [],
+    allowed_hosts: additionalAllowedHosts(site),
     is_active: site.is_active,
     scraping_type: site.scraping_type,
     job_list_item_selector: site.job_list_item_selector ?? '',
@@ -141,8 +165,8 @@ export default function SiteConfigForm({
   const [formData, setFormData] = useState<SiteConfigFormData>(
     initialData ? siteConfigToFormData(initialData) : DEFAULT_FORM_DATA
   )
-  const [allowedHostsText, setAllowedHostsText] = useState(
-    initialData?.allowed_hosts?.join('\n') ?? ''
+  const [allowedHostsText, setAllowedHostsText] = useState(() =>
+    initialData ? additionalAllowedHosts(initialData).join('\n') : ''
   )
   const [logoFile, setLogoFile] = useState<File | null>(null)
   const [paginationDelayMs, setPaginationDelayMs] = useState(() =>

@@ -27,8 +27,10 @@ function wrap(ui: ReactNode) {
   )
 }
 
-function wrapAtDigest(ui: ReactNode) {
-  const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+function wrapAtDigest(
+  ui: ReactNode,
+  qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+) {
   return (
     <QueryClientProvider client={qc}>
       <MemoryRouter initialEntries={['/d/digest-token']}>
@@ -187,6 +189,9 @@ describe('DigestPage', () => {
   })
 
   it('does not switch sessions until switch_required is explicitly confirmed', async () => {
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+    queryClient.setQueryData(['user'], { id: 99 })
+    queryClient.setQueryData(['dashboardData'], { jobs: 3 })
     vi.mocked(authService.logout).mockResolvedValue(undefined)
     vi.mocked(useDigestSession).mockReturnValue({
       data: { ...sessionFixture, account_action: 'switch_required' },
@@ -196,13 +201,38 @@ describe('DigestPage', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any)
 
-    render(wrapAtDigest(<DigestPage />))
+    render(wrapAtDigest(<DigestPage />, queryClient))
 
     expect(authService.logout).not.toHaveBeenCalled()
     await userEvent.click(screen.getByRole('button', { name: /trocar conta e entrar/i }))
 
     await waitFor(() => expect(authService.logout).toHaveBeenCalledTimes(1))
     expect(screen.getByText('login destination')).toBeInTheDocument()
+    expect(queryClient.getQueryData(['user'])).toBeUndefined()
+    expect(queryClient.getQueryData(['dashboardData'])).toBeUndefined()
+  })
+
+  it('preserves the current session cache when explicit account switching fails', async () => {
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+    queryClient.setQueryData(['user'], { id: 99 })
+    queryClient.setQueryData(['dashboardData'], { jobs: 3 })
+    vi.mocked(authService.logout).mockRejectedValue(new Error('network'))
+    vi.mocked(useDigestSession).mockReturnValue({
+      data: { ...sessionFixture, account_action: 'switch_required' },
+      isLoading: false,
+      isError: false,
+      error: null
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any)
+
+    render(wrapAtDigest(<DigestPage />, queryClient))
+    await userEvent.click(screen.getByRole('button', { name: /trocar conta e entrar/i }))
+
+    await waitFor(() => expect(authService.logout).toHaveBeenCalledTimes(1))
+    expect(screen.queryByText('login destination')).not.toBeInTheDocument()
+    expect(screen.getByText(/não foi possível encerrar a sessão atual/i)).toBeInTheDocument()
+    expect(queryClient.getQueryData(['user'])).toEqual({ id: 99 })
+    expect(queryClient.getQueryData(['dashboardData'])).toEqual({ jobs: 3 })
   })
 
   it('shows a login action for login_required without logging out', () => {

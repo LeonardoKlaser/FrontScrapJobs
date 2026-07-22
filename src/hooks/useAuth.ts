@@ -46,6 +46,7 @@ export function useAuth() {
           return (
             path.startsWith('/app') ||
             path.startsWith('/checkout/') ||
+            path.startsWith('/d/') ||
             path === '/payment-confirmation'
           )
         }

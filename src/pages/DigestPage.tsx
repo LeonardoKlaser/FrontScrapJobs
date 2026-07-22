@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { ExternalLink, MapPin, AlertTriangle, CheckCircle, MessageCircle } from 'lucide-react'
@@ -189,6 +190,7 @@ function JobCard({
 export default function DigestPage() {
   const { token } = useParams<{ token: string }>()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { t } = useTranslation('digest')
   const { data, isLoading, isError } = useDigestSession(token)
 
@@ -217,6 +219,7 @@ export default function DigestPage() {
     setSwitchAccountFailed(false)
     try {
       await authService.logout()
+      queryClient.clear()
       navigate(loginHref)
     } catch {
       setSwitchAccountFailed(true)

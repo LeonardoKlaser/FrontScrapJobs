@@ -54,7 +54,7 @@ function makeSite(partial: Partial<SiteConfig> = {}): SiteConfig {
     id: 57,
     site_name: 'Netflix Careers',
     base_url: 'https://jobs.netflix.com',
-    allowed_hosts: ['cdn.netflix.com', 'api.netflix.com'],
+    allowed_hosts: ['jobs.netflix.com', 'cdn.netflix.com', 'api.netflix.com'],
     logo_url: null,
     is_active: true,
     scraping_type: 'API',
@@ -191,6 +191,38 @@ describe('EditSitePage', () => {
     await waitFor(() => expect(mutateAsync).toHaveBeenCalledTimes(1))
     expect(mutateAsync.mock.calls[0][0].formData.allowed_hosts).toEqual([
       'assets.netflix.com',
+      'api.netflix.com'
+    ])
+  })
+
+  it('does not submit the old implicit base host after base_url changes', async () => {
+    const mutateAsync = vi.fn().mockResolvedValue({ id: 57 })
+    vi.mocked(useSite).mockReturnValue({
+      data: makeSite(),
+      isLoading: false,
+      error: null
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any)
+    vi.mocked(useUpdateSiteConfig).mockReturnValue({
+      mutateAsync
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any)
+
+    render(wrap(<EditSitePage />))
+
+    expect(screen.getByLabelText(/allowedHostsLabel/)).toHaveValue(
+      'cdn.netflix.com\napi.netflix.com'
+    )
+    await userEvent.clear(screen.getByLabelText(/basicInfo\.urlLabel/))
+    await userEvent.type(
+      screen.getByLabelText(/basicInfo\.urlLabel/),
+      'https://careers.netflix.com'
+    )
+    await userEvent.click(screen.getByRole('button', { name: /Salvar Alterações/ }))
+
+    await waitFor(() => expect(mutateAsync).toHaveBeenCalledTimes(1))
+    expect(mutateAsync.mock.calls[0][0].formData.allowed_hosts).toEqual([
+      'cdn.netflix.com',
       'api.netflix.com'
     ])
   })

@@ -62,9 +62,9 @@ describe('SecuritySection', () => {
     await userEvent.type(screen.getByLabelText(/confirmar nova senha/i), 'new-password')
     await userEvent.click(screen.getByRole('button', { name: /alterar senha/i }))
 
-    await waitFor(() => expect(mocks.logout).toHaveBeenCalledTimes(1))
+    await waitFor(() => expect(screen.getByText('login destination')).toBeInTheDocument())
     expect(queryClient.getQueryData(['user'])).toBeUndefined()
-    expect(screen.getByText('login destination')).toBeInTheDocument()
+    expect(mocks.logout).not.toHaveBeenCalled()
     expect(mocks.toastSuccess).not.toHaveBeenCalled()
   })
 })

@@ -61,14 +61,9 @@ export function SecuritySection() {
     changePassword.mutate(
       { old_password: data.old_password, new_password: data.new_password },
       {
-        onSuccess: async (result) => {
+        onSuccess: (result) => {
           if (result.session_revoked) {
             queryClient.clear()
-            try {
-              await authService.logout()
-            } catch {
-              /* best-effort: a troca de senha já revogou o cookie no backend */
-            }
             navigate(PATHS.login, { replace: true })
             return
           }
