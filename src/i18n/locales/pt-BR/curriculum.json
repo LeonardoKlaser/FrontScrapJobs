@@ -1,85 +1,37 @@
 {
-  "description": "Crie e gerencie múltiplos currículos para diferentes oportunidades",
+  "description": "Envie e gerencie os PDFs do seu currículo. O arquivo marcado como principal é o usado nas análises de vagas.",
   "list": {
-    "newButton": "Novo Currículo",
-    "emptyTitle": "Nenhum currículo ainda",
-    "emptyDescription": "Crie seu primeiro currículo para começar a receber análises de vagas",
-    "createButton": "Criar Currículo",
-    "noSummary": "Sem resumo",
-    "deleteTitle": "Excluir Currículo",
-    "deleteDescription": "Tem certeza que deseja excluir este currículo? Esta ação não pode ser desfeita.",
+    "emptyTitle": "Nenhum currículo enviado ainda",
+    "emptyDescription": "Envie um PDF do seu currículo para começar a receber análises de vagas.",
+    "uploadedAt": "Enviado em {{date}}",
+    "principalBadge": "Principal",
+    "viewAction": "Visualizar",
+    "downloadAction": "Baixar",
+    "makePrincipalAction": "Tornar principal",
+    "deleteAction": "Excluir",
+    "deleteTitle": "Excluir currículo",
+    "deleteDescription": "Tem certeza que deseja excluir \"{{filename}}\"? Esta ação não pode ser desfeita.",
     "confirmDelete": "Excluir",
+    "cancelDelete": "Cancelar",
     "deleteSuccess": "Currículo excluído com sucesso!",
-    "deleteError": "Erro ao excluir currículo."
+    "principalSuccess": "Currículo definido como principal!"
   },
-  "switcher": {
-    "selectLabel": "Selecionar currículo",
-    "newCurriculumOption": "Criar novo currículo",
-    "exportAction": "Exportar PDF",
-    "deleteAction": "Excluir currículo",
-    "creatingNewLabel": "Novo currículo (não salvo)"
+  "upload": {
+    "button": "Enviar currículo",
+    "uploading": "Enviando...",
+    "success": "Currículo enviado com sucesso!"
   },
-  "form": {
-    "editing": "Editando: {{title}}",
-    "createNew": "Criar Novo Currículo",
-    "nameLabel": "Nome do Currículo",
-    "namePlaceholder": "Ex: Currículo para Vaga Front-end",
-    "summaryLabel": "Resumo Profissional",
-    "summaryPlaceholder": "Descreva sua experiência e objetivos profissionais...",
-    "summaryCounter": "{{count}}/{{max}} caracteres",
-    "skillsLabel": "Habilidades",
-    "skillsPlaceholder": "Digite uma habilidade e pressione Enter ou vírgula",
-    "languagesLabel": "Idiomas",
-    "languagesPlaceholder": "Digite um idioma e pressione Enter ou vírgula",
-    "experience": {
-      "title": "Experiências Profissionais",
-      "label": "Experiência {{index}}",
-      "remove": "Remover experiência",
-      "companyLabel": "Empresa",
-      "companyPlaceholder": "Nome da empresa",
-      "roleLabel": "Cargo",
-      "rolePlaceholder": "Seu cargo",
-      "startDateLabel": "Data de Início",
-      "startDatePlaceholder": "Ex: Jan 2020",
-      "endDateLabel": "Data de Término",
-      "endDatePlaceholder": "Ex: Dez 2022 ou Atual",
-      "descriptionLabel": "Descrição",
-      "descriptionPlaceholder": "Descreva suas responsabilidades e conquistas...",
-      "addBullet": "Adicionar tópico",
-      "removeBullet": "Remover tópico",
-      "bulletPlaceholder": "Descreva uma responsabilidade ou conquista..."
-    },
-    "education": {
-      "title": "Formação Acadêmica",
-      "label": "Formação {{index}}",
-      "remove": "Remover formação",
-      "institutionLabel": "Instituição",
-      "institutionPlaceholder": "Nome da instituição",
-      "degreeLabel": "Curso/Grau",
-      "degreePlaceholder": "Ex: Bacharelado em CC",
-      "startDateLabel": "Data de Início",
-      "startDatePlaceholder": "Ex: 2018",
-      "endDateLabel": "Data de Término",
-      "endDatePlaceholder": "Ex: 2022"
-    },
-    "saveButton": "Salvar Currículo",
-    "saveSuccess": "Currículo salvo com sucesso!",
-    "createSuccess": "Currículo criado com sucesso!",
-    "saveError": "Erro ao salvar currículo. Tente novamente."
+  "viewer": {
+    "emptyTitle": "Selecione um currículo",
+    "emptyDescription": "Escolha um currículo na lista acima para visualizar o PDF."
   },
-  "pdf": {
-    "importButton": "Importar PDF",
-    "importing": "Extraindo...",
-    "importSuccess": "Dados extraídos com sucesso! Revise e salve.",
-    "importFileTooLarge": "Arquivo excede o tamanho máximo de 5MB.",
-    "importInvalidType": "Apenas arquivos PDF são aceitos.",
-    "exportButton": "Exportar PDF",
-    "exportTitle": "Exportar Currículo em PDF",
-    "exportDescription": "Escolha um modelo para gerar o PDF",
-    "generating": "Gerando...",
-    "generateButton": "Gerar PDF",
-    "generateSuccess": "PDF gerado com sucesso!",
-    "downloadPdf": "Baixar PDF",
-    "linkExpiry": "Link válido por 1 hora"
+  "errors": {
+    "invalid_format": "Formato de arquivo inválido. Envie um PDF.",
+    "too_large": "Arquivo muito grande. O tamanho máximo é 10MB.",
+    "limit_reached": "Limite de 5 currículos atingido. Exclua um para enviar outro.",
+    "not_found": "Currículo não encontrado.",
+    "invalid_id": "Currículo inválido.",
+    "storage_unavailable": "Serviço de armazenamento indisponível no momento. Tente novamente em instantes.",
+    "internal_error": "Erro inesperado. Tente novamente."
   }
 }

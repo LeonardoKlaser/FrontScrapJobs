@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { formatPhoneBR, formatCPF, formatCpfCnpj } from './format'
+import { formatPhoneBR, formatCPF, formatCpfCnpj, formatFileSize } from './format'
 
 describe('formatPhoneBR', () => {
   it.each([
@@ -37,5 +37,19 @@ describe('formatCpfCnpj', () => {
     ['123456789012345', '12.345.678/9012-34']
   ])('formats %s -> %s', (input, expected) => {
     expect(formatCpfCnpj(input)).toBe(expected)
+  })
+})
+
+describe('formatFileSize', () => {
+  it.each([
+    [0, '0 B'],
+    [512, '512 B'],
+    [1024, '1.0 KB'],
+    [2048, '2.0 KB'],
+    [10240, '10 KB'],
+    [1024 * 1024, '1.0 MB'],
+    [10.5 * 1024 * 1024, '10.5 MB']
+  ])('formats %i bytes -> %s', (input, expected) => {
+    expect(formatFileSize(input)).toBe(expected)
   })
 })
