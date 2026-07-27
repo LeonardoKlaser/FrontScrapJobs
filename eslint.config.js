@@ -8,7 +8,7 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import prettier from 'eslint-plugin-prettier'
 
 export default tseslint.config([
-  globalIgnores(['dist', 'coverage', 'node_modules', 'eslint.config.js', 'storybook-static', '.storybook', 'vitest.shims.d.ts']),
+  globalIgnores(['dist', 'coverage', 'node_modules', 'eslint.config.js', 'storybook-static', '.storybook', 'vitest.shims.d.ts', '.worktrees']),
   js.configs.recommended,
   ...tseslint.configs.recommended,
   defineConfig({
