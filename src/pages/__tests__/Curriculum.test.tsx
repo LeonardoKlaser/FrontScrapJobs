@@ -1,9 +1,10 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MemoryRouter } from 'react-router'
 import type { ReactNode } from 'react'
 import { Curriculum } from '@/pages/Curriculum'
+import { MAX_CURRICULUM_FILES } from '@/components/curriculum/upload-curriculum-button'
 import type { CurriculumFile } from '@/models/curriculum'
 
 vi.mock('react-i18next', () => ({
@@ -50,6 +51,14 @@ function wrap(ui: ReactNode) {
       <MemoryRouter>{ui}</MemoryRouter>
     </QueryClientProvider>
   )
+}
+
+// A CardTitle também usa o atributo HTML `title` (tooltip nativo pra nomes
+// truncados), então `screen.getByTitle` fica ambíguo com o `title` do iframe
+// do viewer — consulta o iframe diretamente pra saber qual arquivo está
+// selecionado no painel de visualização.
+function viewerIframeTitle(): string | null {
+  return document.querySelector('iframe')?.getAttribute('title') ?? null
 }
 
 function makeFile(overrides: Partial<CurriculumFile> = {}): CurriculumFile {
@@ -102,9 +111,11 @@ describe('Curriculum page (gerenciador de PDFs)', () => {
     expect(mockUpload.mock.calls[0][0]).toBe(file)
   })
 
-  it('com 5 arquivos, botão de upload fica desabilitado com tooltip de limite', () => {
+  it('com o limite de arquivos atingido, botão de upload fica desabilitado com tooltip', () => {
     mockUseCurriculumFiles.mockReturnValue({
-      data: Array.from({ length: 5 }, (_, i) => makeFile({ id: i + 1, filename: `cv-${i}.pdf` })),
+      data: Array.from({ length: MAX_CURRICULUM_FILES }, (_, i) =>
+        makeFile({ id: i + 1, filename: `cv-${i}.pdf` })
+      ),
       isLoading: false
     })
 
@@ -146,6 +157,15 @@ describe('Curriculum page (gerenciador de PDFs)', () => {
     await userEvent.click(screen.getByRole('button', { name: /list\.makePrincipalAction/ }))
 
     expect(mockSetPrincipal).toHaveBeenCalledWith(4, expect.anything())
+  })
+
+  it('erro ao buscar a lista mostra mensagem de erro e NÃO mostra o CTA de vazio', () => {
+    mockUseCurriculumFiles.mockReturnValue({ data: undefined, isLoading: false, isError: true })
+
+    render(wrap(<Curriculum />))
+
+    expect(screen.getByText(/list\.errorState/)).toBeInTheDocument()
+    expect(screen.queryByText(/list\.emptyTitle/)).not.toBeInTheDocument()
   })
 
   it('estado vazio mostra CTA de upload', () => {
@@ -204,5 +224,40 @@ describe('Curriculum page (gerenciador de PDFs)', () => {
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith('errors.not_found')
     })
+  })
+
+  it('ao excluir o arquivo selecionado, reseleciona o principal restante (não fica vazio)', async () => {
+    const files = [
+      makeFile({ id: 1, filename: 'cv-principal.pdf', is_principal: true }),
+      makeFile({ id: 2, filename: 'cv-secundario.pdf', is_principal: false })
+    ]
+    mockUseCurriculumFiles.mockReturnValue({ data: files, isLoading: false })
+    mockDelete.mockImplementation((_id, opts) => opts?.onSuccess?.())
+
+    render(wrap(<Curriculum />))
+
+    // auto-seleção inicial mostra o principal no viewer
+    expect(viewerIframeTitle()).toBe('cv-principal.pdf')
+
+    const secundarioCard = screen.getByText('cv-secundario.pdf').closest('[data-slot="card"]')
+    expect(secundarioCard).not.toBeNull()
+
+    await userEvent.click(
+      within(secundarioCard as HTMLElement).getByRole('button', { name: /list\.viewAction/ })
+    )
+    expect(viewerIframeTitle()).toBe('cv-secundario.pdf')
+
+    await userEvent.click(
+      within(secundarioCard as HTMLElement).getByRole('button', { name: /list\.deleteAction/ })
+    )
+    await userEvent.click(screen.getByRole('button', { name: /list\.confirmDelete/ }))
+
+    await waitFor(() => {
+      expect(mockDelete).toHaveBeenCalledWith(2, expect.anything())
+    })
+
+    // o arquivo secundário (excluído e selecionado) some do viewer, que volta
+    // pro principal restante em vez de ficar vazio
+    expect(viewerIframeTitle()).toBe('cv-principal.pdf')
   })
 })

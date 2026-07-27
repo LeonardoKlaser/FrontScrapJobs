@@ -20,7 +20,7 @@ import { curriculumFileErrorKey } from '@/lib/curriculumFileErrorKey'
 // removidos na Task 16.
 export function Curriculum() {
   const { t } = useTranslation('curriculum')
-  const { data: files, isLoading } = useCurriculumFiles()
+  const { data: files, isLoading, isError } = useCurriculumFiles()
   const deleteFile = useDeleteCurriculumFile()
   const setPrincipal = useSetPrincipalCurriculumFile()
   const [selectedId, setSelectedId] = useState<number | null>(null)
@@ -45,7 +45,15 @@ export function Curriculum() {
     deleteFile.mutate(id, {
       onSuccess: () => {
         toast.success(t('list.deleteSuccess'))
-        setSelectedId((current) => (current === id ? null : current))
+        setSelectedId((current) => {
+          if (current !== id) return current
+          // O arquivo selecionado acabou de ser excluído — reseleciona o
+          // principal (ou o primeiro) entre os que sobraram, em vez de deixar
+          // o painel de visualização vazio enquanto ainda há currículos.
+          const remaining = list.filter((f) => f.id !== id)
+          if (remaining.length === 0) return null
+          return (remaining.find((f) => f.is_principal) ?? remaining[0]).id
+        })
       },
       onError: (error) => toast.error(t(curriculumFileErrorKey(error)))
     })
@@ -66,7 +74,13 @@ export function Curriculum() {
       <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8 space-y-6">
         <p className="text-sm text-muted-foreground">{t('description')}</p>
 
-        {!isLoading && !hasFiles && (
+        {isError && (
+          <div className="flex items-center justify-center h-64">
+            <p className="text-sm text-destructive">{t('list.errorState')}</p>
+          </div>
+        )}
+
+        {!isError && !isLoading && !hasFiles && (
           <EmptyState
             icon={FileText}
             title={t('list.emptyTitle')}
@@ -75,7 +89,7 @@ export function Curriculum() {
           />
         )}
 
-        {hasFiles && (
+        {!isError && hasFiles && (
           <>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {list.map((file) => (

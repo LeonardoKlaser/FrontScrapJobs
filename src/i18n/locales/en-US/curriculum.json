@@ -1,6 +1,7 @@
 {
   "description": "Upload and manage your resume PDFs. The file marked as principal is the one used for job analyses.",
   "list": {
+    "errorState": "Failed to load resumes. Please try again.",
     "emptyTitle": "No resume uploaded yet",
     "emptyDescription": "Upload a PDF of your resume to start receiving job analyses.",
     "uploadedAt": "Uploaded on {{date}}",

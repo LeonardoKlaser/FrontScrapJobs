@@ -1,6 +1,7 @@
 {
   "description": "Envie e gerencie os PDFs do seu currículo. O arquivo marcado como principal é o usado nas análises de vagas.",
   "list": {
+    "errorState": "Erro ao carregar currículos. Tente novamente.",
     "emptyTitle": "Nenhum currículo enviado ainda",
     "emptyDescription": "Envie um PDF do seu currículo para começar a receber análises de vagas.",
     "uploadedAt": "Enviado em {{date}}",
