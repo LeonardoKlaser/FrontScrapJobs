@@ -24,3 +24,14 @@ export interface Curriculum {
   experiences: Experience[]
   educations: Education[]
 }
+
+// CurriculumFile representa um PDF de currículo armazenado no object storage
+// (R2). Substitui o modelo estruturado `Curriculum` acima, que sera removido
+// na Task 16 apos a migracao completa do fluxo de currículo pra PDFs.
+export interface CurriculumFile {
+  id: number
+  filename: string
+  size_bytes: number
+  is_principal: boolean
+  created_at: string
+}
