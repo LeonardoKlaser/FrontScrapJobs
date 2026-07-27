@@ -343,6 +343,14 @@ async function setupMocks(page: Page, opts: MockAPIOptions = {}) {
     return route.fallback()
   })
 
+  // Curriculum files (Task 13+): GET /api/curriculum-files — empty by default.
+  // The analysis dialog (Task 15) fetches this whenever it's open (gated by
+  // `enabled: open`, but Home still mounts the dialog component on every
+  // dashboard load), so specs that never open it still need a safe default.
+  await page.route(`${apiBase}/api/curriculum-files`, (route) =>
+    route.fulfill({ status: 200, json: { files: [] } })
+  )
+
   // Plans: GET /api/plans
   await page.route(`${apiBase}/api/plans`, (route) =>
     route.fulfill({ status: 200, json: mockPlans })

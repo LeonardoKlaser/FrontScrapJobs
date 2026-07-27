@@ -39,11 +39,23 @@ export function OptimizationPromptSection({
     })
   }
 
-  const handleCopy = () => {
+  const handleCopy = async () => {
     if (!data?.prompt) return
-    navigator.clipboard.writeText(data.prompt)
-    setCopied(true)
-    window.setTimeout(() => setCopied(false), 2000)
+    // navigator.clipboard é undefined em contextos não-seguros (http sem
+    // localhost) — sem o guard, writeText jogaria um TypeError síncrono antes
+    // mesmo do try/catch abaixo entrar em ação.
+    if (!navigator.clipboard?.writeText) {
+      toast.error(t('analysis.optimization.copyError'))
+      return
+    }
+    try {
+      await navigator.clipboard.writeText(data.prompt)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.warn('optimization prompt: falha ao copiar pra área de transferência', err)
+      toast.error(t('analysis.optimization.copyError'))
+    }
   }
 
   return (

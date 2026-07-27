@@ -81,6 +81,14 @@ function Step1Upload({ onNext, onSkip }: Step1Props) {
     if (fileInputRef.current) fileInputRef.current.value = ''
     if (!file) return
 
+    // Guarda client-side pra falhar rápido em arquivos claramente errados —
+    // o backend valida de novo (é a fonte de verdade), isto é só UX: evita a
+    // viagem de rede pra um erro óbvio (achado da review, restaurado após a
+    // Task 15 ter trocado extractPdf por upload direto).
+    if (file.type !== 'application/pdf') {
+      toast.error(tCurriculum('errors.invalid_format'))
+      return
+    }
     if (file.size > MAX_FILE_SIZE) {
       toast.error(tCurriculum('errors.too_large'))
       return

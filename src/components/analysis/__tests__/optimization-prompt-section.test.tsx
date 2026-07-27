@@ -93,6 +93,35 @@ describe('OptimizationPromptSection', () => {
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith('Reescreva seu CV.')
   })
 
+  it('mostra toast de erro quando o clipboard rejeita (sem marcar como copiado)', async () => {
+    const { toast } = await import('sonner')
+    Object.assign(navigator, {
+      clipboard: { writeText: vi.fn().mockRejectedValue(new Error('denied')) }
+    })
+    mockMutationState = { data: { prompt: 'Reescreva seu CV.', cached: false }, isPending: false }
+    render(<OptimizationPromptSection notificationId={5} curriculumFileId={9} />)
+
+    await userEvent.click(screen.getByRole('button', { name: 'analysis.optimization.copy' }))
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith('analysis.optimization.copyError')
+    })
+    expect(screen.getByRole('button', { name: 'analysis.optimization.copy' })).toBeInTheDocument()
+  })
+
+  it('mostra toast de erro sem lançar quando navigator.clipboard é undefined (contexto não-seguro)', async () => {
+    const { toast } = await import('sonner')
+    Object.assign(navigator, { clipboard: undefined })
+    mockMutationState = { data: { prompt: 'Reescreva seu CV.', cached: false }, isPending: false }
+    render(<OptimizationPromptSection notificationId={5} curriculumFileId={9} />)
+
+    await userEvent.click(screen.getByRole('button', { name: 'analysis.optimization.copy' }))
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith('analysis.optimization.copyError')
+    })
+  })
+
   it('mostra o prompt instantaneamente independente do valor de cached', () => {
     mockMutationState = { data: { prompt: 'Prompt cacheado.', cached: true }, isPending: false }
     render(<OptimizationPromptSection notificationId={5} curriculumFileId={9} />)

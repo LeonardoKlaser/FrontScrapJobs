@@ -53,6 +53,28 @@ describe('useCurriculumFiles', () => {
 
     expect(result.current.data).toEqual([mockFile])
   })
+
+  it('defaults to enabled when no options are passed', async () => {
+    vi.mocked(curriculumFilesService.list).mockResolvedValue([mockFile])
+
+    const { wrapper } = createWrapper()
+    const { result } = renderHook(() => useCurriculumFiles(), { wrapper })
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+    expect(curriculumFilesService.list).toHaveBeenCalledTimes(1)
+    expect(result.current.data).toEqual([mockFile])
+  })
+
+  it('does not fetch when enabled is false (analysis dialog gate)', async () => {
+    vi.mocked(curriculumFilesService.list).mockResolvedValue([mockFile])
+
+    const { wrapper } = createWrapper()
+    const { result } = renderHook(() => useCurriculumFiles({ enabled: false }), { wrapper })
+
+    expect(result.current.isLoading).toBe(false)
+    expect(result.current.data).toBeUndefined()
+    expect(curriculumFilesService.list).not.toHaveBeenCalled()
+  })
 })
 
 describe('useUploadCurriculumFile', () => {

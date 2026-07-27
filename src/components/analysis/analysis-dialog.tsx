@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 import {
   Dialog,
   DialogContent,
@@ -20,12 +21,15 @@ import {
   Mail,
   TrendingUp,
   TrendingDown,
-  RefreshCw
+  RefreshCw,
+  FileText,
+  Upload
 } from 'lucide-react'
 import { useAnalyzeJob, useAnalysisHistory, useSendAnalysisEmail } from '@/hooks/useAnalysis'
 import { useCurriculumFiles } from '@/hooks/useCurriculumFiles'
 import { OptimizationPromptSection } from './optimization-prompt-section'
 import { formatFileSize } from '@/lib/format'
+import { PATHS } from '@/router/paths'
 import type { ResumeAnalysis } from '@/services/analysisService'
 import { isAxiosError } from 'axios'
 import { toast } from 'sonner'
@@ -390,7 +394,12 @@ export function AnalysisDialog({
   const [selectedFileId, setSelectedFileId] = useState<number | null>(null)
   const [analysisResult, setAnalysisResult] = useState<ResumeAnalysis | null>(null)
 
-  const { data: curriculumFiles } = useCurriculumFiles()
+  // enabled: open — o dialog é montado incondicionalmente em Home.tsx (só a
+  // visibilidade é controlada pelo Dialog), então sem esse gate todo load do
+  // dashboard disparava GET /api/curriculum-files à toa (achado da review).
+  const { data: curriculumFiles, isLoading: isLoadingCurriculumFiles } = useCurriculumFiles({
+    enabled: open
+  })
   const { data: historyData, isLoading: isLoadingHistory } = useAnalysisHistory(open ? jobId : null)
   const { mutate: analyzeJob, isError, error, reset: resetAnalysis } = useAnalyzeJob()
 
@@ -471,14 +480,15 @@ export function AnalysisDialog({
     return t('analysis.error')
   }
 
-  // curriculumFileId/notificationId da análise ativa (tanto histórico quanto
-  // recém-gerada) vêm sempre de historyData (GetAnalysisHistory) — inclusive
-  // logo após analisar, já que useAnalyzeJob invalida essa query e o histórico
-  // é reconsultado em segundo plano. Uma única fonte de verdade evita
-  // divergência entre o resultado "fresco" (retorno cru do POST, sem esses
-  // ids) e o que veio do histórico.
-  const activeCurriculumFileId = historyData?.curriculum_file_id ?? null
+  // notificationId não tem outra fonte além do histórico (GetAnalysisHistory)
+  // — nem o resultado "fresco" do POST /api/analyze-job carrega esse id (ver
+  // Task 15 report). Aceita-se a ausência momentânea logo após analisar: a
+  // invalidação de useAnalyzeJob já refaz essa query em segundo plano, e a
+  // seção de otimização só aparece quando o id chega.
   const activeNotificationId = historyData?.notification_id ?? null
+  // curriculumFileId do histórico (step 'history') — análise já persistida,
+  // sem seleção local pra confiar.
+  const historyCurriculumFileId = historyData?.curriculum_file_id ?? null
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
@@ -501,7 +511,7 @@ export function AnalysisDialog({
           <AnalysisResultPanel
             analysis={analysisResult}
             jobId={jobId}
-            curriculumFileId={activeCurriculumFileId}
+            curriculumFileId={historyCurriculumFileId}
             notificationId={activeNotificationId}
             onRedo={handleRedo}
           />
@@ -510,61 +520,86 @@ export function AnalysisDialog({
         {/* Curriculum selection */}
         {step === 'select' && (
           <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">{t('analysis.selectCurriculum')}</p>
-            <p className="text-xs text-muted-foreground">{t('analysis.principalCaption')}</p>
-            <div className="grid gap-2 max-h-[40vh] overflow-y-auto pr-1">
-              {curriculumFiles?.map((file) => (
-                <Card
-                  key={file.id}
-                  className={`cursor-pointer p-3 transition-all duration-150 ${
-                    selectedFileId === file.id
-                      ? 'border-primary/50 bg-primary/5'
-                      : 'hover:bg-muted/30'
-                  }`}
-                  onClick={() => setSelectedFileId(file.id)}
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <p className="text-sm font-medium truncate">{file.filename}</p>
-                    {file.is_principal && (
-                      <Badge variant="secondary" className="shrink-0 text-xs">
-                        {t('analysis.principalBadge')}
-                      </Badge>
-                    )}
-                  </div>
-                  <p className="text-xs text-muted-foreground">{formatFileSize(file.size_bytes)}</p>
-                </Card>
-              ))}
-            </div>
-            {isError && (
-              <div className="flex items-center gap-2 text-sm text-destructive">
-                <AlertTriangle className="h-4 w-4" />
-                {getErrorMessage()}
+            {!isLoadingCurriculumFiles && curriculumFiles && curriculumFiles.length === 0 ? (
+              <div className="flex flex-col items-center gap-3 py-10 text-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                  <FileText className="h-5 w-5 text-muted-foreground" />
+                </div>
+                <p className="max-w-sm text-sm text-muted-foreground">
+                  {t('analysis.noCurriculumError')}
+                </p>
+                <Button asChild variant="outline" size="sm" className="gap-2" onClick={onClose}>
+                  <Link to={PATHS.app.curriculum}>
+                    <Upload className="h-3.5 w-3.5" />
+                    {t('analysis.goToCurriculum')}
+                  </Link>
+                </Button>
               </div>
+            ) : (
+              <>
+                <p className="text-sm text-muted-foreground">{t('analysis.selectCurriculum')}</p>
+                <p className="text-xs text-muted-foreground">{t('analysis.principalCaption')}</p>
+                <div className="grid gap-2 max-h-[40vh] overflow-y-auto pr-1">
+                  {curriculumFiles?.map((file) => (
+                    <Card
+                      key={file.id}
+                      className={`cursor-pointer p-3 transition-all duration-150 ${
+                        selectedFileId === file.id
+                          ? 'border-primary/50 bg-primary/5'
+                          : 'hover:bg-muted/30'
+                      }`}
+                      onClick={() => setSelectedFileId(file.id)}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="text-sm font-medium truncate">{file.filename}</p>
+                        {file.is_principal && (
+                          <Badge variant="secondary" className="shrink-0 text-xs">
+                            {t('analysis.principalBadge')}
+                          </Badge>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {formatFileSize(file.size_bytes)}
+                      </p>
+                    </Card>
+                  ))}
+                </div>
+                {isError && (
+                  <div className="flex items-center gap-2 text-sm text-destructive">
+                    <AlertTriangle className="h-4 w-4" />
+                    {getErrorMessage()}
+                  </div>
+                )}
+                <div className="flex justify-end">
+                  <Button
+                    variant="glow"
+                    size="sm"
+                    disabled={!selectedFileId}
+                    onClick={handleAnalyze}
+                    className="gap-2"
+                  >
+                    <Target className="h-3.5 w-3.5" />
+                    {t('analysis.generate')}
+                  </Button>
+                </div>
+              </>
             )}
-            <div className="flex justify-end">
-              <Button
-                variant="glow"
-                size="sm"
-                disabled={!selectedFileId}
-                onClick={handleAnalyze}
-                className="gap-2"
-              >
-                <Target className="h-3.5 w-3.5" />
-                {t('analysis.generate')}
-              </Button>
-            </div>
           </div>
         )}
 
         {/* Analyzing */}
         {step === 'analyzing' && <AnalyzingState />}
 
-        {/* New analysis result */}
+        {/* New analysis result — curriculumFileId vem do arquivo escolhido
+            localmente (selectedFileId), não do histórico: é exato e instantâneo,
+            sem esperar o refetch em segundo plano que só o notificationId precisa
+            aguardar (achado da review — histórico podia mostrar o PDF de uma
+            análise anterior por uma fração de segundo). */}
         {step === 'result' && analysisResult && jobId !== null && (
           <AnalysisResultPanel
             analysis={analysisResult}
             jobId={jobId}
-            curriculumFileId={activeCurriculumFileId}
+            curriculumFileId={selectedFileId}
             notificationId={activeNotificationId}
             onRedo={handleRedo}
           />

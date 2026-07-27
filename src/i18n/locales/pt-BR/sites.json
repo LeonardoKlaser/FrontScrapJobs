@@ -115,6 +115,7 @@
     "curriculumUsed": "Currículo utilizado",
     "curriculumDeleted": "Currículo removido",
     "noCurriculumError": "Você ainda não tem um currículo em PDF. Envie um na página de Currículo antes de analisar.",
+    "goToCurriculum": "Enviar currículo",
     "storageUnavailableError": "Serviço de armazenamento indisponível no momento. Tente novamente em instantes.",
     "optimization": {
       "title": "Otimize seu currículo",
@@ -124,7 +125,8 @@
       "copied": "Copiado!",
       "download": "Baixar meu currículo",
       "error": "Erro ao gerar o prompt de otimização. Tente novamente.",
-      "noAnalysisError": "Esta análise ainda não tem um resultado salvo. Refaça a análise antes de gerar o prompt."
+      "noAnalysisError": "Esta análise ainda não tem um resultado salvo. Refaça a análise antes de gerar o prompt.",
+      "copyError": "Não foi possível copiar o prompt. Selecione o texto manualmente."
     }
   }
 }

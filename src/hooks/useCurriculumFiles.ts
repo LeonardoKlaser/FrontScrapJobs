@@ -3,10 +3,11 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 const CURRICULUM_FILES_KEY = ['curriculum-files']
 
-export function useCurriculumFiles() {
+export function useCurriculumFiles(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: CURRICULUM_FILES_KEY,
-    queryFn: curriculumFilesService.list
+    queryFn: curriculumFilesService.list,
+    enabled: options?.enabled ?? true
   })
 }
 

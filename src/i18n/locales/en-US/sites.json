@@ -115,6 +115,7 @@
     "curriculumDeleted": "Resume removed",
     "atsKeywords": "ATS Keywords",
     "noCurriculumError": "You don't have a PDF resume yet. Upload one on the Resume page before analyzing.",
+    "goToCurriculum": "Upload resume",
     "storageUnavailableError": "Storage service is currently unavailable. Please try again shortly.",
     "optimization": {
       "title": "Optimize your resume",
@@ -124,7 +125,8 @@
       "copied": "Copied!",
       "download": "Download my resume",
       "error": "Failed to generate the optimization prompt. Please try again.",
-      "noAnalysisError": "This analysis doesn't have a saved result yet. Redo the analysis before generating the prompt."
+      "noAnalysisError": "This analysis doesn't have a saved result yet. Redo the analysis before generating the prompt.",
+      "copyError": "Couldn't copy the prompt. Please select the text manually."
     }
   }
 }
