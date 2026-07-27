@@ -39,16 +39,27 @@ describe('analysisService', () => {
   })
 
   describe('analyzeJob', () => {
-    it('sends POST /api/analyze-job with job_id and curriculum_id', async () => {
+    it('sends POST /api/analyze-job with job_id and curriculum_file_id', async () => {
       vi.mocked(api.post).mockResolvedValue({ data: mockAnalysis })
 
       const result = await analysisService.analyzeJob(42, 1)
 
       expect(api.post).toHaveBeenCalledWith('/api/analyze-job', {
         job_id: 42,
-        curriculum_id: 1
+        curriculum_file_id: 1
       })
       expect(result).toEqual(mockAnalysis)
+    })
+
+    it('sends curriculum_file_id null to let the backend use the principal file', async () => {
+      vi.mocked(api.post).mockResolvedValue({ data: mockAnalysis })
+
+      await analysisService.analyzeJob(42, null)
+
+      expect(api.post).toHaveBeenCalledWith('/api/analyze-job', {
+        job_id: 42,
+        curriculum_file_id: null
+      })
     })
 
     it('throws on failure', async () => {
@@ -60,7 +71,12 @@ describe('analysisService', () => {
 
   describe('getAnalysisHistory', () => {
     it('sends GET /api/analyze-job/history with job_id param', async () => {
-      const mockHistory = { has_analysis: true, analysis: mockAnalysis, curriculum_id: 1 }
+      const mockHistory = {
+        has_analysis: true,
+        analysis: mockAnalysis,
+        curriculum_file_id: 3,
+        notification_id: 9
+      }
       vi.mocked(api.get).mockResolvedValue({ data: mockHistory })
 
       const result = await analysisService.getAnalysisHistory(42)
@@ -82,6 +98,19 @@ describe('analysisService', () => {
         job_id: 42,
         analysis: mockAnalysis
       })
+    })
+  })
+
+  describe('getOptimizationPrompt', () => {
+    it('sends POST /api/analyze-job/:id/optimization-prompt', async () => {
+      vi.mocked(api.post).mockResolvedValue({
+        data: { prompt: 'Reescreva seu CV...', cached: false }
+      })
+
+      const result = await analysisService.getOptimizationPrompt(9)
+
+      expect(api.post).toHaveBeenCalledWith('/api/analyze-job/9/optimization-prompt')
+      expect(result).toEqual({ prompt: 'Reescreva seu CV...', cached: false })
     })
   })
 })

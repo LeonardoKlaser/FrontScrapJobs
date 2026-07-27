@@ -1,7 +1,7 @@
 import { api } from './api'
 import axios from 'axios'
 import type { Curriculum } from '@/models/curriculum'
-import type { Template, ApplySuggestionsPayload, ApplySuggestionsResponse } from '@/models/pdf'
+import type { Template } from '@/models/pdf'
 
 export const pdfService = {
   extractPdf: async (file: File): Promise<Omit<Curriculum, 'id'>> => {
@@ -16,20 +16,6 @@ export const pdfService = {
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         throw new Error(error.response.data.error || 'Não foi possível extrair dados do PDF.')
-      }
-      throw new Error('Não foi possível conectar ao servidor.')
-    }
-  },
-
-  applySuggestions: async (payload: ApplySuggestionsPayload): Promise<ApplySuggestionsResponse> => {
-    try {
-      const { data } = await api.post('/curriculum/apply-suggestions', payload, {
-        timeout: 90000
-      })
-      return data
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.error || 'Não foi possível aplicar as sugestões.')
       }
       throw new Error('Não foi possível conectar ao servidor.')
     }

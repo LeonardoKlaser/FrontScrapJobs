@@ -1,18 +1,14 @@
 {
   "step1": {
-    "title": "Envie seu currículo",
+    "title": "Envie seu currículo em PDF",
     "description": "Usamos IA para cruzar seu perfil com as vagas e mostrar seu nível de compatibilidade + sugestões de melhoria.",
     "uploadAria": "Fazer upload do currículo em PDF",
     "selectPdf": "Clique para selecionar seu PDF",
-    "fileSizeHint": "PDF até 5 MB",
-    "processing": "Processando currículo...",
+    "fileSizeHint": "PDF até 10 MB",
     "uploading": "Enviando...",
     "selectButton": "Selecionar PDF",
     "skipForNow": "Pular por enquanto",
-    "errorPdfType": "Por favor, envie um arquivo PDF.",
-    "errorFileSize": "Arquivo muito grande. O tamanho máximo é 5 MB.",
-    "successImport": "Currículo importado com sucesso!",
-    "cvUploadError": "Não conseguimos processar seu currículo. Tente novamente em alguns instantes ou pule esta etapa."
+    "successImport": "Currículo enviado com sucesso!"
   },
   "step2": {
     "title": "Escolha empresas para monitorar",

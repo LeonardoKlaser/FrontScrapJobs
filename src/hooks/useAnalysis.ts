@@ -5,8 +5,8 @@ import type { ResumeAnalysis } from '@/services/analysisService'
 export function useAnalyzeJob() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ jobId, curriculumId }: { jobId: number; curriculumId: number }) =>
-      analysisService.analyzeJob(jobId, curriculumId),
+    mutationFn: ({ jobId, curriculumFileId }: { jobId: number; curriculumFileId: number | null }) =>
+      analysisService.analyzeJob(jobId, curriculumFileId),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['analysisHistory', variables.jobId] })
     }
@@ -25,5 +25,14 @@ export function useSendAnalysisEmail() {
   return useMutation({
     mutationFn: ({ jobId, analysis }: { jobId: number; analysis: ResumeAnalysis }) =>
       analysisService.sendAnalysisEmail(jobId, analysis)
+  })
+}
+
+// useOptimizationPrompt gera o prompt de otimização pra uma análise (Task 7).
+// notificationId é fixo por instância (a seção que o consome já nasce presa a
+// uma análise específica) — mutate() não recebe variáveis.
+export function useOptimizationPrompt(notificationId: number) {
+  return useMutation({
+    mutationFn: () => analysisService.getOptimizationPrompt(notificationId)
   })
 }

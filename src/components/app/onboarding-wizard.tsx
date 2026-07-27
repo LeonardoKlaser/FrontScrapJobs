@@ -23,16 +23,19 @@ import {
 } from '@/hooks/useRegisterUserSite'
 import { useUser } from '@/hooks/useUser'
 import { useLatestJobs } from '@/hooks/useDashboard'
-import { useExtractPdf } from '@/hooks/usePdf'
-import { useCreateCurriculum, useCurriculum } from '@/hooks/useCurriculum'
+import { useCurriculumFiles, useUploadCurriculumFile } from '@/hooks/useCurriculumFiles'
 import { useCompleteWebOnboarding } from '@/hooks/useOnboarding'
 import { trackTrial } from '@/lib/analytics'
 import { safeHref } from '@/utils/url'
+import { curriculumFileErrorKey } from '@/lib/curriculumFileErrorKey'
 import { toast } from 'sonner'
 import type { SiteCareer } from '@/models/siteCareer'
-import type { Curriculum } from '@/models/curriculum'
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024
+// Alinhado ao limite real do backend de /api/curriculum-files (Task 4:
+// usecase.MaxCurriculumSizeBytes) — o upload direto substitui a extração via
+// IA (Task 15, spec 2026-07-27), então o teto de tamanho deixa de ser da IA
+// e passa a ser o do object storage.
+const MAX_FILE_SIZE = 10 * 1024 * 1024
 // Versionar a key permite re-mostrar o wizard pra users que ja dispensaram
 // quando o shape/copy mudar — bumpar pra v2 ao introduzir step novo etc.
 // Mantemos a key legada cleanup-only (sem leitura) pra usuarios antigos
@@ -69,49 +72,38 @@ interface Step1Props {
 
 function Step1Upload({ onNext, onSkip }: Step1Props) {
   const { t } = useTranslation('onboarding')
+  const { t: tCurriculum } = useTranslation('curriculum')
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const { mutate: extractPdf, isPending: isExtracting } = useExtractPdf()
-  const { mutate: createCurriculum, isPending: isSaving } = useCreateCurriculum()
-  const isPending = isExtracting || isSaving
+  const { mutate: upload, isPending } = useUploadCurriculumFile()
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
+    if (fileInputRef.current) fileInputRef.current.value = ''
     if (!file) return
 
-    if (file.type !== 'application/pdf') {
-      toast.error(t('step1.errorPdfType'))
-      return
-    }
     if (file.size > MAX_FILE_SIZE) {
-      toast.error(t('step1.errorFileSize'))
+      toast.error(tCurriculum('errors.too_large'))
       return
     }
 
-    extractPdf(file, {
-      onSuccess: (data: Omit<Curriculum, 'id'>) => {
-        createCurriculum(data, {
-          onSuccess: () => {
-            toast.success(t('step1.successImport'))
-            trackTrial('onboarding_step_1')
-            onNext()
-          },
-          onError: (err) => {
-            // Backend errors carry implementation detail (ex: rate-limit codes,
-            // SQL constraint names). User-facing copy stays generic and
-            // actionable — log to console pra trilha de suporte sem expor pro
-            // usuario.
-            console.error('onboarding cv createCurriculum failed', err)
-            toast.error(t('step1.cvUploadError'))
-          }
-        })
+    // Upload direto pro object storage (Task 15, spec 2026-07-27) — sem
+    // extração via IA. O PDF vira o principal do usuário (primeiro arquivo)
+    // e alimenta a análise ATS direto (Task 6), sem struct Curriculum.
+    upload(file, {
+      onSuccess: () => {
+        toast.success(t('step1.successImport'))
+        trackTrial('onboarding_step_1')
+        onNext()
       },
       onError: (err) => {
-        console.error('onboarding cv extractPdf failed', err)
-        toast.error(t('step1.cvUploadError'))
+        // Backend errors carry implementation detail (ex: slugs de validação).
+        // User-facing copy vem do mapeamento já usado na página de currículo
+        // (Task 13/14) — log to console pra trilha de suporte sem expor pro
+        // usuario.
+        console.error('onboarding cv upload failed', err)
+        toast.error(tCurriculum(curriculumFileErrorKey(err)))
       }
     })
-
-    if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   return (
@@ -149,7 +141,7 @@ function Step1Upload({ onNext, onSkip }: Step1Props) {
         </div>
         <div className="space-y-1">
           <p className="text-sm font-medium text-foreground">
-            {isPending ? t('step1.processing') : t('step1.selectPdf')}
+            {isPending ? t('step1.uploading') : t('step1.selectPdf')}
           </p>
           <p className="text-xs text-muted-foreground">{t('step1.fileSizeHint')}</p>
         </div>
@@ -491,21 +483,23 @@ interface OnboardingWizardProps {
 export function OnboardingWizard({ onDismiss }: OnboardingWizardProps = {}) {
   const [step, setStep] = useState(1)
   const [dismissed, setDismissed] = useState(false)
-  const { data: curriculumList, isLoading: curriculumLoading } = useCurriculum()
+  const { data: curriculumFiles, isLoading: curriculumFilesLoading } = useCurriculumFiles()
   const reconciledRef = useRef(false)
 
-  // Avanca pra step 2 se o user ja tem curriculum cadastrado (refresh mid-wizard
+  // Avanca pra step 2 se o user ja tem currículo enviado (refresh mid-wizard
   // ou re-abertura). Sem isso, refresh apos upload bem-sucedido voltava pro
-  // step 1 e o user re-extraia o PDF (custa OpenAI quota + UX confuso).
-  // Roda 1x quando a query resolve — depois disso, navegacao do user controla.
+  // step 1 e o user reenviava o PDF à toa. Fonte agora é curriculum-files
+  // (Task 15) — mesmo destino do upload do step 1, não mais o Curriculum
+  // estruturado antigo. Roda 1x quando a query resolve — depois disso,
+  // navegacao do user controla.
   useEffect(() => {
     if (reconciledRef.current) return
-    if (curriculumLoading) return
+    if (curriculumFilesLoading) return
     reconciledRef.current = true
-    if (curriculumList && curriculumList.length > 0) {
+    if (curriculumFiles && curriculumFiles.length > 0) {
       setStep((prev) => (prev < 2 ? 2 : prev))
     }
-  }, [curriculumList, curriculumLoading])
+  }, [curriculumFiles, curriculumFilesLoading])
 
   const handleDismiss = () => {
     try {
