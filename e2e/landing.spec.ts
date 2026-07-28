@@ -50,7 +50,7 @@ test.describe('landing page', () => {
     await expect(page.locator('#pricing')).toBeInViewport()
   })
 
-  test('hero CTA scrolls to pricing and trial routes to /signup', async ({ page }) => {
+  test('hero CTA scrolls to pricing and the paid plan CTA routes to /signup', async ({ page }) => {
     await page.goto('/')
     // 'Começar grátis' aparece no hero e no CTA final — o hero é o primeiro no DOM.
     await page
@@ -58,8 +58,12 @@ test.describe('landing page', () => {
       .first()
       .click()
     await expect(page.locator('#pricing')).toBeInViewport()
-    // seleciona pelo id estável (#cta-plan-trial), não pelo texto
-    await page.locator('#cta-plan-trial').click()
-    await expect(page).toHaveURL(/\/signup/)
+
+    // PricingSection só renderiza cards pra planos pagos (is_trial: false) —
+    // ver pricing-section.tsx:40. O plano trial não tem CTA nenhum na landing
+    // hoje, então não há mais um #cta-plan-trial pra clicar; seleciona pelo id
+    // estável do plano pago mockado acima ("Mensal" → #cta-plan-mensal).
+    await page.locator('#cta-plan-mensal').click()
+    await expect(page).toHaveURL(/\/signup\?plan=2/)
   })
 })

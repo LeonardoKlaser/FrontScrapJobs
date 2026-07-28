@@ -39,8 +39,14 @@ test.describe('Dashboard', () => {
   })
 
   test('paginacao navega entre paginas', async ({ page }) => {
-    // Page indicator visible
-    await expect(page.locator('text=/ 2')).toBeVisible()
+    // O indicador compacto "N / total" só existe no layout mobile (sm:hidden em
+    // pagination.tsx) — sempre oculto no viewport padrão do Playwright. Desktop
+    // mostra botões numerados com aria-label "Página N" + aria-current="page".
+    await expect(page.getByRole('button', { name: 'Página 1' })).toHaveAttribute(
+      'aria-current',
+      'page'
+    )
+    await expect(page.getByRole('button', { name: 'Página 2' })).toBeVisible()
 
     // Click next button
     const nextBtn = page.locator('button').filter({ hasText: /Próximo/ })
@@ -48,6 +54,10 @@ test.describe('Dashboard', () => {
 
     // Should show page 2 jobs
     await expect(page.locator('td').filter({ hasText: 'Vaga 11' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Página 2' })).toHaveAttribute(
+      'aria-current',
+      'page'
+    )
   })
 
   test('URLs monitoradas exibem como chips', async ({ page }) => {
