@@ -225,13 +225,16 @@ describe('AnalysisDialog', () => {
     expect(screen.queryByRole('button', { name: 'analysis.generate' })).not.toBeInTheDocument()
   })
 
-  it('mostra estado de erro distinto (com retry) quando a busca de currículos falha', async () => {
+  it('mostra estado de erro distinto (com retry) quando o carregamento inicial de currículos falha', async () => {
     const mockRefetch = vi.fn()
     mockUseAnalysisHistory.mockReturnValue({ data: { has_analysis: false }, isLoading: false })
     mockUseCurriculumFiles.mockReturnValue({
       data: undefined,
       isLoading: false,
-      isError: true,
+      // isLoadingError (não isError): sem cache nenhum, o erro ocorreu no
+      // carregamento inicial — este é o único caso que deve mostrar o
+      // bloqueio de erro em vez da lista.
+      isLoadingError: true,
       refetch: mockRefetch
     })
 
@@ -248,5 +251,29 @@ describe('AnalysisDialog', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'analysis.retry' }))
     expect(mockRefetch).toHaveBeenCalledTimes(1)
+  })
+
+  it('falha de refetch em segundo plano NÃO esconde os currículos já em cache', async () => {
+    mockUseAnalysisHistory.mockReturnValue({ data: { has_analysis: false }, isLoading: false })
+    mockUseCurriculumFiles.mockReturnValue({
+      data: [makeFile({ id: 1, filename: 'cv-em-cache.pdf', is_principal: true })],
+      isLoading: false,
+      // isError true mas isLoadingError false: já havia dados em cache (ex.:
+      // staleTime de 5min expirou e o refetch em segundo plano falhou, tipo
+      // dialog reaberto depois desse tempo com um hiccup de rede) — mesmo
+      // princípio do item 2 (Curriculum.tsx): não pode esconder um seletor
+      // utilizável atrás do estado de erro.
+      isError: true,
+      isLoadingError: false,
+      refetch: vi.fn()
+    })
+
+    render(wrap(<AnalysisDialog jobId={7} open onClose={vi.fn()} />))
+
+    await waitFor(() => {
+      expect(screen.getByText('cv-em-cache.pdf')).toBeInTheDocument()
+    })
+    expect(screen.queryByText('analysis.curriculumFilesError')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'analysis.generate' })).toBeInTheDocument()
   })
 })

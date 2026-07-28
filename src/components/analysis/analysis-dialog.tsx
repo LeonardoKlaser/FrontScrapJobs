@@ -389,7 +389,7 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
   const {
     data: curriculumFiles,
     isLoading: isLoadingCurriculumFiles,
-    isError: isCurriculumFilesError,
+    isLoadingError: isCurriculumFilesLoadingError,
     refetch: refetchCurriculumFiles
   } = useCurriculumFiles({
     enabled: open
@@ -506,8 +506,13 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
             {/* Erro ao carregar a lista de currículos — distinto do estado vazio
                 (zero PDFs cadastrados) abaixo: aqui o usuário TEM currículos,
                 só não conseguimos buscá-los agora, então oferecemos retry em
-                vez do CTA de "enviar currículo" (achado da review). */}
-            {!isLoadingCurriculumFiles && isCurriculumFilesError ? (
+                vez do CTA de "enviar currículo" (achado da review). isLoadingError
+                (não isError) — mesmo princípio do item 2 (Curriculum.tsx): com
+                staleTime de 5min, é fácil reabrir o dialog depois desse tempo e
+                uma falha de refetch em segundo plano não pode esconder currículos
+                já carregados em cache; só o erro no carregamento inicial (sem
+                cache) cai neste branch. */}
+            {!isLoadingCurriculumFiles && isCurriculumFilesLoadingError ? (
               <div className="flex flex-col items-center gap-3 py-10 text-center">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
                   <AlertTriangle className="h-5 w-5 text-destructive" />
