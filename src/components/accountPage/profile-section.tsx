@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { useUpdateProfile } from '@/hooks/useUpdateProfile'
 import { useButtonState } from '@/hooks/useButtonState'
+import { formatCPF } from '@/lib/format'
 import { toast } from 'sonner'
 import type { User } from '@/models/user'
 
@@ -120,10 +121,13 @@ export function ProfileSection({ user }: { user: User | undefined }) {
 
           <div className="space-y-2">
             <Label htmlFor="tax">{t('profile.cpfLabel')}</Label>
+            {/* Estado guarda só dígitos (mesmo formato que a API devolve/espera);
+                a máscara 000.000.000-00 é só de exibição. */}
             <Input
               id="tax"
-              value={tax}
-              onChange={(e) => setTax(e.target.value)}
+              inputMode="numeric"
+              value={formatCPF(tax)}
+              onChange={(e) => setTax(e.target.value.replace(/\D/g, '').slice(0, 11))}
               placeholder={t('profile.cpfPlaceholder')}
             />
           </div>

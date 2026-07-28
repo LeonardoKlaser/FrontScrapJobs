@@ -118,6 +118,7 @@
     "curriculumFilesError": "Não foi possível carregar seus currículos. Tente novamente.",
     "retry": "Tentar novamente",
     "storageUnavailableError": "Serviço de armazenamento indisponível no momento. Tente novamente em instantes.",
+    "aiUnavailableError": "IA temporariamente indisponível. Nada foi descontado da sua cota — tente novamente em instantes.",
     "optimization": {
       "title": "Otimize seu currículo",
       "description": "Geramos um prompt pronto pra colar em outra IA (ChatGPT, Claude, Gemini) junto do seu PDF, reescrevendo o currículo mirando esta vaga.",

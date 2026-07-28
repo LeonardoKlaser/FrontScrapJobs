@@ -118,6 +118,7 @@
     "curriculumFilesError": "We couldn't load your resumes. Please try again.",
     "retry": "Try again",
     "storageUnavailableError": "Storage service is currently unavailable. Please try again shortly.",
+    "aiUnavailableError": "AI temporarily unavailable. Nothing was deducted from your quota — please try again shortly.",
     "optimization": {
       "title": "Optimize your resume",
       "description": "We generate a ready-to-paste prompt for another AI (ChatGPT, Claude, Gemini) along with your PDF, rewriting your resume for this job.",

@@ -488,6 +488,9 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
       const slug = error.response?.data?.error
       if (slug === 'no_curriculum') return t('analysis.noCurriculumError')
       if (slug === 'storage_unavailable') return t('analysis.storageUnavailableError')
+      // 503 do backend quando o provedor de IA rejeitou a chamada (ex.: quota
+      // OpenAI) — a cota do usuário foi devolvida, então convidamos o retry.
+      if (slug === 'ai_unavailable') return t('analysis.aiUnavailableError')
       if (typeof slug === 'string') return slug
     }
     return t('analysis.error')
