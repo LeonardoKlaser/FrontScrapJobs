@@ -61,9 +61,6 @@ const mockPlan: Plan = {
   price: 19.9,
   max_sites: 15,
   max_ai_analyses: 30,
-  max_pdf_extractions: 8,
-  max_suggestion_applies: 15,
-  max_pdf_generations: 5,
   is_trial: false,
   features: ['feat1']
 }

@@ -59,10 +59,7 @@ vi.mock('@/hooks/usePlans', () => ({
         is_trial: false,
         features: [],
         max_sites: 5,
-        max_ai_analyses: 10,
-        max_pdf_extractions: 10,
-        max_suggestion_applies: 10,
-        max_pdf_generations: 10
+        max_ai_analyses: 10
       }
     ],
     isLoading: false

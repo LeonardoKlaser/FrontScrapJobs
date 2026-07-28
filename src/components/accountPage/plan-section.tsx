@@ -72,15 +72,6 @@ export function PlanSection({ user }: PlanSectionProps) {
   const analysisUsed = user?.monthly_analysis_count ?? 0
   const analysisMax = user?.plan?.max_ai_analyses ?? 0
   const analysisPercentage = analysisMax > 0 ? (analysisUsed / analysisMax) * 100 : 0
-  const extractionUsed = user?.monthly_extraction_count ?? 0
-  const extractionMax = user?.plan?.max_pdf_extractions ?? 0
-  const extractionPercentage = extractionMax > 0 ? (extractionUsed / extractionMax) * 100 : 0
-  const suggestionUsed = user?.monthly_suggestion_apply_count ?? 0
-  const suggestionMax = user?.plan?.max_suggestion_applies ?? 0
-  const suggestionPercentage = suggestionMax > 0 ? (suggestionUsed / suggestionMax) * 100 : 0
-  const pdfGenUsed = user?.monthly_pdf_generation_count ?? 0
-  const pdfGenMax = user?.plan?.max_pdf_generations ?? 0
-  const pdfGenPercentage = pdfGenMax > 0 ? (pdfGenUsed / pdfGenMax) * 100 : 0
   const benefits = user?.plan?.features ?? []
 
   const [weekdaysOnly, setWeekdaysOnly] = useState(user?.weekdays_only ?? false)
@@ -131,42 +122,6 @@ export function PlanSection({ user }: PlanSectionProps) {
                 <span className="text-sm font-normal text-muted-foreground"> / {analysisMax}</span>
               </p>
               <Progress value={analysisPercentage} className="mt-3 h-1.5" />
-            </div>
-            <div className="rounded-lg border border-border/50 bg-muted/30 p-4">
-              <p className="text-xs font-medium text-muted-foreground">
-                {t('plan.pdfExtractions')}
-              </p>
-              <p className="mt-1 font-display text-2xl font-bold text-foreground">
-                {extractionUsed}
-                <span className="text-sm font-normal text-muted-foreground">
-                  {' '}
-                  / {extractionMax}
-                </span>
-              </p>
-              <Progress value={extractionPercentage} className="mt-3 h-1.5" />
-            </div>
-            <div className="rounded-lg border border-border/50 bg-muted/30 p-4">
-              <p className="text-xs font-medium text-muted-foreground">
-                {t('plan.suggestionApplies')}
-              </p>
-              <p className="mt-1 font-display text-2xl font-bold text-foreground">
-                {suggestionUsed}
-                <span className="text-sm font-normal text-muted-foreground">
-                  {' '}
-                  / {suggestionMax}
-                </span>
-              </p>
-              <Progress value={suggestionPercentage} className="mt-3 h-1.5" />
-            </div>
-            <div className="rounded-lg border border-border/50 bg-muted/30 p-4">
-              <p className="text-xs font-medium text-muted-foreground">
-                {t('plan.pdfGenerations')}
-              </p>
-              <p className="mt-1 font-display text-2xl font-bold text-foreground">
-                {pdfGenUsed}
-                <span className="text-sm font-normal text-muted-foreground"> / {pdfGenMax}</span>
-              </p>
-              <Progress value={pdfGenPercentage} className="mt-3 h-1.5" />
             </div>
           </div>
 

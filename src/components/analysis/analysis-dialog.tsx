@@ -38,10 +38,6 @@ interface AnalysisDialogProps {
   jobId: number | null
   open: boolean
   onClose: () => void
-  // Callbacks OPCIONAIS usados pela DigestPage (magic-link). Quando undefined o
-  // comportamento do dialog e identico ao de hoje — nada muda pro uso in-app.
-  onSubscriptionExpired?: () => void
-  onAnalysisCompleted?: () => void
 }
 
 function getScoreColor(score: number) {
@@ -380,13 +376,7 @@ function AnalysisResultPanel({
   )
 }
 
-export function AnalysisDialog({
-  jobId,
-  open,
-  onClose,
-  onSubscriptionExpired,
-  onAnalysisCompleted
-}: AnalysisDialogProps) {
+export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
   const { t } = useTranslation('sites')
   const [step, setStep] = useState<
     'loading-history' | 'select' | 'analyzing' | 'result' | 'history'
@@ -445,20 +435,9 @@ export function AnalysisDialog({
         onSuccess: (data) => {
           setAnalysisResult(data)
           setStep('result')
-          onAnalysisCompleted?.()
         },
-        onError: (err) => {
+        onError: () => {
           setStep('select')
-          // subscription_expired: deixa quem consome (ex: DigestPage) tratar
-          // localmente em vez de redirecionar. No uso in-app o callback e
-          // undefined, entao o comportamento permanece o mesmo de hoje.
-          if (
-            isAxiosError(err) &&
-            err.response?.status === 403 &&
-            err.response?.data?.error === 'subscription_expired'
-          ) {
-            onSubscriptionExpired?.()
-          }
         }
       }
     )

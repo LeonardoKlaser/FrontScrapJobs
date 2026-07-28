@@ -14,10 +14,9 @@ import {
 } from '@/hooks/useCurriculumFiles'
 import { curriculumFileErrorKey } from '@/lib/curriculumFileErrorKey'
 
-// Página de currículo é agora um gerenciador de PDFs armazenados no R2 (Task
-// 14). Substitui o editor estruturado antigo (CurriculumForm/CurriculumSwitcher
-// /PdfImportButton/PdfExportModal) — esses componentes ficam órfãos até serem
-// removidos na Task 16.
+// Página de currículo é um gerenciador de PDFs armazenados no R2 (Task 14).
+// Substituiu o editor estruturado antigo (CurriculumForm/CurriculumSwitcher/
+// PdfImportButton/PdfExportModal), removido na Task 16.
 export function Curriculum() {
   const { t } = useTranslation('curriculum')
   const { data: files, isLoading, isError } = useCurriculumFiles()

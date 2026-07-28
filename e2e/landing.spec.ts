@@ -14,9 +14,6 @@ test.describe('landing page', () => {
             price: 0,
             max_sites: 5,
             max_ai_analyses: 3,
-            max_pdf_extractions: 3,
-            max_suggestion_applies: 3,
-            max_pdf_generations: 3,
             is_trial: true,
             features: ['radar', 'ats', 'pdf']
           },
@@ -26,9 +23,6 @@ test.describe('landing page', () => {
             price: 4990,
             max_sites: 10,
             max_ai_analyses: 10,
-            max_pdf_extractions: 10,
-            max_suggestion_applies: 10,
-            max_pdf_generations: 10,
             is_trial: false,
             features: ['radar', 'ats', 'pdf']
           }
