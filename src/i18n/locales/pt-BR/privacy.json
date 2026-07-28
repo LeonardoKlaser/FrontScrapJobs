@@ -6,9 +6,9 @@
   "s1_controller": "ScrapJobs (<inserir razão social antes de publicar>, CNPJ <inserir antes de publicar>) é o controlador dos dados pessoais coletados nesta plataforma.",
   "s1_items": [
     "Dados de cadastro: nome, e-mail, CPF e telefone",
-    "Dados de currículo: experiências, formação, habilidades, idiomas e resumo profissional",
+    "Dados de currículo: arquivo(s) PDF do currículo enviados pelo usuário",
     "Preferências de busca: sites monitorados e filtros de palavras-chave",
-    "Dados de uso: análises realizadas, candidaturas, extrações de PDF"
+    "Dados de uso: análises de compatibilidade realizadas"
   ],
   "s2_title": "2. Base Legal do Tratamento (LGPD Art. 7)",
   "s2_intro": "Todo tratamento de dados pessoais no ScrapJobs possui base legal explícita:",
@@ -32,14 +32,14 @@
     {"name": "Pagar.me", "role": "Cancelamento de assinatura legada e retenção fiscal", "country": "Brasil"},
     {"name": "OpenAI", "role": "Análise de currículo e vagas por IA", "country": "Estados Unidos"},
     {"name": "Resend", "role": "Envio de e-mails transacionais e digests", "country": "Estados Unidos"},
-    {"name": "PDFMonkey", "role": "Geração de PDF do currículo", "country": "França (União Europeia)"},
     {"name": "Railway", "role": "Hospedagem da aplicação e banco de dados", "country": "Estados Unidos"},
+    {"name": "Cloudflare (R2)", "role": "Armazenamento dos arquivos PDF de currículo", "country": "Estados Unidos (armazenamento em rede global, sem localização fixa por país)"},
     {"name": "Meta (WhatsApp)", "role": "Envio de alertas de vagas por WhatsApp (apenas para usuários que optam por esse canal)", "country": "Estados Unidos"}
   ],
   "s_whatsapp_title": "Alertas por WhatsApp (opcional)",
   "s_whatsapp_content": "Se você optar por receber alertas de vagas pelo WhatsApp, seu número de celular e as mensagens trocadas serão processados pela Meta Platforms, Inc. (WhatsApp) como sub-operadora, exclusivamente para entregar essas notificações. O envio é facultativo, depende do seu consentimento explícito (opt-in) e pode ser desativado a qualquer momento nas configurações da sua conta, voltando o canal para e-mail.",
   "s5_title": "5. Transferência Internacional de Dados",
-  "s5_content": "Em conformidade com o Art. 33 da LGPD, dados pessoais são transferidos para: Estados Unidos (OpenAI, Resend, Railway e Meta) e França (PDFMonkey). Ao utilizar o ScrapJobs, você consente com essas transferências necessárias à prestação do serviço.",
+  "s5_content": "Em conformidade com o Art. 33 da LGPD, dados pessoais são transferidos para: Estados Unidos (OpenAI, Resend, Railway, Cloudflare e Meta). Ao utilizar o ScrapJobs, você consente com essas transferências necessárias à prestação do serviço.",
   "s6_title": "6. Armazenamento e Segurança",
   "s6_content": "Seus dados são armazenados em servidores seguros com criptografia em trânsito e em repouso. Adotamos medidas técnicas e organizacionais para proteger suas informações contra acesso não autorizado, alteração, divulgação ou destruição.",
   "s7_title": "7. Seus Direitos (LGPD Art. 18)",
@@ -59,7 +59,7 @@
   "s9_intro": "Os dados são retidos de acordo com a finalidade de cada categoria:",
   "s9_rows": [
     {"data": "Nome, e-mail, CPF, telefone, currículo", "retention": "Enquanto conta ativa + 30 dias após exclusão", "basis": "Execução de contrato"},
-    {"data": "Sites monitorados, notificações, candidaturas, extrações e gerações de PDF", "retention": "Enquanto conta ativa + 30 dias após exclusão", "basis": "Execução de contrato"},
+    {"data": "Sites monitorados, notificações e arquivos de currículo em PDF", "retention": "Enquanto conta ativa + 30 dias após exclusão", "basis": "Execução de contrato"},
     {"data": "Identificadores de pagamento Pagar.me", "retention": "5 anos após encerramento da assinatura", "basis": "Obrigação legal fiscal"},
     {"data": "Vagas coletadas (sites públicos)", "retention": "1 dia após última aparição no site de origem", "basis": "Interesse legítimo"},
     {"data": "Cookie de sessão (JWT)", "retention": "Até expirar conforme TTL do token", "basis": "Execução de contrato"}
