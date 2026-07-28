@@ -32,7 +32,6 @@ export const PATHS = {
     editSite: (id: number) => `/app/admin-sites/${id}/edit`,
     account: '/app/account',
     renew: '/app/renew',
-    applications: '/app/applications',
     adminEmails: {
       hub: '/app/admin-emails',
       templates: '/app/admin-emails/templates',

@@ -8,7 +8,6 @@
     "manageSites": "Gerenciar Sites",
     "leads": "Leads",
     "adminEmails": "Emails",
-    "applications": "Candidaturas",
     "logout": "Sair",
     "openMenu": "Abrir menu",
     "unknownUser": "Usuário",
@@ -21,7 +20,6 @@
     "home": "Início",
     "curriculum": "Currículo",
     "sites": "Empresas",
-    "applications": "Candidaturas",
     "account": "Minha conta",
     "renew": "Renovar plano",
     "adminDashboard": "Dashboard admin",
@@ -66,7 +64,6 @@
   "loading": "Carregando...",
   "loadingPermissions": "Verificando permissões...",
   "loadingPanel": "Carregando painel...",
-  "loadingApplications": "Carregando candidaturas...",
   "language": {
     "label": "Idioma",
     "pt": "Português",

@@ -5,7 +5,6 @@ import {
   Home,
   FileText,
   Building2,
-  ClipboardCheck,
   Settings,
   LayoutDashboard,
   Boxes,
@@ -40,7 +39,6 @@ const baseItems: Item[] = [
   { titleKey: 'nav.home', href: PATHS.app.home, icon: Home },
   { titleKey: 'nav.curriculum', href: PATHS.app.curriculum, icon: FileText },
   { titleKey: 'nav.companies', href: PATHS.app.listSites, icon: Building2 },
-  { titleKey: 'nav.applications', href: PATHS.app.applications, icon: ClipboardCheck },
   { titleKey: 'nav.myAccount', href: PATHS.app.account, icon: Settings }
 ]
 

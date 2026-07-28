@@ -80,7 +80,6 @@ const RenewSubscription = lazyWithRetry(() => import('@/pages/RenewSubscription'
 const AdminDashboard = lazyWithRetry(() => import('@/pages/adminDashboard'))
 const TermsOfService = lazyWithRetry(() => import('@/pages/TermsOfService'))
 const PrivacyPolicy = lazyWithRetry(() => import('@/pages/PrivacyPolicy'))
-const Applications = lazyWithRetry(() => import('@/pages/Applications'))
 const AdminEmailsHub = lazyWithRetry(() => import('@/pages/adminEmails/Hub'))
 const AdminEmailsTemplatesList = lazyWithRetry(() => import('@/pages/adminEmails/TemplatesList'))
 const AdminEmailsTemplateEditor = lazyWithRetry(() => import('@/pages/adminEmails/TemplateEditor'))
@@ -306,16 +305,6 @@ export const createRouter = (queryClient: QueryClient) =>
               element: <AdminEmailsLogs />
             }
           ]
-        },
-        {
-          path: PATHS.app.applications,
-          element: (
-            <Suspense
-              fallback={<LoadingSection variant="section" label={i18n.t('loadingApplications')} />}
-            >
-              <Applications />
-            </Suspense>
-          )
         },
         {
           path: PATHS.app.account,

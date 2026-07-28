@@ -18,7 +18,6 @@ import {
   ListFilter,
   X,
   Eye,
-  ClipboardCheck,
   Check
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
@@ -56,11 +55,6 @@ import { AnalysisDialog } from '@/components/analysis/analysis-dialog'
 import { PATHS } from '@/router/paths'
 import { safeHref } from '@/utils/url'
 import { shouldStartWebOnboarding } from '@/lib/onboarding'
-import { toast } from 'sonner'
-import { ApplicationStatusDropdown } from '@/components/common/application-status-dropdown'
-import { useCreateApplication, useUpdateApplication } from '@/hooks/useApplications'
-import { STATUS_COLORS } from '@/models/application'
-import type { ApplicationStatus } from '@/models/application'
 
 type SortField = 'title' | 'company' | 'location' | 'created_at'
 type SortDir = 'asc' | 'desc' | null
@@ -88,49 +82,6 @@ const LIMIT = 10
 // Regiões aplicadas server-side via param `regions` (vocabulário do backend:
 // model.AllRegions). OTHER inclui vagas sem país identificado.
 const REGION_OPTIONS = ['BR', 'US_CA', 'EUROPE', 'REMOTE', 'OTHER'] as const
-
-function ApplyButton({ jobId, iconOnly }: { jobId: number; iconOnly?: boolean }) {
-  const { t } = useTranslation('applications')
-  const createApplication = useCreateApplication()
-  const handleApply = () =>
-    createApplication.mutate(jobId, {
-      onSuccess: () => toast.success(t('toast.createSuccess')),
-      onError: (err) => toast.error(err.message)
-    })
-
-  if (iconOnly) {
-    return (
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            size="icon"
-            variant="outline"
-            className="h-8 w-8"
-            onClick={handleApply}
-            disabled={createApplication.isPending}
-            aria-label={t('dashboard.applied')}
-          >
-            <ClipboardCheck className="h-3.5 w-3.5" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>{t('dashboard.applied')}</TooltipContent>
-      </Tooltip>
-    )
-  }
-
-  return (
-    <Button
-      size="sm"
-      variant="outline"
-      className="gap-1.5 text-xs"
-      onClick={handleApply}
-      disabled={createApplication.isPending}
-    >
-      <ClipboardCheck className="h-3.5 w-3.5" />
-      {t('dashboard.applied')}
-    </Button>
-  )
-}
 
 export function Home() {
   const { t } = useTranslation('dashboard')
@@ -232,26 +183,6 @@ export function Home() {
   useEffect(() => {
     if (page > totalPages) setPage(totalPages)
   }, [page, totalPages])
-
-  const { t: tApp } = useTranslation('applications')
-  const { mutate: updateApplicationMutate } = useUpdateApplication()
-
-  const handleStatusChange = useCallback(
-    (applicationId: number, status: ApplicationStatus, interviewRound?: number) => {
-      updateApplicationMutate(
-        {
-          id: applicationId,
-          status,
-          interview_round: status === 'interview' ? interviewRound : null
-        },
-        {
-          onSuccess: () => toast.success(tApp('toast.updateSuccess')),
-          onError: (err) => toast.error(err.message)
-        }
-      )
-    },
-    [updateApplicationMutate, tApp]
-  )
 
   // Contagem de vagas das últimas 24h pro stat do topo — só usamos total_count,
   // então limit=1 pra não trazer payload à toa.
@@ -617,20 +548,6 @@ export function Home() {
                             {t('latestJobs.matchBadge')}
                           </Badge>
                         )}
-                        {job.application_status && (
-                          <span
-                            className="shrink-0 rounded-full px-2 py-0.5 text-xs font-medium text-white"
-                            style={{
-                              backgroundColor: STATUS_COLORS[job.application_status]
-                            }}
-                          >
-                            {job.application_status === 'interview' && job.interview_round
-                              ? tApp('status.interview', {
-                                  round: job.interview_round
-                                })
-                              : tApp(`status.${job.application_status}`)}
-                          </span>
-                        )}
                       </div>
                       {job.location && (
                         <p className="text-xs text-muted-foreground">{job.location}</p>
@@ -645,7 +562,6 @@ export function Home() {
                           {t('latestJobs.viewJob')}
                           <ExternalLink className="h-3 w-3" />
                         </a>
-                        {!job.application_id && <ApplyButton jobId={job.id} />}
                         <Button
                           size="sm"
                           variant="outline"
@@ -712,7 +628,6 @@ export function Home() {
                       <TableHead className="whitespace-nowrap w-[64px] text-center">
                         {t('latestJobs.link')}
                       </TableHead>
-                      <TableHead className="w-[132px] text-center" />
                       <TableHead className="w-[64px] text-center" />
                     </TableRow>
                   </TableHeader>
@@ -755,19 +670,6 @@ export function Home() {
                             </TooltipTrigger>
                             <TooltipContent>{t('latestJobs.viewJob')}</TooltipContent>
                           </Tooltip>
-                        </TableCell>
-                        <TableCell className="whitespace-nowrap text-center">
-                          {job.application_id && job.application_status ? (
-                            <ApplicationStatusDropdown
-                              currentStatus={job.application_status}
-                              interviewRound={job.interview_round}
-                              onStatusChange={(status, round) =>
-                                handleStatusChange(job.application_id!, status, round)
-                              }
-                            />
-                          ) : (
-                            <ApplyButton jobId={job.id} iconOnly />
-                          )}
                         </TableCell>
                         <TableCell className="whitespace-nowrap text-center">
                           <Tooltip>
