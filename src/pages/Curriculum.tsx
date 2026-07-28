@@ -19,7 +19,7 @@ import { curriculumFileErrorKey } from '@/lib/curriculumFileErrorKey'
 // PdfImportButton/PdfExportModal), removido na Task 16.
 export function Curriculum() {
   const { t } = useTranslation('curriculum')
-  const { data: files, isLoading, isError } = useCurriculumFiles()
+  const { data: files, isLoading, isError, isLoadingError } = useCurriculumFiles()
   const deleteFile = useDeleteCurriculumFile()
   const setPrincipal = useSetPrincipalCurriculumFile()
   const [selectedId, setSelectedId] = useState<number | null>(null)
@@ -28,6 +28,16 @@ export function Curriculum() {
   const list = files ?? []
   const hasFiles = list.length > 0
   const selectedFile = list.find((f) => f.id === selectedId) ?? null
+
+  // Falha de refetch em segundo plano (ex.: revalidação ao focar a aba) não
+  // deve esconder a lista já carregada — só avisa via toast não bloqueante.
+  // isLoadingError (do React Query) distingue isso do erro no carregamento
+  // inicial sem cache, que ainda mostra o estado de erro bloqueante abaixo.
+  useEffect(() => {
+    if (isError && !isLoadingError && hasFiles) {
+      toast.error(t('list.refetchError'))
+    }
+  }, [isError, isLoadingError, hasFiles, t])
 
   // Pré-seleciona o arquivo principal (ou o primeiro, se nenhum for principal)
   // assim que a lista carrega, pra o painel de visualização não abrir vazio.
@@ -73,13 +83,13 @@ export function Curriculum() {
       <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8 space-y-6">
         <p className="text-sm text-muted-foreground">{t('description')}</p>
 
-        {isError && (
+        {isLoadingError && (
           <div className="flex items-center justify-center h-64">
             <p className="text-sm text-destructive">{t('list.errorState')}</p>
           </div>
         )}
 
-        {!isError && !isLoading && !hasFiles && (
+        {!isLoadingError && !isLoading && !hasFiles && (
           <EmptyState
             icon={FileText}
             title={t('list.emptyTitle')}
@@ -88,7 +98,7 @@ export function Curriculum() {
           />
         )}
 
-        {!isError && hasFiles && (
+        {!isLoadingError && hasFiles && (
           <>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {list.map((file) => (

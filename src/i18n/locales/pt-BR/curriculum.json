@@ -15,7 +15,8 @@
     "confirmDelete": "Excluir",
     "cancelDelete": "Cancelar",
     "deleteSuccess": "Currículo excluído com sucesso!",
-    "principalSuccess": "Currículo definido como principal!"
+    "principalSuccess": "Currículo definido como principal!",
+    "refetchError": "Não foi possível atualizar a lista de currículos. Mostrando os dados salvos."
   },
   "upload": {
     "button": "Enviar currículo",

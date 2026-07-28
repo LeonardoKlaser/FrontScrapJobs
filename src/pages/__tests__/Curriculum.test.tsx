@@ -160,12 +160,39 @@ describe('Curriculum page (gerenciador de PDFs)', () => {
   })
 
   it('erro ao buscar a lista mostra mensagem de erro e NÃO mostra o CTA de vazio', () => {
-    mockUseCurriculumFiles.mockReturnValue({ data: undefined, isLoading: false, isError: true })
+    mockUseCurriculumFiles.mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      isError: true,
+      isLoadingError: true
+    })
 
     render(wrap(<Curriculum />))
 
     expect(screen.getByText(/list\.errorState/)).toBeInTheDocument()
     expect(screen.queryByText(/list\.emptyTitle/)).not.toBeInTheDocument()
+  })
+
+  it('falha de refetch em segundo plano mantém a lista em cache visível e avisa via toast', async () => {
+    const { toast } = await import('sonner')
+    mockUseCurriculumFiles.mockReturnValue({
+      data: [makeFile({ id: 1, filename: 'cv.pdf' })],
+      isLoading: false,
+      // isError true mas isLoadingError false: já havia dados em cache quando
+      // o refetch em segundo plano falhou (ex.: revalidação ao focar a aba).
+      isError: true,
+      isLoadingError: false
+    })
+
+    render(wrap(<Curriculum />))
+
+    // lista em cache continua visível — não cai no estado de erro bloqueante
+    expect(screen.getByText('cv.pdf')).toBeInTheDocument()
+    expect(screen.queryByText(/list\.errorState/)).not.toBeInTheDocument()
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith('list.refetchError')
+    })
   })
 
   it('estado vazio mostra CTA de upload', () => {

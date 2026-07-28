@@ -15,7 +15,8 @@
     "confirmDelete": "Delete",
     "cancelDelete": "Cancel",
     "deleteSuccess": "Resume deleted successfully!",
-    "principalSuccess": "Resume set as principal!"
+    "principalSuccess": "Resume set as principal!",
+    "refetchError": "Couldn't refresh your resume list. Showing saved data."
   },
   "upload": {
     "button": "Upload resume",
