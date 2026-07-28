@@ -29,11 +29,12 @@
   "s4_title": "4. Sharing and Sub-processors",
   "s4_intro": "We do not sell your data. We share only with sub-processors necessary for operation:",
   "s4_operators": [
+    {"name": "AbacatePay", "role": "Payment processing (PIX and card)", "country": "Brazil"},
     {"name": "Pagar.me", "role": "Legacy subscription cancellation and tax retention", "country": "Brazil"},
     {"name": "OpenAI", "role": "AI-powered resume and job analysis", "country": "United States"},
     {"name": "Resend", "role": "Transactional and digest e-mail delivery", "country": "United States"},
     {"name": "Railway", "role": "Application and database hosting", "country": "United States"},
-    {"name": "Cloudflare (R2)", "role": "Resume PDF file storage", "country": "United States (global network storage, no fixed per-country location)"},
+    {"name": "Cloudflare (R2)", "role": "Resume PDF file storage", "country": "United States (operator's headquarters); storage across a global network"},
     {"name": "Meta (WhatsApp)", "role": "Sending job alerts via WhatsApp (only for users who opt in to this channel)", "country": "United States"}
   ],
   "s_whatsapp_title": "WhatsApp alerts (optional)",

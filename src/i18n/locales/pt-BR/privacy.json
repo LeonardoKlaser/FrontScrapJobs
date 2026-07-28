@@ -29,11 +29,12 @@
   "s4_title": "4. Compartilhamento e Sub-operadores",
   "s4_intro": "Não vendemos seus dados. Compartilhamos apenas com sub-operadores necessários à operação:",
   "s4_operators": [
+    {"name": "AbacatePay", "role": "Processamento de pagamentos (PIX e cartão)", "country": "Brasil"},
     {"name": "Pagar.me", "role": "Cancelamento de assinatura legada e retenção fiscal", "country": "Brasil"},
     {"name": "OpenAI", "role": "Análise de currículo e vagas por IA", "country": "Estados Unidos"},
     {"name": "Resend", "role": "Envio de e-mails transacionais e digests", "country": "Estados Unidos"},
     {"name": "Railway", "role": "Hospedagem da aplicação e banco de dados", "country": "Estados Unidos"},
-    {"name": "Cloudflare (R2)", "role": "Armazenamento dos arquivos PDF de currículo", "country": "Estados Unidos (armazenamento em rede global, sem localização fixa por país)"},
+    {"name": "Cloudflare (R2)", "role": "Armazenamento dos arquivos PDF de currículo", "country": "Estados Unidos (sede do operador); armazenamento em rede global"},
     {"name": "Meta (WhatsApp)", "role": "Envio de alertas de vagas por WhatsApp (apenas para usuários que optam por esse canal)", "country": "Estados Unidos"}
   ],
   "s_whatsapp_title": "Alertas por WhatsApp (opcional)",
