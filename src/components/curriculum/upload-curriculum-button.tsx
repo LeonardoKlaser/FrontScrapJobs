@@ -12,7 +12,7 @@ interface UploadCurriculumButtonProps {
 }
 
 export const MAX_CURRICULUM_FILES = 5
-const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024
+export const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024
 
 export function UploadCurriculumButton({ fileCount }: UploadCurriculumButtonProps) {
   const { t } = useTranslation('curriculum')

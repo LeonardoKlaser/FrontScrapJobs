@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router'
 import {
   Dialog,
   DialogContent,
@@ -26,10 +25,11 @@ import {
   Upload
 } from 'lucide-react'
 import { useAnalyzeJob, useAnalysisHistory, useSendAnalysisEmail } from '@/hooks/useAnalysis'
-import { useCurriculumFiles } from '@/hooks/useCurriculumFiles'
+import { useCurriculumFiles, useUploadCurriculumFile } from '@/hooks/useCurriculumFiles'
+import { MAX_FILE_SIZE_BYTES } from '@/components/curriculum/upload-curriculum-button'
 import { OptimizationPromptSection } from './optimization-prompt-section'
 import { formatFileSize } from '@/lib/format'
-import { PATHS } from '@/router/paths'
+import { curriculumFileErrorKey } from '@/lib/curriculumFileErrorKey'
 import type { ResumeAnalysis } from '@/services/analysisService'
 import { isAxiosError } from 'axios'
 import { toast } from 'sonner'
@@ -377,11 +377,15 @@ function AnalysisResultPanel({
 
 export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
   const { t } = useTranslation('sites')
+  // Namespace de currículo reusado no upload inline do estado vazio — mesmas
+  // mensagens de sucesso/erro da página de Currículo.
+  const { t: tCv } = useTranslation('curriculum')
   const [step, setStep] = useState<
     'loading-history' | 'select' | 'analyzing' | 'result' | 'history'
   >('loading-history')
   const [selectedFileId, setSelectedFileId] = useState<number | null>(null)
   const [analysisResult, setAnalysisResult] = useState<ResumeAnalysis | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   // enabled: open — o dialog é montado incondicionalmente em Home.tsx (só a
   // visibilidade é controlada pelo Dialog), então sem esse gate todo load do
@@ -396,6 +400,7 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
   })
   const { data: historyData, isLoading: isLoadingHistory } = useAnalysisHistory(open ? jobId : null)
   const { mutate: analyzeJob, isError, error, reset: resetAnalysis } = useAnalyzeJob()
+  const { mutate: uploadCurriculum, isPending: isUploading } = useUploadCurriculumFile()
 
   // When dialog opens, reset state
   useEffect(() => {
@@ -430,11 +435,11 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
     }
   }, [step, curriculumFiles, selectedFileId])
 
-  const handleAnalyze = () => {
+  const runAnalysis = (curriculumFileId: number | null) => {
     if (!jobId) return
     setStep('analyzing')
     analyzeJob(
-      { jobId, curriculumFileId: selectedFileId },
+      { jobId, curriculumFileId },
       {
         onSuccess: (data) => {
           setAnalysisResult(data)
@@ -445,6 +450,31 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
         }
       }
     )
+  }
+
+  const handleAnalyze = () => runAnalysis(selectedFileId)
+
+  // Upload inline no estado vazio: sobe o PDF sem sair do dialog e já emenda
+  // a análise — o CTA antigo redirecionava pra página de Currículo e o
+  // usuário perdia o contexto da vaga.
+  const handleUploadChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (fileInputRef.current) fileInputRef.current.value = ''
+    if (!file) return
+
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      toast.error(tCv('errors.too_large'))
+      return
+    }
+
+    uploadCurriculum(file, {
+      onSuccess: (uploaded) => {
+        toast.success(tCv('upload.success'))
+        setSelectedFileId(uploaded.id)
+        runAnalysis(uploaded.id)
+      },
+      onError: (uploadError) => toast.error(tCv(curriculumFileErrorKey(uploadError)))
+    })
   }
 
   const handleRedo = () => {
@@ -538,11 +568,27 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
                 <p className="max-w-sm text-sm text-muted-foreground">
                   {t('analysis.noCurriculumError')}
                 </p>
-                <Button asChild variant="outline" size="sm" className="gap-2" onClick={onClose}>
-                  <Link to={PATHS.app.curriculum}>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="application/pdf"
+                  className="hidden"
+                  data-testid="analysis-upload-input"
+                  onChange={handleUploadChange}
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2"
+                  disabled={isUploading}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  {isUploading ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
                     <Upload className="h-3.5 w-3.5" />
-                    {t('analysis.goToCurriculum')}
-                  </Link>
+                  )}
+                  {isUploading ? tCv('upload.uploading') : tCv('upload.button')}
                 </Button>
               </div>
             ) : (

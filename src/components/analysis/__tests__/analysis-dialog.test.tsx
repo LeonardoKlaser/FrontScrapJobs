@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MemoryRouter } from 'react-router'
@@ -18,6 +18,7 @@ vi.mock('sonner', () => ({
 const mockAnalyzeMutate = vi.fn()
 const mockReset = vi.fn()
 const mockSendEmailMutate = vi.fn()
+const mockUploadMutate = vi.fn()
 const mockUseAnalysisHistory = vi.fn()
 const mockUseCurriculumFiles = vi.fn()
 
@@ -33,7 +34,8 @@ vi.mock('@/hooks/useAnalysis', () => ({
 }))
 
 vi.mock('@/hooks/useCurriculumFiles', () => ({
-  useCurriculumFiles: (...args: unknown[]) => mockUseCurriculumFiles(...args)
+  useCurriculumFiles: (...args: unknown[]) => mockUseCurriculumFiles(...args),
+  useUploadCurriculumFile: () => ({ mutate: mockUploadMutate, isPending: false })
 }))
 
 // A seção real chama a API de verdade — isolada aqui pra testar só a decisão
@@ -209,7 +211,33 @@ describe('AnalysisDialog', () => {
     expect(section).toHaveAttribute('data-notification-id', '42')
   })
 
-  it('mostra estado vazio com link pra página de currículo quando não há arquivos', async () => {
+  it('estado vazio faz upload inline e emenda direto na análise', async () => {
+    mockUseAnalysisHistory.mockReturnValue({ data: { has_analysis: false }, isLoading: false })
+    mockUseCurriculumFiles.mockReturnValue({ data: [], isLoading: false })
+    mockUploadMutate.mockImplementation((_file, opts) =>
+      opts.onSuccess(makeFile({ id: 9, filename: 'cv-novo.pdf', is_principal: true }))
+    )
+
+    render(wrap(<AnalysisDialog jobId={7} open onClose={vi.fn()} />))
+
+    await waitFor(() => {
+      expect(screen.getByText('analysis.noCurriculumError')).toBeInTheDocument()
+    })
+    expect(screen.getByRole('button', { name: 'upload.button' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'analysis.generate' })).not.toBeInTheDocument()
+
+    const file = new File(['%PDF-1.4'], 'cv-novo.pdf', { type: 'application/pdf' })
+    fireEvent.change(screen.getByTestId('analysis-upload-input'), { target: { files: [file] } })
+
+    expect(mockUploadMutate).toHaveBeenCalledWith(file, expect.anything())
+    // upload concluído emenda direto na análise com o arquivo recém-enviado
+    expect(mockAnalyzeMutate).toHaveBeenCalledWith(
+      { jobId: 7, curriculumFileId: 9 },
+      expect.anything()
+    )
+  })
+
+  it('não envia arquivo acima do limite de tamanho nem dispara análise', async () => {
     mockUseAnalysisHistory.mockReturnValue({ data: { has_analysis: false }, isLoading: false })
     mockUseCurriculumFiles.mockReturnValue({ data: [], isLoading: false })
 
@@ -218,11 +246,13 @@ describe('AnalysisDialog', () => {
     await waitFor(() => {
       expect(screen.getByText('analysis.noCurriculumError')).toBeInTheDocument()
     })
-    expect(screen.getByRole('link', { name: 'analysis.goToCurriculum' })).toHaveAttribute(
-      'href',
-      '/app/curriculum'
-    )
-    expect(screen.queryByRole('button', { name: 'analysis.generate' })).not.toBeInTheDocument()
+
+    const bigFile = new File(['x'], 'cv-grande.pdf', { type: 'application/pdf' })
+    Object.defineProperty(bigFile, 'size', { value: 11 * 1024 * 1024 })
+    fireEvent.change(screen.getByTestId('analysis-upload-input'), { target: { files: [bigFile] } })
+
+    expect(mockUploadMutate).not.toHaveBeenCalled()
+    expect(mockAnalyzeMutate).not.toHaveBeenCalled()
   })
 
   it('mostra estado de erro distinto (com retry) quando o carregamento inicial de currículos falha', async () => {
@@ -246,7 +276,7 @@ describe('AnalysisDialog', () => {
     // distinto do estado de "zero PDFs": não mostra o CTA de upload nem o
     // texto do estado vazio
     expect(screen.queryByText('analysis.noCurriculumError')).not.toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: 'analysis.goToCurriculum' })).not.toBeInTheDocument()
+    expect(screen.queryByTestId('analysis-upload-input')).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'analysis.generate' })).not.toBeInTheDocument()
 
     await userEvent.click(screen.getByRole('button', { name: 'analysis.retry' }))
