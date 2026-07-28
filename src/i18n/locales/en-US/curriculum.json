@@ -7,7 +7,6 @@
     "uploadedAt": "Uploaded on {{date}}",
     "principalBadge": "Principal",
     "viewAction": "View",
-    "viewCardLabel": "View resume {{filename}}",
     "downloadAction": "Download",
     "makePrincipalAction": "Make principal",
     "deleteAction": "Delete",

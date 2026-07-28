@@ -42,30 +42,8 @@ export function CurriculumFileCard({
 
   const uploadedAt = new Date(file.created_at).toLocaleDateString(i18n.language)
 
-  // Card inteiro é clicável (seleciona o arquivo pra visualização), mas só
-  // tinha affordance de mouse — teclado não tinha como ativá-lo (achado da
-  // review de a11y). role="button" + tabIndex + Enter/Espaço replicam o
-  // comportamento nativo de um <button>. O guard `target === currentTarget`
-  // evita disparar onView de novo quando o Enter/Espaço já foi tratado por um
-  // botão aninhado na linha de ações (download/estrela/excluir), cujo keydown
-  // borbulha até aqui.
-  const handleCardKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.target !== event.currentTarget) return
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault()
-      onView()
-    }
-  }
-
   return (
-    <Card
-      role="button"
-      tabIndex={0}
-      aria-label={t('list.viewCardLabel', { filename: file.filename })}
-      className={cn('cursor-pointer', isSelected && 'ring-2 ring-primary')}
-      onClick={onView}
-      onKeyDown={handleCardKeyDown}
-    >
+    <Card className={cn('cursor-pointer', isSelected && 'ring-2 ring-primary')} onClick={onView}>
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-2">
           <CardTitle className="text-sm font-medium truncate" title={file.filename}>

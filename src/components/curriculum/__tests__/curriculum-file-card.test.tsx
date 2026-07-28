@@ -26,7 +26,7 @@ function renderCard(overrides: Partial<Parameters<typeof CurriculumFileCard>[0]>
   const onView = vi.fn()
   const onSetPrincipal = vi.fn()
   const onDelete = vi.fn()
-  render(
+  const { container } = render(
     <CurriculumFileCard
       file={file}
       isSelected={false}
@@ -36,65 +36,53 @@ function renderCard(overrides: Partial<Parameters<typeof CurriculumFileCard>[0]>
       {...overrides}
     />
   )
-  return { onView, onSetPrincipal, onDelete }
+  const card = container.querySelector('[data-slot="card"]') as HTMLElement
+  return { card, onView, onSetPrincipal, onDelete }
 }
 
-describe('CurriculumFileCard — a11y do card clicável', () => {
-  it('expõe role="button", tabIndex=0 e aria-label com o nome do arquivo', () => {
+// O container do card NÃO deve ganhar role="button"/tabIndex/onKeyDown: com 4
+// controles interativos reais dentro (view/download/star/delete), isso seria
+// nested-interactive (violação de axe) e presentational-children de ARIA —
+// leitores de tela podem podar as ações internas por completo, uma regressão
+// de a11y pior do que o gap de teclado que a role tentava cobrir. O caminho
+// de teclado real já existe: o botão "visualizar" (Eye, linha ~82) é um
+// <button> nativo focável que chama o mesmo onView.
+describe('CurriculumFileCard — clique no card e caminho de teclado', () => {
+  it('o container do card não expõe role="button" nem tabIndex', () => {
+    const { card } = renderCard()
+
+    expect(card).not.toHaveAttribute('role', 'button')
+    expect(card).not.toHaveAttribute('tabindex')
+  })
+
+  it('clique no corpo do card (fora das ações) chama onView', async () => {
+    const { card, onView } = renderCard()
+
+    await userEvent.click(card)
+
+    expect(onView).toHaveBeenCalledTimes(1)
+  })
+
+  it('o botão "visualizar" é um <button> nativo focável — caminho de teclado real', () => {
     renderCard()
 
-    const card = screen.getByRole('button', { name: 'list.viewCardLabel:cv.pdf' })
-    expect(card).toHaveAttribute('tabIndex', '0')
+    const viewButton = screen.getByRole('button', { name: 'list.viewAction' })
+    expect(viewButton.tagName).toBe('BUTTON')
   })
 
-  it('clique no card chama onView', async () => {
+  it('clicar no botão "visualizar" chama onView (mesmo handler do clique no card)', async () => {
     const { onView } = renderCard()
 
-    await userEvent.click(screen.getByRole('button', { name: 'list.viewCardLabel:cv.pdf' }))
+    await userEvent.click(screen.getByRole('button', { name: 'list.viewAction' }))
 
     expect(onView).toHaveBeenCalledTimes(1)
   })
 
-  it('tecla Enter com foco no card chama onView', () => {
+  it('clicar em outras ações (excluir) não chama onView — stopPropagation da linha de ações', async () => {
     const { onView } = renderCard()
 
-    const card = screen.getByRole('button', { name: 'list.viewCardLabel:cv.pdf' })
-    card.focus()
-    // fireEvent via userEvent.keyboard respeita o elemento focado
-    card.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
+    await userEvent.click(screen.getByRole('button', { name: 'list.deleteAction' }))
 
-    expect(onView).toHaveBeenCalledTimes(1)
-  })
-
-  it('tecla Espaço com foco no card chama onView', () => {
-    const { onView } = renderCard()
-
-    const card = screen.getByRole('button', { name: 'list.viewCardLabel:cv.pdf' })
-    card.focus()
-    card.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }))
-
-    expect(onView).toHaveBeenCalledTimes(1)
-  })
-
-  it('outras teclas não chamam onView', () => {
-    const { onView } = renderCard()
-
-    const card = screen.getByRole('button', { name: 'list.viewCardLabel:cv.pdf' })
-    card.focus()
-    card.dispatchEvent(new KeyboardEvent('keydown', { key: 'a', bubbles: true }))
-
-    expect(onView).not.toHaveBeenCalled()
-  })
-
-  it('keydown originado num botão aninhado (ex.: excluir) não dispara onView de novo', () => {
-    const { onView } = renderCard()
-
-    const deleteButton = screen.getByRole('button', { name: 'list.deleteAction' })
-    deleteButton.focus()
-    deleteButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
-
-    // o guard target===currentTarget no Card evita que o keydown borbulhado
-    // do botão aninhado dispare onView — a ação do botão aninhado é dele
     expect(onView).not.toHaveBeenCalled()
   })
 })

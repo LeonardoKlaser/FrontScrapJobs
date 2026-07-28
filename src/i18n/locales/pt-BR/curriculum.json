@@ -7,7 +7,6 @@
     "uploadedAt": "Enviado em {{date}}",
     "principalBadge": "Principal",
     "viewAction": "Visualizar",
-    "viewCardLabel": "Visualizar currículo {{filename}}",
     "downloadAction": "Baixar",
     "makePrincipalAction": "Tornar principal",
     "deleteAction": "Excluir",
