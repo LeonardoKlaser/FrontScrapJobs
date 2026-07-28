@@ -45,7 +45,6 @@ export interface OptimizationPromptResponse {
 export interface AnalysisHistoryResponse {
   has_analysis: boolean
   analysis?: ResumeAnalysis
-  curriculum_id?: number
   // curriculum_file_id (Task 6) e notification_id identificam, respectivamente,
   // o PDF usado na análise e a linha de job_notifications que a persistiu —
   // esta última alimenta POST /api/analyze-job/:id/optimization-prompt

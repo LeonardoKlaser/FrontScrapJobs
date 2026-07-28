@@ -105,8 +105,7 @@ function AnalysisResult({
 }) {
   const { t } = useTranslation('sites')
   // Mesma queryKey de useCurriculumFiles no dialog pai — React Query dedupe
-  // evita um segundo fetch, só reusa o cache (mesmo padrão do antigo
-  // useCurriculum aqui dentro).
+  // evita um segundo fetch, só reusa o cache.
   const { data: curriculumFiles } = useCurriculumFiles()
   const usedFile = curriculumFiles?.find((f) => f.id === curriculumFileId)
   const {
