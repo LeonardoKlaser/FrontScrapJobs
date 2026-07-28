@@ -3,6 +3,10 @@ import { usePublicStats, usePublicSiteLogos } from '@/hooks/usePublicStats'
 import { useCountUp } from '@/hooks/useCountUp'
 import { useInViewOnce } from '@/hooks/useInViewOnce'
 
+// Segundos que cada logo leva para atravessar — a duração total escala com a
+// quantidade de logos, mantendo a velocidade percebida constante (~40px/s)
+const SECONDS_PER_LOGO = 3.5
+
 export function ProofBandSection() {
   const { t, i18n } = useTranslation('landing')
   const { data: stats } = usePublicStats()
@@ -33,6 +37,9 @@ export function ProofBandSection() {
           <div
             className="flex w-max animate-logo-scroll items-center gap-12
               hover:[animation-play-state:paused]"
+            style={{
+              animationDuration: `${(duplicatedLogos.length / 2) * SECONDS_PER_LOGO}s`
+            }}
           >
             {duplicatedLogos.map((logo, index) => (
               <img
@@ -40,7 +47,9 @@ export function ProofBandSection() {
                 src={logo.logo_url}
                 alt={logo.site_name}
                 className="h-9 w-auto object-contain opacity-70 transition-opacity
-                  hover:opacity-100"
+                  hover:opacity-100 mix-blend-multiply [filter:grayscale(1)]
+                  dark:mix-blend-screen
+                  dark:[filter:grayscale(1)_invert(1)_brightness(1.5)]"
               />
             ))}
           </div>

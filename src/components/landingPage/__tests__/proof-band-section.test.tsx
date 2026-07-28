@@ -52,6 +52,13 @@ describe('ProofBandSection', () => {
     expect(screen.getAllByAltText('Stone')).toHaveLength(2)
   })
 
+  it('scales the marquee duration with the logo count (constant speed)', () => {
+    render(<ProofBandSection />)
+    // 1 logo duplicado 4x → metade da faixa = 2 logos × 3.5s = 7s
+    const track = screen.getAllByAltText('Nubank')[0].parentElement as HTMLElement
+    expect(track.style.animationDuration).toBe('7s')
+  })
+
   it('renders nothing when there are no stats and no logos', () => {
     usePublicStats.mockReturnValue({ data: undefined, error: null })
     usePublicSiteLogos.mockReturnValue({ data: undefined, error: null })
