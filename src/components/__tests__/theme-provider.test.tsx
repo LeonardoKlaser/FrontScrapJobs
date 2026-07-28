@@ -89,3 +89,51 @@ describe('ThemeProvider + vite-ui-theme-restore', () => {
     expect(document.documentElement.classList.contains('dark')).toBe(false)
   })
 })
+
+// Regressão do finding do code review: React commita efeitos de filho ANTES
+// do pai. Quando o ThemeProvider e uma página pública montam no MESMO commit
+// (o cenário abaixo, sem lazy()/Suspense de por meio), o efeito do
+// useForceSystemTheme rodava primeiro forçando o tema do SO, e o efeito do
+// provider rodava depois e sobrescrevia de volta com o tema salvo — o SO nunca
+// vencia. O contador em nível de módulo em theme-provider.tsx corrige isso
+// estruturalmente; estes testes cobrem exatamente o cenário composto que
+// escapava dos testes isolados acima.
+describe('ThemeProvider + useForceSystemTheme montados no mesmo commit', () => {
+  afterEach(() => {
+    cleanup()
+    vi.restoreAllMocks()
+    localStorage.clear()
+    document.documentElement.classList.remove('light', 'dark')
+  })
+
+  it('SO vence mesmo com tema salvo light, quando provider e página pública montam juntos', () => {
+    localStorage.setItem('vite-ui-theme', 'light')
+    mockMatchMedia(true)
+
+    render(
+      <ThemeProvider>
+        <ForceSystemThemeProbe />
+      </ThemeProvider>
+    )
+
+    expect(document.documentElement.classList.contains('dark')).toBe(true)
+    expect(document.documentElement.classList.contains('light')).toBe(false)
+  })
+
+  it('ao desmontar a página pública dentro do provider, o tema salvo volta', () => {
+    localStorage.setItem('vite-ui-theme', 'light')
+    mockMatchMedia(true)
+
+    function Wrapper({ showPublicPage }: { showPublicPage: boolean }) {
+      return <ThemeProvider>{showPublicPage && <ForceSystemThemeProbe />}</ThemeProvider>
+    }
+
+    const { rerender } = render(<Wrapper showPublicPage />)
+    expect(document.documentElement.classList.contains('dark')).toBe(true)
+
+    rerender(<Wrapper showPublicPage={false} />)
+
+    expect(document.documentElement.classList.contains('light')).toBe(true)
+    expect(document.documentElement.classList.contains('dark')).toBe(false)
+  })
+})

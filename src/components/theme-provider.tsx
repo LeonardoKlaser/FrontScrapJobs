@@ -20,6 +20,18 @@ const initialState: ThemeProviderState = {
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
+// Contador em nível de módulo de quantos useForceSystemTheme estão montados
+// agora. Existe por causa da ordem de commit dos efeitos do React: efeitos de
+// componentes filhos rodam ANTES dos efeitos do pai. Se o ThemeProvider e uma
+// página pública montarem no mesmo commit (ex: import eager em vez de lazy(),
+// ou o Suspense que hoje as isola sumir), o efeito do useForceSystemTheme
+// (filho) roda primeiro forçando o tema do SO, e o efeito do provider (pai)
+// roda depois e sobrescreve de volta com o tema salvo — silenciosamente
+// quebrando o force nas páginas públicas sem nenhum teste acusar. Em prod isso
+// não acontece hoje só porque cada página é lazy() e o provider já commitou
+// antes; nada além desse contador garante isso estruturalmente.
+let forceSystemThemeCount = 0
+
 export function ThemeProvider({
   children,
   defaultTheme = 'system',
@@ -34,6 +46,10 @@ export function ThemeProvider({
     const root = window.document.documentElement
 
     const applyTheme = () => {
+      // Uma página pública está forçando o tema do SO agora — não sobrescreve
+      // com o tema salvo enquanto isso (ver comentário do contador acima).
+      if (forceSystemThemeCount > 0) return
+
       root.classList.remove('light', 'dark')
 
       if (theme === 'system') {
@@ -92,6 +108,7 @@ export const useTheme = () => {
 // Não toca no localStorage — o tema escolhido do app volta ao desmontar.
 export function useForceSystemTheme() {
   useEffect(() => {
+    forceSystemThemeCount++
     const root = window.document.documentElement
     const mq = window.matchMedia('(prefers-color-scheme: dark)')
     const apply = () => {
@@ -102,6 +119,7 @@ export function useForceSystemTheme() {
     mq.addEventListener('change', apply)
     return () => {
       mq.removeEventListener('change', apply)
+      forceSystemThemeCount--
       window.dispatchEvent(new Event('vite-ui-theme-restore'))
     }
   }, [])
