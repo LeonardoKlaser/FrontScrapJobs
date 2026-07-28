@@ -57,16 +57,16 @@ export default function Signup() {
 
   return (
     <AuthLayout hero={hero}>
-      <h2 className="mb-1 text-xl font-semibold text-zinc-900 lg:mb-2">
+      <h2 className="mb-1 text-xl font-semibold text-foreground lg:mb-2">
         {t('signup.title', 'Crie sua conta')}
       </h2>
-      <p className="mb-8 text-sm text-zinc-500">
+      <p className="mb-8 text-sm text-muted-foreground">
         {t('signup.subtitle', 'Verifique seu WhatsApp para começar.')}
       </p>
 
       <SignupWizard />
 
-      <p className="mt-6 text-center text-sm text-zinc-500">
+      <p className="mt-6 text-center text-sm text-muted-foreground">
         {t('signup.hasAccount', 'Já tem uma conta?')}{' '}
         <Link to={PATHS.login} className="font-medium text-primary hover:underline">
           {t('signup.login', 'Fazer login')}

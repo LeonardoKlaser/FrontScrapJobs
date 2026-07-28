@@ -24,7 +24,7 @@ export function ProofBandSection() {
       : [...(logos ?? []), ...(logos ?? [])]
 
   return (
-    <section ref={ref} className="border-y border-zinc-100 bg-zinc-50 px-6 py-12 text-center">
+    <section ref={ref} className="border-y border-border bg-muted px-6 py-12 text-center">
       {hasLogos && (
         <div
           className="mb-8 overflow-hidden py-2
@@ -48,7 +48,7 @@ export function ProofBandSection() {
       )}
 
       {hasStats && (
-        <p className="text-zinc-900">
+        <p className="text-foreground">
           <span className="font-semibold text-emerald-600">{fmt(sites)}</span>{' '}
           <span>{t('proofBand.sites')}</span> ·{' '}
           <span className="font-semibold text-emerald-600">{fmt(jobs)}</span>{' '}

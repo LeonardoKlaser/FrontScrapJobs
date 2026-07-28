@@ -1,6 +1,6 @@
 import { Suspense, useMemo } from 'react'
 import { RouterProvider } from 'react-router'
-import { ThemeProvider, useTheme } from './components/theme-provider'
+import { ThemeProvider, useAppliedTheme } from './components/theme-provider'
 import type { QueryClient } from '@tanstack/react-query'
 import { createRouter } from './router/routes'
 import { Toaster } from 'sonner'
@@ -9,14 +9,13 @@ import { ErrorBoundary } from '@/components/common/error-boundary'
 import { LoadingSection } from '@/components/common/loading-section'
 import { TooltipProvider } from '@/components/ui/tooltip'
 
+// Segue o tema REAL aplicado em <html> (useAppliedTheme), nao o tema salvo do
+// provider. Paginas publicas forcam o tema do SO por cima do tema salvo
+// (useForceSystemTheme em PublicLayout) — se o toaster lesse useTheme() aqui,
+// ele mostraria toasts no tema salvo (ex.: 'dark' default) mesmo com a pagina
+// publica renderizando light pro SO do usuario, quebrando o contraste do toast.
 function ThemedToaster() {
-  const { theme } = useTheme()
-  const resolvedTheme =
-    theme === 'system'
-      ? window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light'
-      : theme
+  const resolvedTheme = useAppliedTheme()
 
   return (
     <Toaster

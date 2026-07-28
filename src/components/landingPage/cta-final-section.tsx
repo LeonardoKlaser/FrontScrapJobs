@@ -9,14 +9,14 @@ export function CtaFinalSection() {
   const { t } = useTranslation('landing')
 
   return (
-    <SectionWrapper className="py-16 lg:py-20 px-6 bg-emerald-50/30">
+    <SectionWrapper className="py-16 lg:py-20 px-6 bg-primary/5">
       <div className="max-w-2xl mx-auto text-center space-y-6">
-        <h2 className="font-display text-3xl lg:text-5xl font-semibold text-zinc-900">
+        <h2 className="font-display text-3xl lg:text-5xl font-semibold text-foreground">
           {t('ctaFinal.title')}{' '}
           <span className="text-gradient-primary">{t('ctaFinal.titleHighlight')}</span>
         </h2>
 
-        <p className="text-base text-zinc-500">{t('ctaFinal.subtitle')}</p>
+        <p className="text-base text-muted-foreground">{t('ctaFinal.subtitle')}</p>
 
         <Button
           variant="glow"

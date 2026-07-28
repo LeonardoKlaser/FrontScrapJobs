@@ -9,7 +9,7 @@ interface SectionWrapperProps {
 export function SectionWrapper({ children, className, id }: SectionWrapperProps) {
   return (
     <section id={id}>
-      <div className={cn('flex-1 min-w-0 bg-white', className)}>{children}</div>
+      <div className={cn('flex-1 min-w-0 bg-background', className)}>{children}</div>
     </section>
   )
 }

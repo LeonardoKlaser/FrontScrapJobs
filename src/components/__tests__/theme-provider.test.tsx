@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { render, cleanup } from '@testing-library/react'
-import { ThemeProvider, useForceSystemTheme } from '../theme-provider'
+import { render, cleanup, screen, waitFor } from '@testing-library/react'
+import { ThemeProvider, useForceSystemTheme, useAppliedTheme } from '../theme-provider'
 
 // matchMedia mock que permite disparar 'change' manualmente e espiar
 // addEventListener/removeEventListener por instância.
@@ -135,5 +135,62 @@ describe('ThemeProvider + useForceSystemTheme montados no mesmo commit', () => {
 
     expect(document.documentElement.classList.contains('light')).toBe(true)
     expect(document.documentElement.classList.contains('dark')).toBe(false)
+  })
+})
+
+function AppliedThemeProbe() {
+  const applied = useAppliedTheme()
+  return <span data-testid="applied-theme">{applied}</span>
+}
+
+// useAppliedTheme existe pro ThemedToaster global (App.tsx) seguir o tema REAL
+// de <html>, nao o tema salvo no provider — necessario porque paginas publicas
+// forcam o tema do SO por cima do tema salvo (useForceSystemTheme) enquanto
+// montadas, e nesse momento os dois divergem.
+describe('useAppliedTheme', () => {
+  afterEach(() => {
+    cleanup()
+    vi.restoreAllMocks()
+    localStorage.clear()
+    document.documentElement.classList.remove('light', 'dark')
+  })
+
+  it('reflete a classe ja aplicada em <html> no mount', () => {
+    document.documentElement.classList.add('dark')
+
+    render(<AppliedThemeProbe />)
+
+    expect(screen.getByTestId('applied-theme')).toHaveTextContent('dark')
+  })
+
+  it('segue o force do SO (useForceSystemTheme), nao o tema salvo do provider', async () => {
+    localStorage.setItem('vite-ui-theme', 'light')
+    mockMatchMedia(true)
+
+    render(
+      <ThemeProvider>
+        <ForceSystemThemeProbe />
+        <AppliedThemeProbe />
+      </ThemeProvider>
+    )
+
+    // Tema salvo e' 'light', mas o SO (mockado dark) forca a classe 'dark' —
+    // useAppliedTheme deve reportar 'dark', batendo com o que esta na tela.
+    await waitFor(() => {
+      expect(screen.getByTestId('applied-theme')).toHaveTextContent('dark')
+    })
+  })
+
+  it('atualiza quando a classe de <html> muda depois do mount', async () => {
+    render(<AppliedThemeProbe />)
+
+    expect(screen.getByTestId('applied-theme')).toHaveTextContent('light')
+
+    document.documentElement.classList.add('dark')
+    document.documentElement.classList.remove('light')
+
+    await waitFor(() => {
+      expect(screen.getByTestId('applied-theme')).toHaveTextContent('dark')
+    })
   })
 })

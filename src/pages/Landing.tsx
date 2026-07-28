@@ -11,7 +11,7 @@ import { ProofBandSection } from '@/components/landingPage/proof-band-section'
 
 export function Landing() {
   return (
-    <div className="bg-white">
+    <div className="bg-background">
       <LandingNavbar />
       <HeroNorteSection />
       <ProofBandSection />

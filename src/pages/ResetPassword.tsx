@@ -69,34 +69,34 @@ export default function ResetPassword() {
     <AuthLayout hero={<LoginSideHero />}>
       {success ? (
         <div className="flex flex-col items-center gap-4 py-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
-            <CheckCircle className="h-6 w-6 text-emerald-700" />
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10">
+            <CheckCircle className="h-6 w-6 text-emerald-500" />
           </div>
-          <h2 className="text-center text-xl font-semibold text-zinc-900">
+          <h2 className="text-center text-xl font-semibold text-foreground">
             {t('reset.successTitle', 'Senha redefinida!')}
           </h2>
-          <p className="text-center text-sm text-zinc-500">
+          <p className="text-center text-sm text-muted-foreground">
             {t('reset.successMessage', 'Você será redirecionado para o login em instantes...')}
           </p>
         </div>
       ) : (
         <>
-          <h2 className="mb-1 text-xl font-semibold text-zinc-900 lg:mb-2">
+          <h2 className="mb-1 text-xl font-semibold text-foreground lg:mb-2">
             {t('reset.title', 'Redefinir senha')}
           </h2>
-          <p className="mb-8 text-sm text-zinc-500">
+          <p className="mb-8 text-sm text-muted-foreground">
             {t('reset.subtitle', 'Escolha uma nova senha para sua conta.')}
           </p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="password" className="text-zinc-500">
+              <Label htmlFor="password" className="text-muted-foreground">
                 {t('reset.newPassword', 'Nova senha')}
               </Label>
               <div className="relative">
                 <LockIcon
                   className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2
-                    text-zinc-500"
+                    text-muted-foreground"
                 />
                 <Input
                   id="password"
@@ -111,8 +111,8 @@ export default function ResetPassword() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500
-                    transition-colors hover:text-zinc-900"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground
+                    transition-colors hover:text-foreground"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -120,13 +120,13 @@ export default function ResetPassword() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="confirmPassword" className="text-zinc-500">
+              <Label htmlFor="confirmPassword" className="text-muted-foreground">
                 {t('reset.confirmPassword', 'Confirmar senha')}
               </Label>
               <div className="relative">
                 <LockIcon
                   className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2
-                    text-zinc-500"
+                    text-muted-foreground"
                 />
                 <Input
                   id="confirmPassword"
@@ -141,8 +141,8 @@ export default function ResetPassword() {
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500
-                    transition-colors hover:text-zinc-900"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground
+                    transition-colors hover:text-foreground"
                 >
                   {showConfirmPassword ? (
                     <EyeOff className="h-4 w-4" />
@@ -168,7 +168,7 @@ export default function ResetPassword() {
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-zinc-500">
+          <p className="mt-6 text-center text-sm text-muted-foreground">
             <Link to={PATHS.login} className="font-medium text-primary hover:underline">
               <ArrowLeft className="mr-1 inline h-3 w-3" />
               {t('forgot.backToLogin', 'Voltar para o login')}

@@ -20,7 +20,7 @@ export function LandingNavbar() {
   }, [])
 
   const anchorClass = `text-sm font-medium transition-colors duration-300 ${
-    scrolled ? 'text-white/90 hover:text-white' : 'text-zinc-600 hover:text-zinc-900'
+    scrolled ? 'text-white/90 hover:text-white' : 'text-muted-foreground hover:text-foreground'
   }`
 
   return (

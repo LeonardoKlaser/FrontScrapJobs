@@ -124,3 +124,34 @@ export function useForceSystemTheme() {
     }
   }, [])
 }
+
+function readAppliedTheme(): 'light' | 'dark' {
+  return window.document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+}
+
+// Le o tema de FATO aplicado em <html> (a classe 'dark'/'light' real), em vez
+// do tema escolhido guardado no provider. useTheme() sozinho nao serve pro
+// toaster global (ThemedToaster em App.tsx): paginas publicas sobrescrevem a
+// classe via useForceSystemTheme enquanto montadas, e nesse momento o tema
+// salvo do provider diverge do que esta de fato na tela. Observa a classe de
+// <html> diretamente via MutationObserver — funciona tanto pro force do SO
+// quanto pras trocas normais de tema (inclusive 'system' reagindo a mudanca de
+// preferencia do SO), sem duplicar a logica de matchMedia que ja vive no
+// provider e no useForceSystemTheme.
+export function useAppliedTheme(): 'light' | 'dark' {
+  const [applied, setApplied] = useState<'light' | 'dark'>(() =>
+    typeof window === 'undefined' ? 'dark' : readAppliedTheme()
+  )
+
+  useEffect(() => {
+    const root = window.document.documentElement
+    const update = () => setApplied(readAppliedTheme())
+    update()
+
+    const observer = new MutationObserver(update)
+    observer.observe(root, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
+  }, [])
+
+  return applied
+}

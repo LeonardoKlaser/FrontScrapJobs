@@ -20,7 +20,7 @@ export function FaqSection() {
           <span className="text-sm font-medium tracking-[2px] uppercase text-emerald-500">
             {t('labels.faq')}
           </span>
-          <h2 className="font-display text-3xl lg:text-5xl font-semibold text-zinc-900 leading-tight tracking-tight text-balance mt-3 mb-2">
+          <h2 className="font-display text-3xl lg:text-5xl font-semibold text-foreground leading-tight tracking-tight text-balance mt-3 mb-2">
             {t('faq.title')}
           </h2>
 
@@ -30,11 +30,11 @@ export function FaqSection() {
             className="grid md:grid-cols-2 gap-x-6 gap-y-0 mt-8 text-left"
           >
             {items.map((item, i) => (
-              <AccordionItem key={i} value={`item-${i}`} className="border-b border-zinc-200">
-                <AccordionTrigger className="text-base font-medium text-zinc-900 py-4 hover:bg-zinc-50 px-2 rounded hover:no-underline">
+              <AccordionItem key={i} value={`item-${i}`} className="border-b border-border">
+                <AccordionTrigger className="text-base font-medium text-foreground py-4 hover:bg-muted px-2 rounded hover:no-underline">
                   {item.q}
                 </AccordionTrigger>
-                <AccordionContent className="text-[15px] text-zinc-500 leading-relaxed pb-4 px-2">
+                <AccordionContent className="text-[15px] text-muted-foreground leading-relaxed pb-4 px-2">
                   {item.a}
                 </AccordionContent>
               </AccordionItem>
