@@ -33,7 +33,7 @@ export function AuthHero({ eyebrow, title, subtitle, jobs, stats }: AuthHeroProp
 
         <span
           className="mb-5 inline-flex items-center gap-2 font-mono text-[11px] font-semibold
-            uppercase tracking-[0.15em] text-primary"
+            uppercase tracking-[0.15em] text-emerald-700 dark:text-primary"
         >
           <span aria-hidden="true">●</span>
           {eyebrow}
@@ -57,7 +57,8 @@ export function AuthHero({ eyebrow, title, subtitle, jobs, stats }: AuthHeroProp
           >
             <span
               className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg
-                bg-primary/10 text-sm font-bold text-primary"
+                bg-emerald-50 text-sm font-bold text-emerald-700 dark:bg-primary/10
+                dark:text-primary"
             >
               {job.initial}
             </span>
@@ -66,8 +67,8 @@ export function AuthHero({ eyebrow, title, subtitle, jobs, stats }: AuthHeroProp
               <p className="truncate text-xs text-muted-foreground">{job.company}</p>
             </div>
             <span
-              className="flex flex-shrink-0 items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1
-                text-xs font-semibold text-primary"
+              className="flex flex-shrink-0 items-center gap-1 rounded-full bg-emerald-50 px-2.5
+                py-1 text-xs font-semibold text-emerald-700 dark:bg-primary/10 dark:text-primary"
             >
               <Sparkles className="h-3 w-3" />
               {job.match}%
@@ -81,7 +82,7 @@ export function AuthHero({ eyebrow, title, subtitle, jobs, stats }: AuthHeroProp
           <div key={stat.label}>
             <p
               className={`font-display text-2xl font-semibold ${
-                stat.highlight ? 'text-primary' : 'text-foreground'
+                stat.highlight ? 'text-emerald-700 dark:text-primary' : 'text-foreground'
               }`}
             >
               {stat.value}

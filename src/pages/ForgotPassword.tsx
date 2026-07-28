@@ -38,7 +38,7 @@ export default function ForgotPassword() {
       {sent ? (
         <div className="flex flex-col items-center gap-4 py-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10">
-            <CheckCircle className="h-6 w-6 text-emerald-500" />
+            <CheckCircle className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
           </div>
           <h2 className="text-center text-xl font-semibold text-foreground">
             {t('forgot.sentTitle', 'E-mail enviado')}

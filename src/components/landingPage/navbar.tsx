@@ -52,7 +52,10 @@ export function LandingNavbar() {
         <Button
           variant={scrolled ? 'outline' : 'glow'}
           className={`rounded-full px-5 py-2 text-sm font-semibold transition-colors duration-300 ${
-            scrolled ? 'bg-white text-emerald-700 border-white hover:bg-white/90' : ''
+            scrolled
+              ? 'bg-white text-emerald-700 border-white hover:bg-white/90 dark:bg-white ' +
+                'dark:text-emerald-700 dark:border-white dark:hover:bg-white/90'
+              : ''
           }`}
           onClick={() => {
             trackLanding('lp_cta_click', { section: 'navbar' })
