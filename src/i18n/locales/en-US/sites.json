@@ -116,6 +116,8 @@
     "atsKeywords": "ATS Keywords",
     "noCurriculumError": "You don't have a PDF resume yet. Upload one on the Resume page before analyzing.",
     "goToCurriculum": "Upload resume",
+    "curriculumFilesError": "We couldn't load your resumes. Please try again.",
+    "retry": "Try again",
     "storageUnavailableError": "Storage service is currently unavailable. Please try again shortly.",
     "optimization": {
       "title": "Optimize your resume",

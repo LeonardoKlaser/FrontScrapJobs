@@ -224,4 +224,29 @@ describe('AnalysisDialog', () => {
     )
     expect(screen.queryByRole('button', { name: 'analysis.generate' })).not.toBeInTheDocument()
   })
+
+  it('mostra estado de erro distinto (com retry) quando a busca de currículos falha', async () => {
+    const mockRefetch = vi.fn()
+    mockUseAnalysisHistory.mockReturnValue({ data: { has_analysis: false }, isLoading: false })
+    mockUseCurriculumFiles.mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      isError: true,
+      refetch: mockRefetch
+    })
+
+    render(wrap(<AnalysisDialog jobId={7} open onClose={vi.fn()} />))
+
+    await waitFor(() => {
+      expect(screen.getByText('analysis.curriculumFilesError')).toBeInTheDocument()
+    })
+    // distinto do estado de "zero PDFs": não mostra o CTA de upload nem o
+    // texto do estado vazio
+    expect(screen.queryByText('analysis.noCurriculumError')).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'analysis.goToCurriculum' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'analysis.generate' })).not.toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole('button', { name: 'analysis.retry' }))
+    expect(mockRefetch).toHaveBeenCalledTimes(1)
+  })
 })

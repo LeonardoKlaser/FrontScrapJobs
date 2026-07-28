@@ -386,7 +386,12 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
   // enabled: open — o dialog é montado incondicionalmente em Home.tsx (só a
   // visibilidade é controlada pelo Dialog), então sem esse gate todo load do
   // dashboard disparava GET /api/curriculum-files à toa (achado da review).
-  const { data: curriculumFiles, isLoading: isLoadingCurriculumFiles } = useCurriculumFiles({
+  const {
+    data: curriculumFiles,
+    isLoading: isLoadingCurriculumFiles,
+    isError: isCurriculumFilesError,
+    refetch: refetchCurriculumFiles
+  } = useCurriculumFiles({
     enabled: open
   })
   const { data: historyData, isLoading: isLoadingHistory } = useAnalysisHistory(open ? jobId : null)
@@ -498,7 +503,29 @@ export function AnalysisDialog({ jobId, open, onClose }: AnalysisDialogProps) {
         {/* Curriculum selection */}
         {step === 'select' && (
           <div className="space-y-4">
-            {!isLoadingCurriculumFiles && curriculumFiles && curriculumFiles.length === 0 ? (
+            {/* Erro ao carregar a lista de currículos — distinto do estado vazio
+                (zero PDFs cadastrados) abaixo: aqui o usuário TEM currículos,
+                só não conseguimos buscá-los agora, então oferecemos retry em
+                vez do CTA de "enviar currículo" (achado da review). */}
+            {!isLoadingCurriculumFiles && isCurriculumFilesError ? (
+              <div className="flex flex-col items-center gap-3 py-10 text-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
+                  <AlertTriangle className="h-5 w-5 text-destructive" />
+                </div>
+                <p className="max-w-sm text-sm text-muted-foreground">
+                  {t('analysis.curriculumFilesError')}
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2"
+                  onClick={() => refetchCurriculumFiles()}
+                >
+                  <RefreshCw className="h-3.5 w-3.5" />
+                  {t('analysis.retry')}
+                </Button>
+              </div>
+            ) : !isLoadingCurriculumFiles && curriculumFiles && curriculumFiles.length === 0 ? (
               <div className="flex flex-col items-center gap-3 py-10 text-center">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
                   <FileText className="h-5 w-5 text-muted-foreground" />

@@ -116,6 +116,8 @@
     "curriculumDeleted": "Currículo removido",
     "noCurriculumError": "Você ainda não tem um currículo em PDF. Envie um na página de Currículo antes de analisar.",
     "goToCurriculum": "Enviar currículo",
+    "curriculumFilesError": "Não foi possível carregar seus currículos. Tente novamente.",
+    "retry": "Tentar novamente",
     "storageUnavailableError": "Serviço de armazenamento indisponível no momento. Tente novamente em instantes.",
     "optimization": {
       "title": "Otimize seu currículo",
