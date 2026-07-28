@@ -48,12 +48,21 @@ export function ThemeProvider({
 
     applyTheme()
 
+    // Páginas públicas forçam o tema do SO enquanto montadas (useForceSystemTheme)
+    // e, ao desmontar, disparam esse evento pra devolver o tema escolhido do app.
+    window.addEventListener('vite-ui-theme-restore', applyTheme)
+
     if (theme === 'system') {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
       const handler = () => applyTheme()
       mediaQuery.addEventListener('change', handler)
-      return () => mediaQuery.removeEventListener('change', handler)
+      return () => {
+        mediaQuery.removeEventListener('change', handler)
+        window.removeEventListener('vite-ui-theme-restore', applyTheme)
+      }
     }
+
+    return () => window.removeEventListener('vite-ui-theme-restore', applyTheme)
   }, [theme])
 
   const value = {
@@ -77,4 +86,23 @@ export const useTheme = () => {
   if (context === undefined) throw new Error('useTheme must be used within a ThemeProvider')
 
   return context
+}
+
+// Força o tema do SO enquanto o componente estiver montado (páginas públicas).
+// Não toca no localStorage — o tema escolhido do app volta ao desmontar.
+export function useForceSystemTheme() {
+  useEffect(() => {
+    const root = window.document.documentElement
+    const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    const apply = () => {
+      root.classList.remove('light', 'dark')
+      root.classList.add(mq.matches ? 'dark' : 'light')
+    }
+    apply()
+    mq.addEventListener('change', apply)
+    return () => {
+      mq.removeEventListener('change', apply)
+      window.dispatchEvent(new Event('vite-ui-theme-restore'))
+    }
+  }, [])
 }
