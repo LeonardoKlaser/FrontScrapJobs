@@ -404,7 +404,9 @@ export default function RenewSubscription() {
                     <QrCode
                       className={
                         'h-6 w-6' +
-                        (paymentMethod === 'pix' ? ' text-emerald-500' : ' text-muted-foreground')
+                        (paymentMethod === 'pix'
+                          ? ' text-emerald-600 dark:text-emerald-400'
+                          : ' text-muted-foreground')
                       }
                     />
                     <span className="text-sm font-semibold text-foreground">
@@ -430,7 +432,9 @@ export default function RenewSubscription() {
                     <CreditCard
                       className={
                         'h-6 w-6' +
-                        (paymentMethod === 'card' ? ' text-emerald-500' : ' text-muted-foreground')
+                        (paymentMethod === 'card'
+                          ? ' text-emerald-600 dark:text-emerald-400'
+                          : ' text-muted-foreground')
                       }
                     />
                     <span className="text-sm font-semibold text-foreground">
