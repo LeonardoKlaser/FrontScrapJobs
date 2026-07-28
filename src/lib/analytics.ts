@@ -71,7 +71,6 @@ export type DigestEvent =
   | 'analysis_started_from_digest'
   | 'analysis_completed_from_digest'
   | 'external_link_clicked'
-  | 'cv_optimize_requested'
   | 'back_to_whatsapp_clicked'
   | 'analysis_via_whatsapp'
 

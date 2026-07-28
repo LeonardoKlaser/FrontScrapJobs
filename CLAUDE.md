@@ -54,7 +54,11 @@ Data router via `createBrowserRouter(queryClient)` in `routes.tsx`. **Every page
 - 403 with `error: "subscription_expired"` → redirects to `/app/renew`.
 - `isRedirecting` guard prevents concurrent redirects from firing multiple times.
 
-Service files (`authService.ts`, `curriculumService.ts`, …) expose plain async functions and are the only code that imports `api`. Hooks in `src/hooks/` (`useAuth`, `useDashboard`, …) wrap services with `useQuery`/`useMutation` and own the query keys. **Components must not call `api` or services directly — go through a hook.**
+Service files (`authService.ts`, `curriculumFilesService.ts`, …) expose plain async functions and are the only code that imports `api`. Hooks in `src/hooks/` (`useAuth`, `useDashboard`, …) wrap services with `useQuery`/`useMutation` and own the query keys. **Components must not call `api` or services directly — go through a hook.**
+
+### Curriculum files & optimization prompt flow
+
+The old structured curriculum editor, in-app "apply suggestions" UI, and kanban of applications are gone. The current flow: users upload/manage CV PDFs (`curriculumFilesService.ts` + `useCurriculumFiles`/`useUploadCurriculumFile`/`useDeleteCurriculumFile`/`useSetPrincipalCurriculumFile` in `src/hooks/useCurriculumFiles.ts`) — the backend stores the files in Cloudflare R2 and a user can mark one as principal. `src/components/curriculum/` renders the file list/upload/viewer. Analysis (`analysisService.ts` + `src/hooks/useAnalysis.ts`) lets the user pick a curriculum file (or the principal) to analyze against a job; after an analysis exists, `useOptimizationPrompt` requests a copy-paste prompt (cached per analysis on the backend) that the user pastes into an external LLM (ChatGPT/Claude/Gemini) alongside the same PDF — there is no in-product CV rewriting or PDF generation anymore.
 
 ### Forms
 
@@ -65,7 +69,7 @@ Service files (`authService.ts`, `curriculumService.ts`, …) expose plain async
 - shadcn/ui, style `new-york`, base color `neutral`, generated into `src/components/ui/` (aliases in `components.json`).
 - Icons: `lucide-react`.
 - Tailwind v4 via `@tailwindcss/vite` — **there is no `tailwind.config.js`**. Design tokens live in `src/index.css` using `@theme`. `tw-animate-css` for animations.
-- Non-primitive components are grouped by feature in `src/components/{accountPage,adminDashboard,analysis,applications,checkout,curriculum,forms,landingPage,sites,common}/`.
+- Non-primitive components are grouped by feature in `src/components/{accountPage,adminDashboard,admin-emails,analysis,app,checkout,curriculum,feedback,forms,landingPage,onboarding,signup,sites,whatsapp,common}/`.
 - Every primitive in `src/components/ui/` has a `.stories.tsx` — add one when introducing a new primitive.
 - Toasts use `sonner`; `ThemedToaster` in `App.tsx` syncs theme from `ThemeProvider`.
 

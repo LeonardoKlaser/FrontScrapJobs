@@ -37,14 +37,36 @@ export interface ResumeAnalysis {
   finalConsiderations: string
 }
 
+export interface OptimizationPromptResponse {
+  prompt: string
+  cached: boolean
+}
+
+export interface AnalysisHistoryResponse {
+  has_analysis: boolean
+  analysis?: ResumeAnalysis
+  // curriculum_file_id (Task 6) e notification_id identificam, respectivamente,
+  // o PDF usado na análise e a linha de job_notifications que a persistiu —
+  // esta última alimenta POST /api/analyze-job/:id/optimization-prompt
+  // (Task 7), consumida pelo useOptimizationPrompt.
+  curriculum_file_id?: number | null
+  notification_id?: number
+  notified_at?: string
+  stale_from_snapshot?: boolean
+}
+
 export const analysisService = {
-  analyzeJob: async (jobId: number, curriculumId: number): Promise<ResumeAnalysis> => {
+  // curriculumFileId seleciona um PDF específico do usuário; null usa o
+  // principal (Task 6) — substitui o antigo curriculum_id (struct Curriculum).
+  // Idempotency-Key: UUID por tentativa, permite ao backend (ai_usage_ledger)
+  // reconhecer retries e devolver a análise já persistida em vez de reprocessar.
+  analyzeJob: async (jobId: number, curriculumFileId: number | null): Promise<ResumeAnalysis> => {
     const attemptId = globalThis.crypto.randomUUID()
     const { data } = await api.post(
       '/api/analyze-job',
       {
         job_id: jobId,
-        curriculum_id: curriculumId
+        curriculum_file_id: curriculumFileId
       },
       {
         headers: {
@@ -55,18 +77,20 @@ export const analysisService = {
     return data
   },
 
-  getAnalysisHistory: async (
-    jobId: number
-  ): Promise<{
-    has_analysis: boolean
-    analysis?: ResumeAnalysis
-    curriculum_id?: number
-  }> => {
+  getAnalysisHistory: async (jobId: number): Promise<AnalysisHistoryResponse> => {
     const { data } = await api.get('/api/analyze-job/history', { params: { job_id: jobId } })
     return data
   },
 
   sendAnalysisEmail: async (jobId: number, analysis: ResumeAnalysis): Promise<void> => {
     await api.post('/api/analyze-job/send-email', { job_id: jobId, analysis })
+  },
+
+  // getOptimizationPrompt gera (ou reusa, cacheado no backend por análise —
+  // Task 7) o prompt de otimização de currículo pra uma análise já feita.
+  // `id` é o notification id (job_notifications.id), não o job_id.
+  getOptimizationPrompt: async (notificationId: number): Promise<OptimizationPromptResponse> => {
+    const { data } = await api.post(`/api/analyze-job/${notificationId}/optimization-prompt`)
+    return data
   }
 }

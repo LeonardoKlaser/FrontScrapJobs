@@ -1,26 +1,10 @@
-export interface Experience {
-  id?: string
-  company: string
-  title: string
-  startDate: string
-  endDate: string
-  description: string[]
-}
-
-export interface Education {
-  id?: string
-  institution: string
-  degree: string
-  startDate: string
-  endDate: string
-}
-
-export interface Curriculum {
+// CurriculumFile representa um PDF de currículo armazenado no object storage
+// (R2). Substituiu o antigo modelo estruturado `Curriculum` (editor de campos
+// + templates), removido na Task 16 junto com o fluxo de extração/geração.
+export interface CurriculumFile {
   id: number
-  title: string
-  summary: string
-  skills: string
-  languages: string
-  experiences: Experience[]
-  educations: Education[]
+  filename: string
+  size_bytes: number
+  is_principal: boolean
+  created_at: string
 }

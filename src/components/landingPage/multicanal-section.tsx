@@ -16,11 +16,11 @@ export function MulticanalSection() {
   ]
 
   return (
-    <section className="bg-white px-6 py-16 text-center lg:py-20">
-      <h2 className="font-display text-2xl font-semibold text-zinc-900 sm:text-3xl">
+    <section className="bg-background px-6 py-16 text-center lg:py-20">
+      <h2 className="font-display text-2xl font-semibold text-foreground sm:text-3xl">
         {t('multicanal.title')}
       </h2>
-      <p className="mx-auto mt-3 max-w-xl text-zinc-500">{t('multicanal.subtitle')}</p>
+      <p className="mx-auto mt-3 max-w-xl text-muted-foreground">{t('multicanal.subtitle')}</p>
 
       <div className="mx-auto mt-10 grid max-w-3xl gap-4 sm:grid-cols-3">
         {channels.map(({ icon: Icon, title, body, highlight }) => (
@@ -28,13 +28,13 @@ export function MulticanalSection() {
             key={title}
             className={`rounded-2xl border p-6 text-left ${
               highlight
-                ? 'border-emerald-300 bg-emerald-50/60 ring-2 ring-emerald-100'
-                : 'border-zinc-200 bg-white'
+                ? 'border-emerald-500/40 bg-primary/5 ring-2 ring-emerald-500/20'
+                : 'border-border bg-background'
             }`}
           >
             <Icon className="h-6 w-6 text-emerald-500" />
-            <h3 className="mt-3 font-semibold text-zinc-900">{title}</h3>
-            <p className="mt-1 text-sm text-zinc-500">{body}</p>
+            <h3 className="mt-3 font-semibold text-foreground">{title}</h3>
+            <p className="mt-1 text-sm text-muted-foreground">{body}</p>
           </div>
         ))}
       </div>

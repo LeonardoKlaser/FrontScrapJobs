@@ -10,7 +10,6 @@ import ptBRPlans from './locales/pt-BR/plans.json'
 import ptBRAdmin from './locales/pt-BR/admin.json'
 import ptBRLanding from './locales/pt-BR/landing.json'
 import ptBRAccount from './locales/pt-BR/account.json'
-import ptBRApplications from './locales/pt-BR/applications.json'
 import ptBRPrivacy from './locales/pt-BR/privacy.json'
 import ptBROnboarding from './locales/pt-BR/onboarding.json'
 import ptBRAdminEmails from './locales/pt-BR/admin-emails.json'
@@ -26,7 +25,6 @@ import enUSPlans from './locales/en-US/plans.json'
 import enUSAdmin from './locales/en-US/admin.json'
 import enUSLanding from './locales/en-US/landing.json'
 import enUSAccount from './locales/en-US/account.json'
-import enUSApplications from './locales/en-US/applications.json'
 import enUSPrivacy from './locales/en-US/privacy.json'
 import enUSOnboarding from './locales/en-US/onboarding.json'
 import enUSAdminEmails from './locales/en-US/admin-emails.json'
@@ -45,7 +43,6 @@ i18n.use(initReactI18next).init({
       admin: ptBRAdmin,
       landing: ptBRLanding,
       account: ptBRAccount,
-      applications: ptBRApplications,
       privacy: ptBRPrivacy,
       onboarding: ptBROnboarding,
       'admin-emails': ptBRAdminEmails,
@@ -62,7 +59,6 @@ i18n.use(initReactI18next).init({
       admin: enUSAdmin,
       landing: enUSLanding,
       account: enUSAccount,
-      applications: enUSApplications,
       privacy: enUSPrivacy,
       onboarding: enUSOnboarding,
       'admin-emails': enUSAdminEmails,

@@ -29,6 +29,22 @@ if (typeof globalThis.IntersectionObserver === 'undefined') {
     IntersectionObserverPolyfill as unknown as typeof IntersectionObserver
 }
 
+// jsdom nao implementa matchMedia — usado por useForceSystemTheme (paginas
+// publicas) e pelo ThemeProvider quando o tema e 'system'. Default matches:
+// false (light); testes que precisam simular SO em dark mockam por conta propria.
+if (typeof window.matchMedia === 'undefined') {
+  window.matchMedia = ((query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false
+  })) as unknown as typeof window.matchMedia
+}
+
 // jsdom nao implementa Pointer Capture nem scrollIntoView — Radix Select usa ambos.
 if (typeof Element !== 'undefined') {
   if (!Element.prototype.hasPointerCapture) {

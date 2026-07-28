@@ -1,4 +1,3 @@
-import { useLayoutEffect } from 'react'
 import { CtaFinalSection } from '@/components/landingPage/cta-final-section'
 import { FaqSection } from '@/components/landingPage/faq-section'
 import { Footer } from '@/components/landingPage/footer'
@@ -11,17 +10,8 @@ import { PricingSection } from '@/components/landingPage/pricing-section'
 import { ProofBandSection } from '@/components/landingPage/proof-band-section'
 
 export function Landing() {
-  useLayoutEffect(() => {
-    const root = document.documentElement
-    const hadDark = root.classList.contains('dark')
-    root.classList.remove('dark')
-    return () => {
-      if (hadDark) root.classList.add('dark')
-    }
-  }, [])
-
   return (
-    <div className="bg-white">
+    <div className="bg-background">
       <LandingNavbar />
       <HeroNorteSection />
       <ProofBandSection />

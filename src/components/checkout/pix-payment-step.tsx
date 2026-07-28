@@ -402,7 +402,7 @@ export function PixPaymentStep({
     return (
       <div className="flex flex-col items-center gap-4 py-8 animate-fade-in-up">
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/10">
-          <CheckCircle2 className="h-8 w-8 text-emerald-500" />
+          <CheckCircle2 className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
         </div>
         <h3 className="text-xl font-semibold text-foreground">{t('pixQrCode.paymentConfirmed')}</h3>
         <Spinner className="h-5 w-5 text-primary" />

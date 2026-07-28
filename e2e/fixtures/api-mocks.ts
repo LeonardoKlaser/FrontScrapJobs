@@ -117,37 +117,16 @@ export const mockSites = [
   }
 ]
 
-export const mockCurriculums = [
-  {
-    id: 1,
-    title: 'Curriculo Frontend',
-    is_active: true,
-    summary: 'Desenvolvedor frontend com 5 anos de experiencia',
-    skills: 'React, TypeScript, CSS',
-    languages: 'Portugues, Ingles',
-    experiences: [
-      {
-        id: '1',
-        company: 'Empresa X',
-        title: 'Dev Frontend',
-        description: 'Desenvolvimento de interfaces'
-      }
-    ],
-    educations: [{ id: '1', institution: 'USP', degree: 'Ciencia da Computacao', year: '2020' }]
-  },
-  {
-    id: 2,
-    title: 'Curriculo Backend',
-    is_active: false,
-    summary: 'Desenvolvedor backend Go',
-    skills: 'Go, PostgreSQL, Redis',
-    languages: 'Portugues',
-    experiences: [
-      { id: '2', company: 'Empresa Y', title: 'Dev Backend', description: 'APIs REST' }
-    ],
-    educations: [{ id: '2', institution: 'UNICAMP', degree: 'Engenharia', year: '2019' }]
-  }
-]
+// CurriculumFile: PDFs de currículo armazenados no R2 (Task 13+). Substituiu
+// o antigo modelo estruturado de currículo (mockCurriculums), removido junto
+// com o editor na Task 16.
+export type MockCurriculumFile = {
+  id: number
+  filename: string
+  size_bytes: number
+  is_principal: boolean
+  created_at: string
+}
 
 export const mockDashboard = {
   monitored_urls_count: 2,
@@ -191,12 +170,24 @@ export const mockJobsPage2 = {
 type MockAPIOptions = {
   authenticated?: boolean
   admin?: boolean
+  // Seed inicial da lista de currículos (PDFs) — a lista fica stateful dentro
+  // do teste (upload/delete/setPrincipal mutam este array), ver rotas de
+  // /api/curriculum-files abaixo.
+  curriculumFiles?: MockCurriculumFile[]
 }
 
 async function setupMocks(page: Page, opts: MockAPIOptions = {}) {
-  const { authenticated = true, admin = false } = opts
+  const { authenticated = true, admin = false, curriculumFiles: seedFiles } = opts
   const apiBase = 'http://localhost:8080'
   const currentUser = admin ? mockAdminUser : mockUser
+  let curriculumFiles: MockCurriculumFile[] = seedFiles ? [...seedFiles] : []
+  let nextCurriculumFileId = curriculumFiles.reduce((max, f) => Math.max(max, f.id), 0) + 1
+  // Signup via WhatsApp OTP (phone → verify-phone → complete) — sessão em
+  // memória por teste, chaveada por signup_session_id. Substituiu o antigo
+  // POST /signup de campo único depois que SignupWizard virou um wizard de
+  // 3 passos com verificação de celular.
+  const signupSessions = new Map<string, { code: string; attempts: number; verified: boolean }>()
+  let nextSignupSessionId = 1
 
   // Auth: GET /api/me
   await page.route(`${apiBase}/api/me`, (route) => {
@@ -215,23 +206,53 @@ async function setupMocks(page: Page, opts: MockAPIOptions = {}) {
     return route.fulfill({ status: 401, json: { error: 'E-mail ou senha invalidos' } })
   })
 
-  // Signup: POST /signup
-  await page.route(`${apiBase}/signup`, async (route) => {
+  // Signup step 1: POST /signup/init — envia o código por WhatsApp e abre
+  // uma sessão. Sucesso por padrão; specs que querem testar
+  // phone_already_registered sobrescrevem esta rota depois de chamar mockAPI().
+  await page.route(`${apiBase}/signup/init`, async (route) => {
     const body = route.request().postDataJSON()
-    // Validate the 5 expected fields are present
-    if (!body?.email || !body?.password || !body?.user_name || !body?.phone || !body?.tax) {
-      return route.fulfill({ status: 400, json: { error: 'Campos obrigatórios faltando' } })
+    const phone: string = body?.phone ?? ''
+    const sessionId = `sess-e2e-${nextSignupSessionId++}`
+    signupSessions.set(sessionId, { code: '123456', attempts: 0, verified: false })
+    const last4 = phone.slice(-4) || '0000'
+    return route.fulfill({
+      status: 200,
+      json: { signup_session_id: sessionId, phone_masked: `(**) *****-${last4}` }
+    })
+  })
+
+  // Signup step 2: POST /signup/verify-phone — código fixo '123456' pra
+  // qualquer sessão aberta acima; qualquer outro valor conta como tentativa
+  // errada (espelha attempts_remaining do backend).
+  await page.route(`${apiBase}/signup/verify-phone`, async (route) => {
+    const body = route.request().postDataJSON()
+    const session = signupSessions.get(body?.signup_session_id)
+    if (!session) {
+      return route.fulfill({ status: 400, json: { error: 'session_expired' } })
     }
-    if (body.email === 'taken@test.com') {
-      return route.fulfill({
-        status: 409,
-        json: { error: 'Email ou CPF já cadastrado' }
-      })
+    if (body?.code === session.code) {
+      session.verified = true
+      return route.fulfill({ status: 200, json: { verified: true } })
+    }
+    session.attempts++
+    return route.fulfill({
+      status: 400,
+      json: { error: 'invalid_code', attempts_remaining: Math.max(0, 3 - session.attempts) }
+    })
+  })
+
+  // Signup step 3: POST /signup/complete — exige uma sessão verificada;
+  // devolve pending_id (não cria a conta ainda — isso só acontece quando o
+  // pagamento confirma, via subscribe-card/pix-monthly com pending_id abaixo).
+  await page.route(`${apiBase}/signup/complete`, async (route) => {
+    const body = route.request().postDataJSON()
+    const session = signupSessions.get(body?.signup_session_id)
+    if (!session?.verified) {
+      return route.fulfill({ status: 400, json: { error: 'phone_not_verified' } })
     }
     return route.fulfill({
-      status: 201,
-      headers: { 'Set-Cookie': 'Authorization=fake-jwt-cookie; Path=/; HttpOnly' },
-      json: { ...mockUser, email: body.email, user_name: body.user_name }
+      status: 200,
+      json: { action: 'payment_required', pending_id: `pending-${body.signup_session_id}` }
     })
   })
 
@@ -322,23 +343,59 @@ async function setupMocks(page: Page, opts: MockAPIOptions = {}) {
     route.fulfill({ status: 201, json: { message: 'ok' } })
   )
 
-  // Curriculum: GET /curriculum
-  await page.route(`${apiBase}/curriculum`, (route) => {
-    if (route.request().method() === 'GET') {
-      return route.fulfill({ status: 200, json: mockCurriculums })
+  // Curriculum files (Task 13+): GET/POST /api/curriculum-files — stateful,
+  // seeded via mockAPI({ curriculumFiles }) and mutated by upload/delete/
+  // setPrincipal so e2e specs can exercise the full flow (Task 16). The
+  // analysis dialog (Task 15) fetches this whenever it's open (gated by
+  // `enabled: open`, but Home still mounts the dialog component on every
+  // dashboard load), so specs that never open it still need a safe default —
+  // hence starting from an empty array when no seed is given.
+  await page.route(`${apiBase}/api/curriculum-files`, (route) => {
+    if (route.request().method() === 'POST') {
+      const body = route.request().postData() || ''
+      const filename = body.match(/filename="([^"]+)"/)?.[1] ?? 'curriculo.pdf'
+      const file: MockCurriculumFile = {
+        id: nextCurriculumFileId++,
+        filename,
+        size_bytes: 204800,
+        is_principal: curriculumFiles.length === 0,
+        created_at: new Date().toISOString()
+      }
+      curriculumFiles.push(file)
+      return route.fulfill({ status: 201, json: { file } })
     }
-    // POST /curriculum (create)
-    return route.fulfill({ status: 201, json: { id: 3, ...route.request().postDataJSON() } })
+    return route.fulfill({ status: 200, json: { files: curriculumFiles } })
   })
 
-  // Curriculum: PUT /curriculum/*
-  await page.route(`${apiBase}/curriculum/*`, (route) => {
-    if (route.request().method() === 'PUT') {
-      return route.fulfill({ status: 200, json: route.request().postDataJSON() })
+  // Curriculum files: DELETE/PATCH .../principal / GET .../download on
+  // /api/curriculum-files/:id. `**` (not `*`) because /principal and
+  // /download add an extra path segment past the id, and glob `*` doesn't
+  // cross `/`.
+  await page.route(`${apiBase}/api/curriculum-files/**`, (route) => {
+    const method = route.request().method()
+    const url = new URL(route.request().url())
+    const idMatch = url.pathname.match(/\/api\/curriculum-files\/(\d+)/)
+    const id = idMatch ? parseInt(idMatch[1], 10) : null
+
+    if (url.pathname.endsWith('/principal') && method === 'PATCH') {
+      curriculumFiles = curriculumFiles.map((f) => ({ ...f, is_principal: f.id === id }))
+      return route.fulfill({ status: 204 })
     }
-    // PATCH /curriculum/*/active
-    if (route.request().method() === 'PATCH') {
-      return route.fulfill({ status: 200, json: { message: 'ok' } })
+    if (url.pathname.endsWith('/download')) {
+      // Real endpoint 302-redireciona pro R2 — o fake aqui só precisa devolver
+      // algo renderizável pelo <iframe> do viewer, sem precisar de rede real.
+      return route.fulfill({ status: 200, contentType: 'application/pdf', body: '%PDF-1.4 fake' })
+    }
+    if (method === 'DELETE') {
+      const deleted = curriculumFiles.find((f) => f.id === id)
+      curriculumFiles = curriculumFiles.filter((f) => f.id !== id)
+      // Espelha usecase.Delete no backend: se o arquivo apagado era o
+      // principal, promove outro (mais recente remanescente) — aqui, de forma
+      // simplificada, o primeiro da lista restante.
+      if (deleted?.is_principal && curriculumFiles.length > 0) {
+        curriculumFiles[0] = { ...curriculumFiles[0], is_principal: true }
+      }
+      return route.fulfill({ status: 204 })
     }
     return route.fallback()
   })
@@ -353,9 +410,31 @@ async function setupMocks(page: Page, opts: MockAPIOptions = {}) {
     route.fulfill({ status: 200, json: { email_exists: false, tax_exists: false } })
   )
 
-  // Create payment: POST /api/payments/create/*
-  await page.route(`${apiBase}/api/payments/create/*`, (route) =>
-    route.fulfill({ status: 200, json: { url: 'https://pay.example.com/checkout' } })
+  // AbacatePay — assinatura via cartão: POST /api/payments/subscribe-card/:planId.
+  // Checkout hospedado (redirect); specs sobrescrevem a URL quando querem
+  // afirmar sobre o redirect real.
+  await page.route(`${apiBase}/api/payments/subscribe-card/*`, (route) =>
+    route.fulfill({ status: 200, json: { checkout_url: 'https://pay.example.com/checkout/mock' } })
+  )
+
+  // AbacatePay — PIX mensal: POST /api/payments/pix-monthly. QR inline,
+  // sem redirect — specs conferem o render do PixPaymentStep.
+  await page.route(`${apiBase}/api/payments/pix-monthly`, (route) =>
+    route.fulfill({
+      status: 200,
+      json: {
+        qr_code: '00020126fake-pix-copia-e-cola-e2e',
+        qr_code_url: 'data:image/png;base64,ZmFrZQ==',
+        expires_at: new Date(Date.now() + 30 * 60 * 1000).toISOString()
+      }
+    })
+  )
+
+  // Polling de status do PIX: GET /api/payments/status?email=... — 'processing'
+  // por padrão pra não deixar o PixPaymentStep confirmar sozinho no meio de um
+  // teste que só quer verificar o render do QR.
+  await page.route(`${apiBase}/api/payments/status*`, (route) =>
+    route.fulfill({ status: 200, json: { status: 'processing' } })
   )
 }
 

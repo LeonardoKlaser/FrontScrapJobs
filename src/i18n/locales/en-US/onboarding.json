@@ -1,18 +1,14 @@
 {
   "step1": {
-    "title": "Upload your resume",
+    "title": "Upload your resume as a PDF",
     "description": "We use AI to match your profile with jobs and show your compatibility score + improvement suggestions.",
     "uploadAria": "Upload resume PDF",
     "selectPdf": "Click to select your PDF",
-    "fileSizeHint": "PDF up to 5 MB",
-    "processing": "Processing resume...",
+    "fileSizeHint": "PDF up to 10 MB",
     "uploading": "Uploading...",
     "selectButton": "Select PDF",
     "skipForNow": "Skip for now",
-    "errorPdfType": "Please upload a PDF file.",
-    "errorFileSize": "File too large. Max size is 5 MB.",
-    "successImport": "Resume imported successfully!",
-    "cvUploadError": "We couldn't process your resume. Please try again or skip this step."
+    "successImport": "Resume uploaded successfully!"
   },
   "step2": {
     "title": "Pick companies to monitor",

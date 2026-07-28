@@ -1,8 +1,11 @@
 import { ArrowLeft, Search } from 'lucide-react'
 import { Link } from 'react-router'
 import { Button } from '@/components/ui/button'
+import { useForceSystemTheme } from '@/components/theme-provider'
 
 export function NotFound() {
+  useForceSystemTheme()
+
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4">
       <div

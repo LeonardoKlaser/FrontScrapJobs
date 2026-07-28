@@ -38,12 +38,12 @@ export function NorteCapabilitiesSection() {
   ]
 
   return (
-    <section className="bg-zinc-50 px-6 py-16 lg:py-20">
+    <section className="bg-muted px-6 py-16 lg:py-20">
       <div className="mx-auto max-w-4xl text-center">
         <p className="font-mono text-xs font-semibold uppercase tracking-wide text-emerald-600">
           {t('norteDoes.overline')}
         </p>
-        <h2 className="mt-2 font-display text-2xl font-semibold text-zinc-900 sm:text-3xl">
+        <h2 className="mt-2 font-display text-2xl font-semibold text-foreground sm:text-3xl">
           {t('norteDoes.title')}
         </h2>
       </div>
@@ -52,8 +52,8 @@ export function NorteCapabilitiesSection() {
         {capabilities.map((cap, i) => (
           <div key={cap.title} className="grid items-center gap-8 md:grid-cols-2">
             <div className={i % 2 === 1 ? 'md:order-2' : ''}>
-              <h3 className="text-xl font-semibold text-zinc-900">{cap.title}</h3>
-              <p className="mt-3 text-zinc-500">{cap.body}</p>
+              <h3 className="text-xl font-semibold text-foreground">{cap.title}</h3>
+              <p className="mt-3 text-muted-foreground">{cap.body}</p>
             </div>
             <div className={`mx-auto w-full max-w-xs ${i % 2 === 1 ? 'md:order-1' : ''}`}>
               <NorteChat messages={cap.messages} showHeader={false} />

@@ -35,3 +35,14 @@ export function formatCpfCnpj(value: string): string {
     .replace(/(\d{3})(\d)/, '$1/$2')
     .replace(/(\d{4})(\d{1,2})$/, '$1-$2')
 }
+
+// formatFileSize converte bytes pra uma string legível em KB/MB. Usado pelo
+// gerenciador de currículos em PDF (Task 14) pra mostrar o tamanho de cada
+// arquivo armazenado no R2.
+export function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`
+  const kb = bytes / 1024
+  if (kb < 1024) return `${kb.toFixed(kb < 10 ? 1 : 0)} KB`
+  const mb = kb / 1024
+  return `${mb.toFixed(1)} MB`
+}

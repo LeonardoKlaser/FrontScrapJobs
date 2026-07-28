@@ -37,13 +37,13 @@ export default function ForgotPassword() {
     <AuthLayout hero={<LoginSideHero />}>
       {sent ? (
         <div className="flex flex-col items-center gap-4 py-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
-            <CheckCircle className="h-6 w-6 text-emerald-700" />
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10">
+            <CheckCircle className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
           </div>
-          <h2 className="text-center text-xl font-semibold text-zinc-900">
+          <h2 className="text-center text-xl font-semibold text-foreground">
             {t('forgot.sentTitle', 'E-mail enviado')}
           </h2>
-          <p className="max-w-sm text-center text-sm text-zinc-500">
+          <p className="max-w-sm text-center text-sm text-muted-foreground">
             {t(
               'forgot.sentMessage',
               'Se o e-mail informado estiver cadastrado, você receberá instruções para ' +
@@ -61,22 +61,22 @@ export default function ForgotPassword() {
         </div>
       ) : (
         <>
-          <h2 className="mb-1 text-xl font-semibold text-zinc-900 lg:mb-2">
+          <h2 className="mb-1 text-xl font-semibold text-foreground lg:mb-2">
             {t('forgot.title', 'Esqueceu sua senha?')}
           </h2>
-          <p className="mb-8 text-sm text-zinc-500">
+          <p className="mb-8 text-sm text-muted-foreground">
             {t('forgot.subtitle', 'Informe seu e-mail para receber um link de redefinição.')}
           </p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="email" className="text-zinc-500">
+              <Label htmlFor="email" className="text-muted-foreground">
                 E-mail
               </Label>
               <div className="relative">
                 <MailIcon
                   className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2
-                    text-zinc-500"
+                    text-muted-foreground"
                 />
                 <Input
                   id="email"
@@ -99,7 +99,7 @@ export default function ForgotPassword() {
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-zinc-500">
+          <p className="mt-6 text-center text-sm text-muted-foreground">
             <Link to={PATHS.login} className="font-medium text-primary hover:underline">
               <ArrowLeft className="mr-1 inline h-3 w-3" />
               {t('forgot.backToLogin', 'Voltar para o login')}

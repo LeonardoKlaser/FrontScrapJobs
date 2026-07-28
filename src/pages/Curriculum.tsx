@@ -1,90 +1,123 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { PlusCircle } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { CurriculumForm } from '@/components/curriculum/curriculum-form'
-import { CurriculumSwitcher } from '@/components/curriculum/curriculum-switcher'
-import { useCurriculum } from '@/hooks/useCurriculum'
+import { toast } from 'sonner'
+import { FileText } from 'lucide-react'
 import { AppPageHeader } from '@/components/common/app-page-header'
-import { PdfExportModal } from '@/components/curriculum/pdf-export-modal'
-import { PdfImportButton } from '@/components/curriculum/pdf-import-button'
-import type { Curriculum as CurriculumType } from '@/models/curriculum'
+import { EmptyState } from '@/components/common/empty-state'
+import { CurriculumFileCard } from '@/components/curriculum/curriculum-file-card'
+import { CurriculumViewer } from '@/components/curriculum/curriculum-viewer'
+import { UploadCurriculumButton } from '@/components/curriculum/upload-curriculum-button'
+import {
+  useCurriculumFiles,
+  useDeleteCurriculumFile,
+  useSetPrincipalCurriculumFile
+} from '@/hooks/useCurriculumFiles'
+import { curriculumFileErrorKey } from '@/lib/curriculumFileErrorKey'
 
+// Página de currículo é um gerenciador de PDFs armazenados no R2 (Task 14).
+// Substituiu o editor estruturado antigo (CurriculumForm/CurriculumSwitcher/
+// PdfImportButton/PdfExportModal), removido na Task 16.
 export function Curriculum() {
   const { t } = useTranslation('curriculum')
-  const { data: curriculums } = useCurriculum()
-  const [selectedCurriculumId, setSelectedCurriculumId] = useState<number | null>(null)
+  const { data: files, isLoading, isError, isLoadingError } = useCurriculumFiles()
+  const deleteFile = useDeleteCurriculumFile()
+  const setPrincipal = useSetPrincipalCurriculumFile()
+  const [selectedId, setSelectedId] = useState<number | null>(null)
   const [hasAutoSelected, setHasAutoSelected] = useState(false)
-  const [importedData, setImportedData] = useState<Omit<CurriculumType, 'id'> | null>(null)
-  const [exportCurriculumId, setExportCurriculumId] = useState<number | null>(null)
 
+  const list = files ?? []
+  const hasFiles = list.length > 0
+  const selectedFile = list.find((f) => f.id === selectedId) ?? null
+
+  // Falha de refetch em segundo plano (ex.: revalidação ao focar a aba) não
+  // deve esconder a lista já carregada — só avisa via toast não bloqueante.
+  // isLoadingError (do React Query) distingue isso do erro no carregamento
+  // inicial sem cache, que ainda mostra o estado de erro bloqueante abaixo.
   useEffect(() => {
-    if (!hasAutoSelected && curriculums?.length && selectedCurriculumId === null) {
-      setSelectedCurriculumId(curriculums[0].id)
+    if (isError && !isLoadingError && hasFiles) {
+      toast.error(t('list.refetchError'))
+    }
+  }, [isError, isLoadingError, hasFiles, t])
+
+  // Pré-seleciona o arquivo principal (ou o primeiro, se nenhum for principal)
+  // assim que a lista carrega, pra o painel de visualização não abrir vazio.
+  // Roda só uma vez — depois disso a seleção fica sob controle do usuário.
+  useEffect(() => {
+    if (!hasAutoSelected && list.length > 0) {
+      const defaultFile = list.find((f) => f.is_principal) ?? list[0]
+      setSelectedId(defaultFile.id)
       setHasAutoSelected(true)
     }
-  }, [curriculums, hasAutoSelected, selectedCurriculumId])
+  }, [list, hasAutoSelected])
 
-  const selectedCurriculum = curriculums?.find((cv) => cv.id === selectedCurriculumId)
-  const hasCurriculums = !!curriculums && curriculums.length > 0
-  const isCreatingNew = selectedCurriculumId === null
-
-  const handleSelectCurriculum = (id: number) => {
-    setSelectedCurriculumId(id)
-    setImportedData(null)
+  const handleDelete = (id: number) => {
+    deleteFile.mutate(id, {
+      onSuccess: () => {
+        toast.success(t('list.deleteSuccess'))
+        setSelectedId((current) => {
+          if (current !== id) return current
+          // O arquivo selecionado acabou de ser excluído — reseleciona o
+          // principal (ou o primeiro) entre os que sobraram, em vez de deixar
+          // o painel de visualização vazio enquanto ainda há currículos.
+          const remaining = list.filter((f) => f.id !== id)
+          if (remaining.length === 0) return null
+          return (remaining.find((f) => f.is_principal) ?? remaining[0]).id
+        })
+      },
+      onError: (error) => toast.error(t(curriculumFileErrorKey(error)))
+    })
   }
 
-  const handleCreateNew = () => {
-    setSelectedCurriculumId(null)
-    setImportedData(null)
-  }
-
-  const handleExtracted = (data: Omit<CurriculumType, 'id'>) => {
-    setImportedData(data)
-    setSelectedCurriculumId(null)
+  const handleSetPrincipal = (id: number) => {
+    setPrincipal.mutate(id, {
+      onSuccess: () => toast.success(t('list.principalSuccess')),
+      onError: (error) => toast.error(t(curriculumFileErrorKey(error)))
+    })
   }
 
   return (
     <>
       <AppPageHeader title={t('pageTitle.curriculum', { ns: 'common' })}>
-        <PdfImportButton onExtracted={handleExtracted} size="sm" />
-        <Button
-          onClick={handleCreateNew}
-          size="sm"
-          aria-label={t('list.newButton')}
-          className="gap-2"
-        >
-          <PlusCircle className="h-4 w-4" />
-          <span className="hidden sm:inline">{t('list.newButton')}</span>
-        </Button>
+        <UploadCurriculumButton fileCount={list.length} />
       </AppPageHeader>
-      <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-        <p className="text-sm text-muted-foreground mb-6">{t('description')}</p>
+      <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8 space-y-6">
+        <p className="text-sm text-muted-foreground">{t('description')}</p>
 
-        {hasCurriculums && (
-          <CurriculumSwitcher
-            curriculums={curriculums}
-            selectedId={selectedCurriculumId}
-            isCreatingNew={isCreatingNew}
-            onSelect={handleSelectCurriculum}
-            onCreateNew={handleCreateNew}
-            onExport={setExportCurriculumId}
+        {isLoadingError && (
+          <div className="flex items-center justify-center h-64">
+            <p className="text-sm text-destructive">{t('list.errorState')}</p>
+          </div>
+        )}
+
+        {!isLoadingError && !isLoading && !hasFiles && (
+          <EmptyState
+            icon={FileText}
+            title={t('list.emptyTitle')}
+            description={t('list.emptyDescription')}
+            action={<UploadCurriculumButton fileCount={list.length} />}
           />
         )}
 
-        <CurriculumForm
-          curriculum={selectedCurriculum}
-          isEditing={selectedCurriculumId !== null}
-          initialData={selectedCurriculumId === null ? (importedData ?? undefined) : undefined}
-          onSaveSuccess={() => setImportedData(null)}
-          hideTitle={hasCurriculums}
-        />
+        {!isLoadingError && hasFiles && (
+          <>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {list.map((file) => (
+                <CurriculumFileCard
+                  key={file.id}
+                  file={file}
+                  isSelected={file.id === selectedId}
+                  onView={() => setSelectedId(file.id)}
+                  onSetPrincipal={() => handleSetPrincipal(file.id)}
+                  onDelete={() => handleDelete(file.id)}
+                  isSettingPrincipal={setPrincipal.isPending}
+                  isDeleting={deleteFile.isPending}
+                />
+              ))}
+            </div>
 
-        <PdfExportModal
-          curriculumId={exportCurriculumId}
-          open={exportCurriculumId !== null}
-          onClose={() => setExportCurriculumId(null)}
-        />
+            <CurriculumViewer file={selectedFile} />
+          </>
+        )}
       </div>
     </>
   )

@@ -19,30 +19,30 @@ export function Footer() {
             <div className="flex items-center space-x-6">
               <Link
                 to={PATHS.terms}
-                className="text-sm text-zinc-500 hover:text-emerald-500 transition-colors"
+                className="text-sm text-muted-foreground hover:text-emerald-500 transition-colors"
               >
                 {t('footer.terms')}
               </Link>
               <Link
                 to={PATHS.privacy}
-                className="text-sm text-zinc-500 hover:text-emerald-500 transition-colors"
+                className="text-sm text-muted-foreground hover:text-emerald-500 transition-colors"
               >
                 {t('footer.privacy')}
               </Link>
               <a
                 href={`mailto:${tCommon('footer.contactEmail')}`}
-                className="text-sm text-zinc-500 hover:text-emerald-500 transition-colors"
+                className="text-sm text-muted-foreground hover:text-emerald-500 transition-colors"
               >
                 {tCommon('footer.contactEmail')}
               </a>
             </div>
 
-            <p className="text-sm text-zinc-400">
+            <p className="text-sm text-muted-foreground">
               {t('footer.copyright', { year: new Date().getFullYear() })}
             </p>
           </div>
 
-          <p className="mt-6 pt-4 border-t border-zinc-200/60 max-w-3xl mx-auto text-xs text-zinc-400 text-center leading-relaxed">
+          <p className="mt-6 pt-4 border-t border-border max-w-3xl mx-auto text-xs text-muted-foreground text-center leading-relaxed">
             {t('footer.disclaimer')}
           </p>
         </div>

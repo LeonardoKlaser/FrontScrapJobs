@@ -20,6 +20,18 @@ const initialState: ThemeProviderState = {
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
+// Contador em nível de módulo de quantos useForceSystemTheme estão montados
+// agora. Existe por causa da ordem de commit dos efeitos do React: efeitos de
+// componentes filhos rodam ANTES dos efeitos do pai. Se o ThemeProvider e uma
+// página pública montarem no mesmo commit (ex: import eager em vez de lazy(),
+// ou o Suspense que hoje as isola sumir), o efeito do useForceSystemTheme
+// (filho) roda primeiro forçando o tema do SO, e o efeito do provider (pai)
+// roda depois e sobrescreve de volta com o tema salvo — silenciosamente
+// quebrando o force nas páginas públicas sem nenhum teste acusar. Em prod isso
+// não acontece hoje só porque cada página é lazy() e o provider já commitou
+// antes; nada além desse contador garante isso estruturalmente.
+let forceSystemThemeCount = 0
+
 export function ThemeProvider({
   children,
   defaultTheme = 'system',
@@ -34,6 +46,10 @@ export function ThemeProvider({
     const root = window.document.documentElement
 
     const applyTheme = () => {
+      // Uma página pública está forçando o tema do SO agora — não sobrescreve
+      // com o tema salvo enquanto isso (ver comentário do contador acima).
+      if (forceSystemThemeCount > 0) return
+
       root.classList.remove('light', 'dark')
 
       if (theme === 'system') {
@@ -48,12 +64,21 @@ export function ThemeProvider({
 
     applyTheme()
 
+    // Páginas públicas forçam o tema do SO enquanto montadas (useForceSystemTheme)
+    // e, ao desmontar, disparam esse evento pra devolver o tema escolhido do app.
+    window.addEventListener('vite-ui-theme-restore', applyTheme)
+
     if (theme === 'system') {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
       const handler = () => applyTheme()
       mediaQuery.addEventListener('change', handler)
-      return () => mediaQuery.removeEventListener('change', handler)
+      return () => {
+        mediaQuery.removeEventListener('change', handler)
+        window.removeEventListener('vite-ui-theme-restore', applyTheme)
+      }
     }
+
+    return () => window.removeEventListener('vite-ui-theme-restore', applyTheme)
   }, [theme])
 
   const value = {
@@ -77,4 +102,56 @@ export const useTheme = () => {
   if (context === undefined) throw new Error('useTheme must be used within a ThemeProvider')
 
   return context
+}
+
+// Força o tema do SO enquanto o componente estiver montado (páginas públicas).
+// Não toca no localStorage — o tema escolhido do app volta ao desmontar.
+export function useForceSystemTheme() {
+  useEffect(() => {
+    forceSystemThemeCount++
+    const root = window.document.documentElement
+    const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    const apply = () => {
+      root.classList.remove('light', 'dark')
+      root.classList.add(mq.matches ? 'dark' : 'light')
+    }
+    apply()
+    mq.addEventListener('change', apply)
+    return () => {
+      mq.removeEventListener('change', apply)
+      forceSystemThemeCount--
+      window.dispatchEvent(new Event('vite-ui-theme-restore'))
+    }
+  }, [])
+}
+
+function readAppliedTheme(): 'light' | 'dark' {
+  return window.document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+}
+
+// Le o tema de FATO aplicado em <html> (a classe 'dark'/'light' real), em vez
+// do tema escolhido guardado no provider. useTheme() sozinho nao serve pro
+// toaster global (ThemedToaster em App.tsx): paginas publicas sobrescrevem a
+// classe via useForceSystemTheme enquanto montadas, e nesse momento o tema
+// salvo do provider diverge do que esta de fato na tela. Observa a classe de
+// <html> diretamente via MutationObserver — funciona tanto pro force do SO
+// quanto pras trocas normais de tema (inclusive 'system' reagindo a mudanca de
+// preferencia do SO), sem duplicar a logica de matchMedia que ja vive no
+// provider e no useForceSystemTheme.
+export function useAppliedTheme(): 'light' | 'dark' {
+  const [applied, setApplied] = useState<'light' | 'dark'>(() =>
+    typeof window === 'undefined' ? 'dark' : readAppliedTheme()
+  )
+
+  useEffect(() => {
+    const root = window.document.documentElement
+    const update = () => setApplied(readAppliedTheme())
+    update()
+
+    const observer = new MutationObserver(update)
+    observer.observe(root, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
+  }, [])
+
+  return applied
 }

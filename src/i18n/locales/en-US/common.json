@@ -8,7 +8,6 @@
     "manageSites": "Manage Sites",
     "leads": "Leads",
     "adminEmails": "Emails",
-    "applications": "Applications",
     "logout": "Sign Out",
     "openMenu": "Open menu",
     "unknownUser": "User",
@@ -21,7 +20,6 @@
     "home": "Home",
     "curriculum": "Resume",
     "sites": "Companies",
-    "applications": "Applications",
     "account": "My account",
     "renew": "Renew plan",
     "adminDashboard": "Admin dashboard",
@@ -66,7 +64,6 @@
   "loading": "Loading...",
   "loadingPermissions": "Checking permissions...",
   "loadingPanel": "Loading dashboard...",
-  "loadingApplications": "Loading applications...",
   "language": {
     "label": "Language",
     "pt": "Português",

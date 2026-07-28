@@ -1,4 +1,4 @@
-import { useLayoutEffect, type ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
@@ -10,26 +10,19 @@ interface AuthLayoutProps {
   children: ReactNode
 }
 
-// Casca de 2 colunas compartilhada por /login e /signup. Forca light mode (igual
-// Landing.tsx) e posiciona o back-link sem sobrepor o logo. O painel hero some no
-// mobile; nesse caso o logo aparece no topo do lado do form.
+// Casca de 2 colunas compartilhada por /login e /signup. O tema (dark/light)
+// e' forcado a seguir o SO pelo PublicLayout pai (useForceSystemTheme) — esta
+// casca so precisa usar tokens do design system pra renderizar certo nos 2 casos.
+// Posiciona o back-link sem sobrepor o logo; o painel hero some no mobile e
+// nesse caso o logo aparece no topo do lado do form.
 export function AuthLayout({ hero, children }: AuthLayoutProps) {
   const { t } = useTranslation('auth')
-
-  useLayoutEffect(() => {
-    const root = document.documentElement
-    const hadDark = root.classList.contains('dark')
-    root.classList.remove('dark')
-    return () => {
-      if (hadDark) root.classList.add('dark')
-    }
-  }, [])
 
   const backLink = (
     <Link
       to={PATHS.landing}
-      className="inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors
-        hover:text-zinc-900"
+      className="inline-flex items-center gap-1.5 text-sm text-muted-foreground
+        transition-colors hover:text-foreground"
     >
       <ArrowLeft className="h-4 w-4" />
       {t('backToHome', 'Voltar')}
@@ -37,12 +30,12 @@ export function AuthLayout({ hero, children }: AuthLayoutProps) {
   )
 
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="flex min-h-screen bg-background">
       {/* Painel esquerdo — hero (escondido no mobile). Back-link fica em fluxo
           normal no topo (nao absoluto) pra nunca sobrepor o logo do hero; o hero
           centraliza no espaco restante e rola se ficar mais alto que a viewport. */}
       <div
-        className="hidden flex-col border-r border-zinc-200 bg-zinc-50 px-12 py-8
+        className="hidden flex-col border-r border-border bg-muted/30 px-12 py-8
           lg:flex lg:w-1/2 xl:px-20"
       >
         {backLink}

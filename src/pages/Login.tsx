@@ -23,16 +23,16 @@ export default function Login() {
 
   return (
     <AuthLayout hero={<LoginSideHero />}>
-      <h2 className="mb-1 text-xl font-semibold text-zinc-900 lg:mb-2">
+      <h2 className="mb-1 text-xl font-semibold text-foreground lg:mb-2">
         {t('login.welcome', 'Bem-vindo de volta')}
       </h2>
-      <p className="mb-8 text-sm text-zinc-500">
+      <p className="mb-8 text-sm text-muted-foreground">
         {t('login.subtitle', 'Entre na sua conta para continuar')}
       </p>
 
       <AuthForm />
 
-      <p className="mt-6 text-center text-sm text-zinc-500">
+      <p className="mt-6 text-center text-sm text-muted-foreground">
         {t('login.noAccount', 'Primeira missão por aqui?')}{' '}
         <Link to={`${PATHS.landing}#pricing`} className="font-medium text-primary hover:underline">
           {t('login.startTrial', 'Ver planos')}

@@ -19,7 +19,7 @@ export function useAuth() {
       setError(null)
       try {
         await authService.login(data)
-        // clear() wipa TUDO: ['dashboardData'], ['latestJobs'], ['applications']
+        // clear() wipa TUDO: ['dashboardData'], ['latestJobs'], ['curriculum-files']
         // etc. Sem isso, dashboard mostra dados do user anterior em cache até o
         // refetch responder — abre janela pra vazamento entre sessões no mesmo
         // browser. authLoader faz fetchQuery(['user']) na navegação seguinte.
@@ -77,7 +77,7 @@ export function useAuth() {
       console.error('Erro ao fazer logout', e)
     } finally {
       // clear() (não removeQueries(['user'])) — ['user'] sozinho deixava
-      // ['dashboardData'], ['latestJobs'], ['applications'] etc. em cache,
+      // ['dashboardData'], ['latestJobs'], ['curriculum-files'] etc. em cache,
       // que vazavam pro próximo login no mesmo browser. Frontend não deve
       // ficar em estado inconsistente (tela authed com cookie já invalidado).
       queryClient.clear()

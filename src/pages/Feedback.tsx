@@ -123,7 +123,7 @@ export default function Feedback() {
 
         {state === 'success' && (
           <div className="space-y-3">
-            <CheckCircle2 className="h-12 w-12 text-emerald-500 mx-auto" />
+            <CheckCircle2 className="h-12 w-12 text-emerald-600 dark:text-emerald-400 mx-auto" />
             <h2 className="text-lg font-semibold">
               {t('feedbackPage.successTitle', 'Obrigado pelo feedback!')}
             </h2>

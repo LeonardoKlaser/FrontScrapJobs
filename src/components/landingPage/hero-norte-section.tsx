@@ -43,7 +43,7 @@ export function HeroNorteSection() {
   }
 
   return (
-    <section className="bg-white px-6 pt-24 pb-16 sm:px-8 lg:pb-20">
+    <section className="bg-background px-6 pt-24 pb-16 sm:px-8 lg:pb-20">
       <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
         <div>
           <span
@@ -54,11 +54,11 @@ export function HeroNorteSection() {
           </span>
           <h1
             className="mt-6 text-balance text-4xl font-semibold leading-tight tracking-tight
-              text-zinc-900 sm:text-5xl"
+              text-foreground sm:text-5xl"
           >
             {t('hero.heading1')} <span className="text-gradient-primary">{t('hero.heading2')}</span>
           </h1>
-          <p className="mt-4 max-w-xl text-pretty text-lg leading-relaxed text-zinc-500">
+          <p className="mt-4 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
             {t('hero.subheading')}
           </p>
 
@@ -66,8 +66,8 @@ export function HeroNorteSection() {
             {AREA_KEYS.map((key) => (
               <span
                 key={key}
-                className="rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs
-                  font-medium text-zinc-500"
+                className="rounded-full border border-border bg-background px-3 py-1 text-xs
+                  font-medium text-muted-foreground"
               >
                 {t(key)}
               </span>
@@ -84,11 +84,11 @@ export function HeroNorteSection() {
               {t('hero.cta')}
               <ArrowRight className="ml-1 h-5 w-5" />
             </Button>
-            <p className="mt-4 flex items-center gap-2 text-sm text-zinc-500">
+            <p className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
               <ShieldCheck className="h-4 w-4 text-primary" />
               {t('hero.microcopy')}
             </p>
-            <p className="mt-2 text-sm text-zinc-500">
+            <p className="mt-2 text-sm text-muted-foreground">
               {t('hero.loginPrompt')}{' '}
               <Link to={PATHS.login} className="font-medium text-primary hover:underline">
                 {t('hero.loginLink')}
