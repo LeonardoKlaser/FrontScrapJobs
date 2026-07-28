@@ -75,6 +75,14 @@ describe('curriculumFilesService', () => {
 
       expect(mock.history.delete.length).toBe(1)
     })
+
+    it('propagates not_found (404) untouched', async () => {
+      mock.onDelete('/api/curriculum-files/5').reply(404, { error: 'not_found' })
+
+      await expect(curriculumFilesService.remove(5)).rejects.toMatchObject({
+        response: { status: 404, data: { error: 'not_found' } }
+      })
+    })
   })
 
   describe('setPrincipal', () => {
@@ -84,6 +92,14 @@ describe('curriculumFilesService', () => {
       await curriculumFilesService.setPrincipal(7)
 
       expect(mock.history.patch.length).toBe(1)
+    })
+
+    it('propagates not_found (404) untouched', async () => {
+      mock.onPatch('/api/curriculum-files/7/principal').reply(404, { error: 'not_found' })
+
+      await expect(curriculumFilesService.setPrincipal(7)).rejects.toMatchObject({
+        response: { status: 404, data: { error: 'not_found' } }
+      })
     })
   })
 

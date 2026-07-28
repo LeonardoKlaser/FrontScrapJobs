@@ -1,13 +1,17 @@
 import { curriculumFilesService } from '@/services/curriculumFilesService'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-const CURRICULUM_FILES_KEY = ['curriculum-files']
+export const CURRICULUM_FILES_KEY = ['curriculum-files']
 
 export function useCurriculumFiles(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: CURRICULUM_FILES_KEY,
     queryFn: curriculumFilesService.list,
-    enabled: options?.enabled ?? true
+    enabled: options?.enabled ?? true,
+    // A lista muda pouco (upload/delete/setPrincipal ja invalidam a query na
+    // hora); 5min evita refetch redundante quando o dialog de analise e a
+    // pagina de curriculo montam em sequencia (mesma queryKey, so reusa cache).
+    staleTime: 5 * 60 * 1000
   })
 }
 
