@@ -47,19 +47,22 @@ export function ActivationBanner() {
             <p className="text-xs text-muted-foreground">{t('banner.description')}</p>
           </div>
         </div>
+        {/* CTA e X no mesmo grupo — o justify-between do container leva os
+            dois juntos pra borda direita (o X solto deixava o CTA flutuando
+            no meio). No mobile o X segue absoluto no canto do banner. */}
         <div className="flex shrink-0 items-center gap-2">
           <Button variant="glow" size="sm" onClick={() => setModalOpen(true)}>
             {t('banner.cta')}
           </Button>
+          <button
+            type="button"
+            onClick={handleDismiss}
+            aria-label={t('banner.dismiss')}
+            className="absolute right-3 top-3 text-muted-foreground transition-colors hover:text-foreground sm:static"
+          >
+            <X className="h-4 w-4" />
+          </button>
         </div>
-        <button
-          type="button"
-          onClick={handleDismiss}
-          aria-label={t('banner.dismiss')}
-          className="absolute right-3 top-3 text-muted-foreground transition-colors hover:text-foreground sm:static"
-        >
-          <X className="h-4 w-4" />
-        </button>
       </div>
 
       <OptInModal open={modalOpen} onOpenChange={setModalOpen} defaultNumber={user.cellphone} />
