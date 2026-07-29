@@ -9,7 +9,11 @@ export function useAnalyzeJob() {
       analysisService.analyzeJob(jobId, curriculumFileId),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['analysisHistory', variables.jobId] })
-    }
+    },
+    // O dialog de análise exibe o erro inline traduzido (getErrorMessage) —
+    // este onError vazio silencia o toast global do MutationCache (main.tsx),
+    // que dispararia com o slug cru do backend por cima da mensagem do dialog.
+    onError: () => {}
   })
 }
 
