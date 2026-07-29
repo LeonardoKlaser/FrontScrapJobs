@@ -1,9 +1,10 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, cleanup, screen, waitFor } from '@testing-library/react'
-import { ThemeProvider, useForceSystemTheme, useAppliedTheme } from '../theme-provider'
+import { ThemeProvider, useForceLightTheme, useAppliedTheme } from '../theme-provider'
 
 // matchMedia mock que permite disparar 'change' manualmente e espiar
-// addEventListener/removeEventListener por instância.
+// addEventListener/removeEventListener por instância. Ainda necessário pro
+// ThemeProvider resolver o tema 'system'.
 function mockMatchMedia(matches: boolean) {
   const listeners = new Set<() => void>()
   const mql = {
@@ -23,12 +24,12 @@ function mockMatchMedia(matches: boolean) {
   return mql
 }
 
-function ForceSystemThemeProbe() {
-  useForceSystemTheme()
+function ForceLightThemeProbe() {
+  useForceLightTheme()
   return null
 }
 
-describe('useForceSystemTheme', () => {
+describe('useForceLightTheme', () => {
   afterEach(() => {
     cleanup()
     vi.restoreAllMocks()
@@ -36,14 +37,14 @@ describe('useForceSystemTheme', () => {
     document.documentElement.classList.remove('light', 'dark')
   })
 
-  it('aplica a classe dark quando o SO prefere dark, mesmo com tema salvo light', () => {
-    localStorage.setItem('vite-ui-theme', 'light')
+  it('aplica a classe light mesmo com tema salvo dark e SO em dark', () => {
+    localStorage.setItem('vite-ui-theme', 'dark')
     mockMatchMedia(true)
 
-    render(<ForceSystemThemeProbe />)
+    render(<ForceLightThemeProbe />)
 
-    expect(document.documentElement.classList.contains('dark')).toBe(true)
-    expect(document.documentElement.classList.contains('light')).toBe(false)
+    expect(document.documentElement.classList.contains('light')).toBe(true)
+    expect(document.documentElement.classList.contains('dark')).toBe(false)
   })
 
   it('ao desmontar, dispara vite-ui-theme-restore pra devolver o tema escolhido', () => {
@@ -51,7 +52,7 @@ describe('useForceSystemTheme', () => {
     const onRestore = vi.fn()
     window.addEventListener('vite-ui-theme-restore', onRestore)
 
-    const { unmount } = render(<ForceSystemThemeProbe />)
+    const { unmount } = render(<ForceLightThemeProbe />)
     unmount()
 
     expect(onRestore).toHaveBeenCalledTimes(1)
@@ -68,8 +69,8 @@ describe('ThemeProvider + vite-ui-theme-restore', () => {
   })
 
   it('reaplica o tema salvo do usuário quando vite-ui-theme-restore é disparado', () => {
-    localStorage.setItem('vite-ui-theme', 'light')
-    mockMatchMedia(true)
+    localStorage.setItem('vite-ui-theme', 'dark')
+    mockMatchMedia(false)
 
     render(
       <ThemeProvider>
@@ -77,28 +78,28 @@ describe('ThemeProvider + vite-ui-theme-restore', () => {
       </ThemeProvider>
     )
 
-    expect(document.documentElement.classList.contains('light')).toBe(true)
+    expect(document.documentElement.classList.contains('dark')).toBe(true)
 
-    // Simula uma página pública forçando o tema do SO por cima (dark).
-    document.documentElement.classList.remove('light')
-    document.documentElement.classList.add('dark')
+    // Simula uma página pública forçando light por cima.
+    document.documentElement.classList.remove('dark')
+    document.documentElement.classList.add('light')
 
     window.dispatchEvent(new Event('vite-ui-theme-restore'))
 
-    expect(document.documentElement.classList.contains('light')).toBe(true)
-    expect(document.documentElement.classList.contains('dark')).toBe(false)
+    expect(document.documentElement.classList.contains('dark')).toBe(true)
+    expect(document.documentElement.classList.contains('light')).toBe(false)
   })
 })
 
 // Regressão do finding do code review: React commita efeitos de filho ANTES
 // do pai. Quando o ThemeProvider e uma página pública montam no MESMO commit
 // (o cenário abaixo, sem lazy()/Suspense de por meio), o efeito do
-// useForceSystemTheme rodava primeiro forçando o tema do SO, e o efeito do
-// provider rodava depois e sobrescrevia de volta com o tema salvo — o SO nunca
+// useForceLightTheme rodava primeiro forçando light, e o efeito do provider
+// rodava depois e sobrescrevia de volta com o tema salvo — o light nunca
 // vencia. O contador em nível de módulo em theme-provider.tsx corrige isso
 // estruturalmente; estes testes cobrem exatamente o cenário composto que
 // escapava dos testes isolados acima.
-describe('ThemeProvider + useForceSystemTheme montados no mesmo commit', () => {
+describe('ThemeProvider + useForceLightTheme montados no mesmo commit', () => {
   afterEach(() => {
     cleanup()
     vi.restoreAllMocks()
@@ -106,35 +107,35 @@ describe('ThemeProvider + useForceSystemTheme montados no mesmo commit', () => {
     document.documentElement.classList.remove('light', 'dark')
   })
 
-  it('SO vence mesmo com tema salvo light, quando provider e página pública montam juntos', () => {
-    localStorage.setItem('vite-ui-theme', 'light')
+  it('light vence mesmo com tema salvo dark, quando provider e página pública montam juntos', () => {
+    localStorage.setItem('vite-ui-theme', 'dark')
     mockMatchMedia(true)
 
     render(
       <ThemeProvider>
-        <ForceSystemThemeProbe />
+        <ForceLightThemeProbe />
       </ThemeProvider>
     )
 
-    expect(document.documentElement.classList.contains('dark')).toBe(true)
-    expect(document.documentElement.classList.contains('light')).toBe(false)
+    expect(document.documentElement.classList.contains('light')).toBe(true)
+    expect(document.documentElement.classList.contains('dark')).toBe(false)
   })
 
   it('ao desmontar a página pública dentro do provider, o tema salvo volta', () => {
-    localStorage.setItem('vite-ui-theme', 'light')
+    localStorage.setItem('vite-ui-theme', 'dark')
     mockMatchMedia(true)
 
     function Wrapper({ showPublicPage }: { showPublicPage: boolean }) {
-      return <ThemeProvider>{showPublicPage && <ForceSystemThemeProbe />}</ThemeProvider>
+      return <ThemeProvider>{showPublicPage && <ForceLightThemeProbe />}</ThemeProvider>
     }
 
     const { rerender } = render(<Wrapper showPublicPage />)
-    expect(document.documentElement.classList.contains('dark')).toBe(true)
+    expect(document.documentElement.classList.contains('light')).toBe(true)
 
     rerender(<Wrapper showPublicPage={false} />)
 
-    expect(document.documentElement.classList.contains('light')).toBe(true)
-    expect(document.documentElement.classList.contains('dark')).toBe(false)
+    expect(document.documentElement.classList.contains('dark')).toBe(true)
+    expect(document.documentElement.classList.contains('light')).toBe(false)
   })
 })
 
@@ -145,8 +146,8 @@ function AppliedThemeProbe() {
 
 // useAppliedTheme existe pro ThemedToaster global (App.tsx) seguir o tema REAL
 // de <html>, nao o tema salvo no provider — necessario porque paginas publicas
-// forcam o tema do SO por cima do tema salvo (useForceSystemTheme) enquanto
-// montadas, e nesse momento os dois divergem.
+// forcam light por cima do tema salvo (useForceLightTheme) enquanto montadas,
+// e nesse momento os dois divergem.
 describe('useAppliedTheme', () => {
   afterEach(() => {
     cleanup()
@@ -163,21 +164,21 @@ describe('useAppliedTheme', () => {
     expect(screen.getByTestId('applied-theme')).toHaveTextContent('dark')
   })
 
-  it('segue o force do SO (useForceSystemTheme), nao o tema salvo do provider', async () => {
-    localStorage.setItem('vite-ui-theme', 'light')
+  it('segue o force de light (useForceLightTheme), nao o tema salvo do provider', async () => {
+    localStorage.setItem('vite-ui-theme', 'dark')
     mockMatchMedia(true)
 
     render(
       <ThemeProvider>
-        <ForceSystemThemeProbe />
+        <ForceLightThemeProbe />
         <AppliedThemeProbe />
       </ThemeProvider>
     )
 
-    // Tema salvo e' 'light', mas o SO (mockado dark) forca a classe 'dark' —
-    // useAppliedTheme deve reportar 'dark', batendo com o que esta na tela.
+    // Tema salvo e' 'dark', mas a pagina publica forca a classe 'light' —
+    // useAppliedTheme deve reportar 'light', batendo com o que esta na tela.
     await waitFor(() => {
-      expect(screen.getByTestId('applied-theme')).toHaveTextContent('dark')
+      expect(screen.getByTestId('applied-theme')).toHaveTextContent('light')
     })
   })
 

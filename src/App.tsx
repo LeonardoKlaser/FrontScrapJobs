@@ -10,10 +10,10 @@ import { LoadingSection } from '@/components/common/loading-section'
 import { TooltipProvider } from '@/components/ui/tooltip'
 
 // Segue o tema REAL aplicado em <html> (useAppliedTheme), nao o tema salvo do
-// provider. Paginas publicas forcam o tema do SO por cima do tema salvo
-// (useForceSystemTheme em PublicLayout) — se o toaster lesse useTheme() aqui,
+// provider. Paginas publicas forcam light por cima do tema salvo
+// (useForceLightTheme em PublicLayout) — se o toaster lesse useTheme() aqui,
 // ele mostraria toasts no tema salvo (ex.: 'dark' default) mesmo com a pagina
-// publica renderizando light pro SO do usuario, quebrando o contraste do toast.
+// publica renderizando light, quebrando o contraste do toast.
 function ThemedToaster() {
   const resolvedTheme = useAppliedTheme()
 

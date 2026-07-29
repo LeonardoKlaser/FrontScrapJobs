@@ -1,9 +1,9 @@
 import { Outlet } from 'react-router'
 import { ScrollToTop } from '@/components/common/scroll-to-top'
-import { useForceSystemTheme } from '@/components/theme-provider'
+import { useForceLightTheme } from '@/components/theme-provider'
 
 export function PublicLayout() {
-  useForceSystemTheme()
+  useForceLightTheme()
 
   return (
     <main className="min-h-screen bg-background">

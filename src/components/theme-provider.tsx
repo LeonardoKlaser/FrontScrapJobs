@@ -20,17 +20,17 @@ const initialState: ThemeProviderState = {
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
-// Contador em nível de módulo de quantos useForceSystemTheme estão montados
+// Contador em nível de módulo de quantos useForceLightTheme estão montados
 // agora. Existe por causa da ordem de commit dos efeitos do React: efeitos de
 // componentes filhos rodam ANTES dos efeitos do pai. Se o ThemeProvider e uma
 // página pública montarem no mesmo commit (ex: import eager em vez de lazy(),
-// ou o Suspense que hoje as isola sumir), o efeito do useForceSystemTheme
-// (filho) roda primeiro forçando o tema do SO, e o efeito do provider (pai)
-// roda depois e sobrescreve de volta com o tema salvo — silenciosamente
-// quebrando o force nas páginas públicas sem nenhum teste acusar. Em prod isso
-// não acontece hoje só porque cada página é lazy() e o provider já commitou
+// ou o Suspense que hoje as isola sumir), o efeito do useForceLightTheme
+// (filho) roda primeiro forçando light, e o efeito do provider (pai) roda
+// depois e sobrescreve de volta com o tema salvo — silenciosamente quebrando
+// o force nas páginas públicas sem nenhum teste acusar. Em prod isso não
+// acontece hoje só porque cada página é lazy() e o provider já commitou
 // antes; nada além desse contador garante isso estruturalmente.
-let forceSystemThemeCount = 0
+let forceLightThemeCount = 0
 
 export function ThemeProvider({
   children,
@@ -46,9 +46,9 @@ export function ThemeProvider({
     const root = window.document.documentElement
 
     const applyTheme = () => {
-      // Uma página pública está forçando o tema do SO agora — não sobrescreve
-      // com o tema salvo enquanto isso (ver comentário do contador acima).
-      if (forceSystemThemeCount > 0) return
+      // Uma página pública está forçando light agora — não sobrescreve com o
+      // tema salvo enquanto isso (ver comentário do contador acima).
+      if (forceLightThemeCount > 0) return
 
       root.classList.remove('light', 'dark')
 
@@ -64,7 +64,7 @@ export function ThemeProvider({
 
     applyTheme()
 
-    // Páginas públicas forçam o tema do SO enquanto montadas (useForceSystemTheme)
+    // Páginas públicas forçam light enquanto montadas (useForceLightTheme)
     // e, ao desmontar, disparam esse evento pra devolver o tema escolhido do app.
     window.addEventListener('vite-ui-theme-restore', applyTheme)
 
@@ -104,22 +104,17 @@ export const useTheme = () => {
   return context
 }
 
-// Força o tema do SO enquanto o componente estiver montado (páginas públicas).
-// Não toca no localStorage — o tema escolhido do app volta ao desmontar.
-export function useForceSystemTheme() {
+// Força o tema light enquanto o componente estiver montado — todas as telas
+// sem login são sempre light. Não toca no localStorage — o tema escolhido do
+// app volta ao desmontar.
+export function useForceLightTheme() {
   useEffect(() => {
-    forceSystemThemeCount++
+    forceLightThemeCount++
     const root = window.document.documentElement
-    const mq = window.matchMedia('(prefers-color-scheme: dark)')
-    const apply = () => {
-      root.classList.remove('light', 'dark')
-      root.classList.add(mq.matches ? 'dark' : 'light')
-    }
-    apply()
-    mq.addEventListener('change', apply)
+    root.classList.remove('light', 'dark')
+    root.classList.add('light')
     return () => {
-      mq.removeEventListener('change', apply)
-      forceSystemThemeCount--
+      forceLightThemeCount--
       window.dispatchEvent(new Event('vite-ui-theme-restore'))
     }
   }, [])
@@ -132,12 +127,12 @@ function readAppliedTheme(): 'light' | 'dark' {
 // Le o tema de FATO aplicado em <html> (a classe 'dark'/'light' real), em vez
 // do tema escolhido guardado no provider. useTheme() sozinho nao serve pro
 // toaster global (ThemedToaster em App.tsx): paginas publicas sobrescrevem a
-// classe via useForceSystemTheme enquanto montadas, e nesse momento o tema
+// classe via useForceLightTheme enquanto montadas, e nesse momento o tema
 // salvo do provider diverge do que esta de fato na tela. Observa a classe de
-// <html> diretamente via MutationObserver — funciona tanto pro force do SO
+// <html> diretamente via MutationObserver — funciona tanto pro force de light
 // quanto pras trocas normais de tema (inclusive 'system' reagindo a mudanca de
 // preferencia do SO), sem duplicar a logica de matchMedia que ja vive no
-// provider e no useForceSystemTheme.
+// provider.
 export function useAppliedTheme(): 'light' | 'dark' {
   const [applied, setApplied] = useState<'light' | 'dark'>(() =>
     typeof window === 'undefined' ? 'dark' : readAppliedTheme()

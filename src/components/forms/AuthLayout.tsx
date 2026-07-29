@@ -10,9 +10,9 @@ interface AuthLayoutProps {
   children: ReactNode
 }
 
-// Casca de 2 colunas compartilhada por /login e /signup. O tema (dark/light)
-// e' forcado a seguir o SO pelo PublicLayout pai (useForceSystemTheme) — esta
-// casca so precisa usar tokens do design system pra renderizar certo nos 2 casos.
+// Casca de 2 colunas compartilhada por /login e /signup. O tema e' forcado a
+// light pelo PublicLayout pai (useForceLightTheme) — esta casca so precisa
+// usar tokens do design system pra renderizar certo.
 // Posiciona o back-link sem sobrepor o logo; o painel hero some no mobile e
 // nesse caso o logo aparece no topo do lado do form.
 export function AuthLayout({ hero, children }: AuthLayoutProps) {

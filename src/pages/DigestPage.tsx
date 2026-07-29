@@ -11,7 +11,7 @@ import type { DigestJobSnapshot } from '@/services/digestService'
 import { trackDigest } from '@/lib/analytics'
 import { PATHS } from '@/router/paths'
 import { authService } from '@/services/authService'
-import { useForceSystemTheme } from '@/components/theme-provider'
+import { useForceLightTheme } from '@/components/theme-provider'
 
 function LoadingSkeleton() {
   return (
@@ -189,7 +189,7 @@ function JobCard({
 }
 
 export default function DigestPage() {
-  useForceSystemTheme()
+  useForceLightTheme()
 
   const { token } = useParams<{ token: string }>()
   const navigate = useNavigate()

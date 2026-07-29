@@ -6,7 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { CompanyCard } from '@/components/onboarding/CompanyCard'
 import { useOnboardingPage, useOnboardingSubscribe } from '@/hooks/useOnboarding'
 import { OnboardingExpiredError, OnboardingLimitExceededError } from '@/services/onboardingService'
-import { useForceSystemTheme } from '@/components/theme-provider'
+import { useForceLightTheme } from '@/components/theme-provider'
 
 function LoadingSkeleton() {
   return (
@@ -62,7 +62,7 @@ function LimitFullScreen() {
 }
 
 export default function OnboardingCompaniesPage() {
-  useForceSystemTheme()
+  useForceLightTheme()
 
   const { token } = useParams<{ token: string }>()
   const { data, isLoading, isError, error } = useOnboardingPage(token)
