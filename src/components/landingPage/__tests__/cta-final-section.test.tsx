@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { CtaFinalSection } from '@/components/landingPage/cta-final-section'
 import * as analytics from '@/lib/analytics'
@@ -7,7 +7,16 @@ vi.mock('qrcode', () => ({
   default: { toDataURL: vi.fn().mockResolvedValue('data:image/png;base64,AAAA') }
 }))
 
-beforeEach(() => vi.restoreAllMocks())
+beforeEach(() => {
+  vi.restoreAllMocks()
+  // buildWaLink('web') é avaliado no JSX do WhatsAppCtaButton mesmo com o
+  // Dialog fechado — sem stub, o console.warn de env ausente dispara em
+  // todo teste que renderiza o CTA (ver landing-wa.test.ts pro caso do warn
+  // em si).
+  vi.stubEnv('VITE_NORTE_WA_NUMBER', '5551999990000')
+})
+
+afterEach(() => vi.unstubAllEnvs())
 
 describe('CtaFinalSection', () => {
   it('renders the final CTA copy', () => {

@@ -21,9 +21,13 @@ describe('buildWaLink', () => {
     expect(decodeURIComponent(buildWaLink('web'))).toMatch(/#lpw$/)
   })
   it('avisa no console e ainda retorna o link sem número quando VITE_NORTE_WA_NUMBER falta', () => {
-    // Sem stubEnv: replica o build de produção sem a variável plumbada
-    // (Dockerfile antes do fix — ver Task 9, fix round 2). O link não pode
-    // quebrar a página, mas a falha não pode mais ser silenciosa.
+    // stubEnv explícito pra '' — o .env.example manda o dev criar um
+    // .env com VITE_NORTE_WA_NUMBER preenchida, então este caso não pode
+    // depender da ausência ambiental da variável (replica o build de
+    // produção sem ela plumbada — Dockerfile antes do fix, ver Task 9, fix
+    // round 2). O link não pode quebrar a página, mas a falha não pode
+    // mais ser silenciosa.
+    vi.stubEnv('VITE_NORTE_WA_NUMBER', '')
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const link = buildWaLink('mobile')
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('VITE_NORTE_WA_NUMBER'))
