@@ -19,6 +19,8 @@ import { trackCheckout } from '@/lib/analytics'
 import { useSaveLead } from '@/hooks/useSaveLead'
 import { useUser } from '@/hooks/useUser'
 import { useAbacatePaySubscribeCard, useAbacatePayPixMonthly } from '@/hooks/useAbacatePay'
+import { getLeadCheckout, completeLeadCheckout } from '@/services/leadCheckoutService'
+import type { LeadCheckoutInfo } from '@/services/leadCheckoutService'
 
 function formatCurrencyBRL(value: number): string {
   return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -27,9 +29,13 @@ function formatCurrencyBRL(value: number): string {
 interface PaymentFormProps {
   plan: Plan
   pendingId?: string | null
+  // Presente quando o lead abre o checkout mágico via link do WhatsApp
+  // (/checkout/:planId?lead_token=X) — troca o pré-preenchimento e o submit
+  // do passo 1 pelo fluxo de completeLeadCheckout (ver useEffect abaixo).
+  leadToken?: string | null
 }
 
-export function PaymentForm({ plan, pendingId }: PaymentFormProps) {
+export function PaymentForm({ plan, pendingId, leadToken }: PaymentFormProps) {
   const { t } = useTranslation('plans')
   const { t: tCommon } = useTranslation('common')
   const navigate = useNavigate()
@@ -45,11 +51,26 @@ export function PaymentForm({ plan, pendingId }: PaymentFormProps) {
   // critico da migração AbacatePay).
   const hasTax = !!currentUser?.tax
 
+  // Modo lead (checkout mágico via WhatsApp): leadPendingId só é setado
+  // depois que completeLeadCheckout cria a PendingRegistration do lead — até
+  // lá o fluxo se comporta como anônimo normal (currentStep 1). pendingId
+  // (query string) resume um checkout anônimo já criado (ex.: volta do
+  // redirect do PIX); effectivePendingId unifica os dois caminhos pro resto
+  // do componente, que nunca deve olhar pendingId cru de novo — se olhar, o
+  // passo 2 no modo lead cai no caminho anônimo e cria uma SEGUNDA
+  // PendingRegistration em vez de usar a do lead.
+  const [leadPendingId, setLeadPendingId] = useState<string | null>(null)
+  const [leadInfo, setLeadInfo] = useState<LeadCheckoutInfo | null>(null)
+  const [isCompletingLead, setIsCompletingLead] = useState(false)
+  const effectivePendingId = pendingId ?? leadPendingId
+
   const [currentStep, setCurrentStep] = useState<1 | 2>(
-    pendingId || (isAuthenticated && hasTax) ? 2 : 1
+    effectivePendingId || (isAuthenticated && hasTax) ? 2 : 1
   )
 
-  const pendingEmail = pendingId ? sessionStorage.getItem('pending_checkout_email') || '' : ''
+  const pendingEmail = effectivePendingId
+    ? sessionStorage.getItem('pending_checkout_email') || ''
+    : ''
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'pix'>('card')
   const [pixResult, setPixResult] = useState<PixPaymentResult | null>(null)
   const subscribeCardMutation = useAbacatePaySubscribeCard()
@@ -97,6 +118,31 @@ export function PaymentForm({ plan, pendingId }: PaymentFormProps) {
     }
   }, [currentUser])
 
+  // Checkout mágico do lead: valida o token e pré-preenche nome + telefone
+  // (mascarado, travado — ver lockedFields abaixo). Se o link expirou/é
+  // inválido (404), não trava a página: toast e o formulário segue como
+  // fluxo anônimo normal, com campos vazios e editáveis.
+  useEffect(() => {
+    if (!leadToken) return
+    let cancelled = false
+    getLeadCheckout(leadToken)
+      .then((info) => {
+        if (cancelled) return
+        setLeadInfo(info)
+        setFormData((prev) => ({ ...prev, name: info.name, phone: info.phone_masked }))
+      })
+      .catch((err) => {
+        if (cancelled) return
+        console.error('getLeadCheckout failed', err)
+        toast.error(
+          t('checkout.leadLinkExpired', 'Link expirado — preencha seus dados normalmente')
+        )
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [leadToken, t])
+
   // Trata erros das mutations AbacatePay (subscribe-card e pix-monthly) —
   // ambas retornam o mesmo shape de erro {error, message}.
   const handlePaymentError = (err: unknown, method: 'card' | 'pix') => {
@@ -134,12 +180,12 @@ export function PaymentForm({ plan, pendingId }: PaymentFormProps) {
   // Dispara a mutation AbacatePay correta pro metodo escolhido na step 2
   // (cartao = checkout hospedado com redirect; pix = QR code inline).
   const handlePaymentSubmit = async () => {
-    const normalizedEmail = pendingId ? pendingEmail : formData.email.trim().toLowerCase()
+    const normalizedEmail = effectivePendingId ? pendingEmail : formData.email.trim().toLowerCase()
 
     if (paymentMethod === 'card') {
       try {
-        const data = pendingId
-          ? { pending_id: pendingId }
+        const data = effectivePendingId
+          ? { pending_id: effectivePendingId }
           : {
               name: formData.name,
               email: normalizedEmail,
@@ -173,8 +219,8 @@ export function PaymentForm({ plan, pendingId }: PaymentFormProps) {
     }
 
     try {
-      const data = pendingId
-        ? { pending_id: pendingId, plan_id: plan.id }
+      const data = effectivePendingId
+        ? { pending_id: effectivePendingId, plan_id: plan.id }
         : {
             name: formData.name,
             email: normalizedEmail,
@@ -199,6 +245,72 @@ export function PaymentForm({ plan, pendingId }: PaymentFormProps) {
     }
   }
 
+  // Submit do passo 1 (PersonalDataStep.onNext). Modo lead: completa a
+  // PendingRegistration já criada pelo bot (telefone verificado via
+  // WhatsApp) via completeLeadCheckout — NÃO chama saveLead (o lead já
+  // existe, não é um novo lead a salvar). Anônimo/renovação: fluxo
+  // pré-existente de saveLead fire-and-forget.
+  const handlePersonalDataNext = () => {
+    if (leadToken && leadInfo) {
+      const normalizedEmail = formData.email.trim().toLowerCase()
+      setIsCompletingLead(true)
+      completeLeadCheckout(leadToken, {
+        name: formData.name,
+        email: normalizedEmail,
+        password: formData.password,
+        tax: formData.tax ?? ''
+      })
+        .then((result) => {
+          sessionStorage.setItem('pending_checkout_email', normalizedEmail)
+          setLeadPendingId(result.pending_id)
+          trackCheckout('checkout_step2_view')
+          setCurrentStep(2)
+        })
+        .catch((err) => {
+          const isAxiosErr = axios.isAxiosError(err)
+          const status = isAxiosErr ? err.response?.status : undefined
+          if (status === 409) {
+            toast.info(t('checkout.leadDuplicateAccount'))
+            navigate(`${PATHS.login}?from=${encodeURIComponent(`/checkout/${plan.id}`)}`)
+            return
+          }
+          console.error('completeLeadCheckout failed', err)
+          toast.error(tCommon('status.error'))
+        })
+        .finally(() => setIsCompletingLead(false))
+      return
+    }
+
+    // Fire-and-forget — falha de save NAO pode bloquear o checkout.
+    // Email normalizado (lower+trim) pra simetria com o payload de
+    // pagamento — dedup do leads store fica consistente entre fluxos.
+    const normalizedEmail = formData.email.trim().toLowerCase()
+    const leadKey = `${formData.name}|${normalizedEmail}|${formData.phone}|${plan.id}`
+    if (leadKey !== lastLeadKeyRef.current) {
+      lastLeadKeyRef.current = leadKey
+      saveLead(
+        {
+          name: formData.name,
+          email: normalizedEmail,
+          phone: formData.phone,
+          plan_id: plan.id
+        },
+        {
+          onError: (err) => {
+            // Fire-and-forget: NÃO bloqueia o avanço, mas reporta a falha
+            // pra telemetria — sem isso, falha de save fica invisível em prod.
+            console.error('saveLead failed', err)
+            trackCheckout('checkout_lead_save_failed', {
+              message: err instanceof Error ? err.message : 'unknown'
+            })
+          }
+        }
+      )
+    }
+    trackCheckout('checkout_step2_view')
+    setCurrentStep(2)
+  }
+
   if (userLoading) {
     return (
       <Card className="w-full border-border/50">
@@ -219,7 +331,7 @@ export function PaymentForm({ plan, pendingId }: PaymentFormProps) {
         {!pixResult &&
           currentStep > 1 &&
           !(isAuthenticated && currentStep === 2) &&
-          !(pendingId && currentStep === 2) && (
+          !(effectivePendingId && currentStep === 2) && (
             <button
               type="button"
               onClick={handleBack}
@@ -249,7 +361,7 @@ export function PaymentForm({ plan, pendingId }: PaymentFormProps) {
           </div>
         )}
 
-        {!pixResult && !pendingId && (
+        {!pixResult && !effectivePendingId && (
           <CheckoutStepper
             currentStep={currentStep}
             labels={[t('checkout.stepData'), t('checkout.stepPayment')]}
@@ -261,7 +373,7 @@ export function PaymentForm({ plan, pendingId }: PaymentFormProps) {
             pixResult={pixResult}
             planId={plan.id}
             // O backend normaliza a chave de confirmação por e-mail.
-            userEmail={pendingId ? pendingEmail : formData.email.trim().toLowerCase()}
+            userEmail={effectivePendingId ? pendingEmail : formData.email.trim().toLowerCase()}
             onExpired={() => {
               pixMonthlyMutation.reset()
               setPixResult(null)
@@ -278,40 +390,13 @@ export function PaymentForm({ plan, pendingId }: PaymentFormProps) {
           <PersonalDataStep
             formData={formData}
             setFormData={setFormData}
-            isLoading={isPaymentPending}
+            isLoading={isPaymentPending || isCompletingLead}
             planId={plan.id}
             isAuthenticated={isAuthenticated}
             hasTaxOnFile={hasTax}
-            onNext={() => {
-              // Fire-and-forget — falha de save NAO pode bloquear o checkout.
-              // Email normalizado (lower+trim) pra simetria com o payload de
-              // pagamento — dedup do leads store fica consistente entre fluxos.
-              const normalizedEmail = formData.email.trim().toLowerCase()
-              const leadKey = `${formData.name}|${normalizedEmail}|${formData.phone}|${plan.id}`
-              if (leadKey !== lastLeadKeyRef.current) {
-                lastLeadKeyRef.current = leadKey
-                saveLead(
-                  {
-                    name: formData.name,
-                    email: normalizedEmail,
-                    phone: formData.phone,
-                    plan_id: plan.id
-                  },
-                  {
-                    onError: (err) => {
-                      // Fire-and-forget: NÃO bloqueia o avanço, mas reporta a falha
-                      // pra telemetria — sem isso, falha de save fica invisível em prod.
-                      console.error('saveLead failed', err)
-                      trackCheckout('checkout_lead_save_failed', {
-                        message: err instanceof Error ? err.message : 'unknown'
-                      })
-                    }
-                  }
-                )
-              }
-              trackCheckout('checkout_step2_view')
-              setCurrentStep(2)
-            }}
+            lockedFields={leadInfo ? ['phone'] : undefined}
+            lockedHint={t('checkout.verifiedViaWhatsApp', 'Verificado via WhatsApp ✓')}
+            onNext={handlePersonalDataNext}
           />
         )}
 

@@ -24,7 +24,10 @@
     "methodPixDesc": "{{price}}/mo · manual renewal · we'll remind you before it's due",
     "chooseMethodLabel": "How would you like to pay?",
     "goToCardCheckout": "Go to payment",
-    "generateMonthlyQR": "Generate PIX QR Code"
+    "generateMonthlyQR": "Generate PIX QR Code",
+    "verifiedViaWhatsApp": "Verified via WhatsApp ✓",
+    "leadLinkExpired": "Link expired — fill in your details normally",
+    "leadDuplicateAccount": "Email or Tax ID already registered. Please log in to continue."
   },
   "pixQrCode": {
     "title": "Scan the QR Code",

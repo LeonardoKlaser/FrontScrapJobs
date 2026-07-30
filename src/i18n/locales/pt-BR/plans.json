@@ -24,7 +24,10 @@
     "methodPixDesc": "{{price}}/mês · renovação manual · avisamos antes de vencer",
     "chooseMethodLabel": "Como você prefere pagar?",
     "goToCardCheckout": "Ir para pagamento",
-    "generateMonthlyQR": "Gerar QR Code PIX"
+    "generateMonthlyQR": "Gerar QR Code PIX",
+    "verifiedViaWhatsApp": "Verificado via WhatsApp ✓",
+    "leadLinkExpired": "Link expirado — preencha seus dados normalmente",
+    "leadDuplicateAccount": "E-mail ou CPF já cadastrado. Faça login para continuar."
   },
   "pixQrCode": {
     "title": "Escaneie o QR Code",

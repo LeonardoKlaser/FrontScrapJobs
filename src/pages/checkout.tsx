@@ -17,6 +17,9 @@ export default function CheckoutPage() {
   const [searchParams] = useSearchParams()
   const { data: plans, isLoading: plansLoading, isError } = usePlans()
   const pendingId = searchParams.get('pending_id')
+  // Checkout mágico do lead (F1 WhatsApp): link com token HMAC que abre o
+  // checkout já pré-preenchido, telefone travado/verificado — ver PaymentForm.
+  const leadToken = searchParams.get('lead_token')
 
   const planId = parseInt(params.planId || '', 10)
 
@@ -87,7 +90,7 @@ export default function CheckoutPage() {
             <PlanSummary plan={plan} />
           </div>
           <div className="animate-fade-in-up lg:col-span-2 [animation-delay:200ms]">
-            <PaymentForm plan={plan} pendingId={pendingId} />
+            <PaymentForm plan={plan} pendingId={pendingId} leadToken={leadToken} />
           </div>
         </div>
       </div>
