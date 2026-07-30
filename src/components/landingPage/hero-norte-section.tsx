@@ -1,11 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { ArrowRight, ShieldCheck } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { PATHS } from '@/router/paths'
-import { trackLanding } from '@/lib/analytics'
 import { NorteChat, type NorteMessage } from './ui-snippets/norte-chat'
-import { LANDING_CTA_CLASS, scrollToPricing } from './landing-cta'
+import { LANDING_CTA_CLASS } from './landing-cta'
+import { WhatsAppCtaButton } from './whatsapp-cta-button'
 
 const AREA_KEYS = [
   'hero.areas.dev',
@@ -36,11 +35,6 @@ export function HeroNorteSection() {
     { from: 'user', text: 'manda 🙌' },
     { from: 'norte', text: 'Prontinho!', pdf: 'CV_Nubank.pdf' }
   ]
-
-  const onCta = () => {
-    trackLanding('lp_cta_click', { section: 'hero' })
-    scrollToPricing()
-  }
 
   return (
     <section className="bg-background px-6 pt-24 pb-16 sm:px-8 lg:pb-20">
@@ -75,15 +69,15 @@ export function HeroNorteSection() {
           </div>
 
           <div className="mt-8">
-            <Button
+            <WhatsAppCtaButton
+              section="hero"
               variant="glow"
               size="lg"
               className={`w-full sm:w-auto ${LANDING_CTA_CLASS}`}
-              onClick={onCta}
             >
               {t('hero.cta')}
               <ArrowRight className="ml-1 h-5 w-5" />
-            </Button>
+            </WhatsAppCtaButton>
             <p className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
               <ShieldCheck className="h-4 w-4 text-primary" />
               {t('hero.microcopy')}

@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
-import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/common/logo'
 import { scrollToId } from './landing-cta'
-import { trackLanding } from '@/lib/analytics'
+import { WhatsAppCtaButton } from './whatsapp-cta-button'
 import { PATHS } from '@/router/paths'
 
 export function LandingNavbar() {
@@ -49,7 +48,8 @@ export function LandingNavbar() {
           </Link>
         </div>
 
-        <Button
+        <WhatsAppCtaButton
+          section="navbar"
           variant={scrolled ? 'outline' : 'glow'}
           className={`rounded-full px-5 py-2 text-sm font-semibold transition-colors duration-300 ${
             scrolled
@@ -57,13 +57,9 @@ export function LandingNavbar() {
                 'dark:text-emerald-700 dark:border-white dark:hover:bg-white/90'
               : ''
           }`}
-          onClick={() => {
-            trackLanding('lp_cta_click', { section: 'navbar' })
-            scrollToId('pricing')
-          }}
         >
           {t('navbar.cta')}
-        </Button>
+        </WhatsAppCtaButton>
       </div>
     </nav>
   )

@@ -5,6 +5,10 @@ import { LandingNavbar } from '@/components/landingPage/navbar'
 import * as analytics from '@/lib/analytics'
 import * as landingCta from '@/components/landingPage/landing-cta'
 
+vi.mock('qrcode', () => ({
+  default: { toDataURL: vi.fn().mockResolvedValue('data:image/png;base64,AAAA') }
+}))
+
 function renderNavbar() {
   return render(
     <MemoryRouter>
@@ -36,12 +40,15 @@ describe('LandingNavbar', () => {
     expect(spy).toHaveBeenCalledWith('faq')
   })
 
-  it('tracks the CTA click and scrolls to pricing', () => {
+  it('tracks the CTA click and opens the WhatsApp modal on desktop', () => {
     const track = vi.spyOn(analytics, 'trackLanding').mockImplementation(() => {})
-    const scroll = vi.spyOn(landingCta, 'scrollToId').mockImplementation(() => {})
     renderNavbar()
     fireEvent.click(screen.getByRole('button', { name: 'Começar agora' }))
-    expect(track).toHaveBeenCalledWith('lp_cta_click', { section: 'navbar' })
-    expect(scroll).toHaveBeenCalledWith('pricing')
+    expect(track).toHaveBeenCalledWith('lp_whatsapp_click', {
+      section: 'navbar',
+      device: 'desktop',
+      method: 'modal'
+    })
+    expect(screen.getByText('Fale com o Norte no seu WhatsApp')).toBeInTheDocument()
   })
 })

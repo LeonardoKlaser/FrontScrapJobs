@@ -118,5 +118,12 @@
     "sitesAnalyzed": "Monitored sites",
     "jobsCollected": "Jobs collected",
     "trustLine": "Real data from our platform, updated in real time"
+  },
+  "waModal": {
+    "title": "Talk to Norte on your WhatsApp",
+    "subtitle": "The conversation happens on your phone — that's where Norte lives.",
+    "qrAlt": "QR code to open Norte's WhatsApp",
+    "scanHint": "Point your phone camera at the code above 📱",
+    "webButton": "Or open in WhatsApp Web"
   }
 }
