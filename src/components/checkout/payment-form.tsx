@@ -123,26 +123,37 @@ export function PaymentForm({ plan, pendingId, leadToken }: PaymentFormProps) {
   // inválido (404), não trava a página: toast e o formulário segue como
   // fluxo anônimo normal, com campos vazios e editáveis.
   //
-  // Nunca roda pra usuário já autenticado: cliente existente (cookie válido)
-  // que conversou com o funil e clicou no link mágico já auto-avançou pro
-  // passo 2 via o efeito de currentUser acima — completeLeadCheckout nunca
-  // roda nesse caso, então prefill de phone/name aqui vazaria o
-  // phone_masked pro payload de pagamento anônimo (celular corrompido,
-  // '+55 (51) 9****-0000' → 9 dígitos) sem nenhuma UI que denuncie, já que o
-  // PersonalDataStep nem chega a renderizar. Guard também contra pisar em
-  // cima do que o usuário já digitou enquanto o GET estava em voo — mesmo
-  // guard do efeito irmão de currentUser acima.
+  // Nunca roda pra usuário já autenticado — mas "autenticado" só é
+  // determinístico depois que useUser() resolve. Em cold load (clique
+  // direto do link mágico do WhatsApp, sem o ['user'] já em cache — o
+  // caminho real deste fluxo), o primeiro render tem userLoading=true e
+  // isAuthenticated=false mesmo que o cookie seja válido; disparar o GET
+  // nessa janela vira uma corrida contra /api/me em vez de uma decisão
+  // determinística. Por isso o guard espera userLoading resolver antes de
+  // decidir: só então sabemos se é um cliente existente (que já
+  // auto-avançou pro passo 2 via o efeito de currentUser acima —
+  // completeLeadCheckout nunca roda nesse caso, então prefill de
+  // phone/name aqui vazaria o phone_masked pro payload de pagamento
+  // anônimo, celular corrompido, sem nenhuma UI que denuncie já que o
+  // PersonalDataStep nem chega a renderizar) ou de fato um anônimo.
   useEffect(() => {
-    if (!leadToken || isAuthenticated) return
+    if (!leadToken || userLoading || isAuthenticated) return
     let cancelled = false
     getLeadCheckout(leadToken)
       .then((info) => {
         if (cancelled) return
-        setLeadInfo(info)
+        // Guard contra pisar em cima do que o usuário já digitou enquanto o
+        // GET estava em voo — mesmo guard do efeito irmão de currentUser
+        // acima. setLeadInfo só entra em modo lead quando o prefill de fato
+        // aplicou; caso contrário o telefone ficaria travado/mascarado com
+        // um valor vazio (UI mentirosa) mesmo sem nunca ter sido preenchido.
+        let didPrefill = false
         setFormData((prev) => {
           if (prev.email || prev.name || prev.phone) return prev
+          didPrefill = true
           return { ...prev, name: info.name, phone: info.phone_masked }
         })
+        if (didPrefill) setLeadInfo(info)
       })
       .catch((err) => {
         if (cancelled) return
@@ -158,7 +169,7 @@ export function PaymentForm({ plan, pendingId, leadToken }: PaymentFormProps) {
     // languageChanged/loaded, e incluir aqui re-dispararia o GET e
     // re-sobrescreveria nome/telefone por cima do que o usuário já editou
     // (inclusive se ele já estiver no passo 2).
-  }, [leadToken, isAuthenticated])
+  }, [leadToken, userLoading, isAuthenticated])
 
   // Trata erros das mutations AbacatePay (subscribe-card e pix-monthly) —
   // ambas retornam o mesmo shape de erro {error, message}.
@@ -306,8 +317,12 @@ export function PaymentForm({ plan, pendingId, leadToken }: PaymentFormProps) {
             // Token expirou entre o GET e o POST (janela rara, mas real).
             // Espelha o tratamento do GET: destrava o telefone e devolve o
             // usuário pro fluxo anônimo normal — sem isso ele fica preso em
-            // modo lead repetindo o mesmo 404 a cada retry.
+            // modo lead repetindo o mesmo 404 a cada retry. Limpa o valor
+            // mascarado do phone também — destravar sem limpar deixaria
+            // '+55 (51) 9****-0000' (9 dígitos) no campo, e o usuário teria
+            // que apagar a máscara na mão pra passar na validação normal.
             setLeadInfo(null)
+            setFormData((prev) => ({ ...prev, phone: '' }))
             toast.error(
               t('checkout.leadLinkExpired', 'Link expirado — preencha seus dados normalmente')
             )

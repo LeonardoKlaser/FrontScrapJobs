@@ -99,14 +99,19 @@ function LocationProbe() {
 
 function renderWithProviders(ui: ReactElement) {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
-  return render(
+  const wrap = (node: ReactElement) => (
     <QueryClientProvider client={qc}>
       <MemoryRouter>
-        {ui}
+        {node}
         <LocationProbe />
       </MemoryRouter>
     </QueryClientProvider>
   )
+  const result = render(wrap(ui))
+  // rerender embrulhado: simula o useUser() resolvendo depois do primeiro
+  // render (cold load) sem desmontar o QueryClientProvider/MemoryRouter —
+  // o teste de cold load muta mockUseUser e chama isso de novo.
+  return { ...result, rerender: (nextUi: ReactElement) => result.rerender(wrap(nextUi)) }
 }
 
 describe('PaymentForm — modo lead (checkout mágico via lead_token)', () => {
@@ -235,6 +240,46 @@ describe('PaymentForm — modo lead (checkout mágico via lead_token)', () => {
     // Auto-avança pro passo 2 via o efeito de currentUser — PersonalDataStep
     // nem chega a renderizar, então não há campo de telefone pra travar ou
     // vazar o phone_masked pro payload de pagamento anônimo.
+    await waitFor(() => {
+      expect(screen.queryByLabelText(/nome completo/i)).not.toBeInTheDocument()
+    })
+
+    expect(mockGetLeadCheckout).not.toHaveBeenCalled()
+    expect(mockCompleteLeadCheckout).not.toHaveBeenCalled()
+  })
+
+  it('cold load: useUser ainda em loading no 1º render, autenticado depois — não chama GET nem mexe no telefone', async () => {
+    // Cenário real do clique direto do link mágico do WhatsApp: sem o
+    // ['user'] em cache, o primeiro render tem isLoading=true/data=undefined
+    // mesmo pra quem tem cookie válido. Diferente do teste "usuário
+    // autenticado" acima (que seta mockUseUser.data já resolvido antes do
+    // primeiro render — cobre só o cache quente/navegação SPA), este
+    // simula a corrida: começa em loading e só resolve depois.
+    mockUseUser.data = undefined
+    mockUseUser.isLoading = true
+
+    const { rerender } = renderWithProviders(
+      <PaymentForm plan={mockPlan} leadToken="lead-token-abc" />
+    )
+
+    // Ainda em loading: nem autenticado nem anônimo foi decidido — o efeito
+    // não pode disparar o GET nessa janela (seria uma corrida contra /api/me).
+    expect(mockGetLeadCheckout).not.toHaveBeenCalled()
+
+    // useUser resolve: cliente já cadastrado (mesmo cenário do Critical 1 —
+    // se o GET tivesse disparado antes, o telefone teria sido sobrescrito
+    // com o masked value já com o passo 2 renderizado).
+    mockUseUser.data = {
+      user_name: 'Marcia',
+      email: 'marcia@test.com',
+      cellphone: '11999999999',
+      tax: '39053344705',
+      is_admin: false,
+      plan: undefined
+    }
+    mockUseUser.isLoading = false
+    rerender(<PaymentForm plan={mockPlan} leadToken="lead-token-abc" />)
+
     await waitFor(() => {
       expect(screen.queryByLabelText(/nome completo/i)).not.toBeInTheDocument()
     })
