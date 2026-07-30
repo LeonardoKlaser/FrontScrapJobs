@@ -40,7 +40,12 @@ export function WhatsAppCtaButton({ section, children, ...buttonProps }: WhatsAp
       method: mobile ? 'direct' : 'modal'
     })
     if (mobile) {
-      window.location.href = buildWaLink('mobile')
+      // Adia a navegação um tick: o dataLayer.push do trackLanding acima é
+      // síncrono, mas o GTM dispara beacons assíncronos pras tags — navegar
+      // no mesmo tick pode abortar esse envio no caminho principal do funil.
+      setTimeout(() => {
+        window.location.href = buildWaLink('mobile')
+      }, 0)
       return
     }
     setOpen(true)

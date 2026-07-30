@@ -55,10 +55,15 @@ test.describe('landing page', () => {
     await expect(dialog.getByText('Fale com o Norte no seu WhatsApp')).toBeVisible()
     await expect(dialog.getByAltText('QR code para abrir o WhatsApp do Norte')).toBeVisible()
 
+    // Exige um número de verdade depois de "wa.me/" — não só o prefixo do
+    // domínio. Sem VITE_NORTE_WA_NUMBER plumbado (ver playwright.config.ts),
+    // o link sobe como "https://wa.me/?text=..." sem destinatário, e esse
+    // assert pegaria essa regressão (é o buraco que passava despercebido
+    // quando a checagem era só /^https:\/\/wa\.me\//).
     // Sufixo #lpw (encodado como %23lpw na querystring) dá atribuição de
     // origem "web" pro backend — distingue de #lp (mobile) e #lpq (QR).
     const webLink = dialog.getByRole('link', { name: 'Ou abrir no WhatsApp Web' })
-    await expect(webLink).toHaveAttribute('href', /^https:\/\/wa\.me\//)
+    await expect(webLink).toHaveAttribute('href', /^https:\/\/wa\.me\/\d+\?text=/)
     await expect(webLink).toHaveAttribute('href', /%23lpw$/)
   })
 
