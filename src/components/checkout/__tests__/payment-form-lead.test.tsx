@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MemoryRouter } from 'react-router'
+import { MemoryRouter, useLocation } from 'react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { ReactElement } from 'react'
 import type { Plan } from '@/models/plan'
@@ -84,11 +84,27 @@ const mockPlan: Plan = {
   features: ['feat1']
 }
 
+// Sonda de rota: MemoryRouter não re-renderiza nada visível quando
+// navigate() é chamado (não há <Routes> nesta árvore), então observamos o
+// location.pathname/search direto pra confirmar redirects (ex.: 409 → login).
+function LocationProbe() {
+  const location = useLocation()
+  return (
+    <p data-testid="location-probe">
+      {location.pathname}
+      {location.search}
+    </p>
+  )
+}
+
 function renderWithProviders(ui: ReactElement) {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
   return render(
     <QueryClientProvider client={qc}>
-      <MemoryRouter>{ui}</MemoryRouter>
+      <MemoryRouter>
+        {ui}
+        <LocationProbe />
+      </MemoryRouter>
     </QueryClientProvider>
   )
 }
@@ -162,6 +178,69 @@ describe('PaymentForm — modo lead (checkout mágico via lead_token)', () => {
 
     expect(await screen.findByText(/como você prefere pagar/i)).toBeInTheDocument()
     expect(saveLeadMutate).not.toHaveBeenCalled()
+    // O polling do PIX (pix-payment-step) lê o e-mail daqui — sem isso o
+    // passo 2 no modo lead não sabe qual pagamento está aguardando.
+    expect(sessionStorage.getItem('pending_checkout_email')).toBe('erick@teste.com')
+  })
+
+  it('erro 409 no complete mostra a mensagem do backend (não sempre "e-mail/CPF") e manda pro login', async () => {
+    mockGetLeadCheckout.mockResolvedValue({
+      name: 'Erick',
+      phone_masked: '+55 (51) 9****-0000',
+      plan: { id: 2, name: 'Profissional', price: 19.9 }
+    })
+    // phone_already_registered — distinto de email_ou_cpf_ja_cadastrado —
+    // vem com "message" pronta do backend; o componente deve exibi-la, não
+    // uma mensagem genérica de e-mail/CPF duplicado.
+    mockCompleteLeadCheckout.mockRejectedValue({
+      isAxiosError: true,
+      response: {
+        status: 409,
+        data: { error: 'phone_already_registered', message: 'Numero ja cadastrado. Faca login.' }
+      }
+    })
+
+    const user = userEvent.setup()
+    renderWithProviders(<PaymentForm plan={mockPlan} leadToken="lead-token-abc" />)
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/nome completo/i)).toHaveValue('Erick')
+    })
+
+    await user.type(screen.getByLabelText(/e-?mail/i), 'erick@teste.com')
+    await user.type(screen.getByLabelText(/^senha/i), 'senha12345')
+    await user.type(screen.getByLabelText(/cpf/i), '52998224725')
+    await user.click(screen.getByRole('button', { name: /próximo/i }))
+
+    await waitFor(() => {
+      expect(toastInfo).toHaveBeenCalledWith('Numero ja cadastrado. Faca login.')
+    })
+    await waitFor(() => {
+      expect(screen.getByTestId('location-probe')).toHaveTextContent('/login?from=%2Fcheckout%2F2')
+    })
+  })
+
+  it('usuário autenticado com lead_token: não entra em modo lead (sem GET, telefone intocado)', async () => {
+    mockUseUser.data = {
+      user_name: 'Marcia',
+      email: 'marcia@test.com',
+      cellphone: '11999999999',
+      tax: '39053344705',
+      is_admin: false,
+      plan: undefined
+    }
+
+    renderWithProviders(<PaymentForm plan={mockPlan} leadToken="lead-token-abc" />)
+
+    // Auto-avança pro passo 2 via o efeito de currentUser — PersonalDataStep
+    // nem chega a renderizar, então não há campo de telefone pra travar ou
+    // vazar o phone_masked pro payload de pagamento anônimo.
+    await waitFor(() => {
+      expect(screen.queryByLabelText(/nome completo/i)).not.toBeInTheDocument()
+    })
+
+    expect(mockGetLeadCheckout).not.toHaveBeenCalled()
+    expect(mockCompleteLeadCheckout).not.toHaveBeenCalled()
   })
 
   it('link expirado (404) cai no fluxo anônimo normal, com campos vazios e editáveis', async () => {

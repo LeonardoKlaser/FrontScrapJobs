@@ -122,14 +122,27 @@ export function PaymentForm({ plan, pendingId, leadToken }: PaymentFormProps) {
   // (mascarado, travado — ver lockedFields abaixo). Se o link expirou/é
   // inválido (404), não trava a página: toast e o formulário segue como
   // fluxo anônimo normal, com campos vazios e editáveis.
+  //
+  // Nunca roda pra usuário já autenticado: cliente existente (cookie válido)
+  // que conversou com o funil e clicou no link mágico já auto-avançou pro
+  // passo 2 via o efeito de currentUser acima — completeLeadCheckout nunca
+  // roda nesse caso, então prefill de phone/name aqui vazaria o
+  // phone_masked pro payload de pagamento anônimo (celular corrompido,
+  // '+55 (51) 9****-0000' → 9 dígitos) sem nenhuma UI que denuncie, já que o
+  // PersonalDataStep nem chega a renderizar. Guard também contra pisar em
+  // cima do que o usuário já digitou enquanto o GET estava em voo — mesmo
+  // guard do efeito irmão de currentUser acima.
   useEffect(() => {
-    if (!leadToken) return
+    if (!leadToken || isAuthenticated) return
     let cancelled = false
     getLeadCheckout(leadToken)
       .then((info) => {
         if (cancelled) return
         setLeadInfo(info)
-        setFormData((prev) => ({ ...prev, name: info.name, phone: info.phone_masked }))
+        setFormData((prev) => {
+          if (prev.email || prev.name || prev.phone) return prev
+          return { ...prev, name: info.name, phone: info.phone_masked }
+        })
       })
       .catch((err) => {
         if (cancelled) return
@@ -141,7 +154,11 @@ export function PaymentForm({ plan, pendingId, leadToken }: PaymentFormProps) {
     return () => {
       cancelled = true
     }
-  }, [leadToken, t])
+    // t fora das deps de proposito: troca de identidade em
+    // languageChanged/loaded, e incluir aqui re-dispararia o GET e
+    // re-sobrescreveria nome/telefone por cima do que o usuário já editou
+    // (inclusive se ele já estiver no passo 2).
+  }, [leadToken, isAuthenticated])
 
   // Trata erros das mutations AbacatePay (subscribe-card e pix-monthly) —
   // ambas retornam o mesmo shape de erro {error, message}.
@@ -270,8 +287,30 @@ export function PaymentForm({ plan, pendingId, leadToken }: PaymentFormProps) {
           const isAxiosErr = axios.isAxiosError(err)
           const status = isAxiosErr ? err.response?.status : undefined
           if (status === 409) {
-            toast.info(t('checkout.leadDuplicateAccount'))
+            // Backend distingue email/CPF duplicado (sem message, só error)
+            // de telefone já cadastrado (com message pronta pro usuário —
+            // "Numero ja cadastrado. Faca login."). Mostra a mensagem do
+            // backend quando vier; só cai no default genérico se não vier.
+            const backendMessage = isAxiosErr ? err.response?.data?.message : undefined
+            toast.info(
+              backendMessage ||
+                t(
+                  'checkout.leadDuplicateAccount',
+                  'E-mail ou CPF já cadastrado. Faça login para continuar.'
+                )
+            )
             navigate(`${PATHS.login}?from=${encodeURIComponent(`/checkout/${plan.id}`)}`)
+            return
+          }
+          if (status === 404) {
+            // Token expirou entre o GET e o POST (janela rara, mas real).
+            // Espelha o tratamento do GET: destrava o telefone e devolve o
+            // usuário pro fluxo anônimo normal — sem isso ele fica preso em
+            // modo lead repetindo o mesmo 404 a cada retry.
+            setLeadInfo(null)
+            toast.error(
+              t('checkout.leadLinkExpired', 'Link expirado — preencha seus dados normalmente')
+            )
             return
           }
           console.error('completeLeadCheckout failed', err)
