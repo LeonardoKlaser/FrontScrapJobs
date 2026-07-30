@@ -225,7 +225,7 @@ export function InfoPaymentStep({ sessionId, plan, onBack }: InfoPaymentStepProp
             <p className="text-xs text-muted-foreground">
               {tPlans('checkout.methodCardDesc', {
                 price: priceStr,
-                defaultValue: `R$ ${priceStr}/mês · renovação automática · cancela quando quiser`
+                defaultValue: `${priceStr}/mês · renovação automática · cancela quando quiser`
               })}
             </p>
           </button>
@@ -248,7 +248,7 @@ export function InfoPaymentStep({ sessionId, plan, onBack }: InfoPaymentStepProp
             <p className="text-xs text-muted-foreground">
               {tPlans('checkout.methodPixDesc', {
                 price: priceStr,
-                defaultValue: `R$ ${priceStr}/mês · renovação manual · avisamos antes de vencer`
+                defaultValue: `${priceStr}/mês · renovação manual · avisamos antes de vencer`
               })}
             </p>
           </button>
