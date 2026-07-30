@@ -27,6 +27,7 @@
     "generateMonthlyQR": "Generate PIX QR Code",
     "verifiedViaWhatsApp": "Verified via WhatsApp ✓",
     "leadLinkExpired": "Link expired — fill in your details normally",
+    "leadLinkLoadError": "We couldn't load your data. Please reload the page and try again.",
     "leadDuplicateAccount": "Email or Tax ID already registered. Please log in to continue."
   },
   "pixQrCode": {

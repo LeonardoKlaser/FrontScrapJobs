@@ -225,6 +225,53 @@ describe('PaymentForm — modo lead (checkout mágico via lead_token)', () => {
     })
   })
 
+  it(
+    'erro 404 no complete (token expirou entre GET e POST) destrava e limpa o telefone, ' +
+      'some com o badge e volta o form pro estado utilizável',
+    async () => {
+      // Caminho de recuperação do "pagante preso": já regrediu uma vez nesta
+      // branch — a limpeza do telefone mascarado só entrou no fix round 2.
+      // Sem ela, destravar sem limpar deixaria '+55 (51) 9****-0000' (9
+      // dígitos) no campo, e o usuário teria que apagar a máscara na mão pra
+      // passar na validação normal.
+      mockGetLeadCheckout.mockResolvedValue({
+        name: 'Erick',
+        phone_masked: '+55 (51) 9****-0000',
+        plan: { id: 2, name: 'Profissional', price: 19.9 }
+      })
+      mockCompleteLeadCheckout.mockRejectedValue({
+        isAxiosError: true,
+        response: { status: 404, data: { error: 'lead_token_not_found' } }
+      })
+
+      const user = userEvent.setup()
+      renderWithProviders(<PaymentForm plan={mockPlan} leadToken="lead-token-abc" />)
+
+      await waitFor(() => {
+        expect(screen.getByLabelText(/nome completo/i)).toHaveValue('Erick')
+      })
+
+      const phoneInputBefore = screen.getByLabelText(/telefone/i)
+      expect(phoneInputBefore).toHaveValue('+55 (51) 9****-0000')
+      expect(phoneInputBefore).toBeDisabled()
+      expect(screen.getByText(/verificado via whatsapp/i)).toBeInTheDocument()
+
+      await user.type(screen.getByLabelText(/e-?mail/i), 'erick@teste.com')
+      await user.type(screen.getByLabelText(/^senha/i), 'senha12345')
+      await user.type(screen.getByLabelText(/cpf/i), '52998224725')
+      await user.click(screen.getByRole('button', { name: /próximo/i }))
+
+      await waitFor(() => {
+        expect(toastError).toHaveBeenCalledWith('Link expirado — preencha seus dados normalmente')
+      })
+
+      const phoneInputAfter = screen.getByLabelText(/telefone/i)
+      expect(phoneInputAfter).toHaveValue('')
+      expect(phoneInputAfter).not.toBeDisabled()
+      expect(screen.queryByText(/verificado via whatsapp/i)).not.toBeInTheDocument()
+    }
+  )
+
   it('usuário autenticado com lead_token: não entra em modo lead (sem GET, telefone intocado)', async () => {
     mockUseUser.data = {
       user_name: 'Marcia',
@@ -289,12 +336,41 @@ describe('PaymentForm — modo lead (checkout mágico via lead_token)', () => {
   })
 
   it('link expirado (404) cai no fluxo anônimo normal, com campos vazios e editáveis', async () => {
-    mockGetLeadCheckout.mockRejectedValue(new Error('not found'))
+    mockGetLeadCheckout.mockRejectedValue({
+      isAxiosError: true,
+      response: { status: 404, data: { error: 'lead_not_found' } }
+    })
 
     renderWithProviders(<PaymentForm plan={mockPlan} leadToken="lead-token-expirado" />)
 
     await waitFor(() => {
-      expect(toastError).toHaveBeenCalled()
+      expect(toastError).toHaveBeenCalledWith('Link expirado — preencha seus dados normalmente')
+    })
+
+    const nameInput = screen.getByLabelText(/nome completo/i)
+    expect(nameInput).toHaveValue('')
+    expect(nameInput).not.toBeDisabled()
+
+    const phoneInput = screen.getByLabelText(/telefone/i)
+    expect(phoneInput).toHaveValue('')
+    expect(phoneInput).not.toBeDisabled()
+
+    expect(screen.queryByText(/verificado via whatsapp/i)).not.toBeInTheDocument()
+  })
+
+  it('falha transiente (rede/500) no GET não mente "expirado" — pede pra recarregar', async () => {
+    // Rede/500 é plausível vindo de mobile via WhatsApp em dados móveis —
+    // não pode ser tratada como link inválido/expirado (isso rebaixaria o
+    // lead pro fluxo anônimo silenciosamente: paga, mas sem atribuição,
+    // sem auto-inscrição e sem a entrega no WhatsApp prometida pelo bot).
+    mockGetLeadCheckout.mockRejectedValue(new Error('network error'))
+
+    renderWithProviders(<PaymentForm plan={mockPlan} leadToken="lead-token-instavel" />)
+
+    await waitFor(() => {
+      expect(toastError).toHaveBeenCalledWith(
+        'Não foi possível carregar seus dados. Recarregue a página e tente novamente.'
+      )
     })
 
     const nameInput = screen.getByLabelText(/nome completo/i)

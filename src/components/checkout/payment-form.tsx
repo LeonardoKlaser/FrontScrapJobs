@@ -158,8 +158,27 @@ export function PaymentForm({ plan, pendingId, leadToken }: PaymentFormProps) {
       .catch((err) => {
         if (cancelled) return
         console.error('getLeadCheckout failed', err)
+        // Backend distingue: 404 = token inválido/expirado (rebaixa pro
+        // fluxo anônimo de verdade). Qualquer outro status ou falha de rede
+        // é transiente (comum vindo de mobile/WhatsApp em dados móveis) — se
+        // tratada como "expirado" aqui, o rebaixamento é silencioso: o lead
+        // paga como anônimo, a linha em wa_leads nunca converte, não ganha
+        // preferências/auto-inscrição, a entrega no WhatsApp prometida pelo
+        // bot não acontece, e a atribuição do funil se perde. Mesma
+        // distinção que o catch do POST (completeLeadCheckout) já faz.
+        const isAxiosErr = axios.isAxiosError(err)
+        const status = isAxiosErr ? err.response?.status : undefined
+        if (status === 404) {
+          toast.error(
+            t('checkout.leadLinkExpired', 'Link expirado — preencha seus dados normalmente')
+          )
+          return
+        }
         toast.error(
-          t('checkout.leadLinkExpired', 'Link expirado — preencha seus dados normalmente')
+          t(
+            'checkout.leadLinkLoadError',
+            'Não foi possível carregar seus dados. Recarregue a página e tente novamente.'
+          )
         )
       })
     return () => {
