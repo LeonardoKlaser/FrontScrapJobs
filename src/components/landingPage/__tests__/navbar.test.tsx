@@ -1,9 +1,13 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import { LandingNavbar } from '@/components/landingPage/navbar'
 import * as analytics from '@/lib/analytics'
 import * as landingCta from '@/components/landingPage/landing-cta'
+
+vi.mock('qrcode', () => ({
+  default: { toDataURL: vi.fn().mockResolvedValue('data:image/png;base64,AAAA') }
+}))
 
 function renderNavbar() {
   return render(
@@ -13,7 +17,16 @@ function renderNavbar() {
   )
 }
 
-beforeEach(() => vi.restoreAllMocks())
+beforeEach(() => {
+  vi.restoreAllMocks()
+  // buildWaLink('web') é avaliado no JSX do WhatsAppCtaButton mesmo com o
+  // Dialog fechado — sem stub, o console.warn de env ausente dispara em
+  // todo teste que renderiza o CTA (ver landing-wa.test.ts pro caso do warn
+  // em si).
+  vi.stubEnv('VITE_NORTE_WA_NUMBER', '5551999990000')
+})
+
+afterEach(() => vi.unstubAllEnvs())
 
 describe('LandingNavbar', () => {
   it('renders desktop anchors, the Entrar link and the CTA', () => {
@@ -36,12 +49,15 @@ describe('LandingNavbar', () => {
     expect(spy).toHaveBeenCalledWith('faq')
   })
 
-  it('tracks the CTA click and scrolls to pricing', () => {
+  it('tracks the CTA click and opens the WhatsApp modal on desktop', () => {
     const track = vi.spyOn(analytics, 'trackLanding').mockImplementation(() => {})
-    const scroll = vi.spyOn(landingCta, 'scrollToId').mockImplementation(() => {})
     renderNavbar()
     fireEvent.click(screen.getByRole('button', { name: 'Começar agora' }))
-    expect(track).toHaveBeenCalledWith('lp_cta_click', { section: 'navbar' })
-    expect(scroll).toHaveBeenCalledWith('pricing')
+    expect(track).toHaveBeenCalledWith('lp_whatsapp_click', {
+      section: 'navbar',
+      device: 'desktop',
+      method: 'modal'
+    })
+    expect(screen.getByText('Fale com o Norte no seu WhatsApp')).toBeInTheDocument()
   })
 })

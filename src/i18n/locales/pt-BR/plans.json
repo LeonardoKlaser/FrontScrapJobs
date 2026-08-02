@@ -19,12 +19,16 @@
     "generateQR": "Gerar QR Code PIX",
     "goToPayment": "Ir para pagamento",
     "methodCardTitle": "Assinar com cartão de crédito",
-    "methodCardDesc": "{{price}}/mês · 7 dias grátis · renovação automática · cancela quando quiser",
+    "methodCardDesc": "{{price}}/mês · renovação automática · cancela quando quiser",
     "methodPixTitle": "Pagar com PIX",
     "methodPixDesc": "{{price}}/mês · renovação manual · avisamos antes de vencer",
     "chooseMethodLabel": "Como você prefere pagar?",
     "goToCardCheckout": "Ir para pagamento",
-    "generateMonthlyQR": "Gerar QR Code PIX"
+    "generateMonthlyQR": "Gerar QR Code PIX",
+    "verifiedViaWhatsApp": "Verificado via WhatsApp ✓",
+    "leadLinkExpired": "Link expirado — preencha seus dados normalmente",
+    "leadLinkLoadError": "Não foi possível carregar seus dados. Recarregue a página e tente novamente.",
+    "leadDuplicateAccount": "E-mail ou CPF já cadastrado. Faça login para continuar."
   },
   "pixQrCode": {
     "title": "Escaneie o QR Code",

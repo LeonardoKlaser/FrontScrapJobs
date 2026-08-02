@@ -24,7 +24,7 @@
       "infra": "Infra & QA"
     },
     "cta": "Começar grátis",
-    "microcopy": "7 dias de trial no cartão · PIX libera 1 mês",
+    "microcopy": "Sem fidelidade · cancele quando quiser",
     "loginPrompt": "Já tem conta?",
     "loginLink": "Fazer login"
   },
@@ -118,5 +118,12 @@
     "sitesAnalyzed": "Sites monitorados",
     "jobsCollected": "Vagas coletadas",
     "trustLine": "Dados reais da nossa plataforma, atualizados em tempo real"
+  },
+  "waModal": {
+    "title": "Fale com o Norte no seu WhatsApp",
+    "subtitle": "A conversa acontece no seu celular — é lá que o Norte vive.",
+    "qrAlt": "QR code para abrir o WhatsApp do Norte",
+    "scanHint": "Aponte a câmera do celular pro código acima 📱",
+    "webButton": "Ou abrir no WhatsApp Web"
   }
 }

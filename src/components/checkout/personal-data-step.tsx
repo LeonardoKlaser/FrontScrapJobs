@@ -47,6 +47,10 @@ interface PersonalDataStepProps {
   // ele fica travado com "CPF invalido" no submit sem UI de recuperacao.
   // Optional com default false: default fail-safe eh pedir CPF, nao pular.
   hasTaxOnFile?: boolean
+  // Campos travados no checkout mágico do lead (telefone já verificado via
+  // WhatsApp). Default: nenhum.
+  lockedFields?: Array<'phone'>
+  lockedHint?: string
   onNext: () => void
 }
 
@@ -57,6 +61,8 @@ export function PersonalDataStep({
   planId,
   isAuthenticated,
   hasTaxOnFile = false,
+  lockedFields,
+  lockedHint,
   onNext
 }: PersonalDataStepProps) {
   const { t } = useTranslation('plans')
@@ -148,11 +154,16 @@ export function PersonalDataStep({
       }
     }
 
-    const phoneDigits = formData.phone.replace(/\D/g, '')
-    if (!formData.phone.trim()) {
-      newErrors.phone = tAuth('validation.phoneRequired')
-    } else if (phoneDigits.length < 10 || phoneDigits.length > 11) {
-      newErrors.phone = tAuth('validation.phoneInvalid')
+    // Telefone travado (checkout mágico do lead): o valor exibido é mascarado
+    // ('+55 (51) 9****-0000') e nunca passa no regex de dígitos — pular a
+    // validação, o telefone já foi verificado via WhatsApp antes deste passo.
+    if (!lockedFields?.includes('phone')) {
+      const phoneDigits = formData.phone.replace(/\D/g, '')
+      if (!formData.phone.trim()) {
+        newErrors.phone = tAuth('validation.phoneRequired')
+      } else if (phoneDigits.length < 10 || phoneDigits.length > 11) {
+        newErrors.phone = tAuth('validation.phoneInvalid')
+      }
     }
 
     // CPF obrigatorio quando ainda nao ha tax cadastrado: fluxo anonimo
@@ -290,11 +301,14 @@ export function PersonalDataStep({
               placeholder={t('paymentForm.phonePlaceholder')}
               value={formData.phone}
               onChange={handleInputChange}
-              disabled={isLoading}
+              disabled={isLoading || lockedFields?.includes('phone')}
               className={`pl-10 font-mono ${errors.phone ? 'border-destructive' : ''}`}
             />
           </div>
           {errors.phone && <p className="text-xs text-destructive">{errors.phone}</p>}
+          {lockedFields?.includes('phone') && (
+            <p className="text-xs text-emerald-600">{lockedHint}</p>
+          )}
         </div>
 
         {/* CPF renderiza pra fluxo anônimo (criando conta) e pra autenticado

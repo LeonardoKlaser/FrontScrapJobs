@@ -24,7 +24,7 @@
       "infra": "Infra & QA"
     },
     "cta": "Start free",
-    "microcopy": "7-day card trial · PIX unlocks 1 month",
+    "microcopy": "No lock-in · cancel anytime",
     "loginPrompt": "Already have an account?",
     "loginLink": "Log in"
   },
@@ -118,5 +118,12 @@
     "sitesAnalyzed": "Monitored sites",
     "jobsCollected": "Jobs collected",
     "trustLine": "Real data from our platform, updated in real time"
+  },
+  "waModal": {
+    "title": "Talk to Norte on your WhatsApp",
+    "subtitle": "The conversation happens on your phone — that's where Norte lives.",
+    "qrAlt": "QR code to open Norte's WhatsApp",
+    "scanHint": "Point your phone camera at the code above 📱",
+    "webButton": "Or open in WhatsApp Web"
   }
 }

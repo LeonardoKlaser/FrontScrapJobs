@@ -86,7 +86,7 @@ export function trackDigest(event: DigestEvent, payload: Record<string, unknown>
 
 // Landing page events: mede a conversao da LP (clique nos CTAs por secao:
 // navbar | hero | final). GTM ja esta carregado no index.html.
-export type LandingEvent = 'lp_cta_click'
+export type LandingEvent = 'lp_cta_click' | 'lp_whatsapp_click'
 
 export function trackLanding(event: LandingEvent, payload: Record<string, unknown> = {}): void {
   if (typeof window === 'undefined') return

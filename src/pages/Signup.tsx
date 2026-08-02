@@ -15,7 +15,7 @@ export default function Signup() {
       subtitle={t(
         'signup.heroSubtitle',
         'Conecte seu currículo, escolha as empresas e deixe a IA do ScrapJobs ' +
-          'encontrar as vagas certas pra você. No cartão, seu plano começa com 7 dias de trial.'
+          'encontrar as vagas certas pra você.'
       )}
       jobs={[
         {
@@ -47,8 +47,8 @@ export default function Signup() {
           label: t('hero.companiesTracked', 'empresas rastreadas')
         },
         {
-          value: `7 ${t('signup.days', 'dias')}`,
-          label: t('signup.freeTrial', 'de trial no plano'),
+          value: '2 min',
+          label: t('signup.quickStart', 'pra começar'),
           highlight: true
         }
       ]}

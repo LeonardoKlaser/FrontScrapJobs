@@ -19,12 +19,16 @@
     "generateQR": "Generate PIX QR Code",
     "goToPayment": "Go to payment",
     "methodCardTitle": "Subscribe with credit card",
-    "methodCardDesc": "{{price}}/mo · 7-day free trial · auto-renewal · cancel anytime",
+    "methodCardDesc": "{{price}}/mo · auto-renewal · cancel anytime",
     "methodPixTitle": "Pay with PIX",
     "methodPixDesc": "{{price}}/mo · manual renewal · we'll remind you before it's due",
     "chooseMethodLabel": "How would you like to pay?",
     "goToCardCheckout": "Go to payment",
-    "generateMonthlyQR": "Generate PIX QR Code"
+    "generateMonthlyQR": "Generate PIX QR Code",
+    "verifiedViaWhatsApp": "Verified via WhatsApp ✓",
+    "leadLinkExpired": "Link expired — fill in your details normally",
+    "leadLinkLoadError": "We couldn't load your data. Please reload the page and try again.",
+    "leadDuplicateAccount": "Email or Tax ID already registered. Please log in to continue."
   },
   "pixQrCode": {
     "title": "Scan the QR Code",
