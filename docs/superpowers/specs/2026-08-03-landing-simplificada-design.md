@@ -1,14 +1,15 @@
 # Landing simplificada e alinhada ao produto — Design
 
 - Data: 2026-08-03
-- Status: aprovado em brainstorm
+- Status: revisado pelo Codex; aguardando aprovação final
 - Repositório: `FrontScrapJobs`
 
 ## 1. Objetivo
 
 Simplificar a landing page do ScrapJobs e alinhar todas as promessas ao produto que existe hoje.
-A página deve apresentar uma assinatura única com recursos integrados, usar o WhatsApp como porta
-principal do funil e manter os preços na seção de planos, sem colocá-los no hero.
+A página deve apresentar uma oferta integrada por assinatura, com os recursos no mesmo pacote,
+usar o WhatsApp como porta principal do funil e manter os preços na seção de planos, sem colocá-los
+no hero.
 
 A proposta central passa a ser:
 
@@ -38,7 +39,7 @@ exemplos de áreas, pois têm reconhecimento positivo, sem representar uma lista
 |---|---|
 | Radar de vagas | Monitora páginas de carreira das empresas várias vezes ao dia. |
 | Seleção personalizada | Filtra vagas usando área, senioridade, localização e empresas acompanhadas. |
-| Alertas | Entrega oportunidades por WhatsApp ou email. |
+| Alertas | Entrega oportunidades pelo canal escolhido: WhatsApp ou email. |
 | Painel | Organiza vagas, empresas monitoradas, currículos e configurações. |
 | Currículos | Armazena PDFs e permite selecionar um arquivo principal. |
 | Análise | Compara uma vaga com o currículo e mostra compatibilidade, pontos fortes, lacunas, palavras-chave e sugestões. |
@@ -101,14 +102,17 @@ Marketing, RH, Finanças e Comercial.
 
 ### Demonstração do WhatsApp
 
-O mock do hero deve mostrar apenas uma entrega real:
+O mock do hero deve reproduzir o formato da entrega proativa que existe hoje, em uma única mensagem
+do Norte:
 
-1. Norte informa que encontrou vagas novas desde o último envio.
-2. Norte resume quantidade e cargos ou áreas.
-3. Usuário pede para ver.
-4. Norte entrega o link do digest.
+> 8 vagas novas hoje — Empresa A, Empresa B. Abre: scrapjobs.com.br/d/...
+
+Quantidade, empresas e URL são apenas dados ilustrativos no mock. Não incluir etapas intermediárias,
+resumo por cargo ou resposta do usuário que não façam parte do digest real.
 
 O mock não pode mostrar o Norte criando, reescrevendo ou enviando currículo otimizado.
+O cabeçalho deve identificar a peça como demonstração e não exibir um estado dinâmico falso como
+“online”.
 
 No desktop, hero e conversa ficam em duas colunas. No mobile, a ordem é texto, CTA e conversa.
 
@@ -127,7 +131,7 @@ as duas APIs falharem, ocultar a faixa sem deixar espaço vazio.
 ## 8. Como começar pelo WhatsApp
 
 - Overline: `Comece pelo WhatsApp`
-- Título: `Descubra suas oportunidades em poucos minutos`
+- Título: `Veja suas oportunidades em 3 perguntas`
 - Descrição: `A conversa inicial identifica o que você procura e mostra o volume de vagas antes de você escolher um plano.`
 
 Três passos:
@@ -160,7 +164,7 @@ Radar de vagas → Seleção personalizada → Alertas de vagas
 
 1. **Radar de vagas** — monitora páginas de carreira várias vezes ao dia.
 2. **Seleção personalizada** — filtra vagas de acordo com perfil e preferências.
-3. **Alertas de vagas** — entrega oportunidades pelo WhatsApp ou por email.
+3. **Alertas de vagas** — entrega oportunidades pelo canal escolhido: WhatsApp ou email.
 4. **Análise de compatibilidade** — compara vaga e currículo e aponta forças, lacunas e
    palavras-chave.
 5. **Prompt de otimização** — gera instruções para adaptar o currículo no ChatGPT, Claude ou
@@ -183,23 +187,27 @@ Nota obrigatória do prompt:
 - Título: `Escolha quanto você quer acompanhar`
 - Descrição: `Ambos incluem alertas, painel, Norte, análise de compatibilidade e prompt de otimização.`
 
-### Profissional — R$ 19,90/mês
+Os valores abaixo são a referência comercial encontrada durante a revisão, não strings a serem
+fixadas no componente. Nome, preço, limite de empresas, cota de análises e indicador Ultra devem ser
+renderizados a partir dos campos estruturados da API.
+
+### Profissional — referência atual de R$ 19,90/mês
 
 Badge: `Melhor para começar`
 
 - monitoramento de até 40 empresas;
 - 20 análises de compatibilidade por mês;
 - prompt de otimização após cada análise;
-- alertas por WhatsApp e email;
+- canal de entrega por WhatsApp ou email;
 - acesso ao painel ScrapJobs;
 - CTA: `Assinar Profissional`.
 
-### Ultra — R$ 29,90/mês
+### Ultra — referência atual de R$ 29,90/mês
 
 - monitoramento de todas as empresas disponíveis no ScrapJobs;
 - 50 análises de compatibilidade por mês;
 - prompt de otimização após cada análise;
-- alertas por WhatsApp e email;
+- canal de entrega por WhatsApp ou email;
 - suporte prioritário;
 - CTA: `Assinar Ultra`.
 
@@ -207,9 +215,14 @@ Rodapé dos cards:
 
 > Cobrança mensal · sem fidelidade · cancele quando quiser pelo painel
 
-Os preços, nomes, limites e features continuam vindo da API. A copy fixa deve explicar as
-diferenças sem substituir esses dados. Se a API de planos falhar, mostrar um estado de erro com
-ação de tentar novamente; não renderizar uma seção aparentemente vazia.
+O contrato de renderização deve usar `name`, `price`, `max_sites`, `max_ai_analyses` e `is_ultra` da
+API. Os rótulos e benefícios comuns são montados com chaves locais de i18n em pt-BR e en-US. A
+landing não deve renderizar diretamente o array textual `features`, pois hoje ele contém copy do
+backend em português e não é um contrato localizado. `is_ultra` determina a mensagem de cobertura
+total e o suporte prioritário; os demais planos usam `max_sites`.
+
+Se a API de planos falhar, mostrar um estado de erro com ação de tentar novamente; não renderizar
+uma seção aparentemente vazia.
 
 Os CTAs dos planos mantêm o caminho direto de cadastro com `?plan=<id>` e devem registrar plano,
 posição e origem no evento de analytics.
@@ -222,8 +235,8 @@ Manter seis perguntas:
    vezes ao dia.
 2. **A conversa inicial é gratuita?** Sim. A pessoa responde três perguntas e vê a quantidade de
    vagas. O acesso e o monitoramento contínuo exigem assinatura.
-3. **Preciso usar WhatsApp?** O início e a verificação acontecem pelo WhatsApp. Depois, alertas por
-   email e painel web também ficam disponíveis.
+3. **Preciso usar WhatsApp?** O início e a verificação acontecem pelo WhatsApp. Depois, a pessoa
+   pode trocar o canal de alertas para email e usar o painel web.
 4. **O ScrapJobs modifica meu currículo?** Não. Ele analisa a compatibilidade e gera um prompt para
    uso em outra IA junto com o PDF.
 5. **Posso cancelar quando quiser?** Sim, sem fidelidade, diretamente pelo painel.
@@ -254,20 +267,26 @@ Continuar usando o componente compartilhado para navbar, hero e CTA final. Prese
 - links com marcadores `#lp`, `#lpq` e `#lpw`;
 - eventos `lp_whatsapp_click` com seção, dispositivo e método.
 
-Ausência de `VITE_NORTE_WA_NUMBER` não pode produzir um link silenciosamente inválido. O build ou
-o deploy deve validar a variável; como proteção adicional, a UI deve impedir a ação e informar
-indisponibilidade temporária.
+Ausência de `VITE_NORTE_WA_NUMBER` não pode produzir um link silenciosamente inválido. O estágio de
+build do `Dockerfile` deve falhar antes do `vite build` quando o `ARG VITE_NORTE_WA_NUMBER` estiver
+vazio; `npm run build` continua permitido sem a variável para desenvolvimento e testes locais. Como
+proteção em runtime, o componente compartilhado deve desabilitar a ação e exibir uma mensagem de
+indisponibilidade temporária quando o número não estiver configurado.
 
 ### Analytics
 
-Medir pelo menos:
+Contrato mínimo de eventos:
 
-- clique no CTA do WhatsApp por seção e método;
-- abertura do modal QR;
-- clique em WhatsApp Web;
-- clique em cada plano;
-- abertura de FAQ;
-- erro no carregamento dos planos.
+- `lp_whatsapp_click`: disparado uma vez no CTA, com `section`, `device` e
+  `method: direct | modal`; `method: modal` já representa a abertura do QR e não deve gerar uma
+  segunda impressão do mesmo evento;
+- `lp_whatsapp_web_click`: disparado no link alternativo do modal, com `section`;
+- `lp_plan_click`: disparado no CTA de plano, com `plan_id`, `plan_name`, `position` e
+  `origin: landing_pricing`;
+- `lp_faq_open`: disparado ao abrir uma resposta, com `item_key` estável e `position`;
+- `lp_plans_load_error`: disparado uma vez por tentativa que terminar em falha, com `attempt`.
+
+`position` é sempre inteiro começando em 1 e segue a ordem visual da página.
 
 Os eventos do frontend devem continuar correlacionáveis às fontes `lp`, `lp_qr` e `lp_web` do
 backend.
@@ -276,10 +295,11 @@ backend.
 
 - Atualizar title, description, Open Graph e Twitter para remover “CV otimizado”.
 - Usar a proposta de alertas de vagas no WhatsApp nos metadados.
-- Adicionar imagem social apropriada quando houver asset aprovado; não usar mock de entrega falsa.
 - Preservar apenas um `h1` e hierarquia sequencial de headings.
 - Dar nome acessível à navegação e evitar texto duplicado no logo.
 - Marcar mock de conversa como demonstração ou torná-lo ignorável por leitor de tela.
+- Manter o rótulo e os chips de áreas disponíveis para leitores de tela; eles carregam informação
+  de escopo e não devem usar `aria-hidden`.
 - Adicionar `scroll-margin-top` às seções ancoradas por causa da navbar fixa.
 - Manter suporte a `prefers-reduced-motion` no carrossel, contadores e animações.
 - Garantir foco visível e navegação por teclado no modal, FAQ e CTAs.
@@ -303,16 +323,36 @@ Não fazem parte deste trabalho:
 - criar geração de currículo ou PDF;
 - alterar preços, planos ou cotas;
 - criar testemunhos ou métricas de resultado sem dados reais;
+- criar uma nova imagem de compartilhamento social; até existir um asset aprovado, não adicionar
+  `og:image` novo;
 - redesenhar páginas internas do aplicativo.
 
-## 16. Testes e critérios de aceite
+## 16. Inconsistências relacionadas, fora deste escopo
+
+A revisão encontrou dois débitos de verdade do produto que não devem ser resolvidos silenciosamente
+como parte da landing:
+
+1. Os prompts `norte_v1.md` e `norte_v2.md`, no repositório `agent-scrapjobs`, ainda citam Básico,
+   Pro e Premium com valores antigos, embora o produto atual use Profissional e Ultra. Isso exige
+   uma mudança separada no agente, com testes e evals próprios.
+2. A política de privacidade afirma que não existem cookies de rastreamento, enquanto o frontend
+   carrega Google Tag Manager. Isso exige auditoria de consentimento, tags e texto jurídico. A nova
+   landing não fará afirmações de LGPD, criptografia ou ausência de rastreamento.
+
+Esses pontos não bloqueiam o redesenho visual, mas devem virar trabalhos próprios antes de uma
+revisão geral de comunicação do produto ser considerada concluída.
+
+## 17. Testes e critérios de aceite
 
 ### Testes
 
 - Atualizar testes unitários das seções e traduções.
 - Cobrir falha e retry da API de planos.
+- Cobrir renderização localizada dos benefícios a partir dos campos estruturados dos planos, sem
+  exibir `features` diretamente.
 - Cobrir CTA bloqueado quando o número do WhatsApp estiver ausente.
 - Preservar testes mobile, modal desktop, QR e marcadores de origem.
+- Cobrir payload e cardinalidade dos novos eventos de analytics.
 - Atualizar E2E da landing para nova navegação, copy, planos e CTA.
 - Verificar responsividade em mobile e desktop.
 - Rodar lint, testes unitários, build e E2E da landing.
@@ -325,8 +365,9 @@ Não fazem parte deste trabalho:
 4. O funil de três perguntas e a necessidade de assinatura ficam explícitos antes dos planos.
 5. Todos os recursos aparecem como parte de uma única assinatura.
 6. Os limites dos planos correspondem aos dados atuais do backend.
-7. Os CTAs do WhatsApp e dos planos continuam funcionais e mensuráveis.
-8. Falhas de planos ou configuração do WhatsApp não criam ações vazias ou silenciosamente
+7. A landing não sugere entrega simultânea por WhatsApp e email; ela explica a escolha do canal.
+8. Os CTAs do WhatsApp e dos planos continuam funcionais e mensuráveis.
+9. Falhas de planos ou configuração do WhatsApp não criam ações vazias ou silenciosamente
    inválidas.
-9. Metadados, FAQ e exemplos de conversa respeitam a mesma verdade do produto.
-10. Copy nova existe em pt-BR e en-US.
+10. Metadados, FAQ e exemplos de conversa respeitam a mesma verdade do produto.
+11. Copy nova existe em pt-BR e en-US.
