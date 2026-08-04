@@ -1,15 +1,17 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
+import { Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Check, Clock, ShieldCheck, Lock } from 'lucide-react'
 import { usePlans } from '@/hooks/usePlans'
+import { trackLanding } from '@/lib/analytics'
 import { PATHS } from '@/router/paths'
+import { getLandingPlanBenefits } from './landing-plan-benefits'
 import { SectionWrapper } from './section-wrapper'
 
 export function PricingSection() {
   const { t, i18n } = useTranslation('landing')
-  const { data: plans, isLoading } = usePlans()
+  const { data: plans, isLoading, isError, failureCount, refetch } = usePlans()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -22,7 +24,18 @@ export function PricingSection() {
     }
   }, [plans])
 
-  const handleSubscribeDirect = (id: number) => {
+  useEffect(() => {
+    if (!isError) return
+    trackLanding('lp_plans_load_error', { attempt: Math.max(failureCount, 1) })
+  }, [failureCount, isError])
+
+  const handleSubscribeDirect = (id: number, name: string, position: number) => {
+    trackLanding('lp_plan_click', {
+      plan_id: id,
+      plan_name: name,
+      position,
+      origin: 'landing_pricing'
+    })
     navigate(`${PATHS.signup}?plan=${id}`)
   }
 
@@ -36,9 +49,23 @@ export function PricingSection() {
     )
   }
 
+  if (isError) {
+    return (
+      <SectionWrapper id="pricing">
+        <div className="py-16 lg:py-20 px-6 text-center">
+          <div role="alert" className="text-muted-foreground">
+            {t('pricing.loadError')}
+          </div>
+          <Button className="mt-4" onClick={() => void refetch()}>
+            {t('pricing.retry')}
+          </Button>
+        </div>
+      </SectionWrapper>
+    )
+  }
+
   const all = plans ? [...plans] : []
-  const paid = all.filter((p) => !p.is_trial).sort((a, b) => a.price - b.price)
-  const midIndex = Math.floor(paid.length / 2)
+  const paid = all.filter((plan) => !plan.is_trial).sort((a, b) => a.price - b.price)
 
   return (
     <SectionWrapper id="pricing">
@@ -46,7 +73,7 @@ export function PricingSection() {
         <div className="max-w-6xl mx-auto">
           <div className="mb-12">
             <span className="text-sm font-medium tracking-[2px] uppercase text-emerald-500">
-              {t('labels.pricing')}
+              {t('pricing.overline')}
             </span>
             <h2 className="font-display text-3xl lg:text-5xl font-semibold text-foreground mb-6 mt-3 tracking-tight text-balance">
               {t('pricing.title')}
@@ -56,7 +83,7 @@ export function PricingSection() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
             {paid.map((plan, index) => {
-              const isPopular = index === midIndex
+              const isPopular = index === 0
               return (
                 <div
                   key={plan.id}
@@ -69,14 +96,12 @@ export function PricingSection() {
                 >
                   {isPopular && (
                     <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-                      {t('pricing.popular')}
+                      {t('pricing.starter')}
                     </span>
                   )}
 
                   <div className="text-center pb-4">
-                    <h3 className="text-2xl font-bold text-foreground">
-                      {t('pricing.planName', { name: plan.name })}
-                    </h3>
+                    <h3 className="text-2xl font-bold text-foreground">{plan.name}</h3>
                     <div className="mt-4">
                       <span className="font-display text-[44px] font-bold text-foreground">
                         {new Intl.NumberFormat(i18n.language, {
@@ -86,66 +111,43 @@ export function PricingSection() {
                       </span>
                       <span className="text-sm text-muted-foreground">{t('pricing.perMonth')}</span>
                     </div>
-                    <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground mt-3">
-                      <Clock className="w-3.5 h-3.5 text-emerald-500" />
-                      {t('pricing.savingsAnchor', { hours: plan.max_ai_analyses })}
-                    </p>
                   </div>
 
                   <div className="flex flex-col flex-1 space-y-6">
                     <ul className="space-y-3 flex-1">
-                      {plan.features.map((feature, featureIndex) => (
-                        <li key={featureIndex} className="flex items-center space-x-3">
-                          <Check className="w-5 h-5 text-emerald-500 flex-shrink-0" />
-                          <span className="text-muted-foreground">{feature}</span>
+                      {getLandingPlanBenefits(plan).map((benefit) => (
+                        <li key={benefit.key} className="flex items-start gap-3">
+                          <Check
+                            className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-500"
+                            aria-hidden
+                          />
+                          <span className="text-muted-foreground">
+                            {t(`pricing.benefits.${benefit.key}`, benefit.values)}
+                          </span>
                         </li>
                       ))}
                     </ul>
 
-                    <div>
-                      <Button
-                        id={`cta-plan-${plan.name
-                          .normalize('NFD')
-                          .replace(/[\u0300-\u036f]/g, '')
-                          .toLowerCase()
-                          .replace(/\s+/g, '-')}`}
-                        variant="glow"
-                        size="lg"
-                        className="w-full h-auto py-4 text-base font-semibold rounded-lg"
-                        onClick={() => handleSubscribeDirect(plan.id)}
-                      >
-                        {t('pricing.paidCta')}
-                      </Button>
-
-                      <p className="text-xs text-muted-foreground mt-2">
-                        {t('pricing.paidSubtext')}
-                      </p>
-
-                      <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground text-center pt-2 mt-6 border-t border-border">
-                        <ShieldCheck className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                        {t('pricing.guarantee')}
-                      </p>
-                    </div>
+                    <Button
+                      id={`cta-plan-${plan.name
+                        .normalize('NFD')
+                        .replace(/[\u0300-\u036f]/g, '')
+                        .toLowerCase()
+                        .replace(/\s+/g, '-')}`}
+                      variant="glow"
+                      size="lg"
+                      className="w-full h-auto py-4 text-base font-semibold rounded-lg"
+                      onClick={() => handleSubscribeDirect(plan.id, plan.name, index + 1)}
+                    >
+                      {t('pricing.subscribePlan', { name: plan.name })}
+                    </Button>
                   </div>
                 </div>
               )
             })}
           </div>
 
-          <div className="mt-12 flex flex-col items-center gap-2 animate-fade-in-up [animation-delay:400ms]">
-            <div className="flex items-center gap-4 rounded-xl border border-border bg-background px-6 py-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10">
-                <Lock className="h-5 w-5 text-emerald-500" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
-                  <ShieldCheck className="h-4 w-4 text-emerald-500" />
-                  {t('lgpd.badge')}
-                </p>
-                <p className="text-xs text-muted-foreground">{t('lgpd.encryption')}</p>
-              </div>
-            </div>
-          </div>
+          <p className="mt-8 text-xs text-muted-foreground">{t('pricing.footer')}</p>
         </div>
       </div>
     </SectionWrapper>

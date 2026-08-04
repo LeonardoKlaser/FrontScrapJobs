@@ -136,22 +136,25 @@
     "cta": "Começar grátis"
   },
   "pricing": {
-    "title": "Escolha seu plano",
-    "subtitle": "Cancele quando quiser. Sem fidelidade, sem letras miúdas.",
-    "lgpd": "Seus dados protegidos — LGPD",
+    "overline": "Planos",
+    "title": "Escolha quanto você quer acompanhar",
+    "subtitle": "Ambos incluem alertas, painel, Norte, análise de compatibilidade e prompt de otimização.",
     "loading": "Carregando planos...",
-    "monthly": "Mensal",
-    "popular": "Mais Popular",
-    "planName": "Plano {{name}}",
+    "loadError": "Não foi possível carregar os planos.",
+    "retry": "Tentar novamente",
+    "starter": "Melhor para começar",
     "perMonth": "/mês",
-    "savingsAnchor": "Economize até {{hours}} horas de busca maçante por mês",
-    "guarantee": "Cancele a qualquer momento. Sem fidelidade, sem letras miúdas.",
-    "paidCta": "Assinar agora",
-    "paidSubtext": "Acesso imediato a todas as funcionalidades."
-  },
-  "lgpd": {
-    "badge": "Em conformidade com LGPD e GDPR",
-    "encryption": "Seus dados são protegidos com criptografia de ponta a ponta"
+    "subscribePlan": "Assinar {{name}}",
+    "footer": "Cobrança mensal · sem fidelidade · cancele quando quiser pelo painel",
+    "benefits": {
+      "siteLimit": "Até {{count}} empresas monitoradas",
+      "allSites": "Todas as empresas disponíveis no ScrapJobs",
+      "analysisLimit": "{{count}} análises de compatibilidade por mês",
+      "prompt": "Prompt de otimização após cada análise",
+      "channel": "Canal de entrega por WhatsApp ou email",
+      "dashboard": "Acesso ao painel ScrapJobs",
+      "prioritySupport": "Suporte prioritário"
+    }
   },
   "stats": {
     "sitesAnalyzed": "Sites monitorados",
