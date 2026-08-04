@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Check } from 'lucide-react'
@@ -13,6 +13,7 @@ export function PricingSection() {
   const { t, i18n } = useTranslation('landing')
   const { data: plans, isLoading, isError, failureCount, refetch } = usePlans()
   const navigate = useNavigate()
+  const lastTrackedFailureAttempt = useRef<number | null>(null)
 
   useEffect(() => {
     if (plans && window.location.hash === '#pricing') {
@@ -25,8 +26,14 @@ export function PricingSection() {
   }, [plans])
 
   useEffect(() => {
-    if (!isError) return
-    trackLanding('lp_plans_load_error', { attempt: Math.max(failureCount, 1) })
+    if (!isError) {
+      lastTrackedFailureAttempt.current = null
+      return
+    }
+    const attempt = Math.max(failureCount, 1)
+    if (lastTrackedFailureAttempt.current === attempt) return
+    lastTrackedFailureAttempt.current = attempt
+    trackLanding('lp_plans_load_error', { attempt })
   }, [failureCount, isError])
 
   const handleSubscribeDirect = (id: number, name: string, position: number) => {

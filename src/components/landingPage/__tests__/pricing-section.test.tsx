@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { StrictMode } from 'react'
 import { MemoryRouter, useLocation } from 'react-router'
 import type { Plan } from '@/models/plan'
 import { PricingSection } from '../pricing-section'
@@ -55,13 +56,19 @@ function CurrentLocation() {
   return <output data-testid="location">{`${location.pathname}${location.search}`}</output>
 }
 
-function renderPricing() {
-  return render(
+function PricingTree({ strictMode = false }) {
+  const content = (
     <MemoryRouter>
       <PricingSection />
       <CurrentLocation />
     </MemoryRouter>
   )
+
+  return strictMode ? <StrictMode>{content}</StrictMode> : content
+}
+
+function renderPricing({ strictMode = false } = {}) {
+  return render(<PricingTree strictMode={strictMode} />)
 }
 
 describe('PricingSection', () => {
@@ -108,5 +115,53 @@ describe('PricingSection', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Tentar novamente' }))
     expect(refetch).toHaveBeenCalledTimes(1)
+  })
+
+  it('mede uma falha apenas uma vez em StrictMode', async () => {
+    usePlansMock.mockReturnValue(failedPlansState)
+
+    renderPricing({ strictMode: true })
+
+    await waitFor(() => {
+      expect(trackLandingMock).toHaveBeenCalledWith('lp_plans_load_error', { attempt: 1 })
+    })
+    expect(trackLandingMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('mede novamente quando a contagem de falhas aumenta', async () => {
+    usePlansMock.mockReturnValue(failedPlansState)
+
+    const { rerender } = renderPricing()
+
+    await waitFor(() => {
+      expect(trackLandingMock).toHaveBeenCalledWith('lp_plans_load_error', { attempt: 1 })
+    })
+
+    usePlansMock.mockReturnValue({ ...failedPlansState, failureCount: 2 })
+    rerender(<PricingTree />)
+
+    await waitFor(() => {
+      expect(trackLandingMock).toHaveBeenCalledWith('lp_plans_load_error', { attempt: 2 })
+    })
+    expect(trackLandingMock).toHaveBeenCalledTimes(2)
+  })
+
+  it('mede uma nova falha após a recuperação reiniciar a contagem', async () => {
+    usePlansMock.mockReturnValue(failedPlansState)
+
+    const { rerender } = renderPricing()
+
+    await waitFor(() => {
+      expect(trackLandingMock).toHaveBeenCalledWith('lp_plans_load_error', { attempt: 1 })
+    })
+
+    usePlansMock.mockReturnValue(successfulPlansState)
+    rerender(<PricingTree />)
+    usePlansMock.mockReturnValue(failedPlansState)
+    rerender(<PricingTree />)
+
+    await waitFor(() => {
+      expect(trackLandingMock).toHaveBeenCalledTimes(2)
+    })
   })
 })
