@@ -24,6 +24,7 @@ export function LandingNavbar() {
 
   return (
     <nav
+      aria-label={t('navbar.ariaLabel')}
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
         scrolled ? 'bg-emerald-600 shadow-md' : 'bg-transparent'
       }`}

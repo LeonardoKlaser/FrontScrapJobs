@@ -31,11 +31,12 @@ afterEach(() => vi.unstubAllEnvs())
 describe('LandingNavbar', () => {
   it('renders desktop anchors, the Entrar link and the CTA', () => {
     renderNavbar()
+    expect(screen.getByRole('navigation', { name: 'Navegação principal' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Como funciona' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Planos' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'FAQ' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Entrar' })).toHaveAttribute('href', '/login')
-    expect(screen.getByRole('button', { name: 'Começar agora' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Receber vagas' })).toBeInTheDocument()
   })
 
   it('scrolls to the matching section when an anchor is clicked', () => {
@@ -52,7 +53,7 @@ describe('LandingNavbar', () => {
   it('tracks the CTA click and opens the WhatsApp modal on desktop', () => {
     const track = vi.spyOn(analytics, 'trackLanding').mockImplementation(() => {})
     renderNavbar()
-    fireEvent.click(screen.getByRole('button', { name: 'Começar agora' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Receber vagas' }))
     expect(track).toHaveBeenCalledWith('lp_whatsapp_click', {
       section: 'navbar',
       device: 'desktop',

@@ -10,10 +10,16 @@ export type NorteMessage = {
 interface NorteChatProps {
   messages: NorteMessage[]
   showHeader?: boolean
+  headerSubtitle?: ReactNode
   className?: string
 }
 
-export function NorteChat({ messages, showHeader = true, className }: NorteChatProps) {
+export function NorteChat({
+  messages,
+  showHeader = true,
+  headerSubtitle,
+  className
+}: NorteChatProps) {
   return (
     <div className={cn('overflow-hidden rounded-2xl shadow-lg', className)}>
       {showHeader && (
@@ -26,7 +32,7 @@ export function NorteChat({ messages, showHeader = true, className }: NorteChatP
           </div>
           <div className="leading-none">
             <p className="text-sm font-semibold">Norte</p>
-            <p className="text-[10px] opacity-80">online</p>
+            {headerSubtitle && <p className="text-[10px] opacity-80">{headerSubtitle}</p>}
           </div>
         </div>
       )}

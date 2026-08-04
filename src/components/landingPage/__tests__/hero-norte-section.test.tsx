@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import { HeroNorteSection } from '@/components/landingPage/hero-norte-section'
 import * as analytics from '@/lib/analytics'
@@ -28,17 +28,27 @@ function renderHero() {
 }
 
 describe('HeroNorteSection', () => {
-  it('renders the Norte headline and the chat conversation', () => {
+  it('renderiza a proposta principal e um digest real', () => {
     renderHero()
-    expect(screen.getByText(/No seu WhatsApp/)).toBeInTheDocument()
-    expect(screen.getByText('online')).toBeInTheDocument()
-    expect(screen.getByText(/92% match/)).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+        name: 'Receba as vagas mais recentes no seu WhatsApp.'
+      })
+    ).toBeInTheDocument()
+    expect(screen.getByText('Vagas em áreas como')).toBeInTheDocument()
+    expect(screen.getByText('Tecnologia')).toBeInTheDocument()
+    expect(screen.getByText('Finanças')).toBeInTheDocument()
+    expect(screen.getByText(/8 vagas novas hoje/)).toBeInTheDocument()
+    expect(screen.getByText('demonstração')).toBeInTheDocument()
+    expect(screen.queryByText(/CV_Nubank\.pdf|CV otimizado|92% match/i)).not.toBeInTheDocument()
+    expect(screen.queryByText('online')).not.toBeInTheDocument()
   })
 
   it('tracks section:hero and opens the WhatsApp modal on CTA click', () => {
     const track = vi.spyOn(analytics, 'trackLanding').mockImplementation(() => {})
     renderHero()
-    fireEvent.click(screen.getByRole('button', { name: /Começar grátis/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Receber vagas no WhatsApp/ }))
     expect(track).toHaveBeenCalledWith('lp_whatsapp_click', {
       section: 'hero',
       device: 'desktop',
@@ -47,9 +57,11 @@ describe('HeroNorteSection', () => {
     expect(screen.getByText('Fale com o Norte no seu WhatsApp')).toBeInTheDocument()
   })
 
-  it('renders the area chips as decorative (non-interactive) text', () => {
+  it('renders area chips as accessible examples, not controls', () => {
     renderHero()
-    expect(screen.getByText('Dev')).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: 'Dev' })).not.toBeInTheDocument()
+    const areas = screen.getByRole('list')
+    expect(areas).toBeInTheDocument()
+    expect(within(areas).getByText('Tecnologia')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Tecnologia' })).not.toBeInTheDocument()
   })
 })

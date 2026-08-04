@@ -41,17 +41,22 @@ export function ProofBandSection() {
               animationDuration: `${(duplicatedLogos.length / 2) * SECONDS_PER_LOGO}s`
             }}
           >
-            {duplicatedLogos.map((logo, index) => (
-              <img
-                key={`${logo.site_name}-${index}`}
-                src={logo.logo_url}
-                alt={logo.site_name}
-                className="h-9 w-auto object-contain opacity-70 transition-opacity
-                  hover:opacity-100 mix-blend-multiply [filter:grayscale(1)]
-                  dark:mix-blend-screen
-                  dark:[filter:grayscale(1)_invert(1)_brightness(1.5)]"
-              />
-            ))}
+            {duplicatedLogos.map((logo, index) => {
+              const isVisualDuplicate = index >= (logos?.length ?? 0)
+
+              return (
+                <img
+                  key={`${logo.site_name}-${index}`}
+                  src={logo.logo_url}
+                  alt={isVisualDuplicate ? '' : logo.site_name}
+                  aria-hidden={isVisualDuplicate}
+                  className="h-9 w-auto object-contain opacity-70 transition-opacity
+                    hover:opacity-100 mix-blend-multiply [filter:grayscale(1)]
+                    dark:mix-blend-screen
+                    dark:[filter:grayscale(1)_invert(1)_brightness(1.5)]"
+                />
+              )
+            })}
           </div>
         </div>
       )}

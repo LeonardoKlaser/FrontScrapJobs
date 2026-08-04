@@ -7,34 +7,19 @@ import { LANDING_CTA_CLASS } from './landing-cta'
 import { WhatsAppCtaButton } from './whatsapp-cta-button'
 
 const AREA_KEYS = [
-  'hero.areas.dev',
-  'hero.areas.produto',
+  'hero.areas.technology',
+  'hero.areas.marketing',
+  'hero.areas.sales',
+  'hero.areas.hr',
+  'hero.areas.finance',
   'hero.areas.design',
-  'hero.areas.dados',
-  'hero.areas.infra'
+  'hero.areas.data'
 ] as const
 
 export function HeroNorteSection() {
   const { t } = useTranslation('landing')
 
-  const messages: NorteMessage[] = [
-    { from: 'norte', text: 'Oi, Erick! 👋 Achei 3 vagas novas de Backend hoje.' },
-    {
-      from: 'norte',
-      text: (
-        <>
-          A do <strong>Nubank</strong> deu <strong>🎯 92% match</strong> com seu CV. Quer a análise?
-        </>
-      )
-    },
-    { from: 'user', text: 'quero' },
-    {
-      from: 'norte',
-      text: '✅ Já tem: Go, Postgres, K8s\n⚠️ Falta: pagamentos\nTe mando o CV ajustado?'
-    },
-    { from: 'user', text: 'manda 🙌' },
-    { from: 'norte', text: 'Prontinho!', pdf: 'CV_Nubank.pdf' }
-  ]
+  const messages: NorteMessage[] = [{ from: 'norte', text: t('hero.chatDigest') }]
 
   return (
     <section className="bg-background px-6 pt-24 pb-16 sm:px-8 lg:pb-20">
@@ -50,22 +35,26 @@ export function HeroNorteSection() {
             className="mt-6 text-balance text-4xl font-semibold leading-tight tracking-tight
               text-foreground sm:text-5xl"
           >
-            {t('hero.heading1')} <span className="text-gradient-primary">{t('hero.heading2')}</span>
+            {t('hero.headingLead')}{' '}
+            <span className="text-gradient-primary">{t('hero.headingHighlight')}</span>
           </h1>
           <p className="mt-4 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
             {t('hero.subheading')}
           </p>
 
-          <div className="mt-6 flex flex-wrap gap-2" aria-hidden>
-            {AREA_KEYS.map((key) => (
-              <span
-                key={key}
-                className="rounded-full border border-border bg-background px-3 py-1 text-xs
-                  font-medium text-muted-foreground"
-              >
-                {t(key)}
-              </span>
-            ))}
+          <div className="mt-6">
+            <p className="text-sm font-medium text-muted-foreground">{t('hero.areasLabel')}</p>
+            <ul className="mt-2 flex flex-wrap gap-2">
+              {AREA_KEYS.map((key) => (
+                <li
+                  key={key}
+                  className="rounded-full border border-border bg-background px-3 py-1 text-xs
+                    font-medium text-muted-foreground"
+                >
+                  {t(key)}
+                </li>
+              ))}
+            </ul>
           </div>
 
           <div className="mt-8">
@@ -92,7 +81,7 @@ export function HeroNorteSection() {
         </div>
 
         <div className="mx-auto w-full max-w-sm">
-          <NorteChat messages={messages} />
+          <NorteChat messages={messages} headerSubtitle={t('hero.chatSubtitle')} />
         </div>
       </div>
     </section>

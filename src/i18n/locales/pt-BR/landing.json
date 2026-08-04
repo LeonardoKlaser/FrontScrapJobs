@@ -4,7 +4,8 @@
     "pricing": "Planos",
     "faq": "FAQ",
     "login": "Entrar",
-    "cta": "Começar agora"
+    "cta": "Receber vagas",
+    "ariaLabel": "Navegação principal"
   },
   "labels": {
     "howItWorks": "COMO FUNCIONA",
@@ -12,25 +13,30 @@
     "faq": "FAQ"
   },
   "hero": {
-    "eyebrow": "● Agora no WhatsApp",
-    "heading1": "O Norte cuida da sua busca de vaga.",
-    "heading2": "No seu WhatsApp.",
-    "subheading": "Ele vigia as vagas das empresas que você escolhe, analisa seu currículo e te manda o CV otimizado pra cada uma — tudo numa conversa.",
+    "eyebrow": "Vagas direto das empresas",
+    "headingLead": "Receba as vagas mais recentes no seu",
+    "headingHighlight": "WhatsApp.",
+    "subheading": "O ScrapJobs monitora páginas de carreira, encontra oportunidades compatíveis com o seu perfil e envia as novidades diretamente para você.",
+    "areasLabel": "Vagas em áreas como",
     "areas": {
-      "dev": "Dev",
-      "produto": "Produto",
+      "technology": "Tecnologia",
+      "marketing": "Marketing",
+      "sales": "Vendas",
+      "hr": "RH",
+      "finance": "Finanças",
       "design": "Design",
-      "dados": "Dados",
-      "infra": "Infra & QA"
+      "data": "Dados"
     },
-    "cta": "Começar grátis",
-    "microcopy": "Sem fidelidade · cancele quando quiser",
-    "loginPrompt": "Já tem conta?",
-    "loginLink": "Fazer login"
+    "cta": "Receber vagas no WhatsApp",
+    "microcopy": "Responda 3 perguntas e descubra quantas vagas encontramos para você.",
+    "loginPrompt": "Já é assinante?",
+    "loginLink": "Entrar",
+    "chatSubtitle": "demonstração",
+    "chatDigest": "8 vagas novas hoje — Empresa A, Empresa B. Abre: scrapjobs.com.br/d/..."
   },
   "proofBand": {
-    "sites": "sites monitorados",
-    "jobs": "vagas abertas agora"
+    "sites": "empresas monitoradas",
+    "jobs": "vagas disponíveis"
   },
   "howItWorksNew": {
     "headline": "Do \"oi\" à vaga certa, em 4 passos",

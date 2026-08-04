@@ -26,15 +26,16 @@ describe('ProofBandSection', () => {
   it('renders the stats line (number + label live in sibling nodes)', () => {
     render(<ProofBandSection />)
     expect(screen.getByText('87')).toBeInTheDocument()
-    expect(screen.getByText('sites monitorados')).toBeInTheDocument()
-    expect(screen.getByText('vagas abertas agora')).toBeInTheDocument()
+    expect(screen.getByText('empresas monitoradas')).toBeInTheDocument()
+    expect(screen.getByText('vagas disponíveis')).toBeInTheDocument()
     // 142000 formatted by Intl for pt-BR is "142.000"; locale may vary in jsdom
     expect(screen.getByText(/142[.,]?000/)).toBeInTheDocument()
   })
 
   it('duplicates a single logo 4x for a seamless marquee', () => {
-    render(<ProofBandSection />)
-    expect(screen.getAllByAltText('Nubank')).toHaveLength(4)
+    const { container } = render(<ProofBandSection />)
+    expect(container.querySelectorAll('img')).toHaveLength(4)
+    expect(screen.getAllByAltText('Nubank')).toHaveLength(1)
   })
 
   it('duplicates 3+ logos only 2x', () => {
@@ -46,16 +47,17 @@ describe('ProofBandSection', () => {
       ],
       error: null
     })
-    render(<ProofBandSection />)
-    expect(screen.getAllByAltText('Nubank')).toHaveLength(2)
-    expect(screen.getAllByAltText('iFood')).toHaveLength(2)
-    expect(screen.getAllByAltText('Stone')).toHaveLength(2)
+    const { container } = render(<ProofBandSection />)
+    expect(container.querySelectorAll('img')).toHaveLength(6)
+    expect(screen.getAllByAltText('Nubank')).toHaveLength(1)
+    expect(screen.getAllByAltText('iFood')).toHaveLength(1)
+    expect(screen.getAllByAltText('Stone')).toHaveLength(1)
   })
 
   it('scales the marquee duration with the logo count (constant speed)', () => {
     render(<ProofBandSection />)
     // 1 logo duplicado 4x → metade da faixa = 2 logos × 3.5s = 7s
-    const track = screen.getAllByAltText('Nubank')[0].parentElement as HTMLElement
+    const track = screen.getByAltText('Nubank').parentElement as HTMLElement
     expect(track.style.animationDuration).toBe('7s')
   })
 

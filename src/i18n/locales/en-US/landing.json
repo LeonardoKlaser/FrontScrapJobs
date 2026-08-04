@@ -4,7 +4,8 @@
     "pricing": "Plans",
     "faq": "FAQ",
     "login": "Sign in",
-    "cta": "Get started"
+    "cta": "Get jobs",
+    "ariaLabel": "Main navigation"
   },
   "labels": {
     "howItWorks": "HOW IT WORKS",
@@ -12,25 +13,30 @@
     "faq": "FAQ"
   },
   "hero": {
-    "eyebrow": "● Now on WhatsApp",
-    "heading1": "Norte runs your job hunt.",
-    "heading2": "On your WhatsApp.",
-    "subheading": "It watches the openings at the companies you pick, reviews your résumé and sends you a tailored CV for each one — all in a chat.",
+    "eyebrow": "Jobs straight from employers",
+    "headingLead": "Get the latest jobs on your",
+    "headingHighlight": "WhatsApp.",
+    "subheading": "ScrapJobs monitors company career pages, finds opportunities that match your profile, and sends new jobs directly to you.",
+    "areasLabel": "Jobs in fields such as",
     "areas": {
-      "dev": "Dev",
-      "produto": "Product",
+      "technology": "Technology",
+      "marketing": "Marketing",
+      "sales": "Sales",
+      "hr": "HR",
+      "finance": "Finance",
       "design": "Design",
-      "dados": "Data",
-      "infra": "Infra & QA"
+      "data": "Data"
     },
-    "cta": "Start free",
-    "microcopy": "No lock-in · cancel anytime",
-    "loginPrompt": "Already have an account?",
-    "loginLink": "Log in"
+    "cta": "Get jobs on WhatsApp",
+    "microcopy": "Answer 3 questions and see how many jobs we found for you.",
+    "loginPrompt": "Already a subscriber?",
+    "loginLink": "Sign in",
+    "chatSubtitle": "demo",
+    "chatDigest": "8 new jobs today — Company A, Company B. Open: scrapjobs.com.br/d/..."
   },
   "proofBand": {
-    "sites": "monitored sites",
-    "jobs": "open jobs right now"
+    "sites": "monitored companies",
+    "jobs": "available jobs"
   },
   "howItWorksNew": {
     "headline": "From \"hi\" to the right role, in 4 steps",
