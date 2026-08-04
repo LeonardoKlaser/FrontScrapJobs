@@ -8,11 +8,6 @@
     "cta": "Get jobs",
     "ariaLabel": "Main navigation"
   },
-  "labels": {
-    "howItWorks": "HOW IT WORKS",
-    "pricing": "PLANS",
-    "faq": "FAQ"
-  },
   "hero": {
     "eyebrow": "Jobs straight from employers",
     "headingLead": "Get the latest jobs on your",
@@ -99,29 +94,34 @@
     }
   },
   "faq": {
+    "overline": "FAQ",
     "title": "Frequently asked questions",
-    "items": [
-      {
-        "q": "Is Norte a bot?",
-        "a": "It's an AI assistant — but built to talk like a person and actually get things done. Whenever you want, or if it gets stuck, a real human takes over."
+    "items": {
+      "origin": {
+        "question": "Where do the jobs come from?",
+        "answer": "From the career pages of monitored companies, checked several times a day."
       },
-      {
-        "q": "Do you have my number? Is it safe?",
-        "a": "We only use your WhatsApp to send openings and talk about your search. No spam, you can opt out anytime, and we follow Brazil's LGPD."
+      "initialFree": {
+        "question": "Is the initial conversation free?",
+        "answer": "Yes. You answer three questions and see the number of jobs. Access and continuous monitoring require a subscription."
       },
-      {
-        "q": "What if I don't use WhatsApp?",
-        "a": "No problem. Norte also works over email, and the web dashboard has everything."
+      "whatsapp": {
+        "question": "Do I need WhatsApp?",
+        "answer": "The initial flow and verification happen on WhatsApp. Afterwards, you can change the alert channel to email and use the web dashboard."
       },
-      {
-        "q": "Are the jobs real? Where do they come from?",
-        "a": "Yes. We pull straight from the companies' own career pages, several times a day. No aggregator — the opening shows up as soon as it's posted."
+      "curriculum": {
+        "question": "Does ScrapJobs modify my résumé?",
+        "answer": "No. It analyzes compatibility and generates a prompt to use in another AI together with your PDF."
       },
-      {
-        "q": "Can I cancel anytime?",
-        "a": "Yes. No lock-in — cancel whenever you want from the dashboard."
+      "cancel": {
+        "question": "Can I cancel at any time?",
+        "answer": "Yes, with no lock-in, directly from the dashboard."
+      },
+      "company": {
+        "question": "Can I request another company?",
+        "answer": "Yes. Send the career-page URL and the team will assess whether it can be added to monitoring."
       }
-    ]
+    }
   },
   "footer": {
     "terms": "Terms of Service",
@@ -130,10 +130,10 @@
     "disclaimer": "The brands, logos, and company names displayed belong to their respective owners and are used for identification purposes only. ScrapJobs has no affiliation, sponsorship, or endorsement from these companies."
   },
   "ctaFinal": {
-    "title": "Let Norte run the search",
-    "titleHighlight": "for you",
-    "subtitle": "While you get on with life, it watches the openings and prepares your CV.",
-    "cta": "Start free"
+    "title": "Stop searching for jobs every day.",
+    "subtitle": "Tell us what you want and let ScrapJobs monitor company career pages for you.",
+    "cta": "Get jobs on WhatsApp",
+    "microcopy": "Start with 3 questions and see the result before choosing a plan."
   },
   "pricing": {
     "overline": "Plans",

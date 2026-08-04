@@ -5,12 +5,13 @@ import {
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/accordion'
+import { trackLanding } from '@/lib/analytics'
 import { SectionWrapper } from './section-wrapper'
+
+const FAQ_KEYS = ['origin', 'initialFree', 'whatsapp', 'curriculum', 'cancel', 'company'] as const
 
 export function FaqSection() {
   const { t } = useTranslation('landing')
-
-  const items = t('faq.items', { returnObjects: true }) as { q: string; a: string }[]
 
   return (
     <SectionWrapper id="faq">
@@ -18,7 +19,7 @@ export function FaqSection() {
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <span className="text-sm font-medium tracking-[2px] uppercase text-emerald-500">
-            {t('labels.faq')}
+            {t('faq.overline')}
           </span>
           <h2 className="font-display text-3xl lg:text-5xl font-semibold text-foreground leading-tight tracking-tight text-balance mt-3 mb-2">
             {t('faq.title')}
@@ -28,14 +29,19 @@ export function FaqSection() {
             type="single"
             collapsible
             className="grid md:grid-cols-2 gap-x-6 gap-y-0 mt-8 text-left"
+            onValueChange={(value) => {
+              if (!value) return
+              const position = FAQ_KEYS.indexOf(value as (typeof FAQ_KEYS)[number]) + 1
+              if (position > 0) trackLanding('lp_faq_open', { item_key: value, position })
+            }}
           >
-            {items.map((item, i) => (
-              <AccordionItem key={i} value={`item-${i}`} className="border-b border-border">
+            {FAQ_KEYS.map((key) => (
+              <AccordionItem key={key} value={key} className="border-b border-border">
                 <AccordionTrigger className="text-base font-medium text-foreground py-4 hover:bg-muted px-2 rounded hover:no-underline">
-                  {item.q}
+                  {t(`faq.items.${key}.question`)}
                 </AccordionTrigger>
                 <AccordionContent className="text-[15px] text-muted-foreground leading-relaxed pb-4 px-2">
-                  {item.a}
+                  {t(`faq.items.${key}.answer`)}
                 </AccordionContent>
               </AccordionItem>
             ))}

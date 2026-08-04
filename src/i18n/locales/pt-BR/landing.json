@@ -8,11 +8,6 @@
     "cta": "Receber vagas",
     "ariaLabel": "Navegação principal"
   },
-  "labels": {
-    "howItWorks": "COMO FUNCIONA",
-    "pricing": "PLANOS",
-    "faq": "FAQ"
-  },
   "hero": {
     "eyebrow": "Vagas direto das empresas",
     "headingLead": "Receba as vagas mais recentes no seu",
@@ -99,29 +94,34 @@
     }
   },
   "faq": {
+    "overline": "FAQ",
     "title": "Perguntas frequentes",
-    "items": [
-      {
-        "q": "O Norte é um robô?",
-        "a": "É um assistente com IA — mas treinado pra falar como gente e resolver de verdade. Se você quiser, ou se ele travar, uma pessoa de verdade assume a conversa."
+    "items": {
+      "origin": {
+        "question": "De onde vêm as vagas?",
+        "answer": "Das páginas de carreira das empresas monitoradas, consultadas várias vezes ao dia."
       },
-      {
-        "q": "Vocês têm meu número? É seguro?",
-        "a": "Só usamos seu WhatsApp pra te mandar as vagas e conversar sobre sua busca. Sem spam, você sai quando quiser, e seguimos a LGPD."
+      "initialFree": {
+        "question": "A conversa inicial é gratuita?",
+        "answer": "Sim. Você responde três perguntas e vê a quantidade de vagas. O acesso e o monitoramento contínuo exigem assinatura."
       },
-      {
-        "q": "E se eu não usar WhatsApp?",
-        "a": "Sem problema. O Norte também fala por email, e o painel web tem tudo."
+      "whatsapp": {
+        "question": "Preciso usar WhatsApp?",
+        "answer": "O início e a verificação acontecem pelo WhatsApp. Depois, você pode trocar o canal de alertas para email e usar o painel web."
       },
-      {
-        "q": "As vagas são reais? De onde vêm?",
-        "a": "Sim. Coletamos direto das páginas de carreira das próprias empresas, várias vezes ao dia. Nada de agregador — a vaga aparece assim que sai na fonte."
+      "curriculum": {
+        "question": "O ScrapJobs modifica meu currículo?",
+        "answer": "Não. Ele analisa a compatibilidade e gera um prompt para uso em outra IA junto com o PDF."
       },
-      {
-        "q": "Posso cancelar quando quiser?",
-        "a": "Pode. Sem fidelidade — cancele a qualquer momento direto no painel."
+      "cancel": {
+        "question": "Posso cancelar quando quiser?",
+        "answer": "Sim, sem fidelidade, diretamente pelo painel."
+      },
+      "company": {
+        "question": "Posso pedir outra empresa?",
+        "answer": "Sim. Envie a página de carreiras, e o time avalia se ela pode entrar no monitoramento."
       }
-    ]
+    }
   },
   "footer": {
     "terms": "Termos de Serviço",
@@ -130,10 +130,10 @@
     "disclaimer": "As marcas, logotipos e nomes de empresas exibidos pertencem aos seus respectivos proprietários e são usados apenas para identificação. O ScrapJobs não possui afiliação, patrocínio ou endosso dessas empresas."
   },
   "ctaFinal": {
-    "title": "Deixa o Norte cuidar da busca",
-    "titleHighlight": "por você",
-    "subtitle": "Enquanto você toca o resto da vida, ele vigia as vagas e prepara seu CV.",
-    "cta": "Começar grátis"
+    "title": "Pare de procurar vaga todos os dias.",
+    "subtitle": "Conte o que você busca e deixe o ScrapJobs acompanhar as páginas das empresas para você.",
+    "cta": "Receber vagas no WhatsApp",
+    "microcopy": "Comece com 3 perguntas e veja o resultado antes de escolher um plano."
   },
   "pricing": {
     "overline": "Planos",

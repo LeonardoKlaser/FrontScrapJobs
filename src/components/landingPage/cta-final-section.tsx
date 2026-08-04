@@ -11,8 +11,7 @@ export function CtaFinalSection() {
     <SectionWrapper className="py-16 lg:py-20 px-6 bg-primary/5">
       <div className="max-w-2xl mx-auto text-center space-y-6">
         <h2 className="font-display text-3xl lg:text-5xl font-semibold text-foreground">
-          {t('ctaFinal.title')}{' '}
-          <span className="text-gradient-primary">{t('ctaFinal.titleHighlight')}</span>
+          {t('ctaFinal.title')}
         </h2>
 
         <p className="text-base text-muted-foreground">{t('ctaFinal.subtitle')}</p>
@@ -21,6 +20,8 @@ export function CtaFinalSection() {
           {t('ctaFinal.cta')}
           <ArrowRight className="w-5 h-5 ml-1" />
         </WhatsAppCtaButton>
+
+        <p className="text-sm text-muted-foreground">{t('ctaFinal.microcopy')}</p>
       </div>
     </SectionWrapper>
   )

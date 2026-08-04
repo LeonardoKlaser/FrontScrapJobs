@@ -21,13 +21,17 @@ afterEach(() => vi.unstubAllEnvs())
 describe('CtaFinalSection', () => {
   it('renders the final CTA copy', () => {
     render(<CtaFinalSection />)
-    expect(screen.getByText('Começar grátis')).toBeInTheDocument()
+    expect(screen.getByText('Pare de procurar vaga todos os dias.')).toBeInTheDocument()
+    expect(
+      screen.getByText('Comece com 3 perguntas e veja o resultado antes de escolher um plano.')
+    ).toBeInTheDocument()
+    expect(screen.getByText('Receber vagas no WhatsApp')).toBeInTheDocument()
   })
 
   it('tracks section:final and opens the WhatsApp modal on click', () => {
     const track = vi.spyOn(analytics, 'trackLanding').mockImplementation(() => {})
     render(<CtaFinalSection />)
-    fireEvent.click(screen.getByRole('button', { name: /Começar grátis/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Receber vagas no WhatsApp/ }))
     expect(track).toHaveBeenCalledWith('lp_whatsapp_click', {
       section: 'final',
       device: 'desktop',
