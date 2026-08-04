@@ -3,11 +3,17 @@ import { render, screen } from '@testing-library/react'
 import { HowItWorksStrip } from '@/components/landingPage/how-it-works-strip'
 
 describe('HowItWorksStrip', () => {
-  it('renders the 4-step WhatsApp flow', () => {
+  it('explica as três perguntas, o resultado e a assinatura', () => {
     render(<HowItWorksStrip />)
-    expect(screen.getByText(/à vaga certa, em 4 passos/)).toBeInTheDocument()
-    expect(screen.getByText('Crie a conta e conecte o WhatsApp')).toBeInTheDocument()
-    expect(screen.getByText('Peça análise e CV otimizado no chat')).toBeInTheDocument()
+    expect(screen.getByText('Comece pelo WhatsApp')).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: 'Veja suas oportunidades em 3 perguntas' })
+    ).toBeInTheDocument()
+    expect(screen.getByText('Conte o que você procura')).toBeInTheDocument()
+    expect(screen.getByText('Veja o resultado')).toBeInTheDocument()
+    expect(screen.getByText('Escolha seu plano')).toBeInTheDocument()
+    expect(screen.getByText(/consulta inicial são gratuitas/i)).toBeInTheDocument()
+    expect(screen.getAllByRole('listitem')).toHaveLength(3)
   })
 
   it('keeps the howItWorks anchor id', () => {

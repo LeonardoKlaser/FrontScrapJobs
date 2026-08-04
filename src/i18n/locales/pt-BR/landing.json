@@ -38,12 +38,25 @@
     "sites": "empresas monitoradas",
     "jobs": "vagas disponíveis"
   },
-  "howItWorksNew": {
-    "headline": "Do \"oi\" à vaga certa, em 4 passos",
-    "step1Title": "Crie a conta e conecte o WhatsApp",
-    "step2Title": "Escolha as empresas que quer vigiar",
-    "step3Title": "O Norte te avisa das vagas novas",
-    "step4Title": "Peça análise e CV otimizado no chat"
+  "howItWorks": {
+    "overline": "Comece pelo WhatsApp",
+    "title": "Veja suas oportunidades em 3 perguntas",
+    "description": "A conversa inicial identifica o que você procura e mostra o volume de vagas antes de você escolher um plano.",
+    "steps": {
+      "profile": {
+        "title": "Conte o que você procura",
+        "body": "Informe sua área, seu nível de experiência e as regiões de interesse."
+      },
+      "result": {
+        "title": "Veja o resultado",
+        "body": "O ScrapJobs consulta as vagas disponíveis e mostra quantas combinam com o perfil."
+      },
+      "plan": {
+        "title": "Escolha seu plano",
+        "body": "Assine para acessar as oportunidades encontradas e receber as próximas automaticamente."
+      }
+    },
+    "note": "A conversa e a consulta inicial são gratuitas. O acesso às vagas e o monitoramento contínuo fazem parte da assinatura."
   },
   "norteDoes": {
     "overline": "Seu parceiro de carreira",

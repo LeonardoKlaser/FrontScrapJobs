@@ -38,12 +38,25 @@
     "sites": "monitored companies",
     "jobs": "available jobs"
   },
-  "howItWorksNew": {
-    "headline": "From \"hi\" to the right role, in 4 steps",
-    "step1Title": "Create your account and connect WhatsApp",
-    "step2Title": "Pick the companies you want to watch",
-    "step3Title": "Norte flags new openings for you",
-    "step4Title": "Ask for analysis and a tailored CV in the chat"
+  "howItWorks": {
+    "overline": "Start on WhatsApp",
+    "title": "See your opportunities in 3 questions",
+    "description": "The initial conversation identifies what you are looking for and shows the number of jobs before you choose a plan.",
+    "steps": {
+      "profile": {
+        "title": "Tell us what you want",
+        "body": "Share your field, experience level, and preferred locations."
+      },
+      "result": {
+        "title": "See the result",
+        "body": "ScrapJobs checks available jobs and shows how many match your profile."
+      },
+      "plan": {
+        "title": "Choose your plan",
+        "body": "Subscribe to access the opportunities and receive the next matching jobs automatically."
+      }
+    },
+    "note": "The conversation and initial search are free. Job access and continuous monitoring are included with a subscription."
   },
   "norteDoes": {
     "overline": "Your career partner",
