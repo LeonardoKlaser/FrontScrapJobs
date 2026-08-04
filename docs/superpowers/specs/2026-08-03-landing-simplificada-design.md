@@ -1,7 +1,7 @@
 # Landing simplificada e alinhada ao produto — Design
 
 - Data: 2026-08-03
-- Status: revisado pelo Codex; aguardando aprovação final
+- Status: aprovado pelo usuário
 - Repositório: `FrontScrapJobs`
 
 ## 1. Objetivo
