@@ -29,6 +29,8 @@ react-i18next, Tailwind CSS 4, Radix UI, Vitest, Testing Library e Playwright.
 - Nomes, preços, `max_sites`, `max_ai_analyses` e `is_ultra` vêm da API.
 - Não renderizar `plan.features`; os benefícios são localizados no frontend.
 - `npm run build` funciona sem número; o `Dockerfile` falha sem `VITE_NORTE_WA_NUMBER`.
+- Exceção de TDD aprovada para o `Dockerfile`: validar com um build que passa com o número e outro
+  que falha sem ele, sem teste unitário artificial.
 - Preservar o `AGENTS.md` não rastreado, que pertence ao usuário.
 - Implementar cada tarefa em TDD e criar um commit focado após sua verificação.
 
@@ -41,7 +43,6 @@ react-i18next, Tailwind CSS 4, Radix UI, Vitest, Testing Library e Playwright.
 - `src/components/landingPage/landing-plan-benefits.ts`
 - `src/components/landingPage/__tests__/landing-plan-benefits.test.ts`
 - `src/components/landingPage/__tests__/pricing-section.test.tsx`
-- `src/components/landingPage/__tests__/landing-copy.test.ts`
 
 **Modify:**
 
@@ -970,11 +971,10 @@ git add src/components/landingPage/faq-section.tsx src/components/landingPage/ct
 git commit -m "feat(landing): fecha copy e FAQ transparentes"
 ```
 
-### Task 7: Lock SEO, translation parity and accessibility requirements
+### Task 7: Lock SEO and accessibility requirements
 
 **Files:**
 
-- Create: `src/components/landingPage/__tests__/landing-copy.test.ts`
 - Modify: `index.html`
 - Modify: `src/components/landingPage/section-wrapper.tsx`
 - Modify: `src/components/landingPage/__tests__/section-wrapper.test.tsx`
@@ -984,46 +984,21 @@ git commit -m "feat(landing): fecha copy e FAQ transparentes"
 
 - Preserves exactly one H1.
 - Produces anchor offset through `scroll-mt-20`.
-- Treats both locale files as the source of landing copy.
+- Leaves copy coverage to rendered component tests and the bilingual E2E in Task 8.
 
-- [ ] **Step 1: Write failing copy and anchor invariants**
+- [ ] **Step 1: Write the failing anchor invariant**
 
-Create `landing-copy.test.ts`:
-
-```ts
-import ptBR from '@/i18n/locales/pt-BR/landing.json'
-import enUS from '@/i18n/locales/en-US/landing.json'
-
-function leafKeys(value: unknown, prefix = ''): string[] {
-  if (typeof value !== 'object' || value === null) return [prefix]
-  return Object.entries(value).flatMap(([key, child]) =>
-    leafKeys(child, prefix ? `${prefix}.${key}` : key)
-  )
-}
-
-describe('landing copy', () => {
-  it('mantém paridade estrutural entre pt-BR e en-US', () => {
-    expect(leafKeys(enUS).sort()).toEqual(leafKeys(ptBR).sort())
-  })
-
-  it('não contém promessas removidas', () => {
-    const copy = `${JSON.stringify(ptBR)} ${JSON.stringify(enUS)}`
-    expect(copy).not.toMatch(
-      /começar grátis|start free|cv otimizado|tailored cv|reescreve seu cv|rewrites your cv|pdf sob medida|tailored pdf|antes de todo mundo|before everyone else|criptografia de ponta a ponta|end-to-end encryption/i
-    )
-  })
-})
-```
-
-Add a `SectionWrapper` test asserting outer `section#pricing` has `scroll-mt-20`.
+Add a `SectionWrapper` test asserting outer `section#pricing` has `scroll-mt-20`. Copy truth is
+asserted at rendered component boundaries in Tasks 2–6 and across pt-BR/en-US in Task 8; do not add
+tests or validation commands that inspect locale source text directly.
 
 - [ ] **Step 2: Run tests and confirm RED**
 
 ```bash
-npx vitest run src/components/landingPage/__tests__/landing-copy.test.ts src/components/landingPage/__tests__/section-wrapper.test.tsx
+npx vitest run src/components/landingPage/__tests__/section-wrapper.test.tsx
 ```
 
-Expected: FAIL until obsolete keys are gone and anchor offset exists.
+Expected: FAIL until the anchor offset exists.
 
 - [ ] **Step 3: Centralize fixed-navbar anchor offset**
 
@@ -1049,7 +1024,7 @@ offset in those components.
 
 Keep `twitter:card="summary"`, canonical URL, theme color and favicon. Do not add `og:image`.
 
-- [ ] **Step 5: Verify keyboard, motion and forbidden-copy behavior**
+- [ ] **Step 5: Verify keyboard and reduced-motion behavior**
 
 Extend the dialog test with `userEvent`: focus the CTA, press Enter, assert the dialog is visible,
 press Escape, and assert it closes. Then run:
@@ -1057,15 +1032,15 @@ press Escape, and assert it closes. Then run:
 ```bash
 npx vitest run src/components/landingPage
 rg -n "prefers-reduced-motion" src/index.css
-rg -n -i "CV otimizado|tailored CV|reescreve seu CV|rewrites your CV|PDF sob medida|tailored PDF|antes de todo mundo|before everyone else|end-to-end encryption|Começar grátis|Start free" index.html src/components/landingPage src/i18n/locales/pt-BR/landing.json src/i18n/locales/en-US/landing.json
 ```
 
-Expected: Vitest PASS; reduced-motion rule found; final `rg` exits 1 with no matches.
+Expected: Vitest PASS and reduced-motion rule found. Truthful copy is verified through the rendered
+component assertions from Tasks 2–6 and the integrated browser assertions from Task 8.
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add index.html src/components/landingPage/section-wrapper.tsx src/components/landingPage/__tests__/section-wrapper.test.tsx src/components/landingPage/__tests__/landing-copy.test.ts src/components/landingPage/__tests__/whatsapp-cta-button.test.tsx
+git add index.html src/components/landingPage/section-wrapper.tsx src/components/landingPage/__tests__/section-wrapper.test.tsx src/components/landingPage/__tests__/whatsapp-cta-button.test.tsx
 git commit -m "test(landing): trava verdade e acessibilidade da copy"
 ```
 
