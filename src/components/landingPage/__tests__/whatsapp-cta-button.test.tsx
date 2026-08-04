@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { WhatsAppCtaButton } from '@/components/landingPage/whatsapp-cta-button'
 import * as analytics from '@/lib/analytics'
 
@@ -45,6 +46,21 @@ describe('WhatsAppCtaButton', () => {
       'data:image/png;base64,AAAA'
     )
     expect(screen.getByText(/Aponte a câmera do celular/)).toBeInTheDocument()
+  })
+
+  it('desktop: Enter abre e Escape fecha o dialog do CTA focado', async () => {
+    const user = userEvent.setup()
+    render(<WhatsAppCtaButton section="hero">Começar grátis</WhatsAppCtaButton>)
+
+    const cta = screen.getByRole('button', { name: 'Começar grátis' })
+    cta.focus()
+    await user.keyboard('{Enter}')
+
+    expect(await screen.findByRole('dialog')).toBeInTheDocument()
+
+    await user.keyboard('{Escape}')
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
   it('mobile: navega pro wa.me direto (um tick depois) e nao abre o modal', () => {

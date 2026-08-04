@@ -12,6 +12,16 @@ describe('SectionWrapper', () => {
     expect(container.querySelector('section#pricing')).not.toBeNull()
   })
 
+  it('offsets anchors below the fixed navbar', () => {
+    const { container } = render(
+      <SectionWrapper id="pricing">
+        <p>content</p>
+      </SectionWrapper>
+    )
+
+    expect(container.querySelector('section#pricing')).toHaveClass('scroll-mt-20')
+  })
+
   it('drops the striped side rails', () => {
     const { container } = render(
       <SectionWrapper id="faq">
