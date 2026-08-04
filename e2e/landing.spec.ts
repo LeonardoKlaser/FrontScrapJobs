@@ -2,99 +2,179 @@ import { test, expect } from '@playwright/test'
 
 test.describe('landing page', () => {
   test.beforeEach(async ({ page }) => {
-    // PricingSection renderiza um skeleton enquanto usePlans carrega — sem este
-    // mock o card de trial (#cta-plan-trial) nunca aparece e o último teste falha.
-    // O card de trial só é renderizado para um plano com is_trial: true.
+    await page.route('**/api/public/stats', (route) =>
+      route.fulfill({ json: { monitored_sites: 101, total_jobs: 2840 } })
+    )
+    await page.route('**/api/public/sites/logos', (route) => route.fulfill({ json: [] }))
     await page.route('**/api/plans', (route) =>
       route.fulfill({
         json: [
           {
-            id: 1,
-            name: 'Trial',
-            price: 0,
-            max_sites: 5,
-            max_ai_analyses: 3,
-            is_trial: true,
-            features: ['radar', 'ats', 'pdf']
+            id: 2,
+            name: 'Profissional',
+            price: 19.9,
+            max_sites: 40,
+            max_ai_analyses: 20,
+            is_trial: false,
+            is_ultra: false,
+            features: ['NÃO DEVE APARECER']
           },
           {
-            id: 2,
-            name: 'Mensal',
-            price: 4990,
-            max_sites: 10,
-            max_ai_analyses: 10,
+            id: 3,
+            name: 'Ultra',
+            price: 29.9,
+            max_sites: 0,
+            max_ai_analyses: 50,
             is_trial: false,
-            features: ['radar', 'ats', 'pdf']
+            is_ultra: true,
+            features: ['NÃO DEVE APARECER']
           }
         ]
       })
     )
   })
 
-  test('navbar anchors scroll to their sections and the navbar CTA opens the WhatsApp modal', async ({
-    page
-  }) => {
+  test('covers the complete desktop journey and conversion paths', async ({ page }) => {
     await page.goto('/')
 
-    await page.getByRole('button', { name: 'Como funciona' }).click()
-    await expect(page.locator('#howItWorks')).toBeInViewport()
+    await expect(page).toHaveTitle('ScrapJobs — Vagas recentes no seu WhatsApp')
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+      'content',
+      'O ScrapJobs monitora páginas de carreira, encontra vagas compatíveis com seu perfil e envia as novidades no seu WhatsApp.'
+    )
 
-    await page.getByRole('button', { name: 'Planos' }).click()
-    await expect(page.locator('#pricing')).toBeInViewport()
+    const hero = page.locator('section').first()
+    await expect(
+      hero.getByRole('heading', {
+        level: 1,
+        name: 'Receba as vagas mais recentes no seu WhatsApp.'
+      })
+    ).toBeVisible()
+    await expect(hero.locator('ul > li')).toHaveText([
+      'Tecnologia',
+      'Marketing',
+      'Vendas',
+      'RH',
+      'Finanças',
+      'Design',
+      'Dados'
+    ])
 
-    await page.getByRole('button', { name: 'FAQ' }).click()
-    await expect(page.locator('#faq')).toBeInViewport()
+    const statsLine = page
+      .locator('section')
+      .filter({ hasText: 'vagas disponíveis' })
+      .first()
+      .locator('p')
+    await statsLine.scrollIntoViewIfNeeded()
+    await expect(statsLine).toContainText('101 empresas monitoradas · 2.840 vagas disponíveis')
 
-    // 'Começar agora' aparece em mais de um lugar — escopa a navbar. No
-    // Chromium desktop (sem sessão de WhatsApp) o CTA sempre abre o modal com
-    // QR — não navega mais direto pro wa.me nem rola até #pricing.
-    await page.getByRole('navigation').getByRole('button', { name: 'Começar agora' }).click()
+    const navigation = page.getByRole('navigation', { name: 'Navegação principal' })
+    for (const [name, target] of [
+      ['Como funciona', '#howItWorks'],
+      ['O que está incluído', '#included'],
+      ['Planos', '#pricing'],
+      ['FAQ', '#faq']
+    ] as const) {
+      await navigation.getByRole('button', { name }).click()
+      await expect(page.locator(target)).toBeInViewport()
+    }
+
+    const howItWorks = page.locator('#howItWorks')
+    await expect(
+      howItWorks.getByRole('heading', {
+        level: 2,
+        name: 'Veja suas oportunidades em 3 perguntas'
+      })
+    ).toBeVisible()
+    await expect(howItWorks.getByRole('heading', { level: 3 })).toHaveText([
+      'Conte o que você procura',
+      'Veja o resultado',
+      'Escolha seu plano'
+    ])
+
+    const included = page.locator('#included')
+    await expect(
+      included.getByRole('heading', { level: 2, name: 'Da descoberta à candidatura' })
+    ).toBeVisible()
+    await expect(included.getByTestId('journey-feature')).toHaveCount(5)
+
+    const pricing = page.locator('#pricing')
+    await expect(pricing.getByText(/^R\$\s*19,90$/)).toBeVisible()
+    await expect(pricing.getByText(/^R\$\s*29,90$/)).toBeVisible()
+
+    const faq = page.locator('#faq')
+    await expect(faq.getByRole('button')).toHaveText([
+      'De onde vêm as vagas?',
+      'A conversa inicial é gratuita?',
+      'Preciso usar WhatsApp?',
+      'O ScrapJobs modifica meu currículo?',
+      'Posso cancelar quando quiser?',
+      'Posso pedir outra empresa?'
+    ])
+
+    const closing = page
+      .getByRole('heading', { level: 2, name: 'Pare de procurar vaga todos os dias.' })
+      .locator('xpath=ancestor::section')
+    await closing.scrollIntoViewIfNeeded()
+    await expect(closing.getByRole('button', { name: 'Receber vagas no WhatsApp' })).toBeVisible()
+    await expect(page.getByText('NÃO DEVE APARECER')).toHaveCount(0)
+    await expect(page.getByText('Começar grátis')).toHaveCount(0)
+
+    await hero.getByRole('button', { name: 'Receber vagas no WhatsApp' }).click()
 
     const dialog = page.getByRole('dialog')
     await expect(dialog).toBeVisible()
     await expect(dialog.getByText('Fale com o Norte no seu WhatsApp')).toBeVisible()
     await expect(dialog.getByAltText('QR code para abrir o WhatsApp do Norte')).toBeVisible()
 
-    // Exige um número de verdade depois de "wa.me/" — não só o prefixo do
-    // domínio. Sem VITE_NORTE_WA_NUMBER plumbado (ver playwright.config.ts),
-    // o link sobe como "https://wa.me/?text=..." sem destinatário, e esse
-    // assert pegaria essa regressão (é o buraco que passava despercebido
-    // quando a checagem era só /^https:\/\/wa\.me\//).
-    // Sufixo #lpw (encodado como %23lpw na querystring) dá atribuição de
-    // origem "web" pro backend — distingue de #lp (mobile) e #lpq (QR).
     const webLink = dialog.getByRole('link', { name: 'Ou abrir no WhatsApp Web' })
     await expect(webLink).toHaveAttribute('href', /^https:\/\/wa\.me\/\d+\?text=/)
     await expect(webLink).toHaveAttribute('href', /%23lpw$/)
-  })
 
-  test('hero CTA opens the WhatsApp modal and the paid plan CTA routes to /signup', async ({
-    page
-  }) => {
-    await page.goto('/')
-    // 'Começar grátis' aparece no hero e no CTA final — o hero é o primeiro no DOM.
-    await page
-      .getByRole('button', { name: /Começar grátis/ })
-      .first()
-      .click()
-
-    const dialog = page.getByRole('dialog')
-    await expect(dialog).toBeVisible()
-    await expect(dialog.getByText('Fale com o Norte no seu WhatsApp')).toBeVisible()
-
-    // Fecha o modal pra não bloquear o clique na seção de planos logo abaixo.
     await page.keyboard.press('Escape')
     await expect(dialog).not.toBeVisible()
 
-    // O CTA do hero não rola mais até #pricing (agora abre o WhatsApp) —
-    // chega lá pela âncora da navbar, que continua com o comportamento antigo.
-    await page.getByRole('navigation').getByRole('button', { name: 'Planos' }).click()
-    await expect(page.locator('#pricing')).toBeInViewport()
+    await pricing.getByRole('button', { name: 'Assinar Profissional' }).click()
+    await expect(page).toHaveURL(/\/signup\?plan=2$/)
+  })
 
-    // PricingSection só renderiza cards pra planos pagos (is_trial: false) —
-    // ver pricing-section.tsx:40. O plano trial não tem CTA nenhum na landing
-    // hoje, então não há mais um #cta-plan-trial pra clicar; seleciona pelo id
-    // estável do plano pago mockado acima ("Mensal" → #cta-plan-mensal).
-    await page.locator('#cta-plan-mensal').click()
-    await expect(page).toHaveURL(/\/signup\?plan=2/)
+  test('keeps the mobile hero visible without horizontal overflow', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/')
+
+    const hero = page.locator('section').first()
+    await expect(
+      hero.getByRole('heading', {
+        level: 1,
+        name: 'Receba as vagas mais recentes no seu WhatsApp.'
+      })
+    ).toBeVisible()
+    await expect(hero.getByRole('button', { name: 'Receber vagas no WhatsApp' })).toBeVisible()
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(
+      await page.evaluate(() => document.documentElement.clientWidth)
+    )
+  })
+
+  test('renders the approved English journey without Portuguese fallback', async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('i18n-lng', 'en-US'))
+    await page.goto('/')
+
+    await expect(
+      page.getByRole('heading', {
+        level: 1,
+        name: 'Get the latest jobs on your WhatsApp.'
+      })
+    ).toBeVisible()
+    await expect(
+      page.getByRole('navigation', { name: 'Main navigation' }).getByRole('button', {
+        name: "What's included"
+      })
+    ).toBeVisible()
+    await expect(
+      page.getByRole('heading', { level: 2, name: 'Choose how much you want to monitor' })
+    ).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Get jobs on WhatsApp' }).first()).toBeVisible()
+    await expect(page.getByText('Receba as vagas mais recentes no seu WhatsApp.')).toHaveCount(0)
+    await expect(page.getByText('O que está incluído')).toHaveCount(0)
   })
 })
