@@ -38,6 +38,9 @@ export function LandingNavbar() {
           <button type="button" onClick={() => scrollToId('howItWorks')} className={anchorClass}>
             {t('navbar.howItWorks')}
           </button>
+          <button type="button" onClick={() => scrollToId('included')} className={anchorClass}>
+            {t('navbar.included')}
+          </button>
           <button type="button" onClick={() => scrollToId('pricing')} className={anchorClass}>
             {t('navbar.pricing')}
           </button>

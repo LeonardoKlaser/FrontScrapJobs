@@ -6,7 +6,9 @@ import * as analytics from '@/lib/analytics'
 import * as landingCta from '@/components/landingPage/landing-cta'
 
 vi.mock('qrcode', () => ({
-  default: { toDataURL: vi.fn().mockResolvedValue('data:image/png;base64,AAAA') }
+  default: {
+    toDataURL: vi.fn().mockResolvedValue('data:image/png;base64,AAAA')
+  }
 }))
 
 function renderNavbar() {
@@ -33,6 +35,7 @@ describe('LandingNavbar', () => {
     renderNavbar()
     expect(screen.getByRole('navigation', { name: 'Navegação principal' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Como funciona' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'O que está incluído' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Planos' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'FAQ' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Entrar' })).toHaveAttribute('href', '/login')
@@ -44,6 +47,8 @@ describe('LandingNavbar', () => {
     renderNavbar()
     fireEvent.click(screen.getByRole('button', { name: 'Como funciona' }))
     expect(spy).toHaveBeenCalledWith('howItWorks')
+    fireEvent.click(screen.getByRole('button', { name: 'O que está incluído' }))
+    expect(spy).toHaveBeenCalledWith('included')
     fireEvent.click(screen.getByRole('button', { name: 'Planos' }))
     expect(spy).toHaveBeenCalledWith('pricing')
     fireEvent.click(screen.getByRole('button', { name: 'FAQ' }))

@@ -1,6 +1,7 @@
 {
   "navbar": {
     "howItWorks": "Como funciona",
+    "included": "O que está incluído",
     "pricing": "Planos",
     "faq": "FAQ",
     "login": "Entrar",
@@ -58,25 +59,44 @@
     },
     "note": "A conversa e a consulta inicial são gratuitas. O acesso às vagas e o monitoramento contínuo fazem parte da assinatura."
   },
-  "norteDoes": {
-    "overline": "Seu parceiro de carreira",
-    "title": "O que o Norte faz por você",
-    "alertTitle": "Avisa das vagas antes de todo mundo",
-    "alertBody": "Direto da página de carreira das empresas, não de agregador. Você recebe só o que é da sua área — sem garimpar o dia inteiro.",
-    "matchTitle": "Mostra por que seu CV é descartado",
-    "matchBody": "A IA compara seu currículo com a vaga e revela o match, o que você já tem e o que falta pra passar no filtro ATS — antes de você aplicar.",
-    "pdfTitle": "Reescreve seu CV pra cada vaga",
-    "pdfBody": "Um PDF sob medida, com as palavras-chave certas da vaga — sem você reescrever nada do zero. É só pedir no chat."
-  },
-  "multicanal": {
-    "title": "No canal que você preferir",
-    "subtitle": "O WhatsApp é a forma mais rápida de falar com o Norte — mas não é a única.",
-    "whatsappTitle": "WhatsApp",
-    "whatsappBody": "Converse, receba vagas e peça seu CV — no zap que você já usa.",
-    "emailTitle": "Email",
-    "emailBody": "Prefere não usar WhatsApp? Ele manda o resumo das vagas por email.",
-    "webTitle": "Painel web",
-    "webBody": "Controle total: histórico, currículos e configurações num só lugar."
+  "included": {
+    "overline": "Uma assinatura, todo o sistema",
+    "title": "Da descoberta à candidatura",
+    "description": "Cada recurso resolve uma parte da busca por emprego. Juntos, eles reduzem o trabalho repetitivo e ajudam você a decidir onde vale a pena aplicar.",
+    "features": {
+      "radar": {
+        "title": "Radar de vagas",
+        "body": "Monitora páginas de carreira das empresas várias vezes ao dia."
+      },
+      "selection": {
+        "title": "Seleção personalizada",
+        "body": "Filtra vagas de acordo com seu perfil e suas preferências."
+      },
+      "alerts": {
+        "title": "Alertas de vagas",
+        "body": "Entrega oportunidades pelo canal escolhido: WhatsApp ou email."
+      },
+      "analysis": {
+        "title": "Análise de compatibilidade",
+        "body": "Compara vaga e currículo e aponta forças, lacunas e palavras-chave."
+      },
+      "prompt": {
+        "title": "Prompt de otimização",
+        "body": "Gera instruções para adaptar o currículo no ChatGPT, Claude ou Gemini."
+      }
+    },
+    "promptNote": "O prompt prepara instruções personalizadas para você usar junto com seu PDF em outra IA. O ScrapJobs não reescreve nem gera um novo currículo.",
+    "interfacesTitle": "Use do seu jeito",
+    "interfaces": {
+      "norte": {
+        "title": "Norte no WhatsApp",
+        "body": "Pesquise vagas, peça análises, envie currículo e altere preferências conversando."
+      },
+      "dashboard": {
+        "title": "Painel ScrapJobs",
+        "body": "Acompanhe vagas, empresas monitoradas, currículos e configurações."
+      }
+    }
   },
   "faq": {
     "title": "Perguntas frequentes",
