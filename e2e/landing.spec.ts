@@ -1,4 +1,30 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Locator } from '@playwright/test'
+
+interface OrderedElement {
+  name: string
+  locator: Locator
+}
+
+async function expectDomOrder(elements: OrderedElement[]) {
+  const handles = await Promise.all(elements.map(({ locator }) => locator.elementHandle()))
+  expect(handles).not.toContain(null)
+
+  for (let index = 0; index < handles.length - 1; index++) {
+    const current = handles[index]
+    const next = handles[index + 1]
+    if (!current || !next) throw new Error('Expected every ordered element to exist')
+
+    const nextFollowsCurrent = await current.evaluate(
+      (node, following) =>
+        Boolean(node.compareDocumentPosition(following) & Node.DOCUMENT_POSITION_FOLLOWING),
+      next
+    )
+    expect(
+      nextFollowsCurrent,
+      `${elements[index].name} should precede ${elements[index + 1].name}`
+    ).toBe(true)
+  }
+}
 
 test.describe('landing page', () => {
   test.beforeEach(async ({ page }) => {
@@ -43,13 +69,12 @@ test.describe('landing page', () => {
       'O ScrapJobs monitora páginas de carreira, encontra vagas compatíveis com seu perfil e envia as novidades no seu WhatsApp.'
     )
 
-    const hero = page.locator('section').first()
-    await expect(
-      hero.getByRole('heading', {
-        level: 1,
-        name: 'Receba as vagas mais recentes no seu WhatsApp.'
-      })
-    ).toBeVisible()
+    const heroHeading = page.getByRole('heading', {
+      level: 1,
+      name: 'Receba as vagas mais recentes no seu WhatsApp.'
+    })
+    const hero = heroHeading.locator('xpath=ancestor::section')
+    await expect(heroHeading).toBeVisible()
     await expect(hero.locator('ul > li')).toHaveText([
       'Tecnologia',
       'Marketing',
@@ -119,6 +144,24 @@ test.describe('landing page', () => {
     await expect(closing.getByRole('button', { name: 'Receber vagas no WhatsApp' })).toBeVisible()
     await expect(page.getByText('NÃO DEVE APARECER')).toHaveCount(0)
     await expect(page.getByText('Começar grátis')).toHaveCount(0)
+
+    const proof = statsLine.locator('xpath=ancestor::section')
+    const footer = page.locator('footer')
+    await expect(page.locator('main > div > section, main > div > footer')).toHaveCount(8)
+    await expectDomOrder([
+      { name: 'navbar', locator: navigation },
+      { name: 'hero', locator: hero }
+    ])
+    await expectDomOrder([
+      { name: 'hero', locator: hero },
+      { name: 'proof', locator: proof },
+      { name: 'three steps', locator: howItWorks },
+      { name: 'included', locator: included },
+      { name: 'pricing', locator: pricing },
+      { name: 'FAQ', locator: faq },
+      { name: 'final CTA', locator: closing },
+      { name: 'footer', locator: footer }
+    ])
 
     await hero.getByRole('button', { name: 'Receber vagas no WhatsApp' }).click()
 
