@@ -20,7 +20,7 @@ export function Logo({
 }: LogoProps) {
   return (
     <div className={cn('flex items-center gap-2', className)}>
-      <LogoMark size={size} />
+      <LogoMark size={size} decorative={showText} />
       {showText && (
         <span
           className={cn(
@@ -37,11 +37,19 @@ export function Logo({
   )
 }
 
-export function LogoMark({ size = 32, className }: { size?: number; className?: string }) {
+export function LogoMark({
+  size = 32,
+  className,
+  decorative = false
+}: {
+  size?: number
+  className?: string
+  decorative?: boolean
+}) {
   return (
     <img
       src={faviconSrc}
-      alt="ScrapJobs"
+      alt={decorative ? '' : 'ScrapJobs'}
       width={size}
       height={size}
       className={cn('shrink-0 rounded', className)}

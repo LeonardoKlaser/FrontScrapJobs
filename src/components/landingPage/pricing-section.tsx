@@ -11,9 +11,10 @@ import { SectionWrapper } from './section-wrapper'
 
 export function PricingSection() {
   const { t, i18n } = useTranslation('landing')
-  const { data: plans, isLoading, isError, failureCount, refetch } = usePlans()
+  const { data: plans, isLoading, isError, isSuccess, errorUpdateCount, refetch } = usePlans()
   const navigate = useNavigate()
-  const lastTrackedFailureAttempt = useRef<number | null>(null)
+  const lastTrackedTerminalError = useRef<number | null>(null)
+  const visibleFailureAttempt = useRef(0)
 
   useEffect(() => {
     if (plans && window.location.hash === '#pricing') {
@@ -26,15 +27,16 @@ export function PricingSection() {
   }, [plans])
 
   useEffect(() => {
-    if (!isError) {
-      lastTrackedFailureAttempt.current = null
+    if (isSuccess) {
+      lastTrackedTerminalError.current = null
+      visibleFailureAttempt.current = 0
       return
     }
-    const attempt = Math.max(failureCount, 1)
-    if (lastTrackedFailureAttempt.current === attempt) return
-    lastTrackedFailureAttempt.current = attempt
-    trackLanding('lp_plans_load_error', { attempt })
-  }, [failureCount, isError])
+    if (!isError || lastTrackedTerminalError.current === errorUpdateCount) return
+    lastTrackedTerminalError.current = errorUpdateCount
+    visibleFailureAttempt.current += 1
+    trackLanding('lp_plans_load_error', { attempt: visibleFailureAttempt.current })
+  }, [errorUpdateCount, isError, isSuccess])
 
   const handleSubscribeDirect = (id: number, name: string, position: number) => {
     trackLanding('lp_plan_click', {

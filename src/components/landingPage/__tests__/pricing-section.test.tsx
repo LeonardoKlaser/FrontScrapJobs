@@ -1,17 +1,11 @@
+import { StrictMode, act } from 'react'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { StrictMode } from 'react'
 import { MemoryRouter, useLocation } from 'react-router'
 import type { Plan } from '@/models/plan'
+import { planService } from '@/services/planService'
 import { PricingSection } from '../pricing-section'
-
-const { usePlansMock, trackLandingMock } = vi.hoisted(() => ({
-  usePlansMock: vi.fn(),
-  trackLandingMock: vi.fn()
-}))
-
-vi.mock('@/hooks/usePlans', () => ({ usePlans: usePlansMock }))
-vi.mock('@/lib/analytics', () => ({ trackLanding: trackLandingMock }))
 
 const profissional: Plan = {
   id: 2,
@@ -35,20 +29,16 @@ const ultra: Plan = {
   features: ['NÃO RENDERIZAR']
 }
 
-const refetch = vi.fn()
-const successfulPlansState = {
-  data: [ultra, profissional],
-  isLoading: false,
-  isError: false,
-  failureCount: 0,
-  refetch
-}
-const failedPlansState = {
-  data: undefined,
-  isLoading: false,
-  isError: true,
-  failureCount: 1,
-  refetch
+const plans = [ultra, profissional]
+
+function createQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        retryDelay: 0
+      }
+    }
+  })
 }
 
 function CurrentLocation() {
@@ -56,44 +46,62 @@ function CurrentLocation() {
   return <output data-testid="location">{`${location.pathname}${location.search}`}</output>
 }
 
-function PricingTree({ strictMode = false }) {
+function PricingTree({
+  queryClient,
+  strictMode = false
+}: {
+  queryClient: QueryClient
+  strictMode?: boolean
+}) {
   const content = (
-    <MemoryRouter>
-      <PricingSection />
-      <CurrentLocation />
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>
+        <PricingSection />
+        <CurrentLocation />
+      </MemoryRouter>
+    </QueryClientProvider>
   )
 
   return strictMode ? <StrictMode>{content}</StrictMode> : content
 }
 
 function renderPricing({ strictMode = false } = {}) {
-  return render(<PricingTree strictMode={strictMode} />)
+  const queryClient = createQueryClient()
+  return {
+    queryClient,
+    ...render(<PricingTree queryClient={queryClient} strictMode={strictMode} />)
+  }
+}
+
+function plansLoadErrors() {
+  return (window.dataLayer ?? []).filter(({ event }) => event === 'lp_plans_load_error')
 }
 
 describe('PricingSection', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    vi.restoreAllMocks()
+    window.dataLayer = []
   })
 
-  it('renderiza dados estruturados e ignora features', () => {
-    usePlansMock.mockReturnValue(successfulPlansState)
+  it('renderiza dados estruturados e ignora features', async () => {
+    vi.spyOn(planService, 'getAllPlans').mockResolvedValue(plans)
 
     renderPricing()
 
-    expect(screen.getByText('R$ 19,90')).toBeInTheDocument()
+    expect(await screen.findByText('R$ 19,90')).toBeInTheDocument()
     expect(screen.getByText('Até 40 empresas monitoradas')).toBeInTheDocument()
     expect(screen.getByText('20 análises de compatibilidade por mês')).toBeInTheDocument()
     expect(screen.queryByText('NÃO RENDERIZAR')).not.toBeInTheDocument()
   })
 
-  it('registra posição e navega com o id do plano', () => {
-    usePlansMock.mockReturnValue(successfulPlansState)
+  it('registra posição e navega com o id do plano', async () => {
+    vi.spyOn(planService, 'getAllPlans').mockResolvedValue(plans)
 
     renderPricing()
-    fireEvent.click(screen.getByRole('button', { name: 'Assinar Profissional' }))
+    fireEvent.click(await screen.findByRole('button', { name: 'Assinar Profissional' }))
 
-    expect(trackLandingMock).toHaveBeenCalledWith('lp_plan_click', {
+    expect(window.dataLayer).toContainEqual({
+      event: 'lp_plan_click',
       plan_id: 2,
       plan_name: 'Profissional',
       position: 1,
@@ -102,66 +110,64 @@ describe('PricingSection', () => {
     expect(screen.getByTestId('location')).toHaveTextContent('/signup?plan=2')
   })
 
-  it('mostra erro, mede uma vez e permite tentar novamente', async () => {
-    usePlansMock.mockReturnValue(failedPlansState)
+  it('mede a primeira falha terminal como tentativa 1 uma vez em StrictMode', async () => {
+    vi.spyOn(planService, 'getAllPlans').mockRejectedValue(new Error('Erro'))
+
+    const { queryClient } = renderPricing({ strictMode: true })
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Não foi possível carregar os planos'
+    )
+    await waitFor(() => {
+      expect(plansLoadErrors()).toEqual([{ event: 'lp_plans_load_error', attempt: 1 }])
+    })
+    expect(queryClient.getQueryState(['plans'])?.fetchFailureCount).toBe(4)
+  })
+
+  it('mede um novo refetch terminalmente falho como tentativa 2', async () => {
+    vi.spyOn(planService, 'getAllPlans').mockRejectedValue(new Error('Erro'))
 
     renderPricing()
 
-    expect(screen.getByRole('alert')).toHaveTextContent('Não foi possível carregar os planos')
+    await screen.findByRole('alert')
     await waitFor(() => {
-      expect(trackLandingMock).toHaveBeenCalledWith('lp_plans_load_error', { attempt: 1 })
+      expect(plansLoadErrors()).toHaveLength(1)
     })
-    expect(trackLandingMock).toHaveBeenCalledTimes(1)
 
     fireEvent.click(screen.getByRole('button', { name: 'Tentar novamente' }))
-    expect(refetch).toHaveBeenCalledTimes(1)
+
+    await waitFor(() => {
+      expect(plansLoadErrors()).toEqual([
+        { event: 'lp_plans_load_error', attempt: 1 },
+        { event: 'lp_plans_load_error', attempt: 2 }
+      ])
+    })
   })
 
-  it('mede uma falha apenas uma vez em StrictMode', async () => {
-    usePlansMock.mockReturnValue(failedPlansState)
+  it('reinicia a tentativa visível depois de uma recuperação', async () => {
+    const getAllPlans = vi.spyOn(planService, 'getAllPlans').mockRejectedValue(new Error('Erro'))
 
-    renderPricing({ strictMode: true })
+    const { queryClient } = renderPricing()
 
+    await screen.findByRole('alert')
     await waitFor(() => {
-      expect(trackLandingMock).toHaveBeenCalledWith('lp_plans_load_error', { attempt: 1 })
-    })
-    expect(trackLandingMock).toHaveBeenCalledTimes(1)
-  })
-
-  it('mede novamente quando a contagem de falhas aumenta', async () => {
-    usePlansMock.mockReturnValue(failedPlansState)
-
-    const { rerender } = renderPricing()
-
-    await waitFor(() => {
-      expect(trackLandingMock).toHaveBeenCalledWith('lp_plans_load_error', { attempt: 1 })
+      expect(plansLoadErrors()).toHaveLength(1)
     })
 
-    usePlansMock.mockReturnValue({ ...failedPlansState, failureCount: 2 })
-    rerender(<PricingTree />)
+    getAllPlans.mockResolvedValue(plans)
+    fireEvent.click(screen.getByRole('button', { name: 'Tentar novamente' }))
+    expect(await screen.findByRole('button', { name: 'Assinar Profissional' })).toBeInTheDocument()
 
-    await waitFor(() => {
-      expect(trackLandingMock).toHaveBeenCalledWith('lp_plans_load_error', { attempt: 2 })
-    })
-    expect(trackLandingMock).toHaveBeenCalledTimes(2)
-  })
-
-  it('mede uma nova falha após a recuperação reiniciar a contagem', async () => {
-    usePlansMock.mockReturnValue(failedPlansState)
-
-    const { rerender } = renderPricing()
-
-    await waitFor(() => {
-      expect(trackLandingMock).toHaveBeenCalledWith('lp_plans_load_error', { attempt: 1 })
+    getAllPlans.mockRejectedValue(new Error('Erro novamente'))
+    await act(async () => {
+      await queryClient.refetchQueries({ queryKey: ['plans'] })
     })
 
-    usePlansMock.mockReturnValue(successfulPlansState)
-    rerender(<PricingTree />)
-    usePlansMock.mockReturnValue(failedPlansState)
-    rerender(<PricingTree />)
-
     await waitFor(() => {
-      expect(trackLandingMock).toHaveBeenCalledTimes(2)
+      expect(plansLoadErrors()).toEqual([
+        { event: 'lp_plans_load_error', attempt: 1 },
+        { event: 'lp_plans_load_error', attempt: 1 }
+      ])
     })
   })
 })
