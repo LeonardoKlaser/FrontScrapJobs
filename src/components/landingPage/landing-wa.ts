@@ -4,14 +4,17 @@ const WA_SOURCE_SUFFIX = { mobile: '#lp', qr: '#lpq', web: '#lpw' } as const
 
 export type WaCtaSource = keyof typeof WA_SOURCE_SUFFIX
 
-export function buildWaLink(source: WaCtaSource): string {
-  const number = import.meta.env.VITE_NORTE_WA_NUMBER || ''
-  if (!number) {
-    // Sem VITE_NORTE_WA_NUMBER (env ausente no build), o link sobe sem
-    // destinatário — os 3 CTAs e o QR do modal ficam mudos. Não quebra a
-    // página, mas precisa aparecer alto no console pra não passar batido.
-    console.warn('VITE_NORTE_WA_NUMBER não configurada — o link do WhatsApp ficou sem número')
-  }
+export function getWaNumber(): string {
+  return (import.meta.env.VITE_NORTE_WA_NUMBER || '').trim()
+}
+
+export function hasWaNumber(): boolean {
+  return getWaNumber().length > 0
+}
+
+export function buildWaLink(source: WaCtaSource): string | null {
+  const number = getWaNumber()
+  if (!number) return null
   const text = encodeURIComponent(`Oi Norte! Quero ver vagas pra mim ${WA_SOURCE_SUFFIX[source]}`)
   return `https://wa.me/${number}?text=${text}`
 }

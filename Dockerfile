@@ -12,6 +12,8 @@ ENV VITE_API_URL=${VITE_API_URL}
 
 ARG VITE_NORTE_WA_NUMBER
 ENV VITE_NORTE_WA_NUMBER=${VITE_NORTE_WA_NUMBER}
+RUN test -n "$VITE_NORTE_WA_NUMBER" || \
+    (echo "VITE_NORTE_WA_NUMBER is required for production builds" >&2; exit 1)
 
 RUN npx vite build
 

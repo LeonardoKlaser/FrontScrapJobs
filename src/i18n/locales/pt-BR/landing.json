@@ -125,5 +125,6 @@
     "qrAlt": "QR code para abrir o WhatsApp do Norte",
     "scanHint": "Aponte a câmera do celular pro código acima 📱",
     "webButton": "Ou abrir no WhatsApp Web"
-  }
+  },
+  "waUnavailable": "WhatsApp temporariamente indisponível. Tente novamente mais tarde."
 }

@@ -125,5 +125,6 @@
     "qrAlt": "QR code to open Norte's WhatsApp",
     "scanHint": "Point your phone camera at the code above 📱",
     "webButton": "Or open in WhatsApp Web"
-  }
+  },
+  "waUnavailable": "WhatsApp is temporarily unavailable. Please try again later."
 }

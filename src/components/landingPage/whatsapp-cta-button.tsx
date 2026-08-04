@@ -10,7 +10,7 @@ import {
   DialogDescription
 } from '@/components/ui/dialog'
 import { trackLanding } from '@/lib/analytics'
-import { buildWaLink, isMobileDevice } from './landing-wa'
+import { buildWaLink, hasWaNumber, isMobileDevice } from './landing-wa'
 
 interface WhatsAppCtaButtonProps extends React.ComponentProps<typeof Button> {
   section: 'navbar' | 'hero' | 'final'
@@ -24,15 +24,20 @@ export function WhatsAppCtaButton({ section, children, ...buttonProps }: WhatsAp
   const { t } = useTranslation('landing')
   const [open, setOpen] = useState(false)
   const [qrDataUrl, setQrDataUrl] = useState('')
+  const available = hasWaNumber()
+  const qrLink = buildWaLink('qr')
+  const webLink = buildWaLink('web')
+  const unavailableId = `wa-unavailable-${section}`
 
   useEffect(() => {
-    if (!open) return
-    QRCode.toDataURL(buildWaLink('qr'), { width: 240, margin: 1 })
+    if (!open || !qrLink) return
+    QRCode.toDataURL(qrLink, { width: 240, margin: 1 })
       .then(setQrDataUrl)
       .catch(() => setQrDataUrl(''))
-  }, [open])
+  }, [open, qrLink])
 
   const onClick = () => {
+    if (!available) return
     const mobile = isMobileDevice()
     trackLanding('lp_whatsapp_click', {
       section,
@@ -44,7 +49,8 @@ export function WhatsAppCtaButton({ section, children, ...buttonProps }: WhatsAp
       // síncrono, mas o GTM dispara beacons assíncronos pras tags — navegar
       // no mesmo tick pode abortar esse envio no caminho principal do funil.
       setTimeout(() => {
-        window.location.href = buildWaLink('mobile')
+        const mobileLink = buildWaLink('mobile')
+        if (mobileLink) window.location.href = mobileLink
       }, 0)
       return
     }
@@ -53,9 +59,19 @@ export function WhatsAppCtaButton({ section, children, ...buttonProps }: WhatsAp
 
   return (
     <>
-      <Button {...buttonProps} onClick={onClick}>
+      <Button
+        {...buttonProps}
+        disabled={buttonProps.disabled || !available}
+        aria-describedby={!available ? unavailableId : undefined}
+        onClick={onClick}
+      >
         {children}
       </Button>
+      {!available && (
+        <span id={unavailableId} role="status" className="mt-2 block text-xs text-destructive">
+          {t('waUnavailable')}
+        </span>
+      )}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-md text-center">
           <DialogHeader>
@@ -70,17 +86,17 @@ export function WhatsAppCtaButton({ section, children, ...buttonProps }: WhatsAp
             />
           )}
           <p className="text-sm text-muted-foreground">{t('waModal.scanHint')}</p>
-          <a
-            href={buildWaLink('web')}
-            target="_blank"
-            rel="noreferrer"
-            onClick={() =>
-              trackLanding('lp_whatsapp_click', { section, device: 'desktop', method: 'web' })
-            }
-            className="text-sm font-medium text-primary hover:underline"
-          >
-            {t('waModal.webButton')}
-          </a>
+          {webLink && (
+            <a
+              href={webLink}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => trackLanding('lp_whatsapp_web_click', { section })}
+              className="text-sm font-medium text-primary hover:underline"
+            >
+              {t('waModal.webButton')}
+            </a>
+          )}
         </DialogContent>
       </Dialog>
     </>

@@ -19,6 +19,15 @@ afterEach(() => {
 })
 
 describe('WhatsAppCtaButton', () => {
+  it('bloqueia o CTA e informa indisponibilidade quando o número falta', () => {
+    vi.stubEnv('VITE_NORTE_WA_NUMBER', '')
+
+    render(<WhatsAppCtaButton section="hero">Receber vagas no WhatsApp</WhatsAppCtaButton>)
+
+    expect(screen.getByRole('button', { name: 'Receber vagas no WhatsApp' })).toBeDisabled()
+    expect(screen.getByRole('status')).toHaveTextContent('WhatsApp temporariamente indisponível')
+  })
+
   it('desktop: clique abre o modal com QR e hint', async () => {
     const track = vi.spyOn(analytics, 'trackLanding').mockImplementation(() => {})
     render(<WhatsAppCtaButton section="hero">Começar grátis</WhatsAppCtaButton>)
@@ -75,7 +84,7 @@ describe('WhatsAppCtaButton', () => {
     })
   })
 
-  it('clique no link "Ou abrir no WhatsApp Web" dispara evento method: web', async () => {
+  it('clique no link "Ou abrir no WhatsApp Web" dispara evento exclusivo', async () => {
     const track = vi.spyOn(analytics, 'trackLanding').mockImplementation(() => {})
     render(<WhatsAppCtaButton section="final">Começar grátis</WhatsAppCtaButton>)
 
@@ -83,10 +92,6 @@ describe('WhatsAppCtaButton', () => {
     const webLink = await screen.findByRole('link', { name: 'Ou abrir no WhatsApp Web' })
     fireEvent.click(webLink)
 
-    expect(track).toHaveBeenLastCalledWith('lp_whatsapp_click', {
-      section: 'final',
-      device: 'desktop',
-      method: 'web'
-    })
+    expect(track).toHaveBeenLastCalledWith('lp_whatsapp_web_click', { section: 'final' })
   })
 })
