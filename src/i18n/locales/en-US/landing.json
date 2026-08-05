@@ -13,8 +13,9 @@
     "headingLead": "Get the latest jobs on your",
     "headingHighlight": "WhatsApp.",
     "subheading": "ScrapJobs monitors company career pages, finds opportunities that match your profile, and sends new jobs directly to you.",
-    "areasLabel": "Jobs in fields such as",
+    "areasLabel": "See jobs in",
     "areas": {
+      "all": "All",
       "technology": "Technology",
       "marketing": "Marketing",
       "sales": "Sales",
@@ -28,7 +29,19 @@
     "loginPrompt": "Already a subscriber?",
     "loginLink": "Sign in",
     "chatSubtitle": "demo",
-    "chatDigest": "8 new jobs today — Company A, Company B. Open: scrapjobs.com.br/d/..."
+    "chatDigest": "{{count}} new jobs for you today",
+    "chatDigestGeneric": "Your new jobs arrive here",
+    "panel": {
+      "live": "live",
+      "example": "example",
+      "count": "{{count}} jobs · last 24h",
+      "now": "just now",
+      "hoursAgo": "{{count}}h ago",
+      "daysAgo": "{{count}}d ago",
+      "empty": "No new jobs in {{area}} in the last few hours.",
+      "clearFilter": "See all areas",
+      "ariaLabel": "Recent jobs found by ScrapJobs"
+    }
   },
   "proofBand": {
     "sites": "monitored companies",
