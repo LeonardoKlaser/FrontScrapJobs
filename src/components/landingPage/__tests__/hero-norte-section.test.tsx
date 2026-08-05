@@ -3,7 +3,7 @@ import { render, screen, fireEvent, within, waitFor } from '@testing-library/rea
 import { MemoryRouter } from 'react-router'
 import { HeroNorteSection } from '@/components/landingPage/hero-norte-section'
 import * as analytics from '@/lib/analytics'
-import { publicJobsService } from '@/services/publicJobsService'
+import { publicJobsService, type PublicRecentJobs } from '@/services/publicJobsService'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 vi.mock('qrcode', () => ({
@@ -21,12 +21,15 @@ beforeEach(() => {
   // todo teste que renderiza o CTA (ver landing-wa.test.ts pro caso do warn
   // em si).
   vi.stubEnv('VITE_NORTE_WA_NUMBER', '5551999990000')
+  // Distinta de FALLBACK_JOBS (live-jobs-helpers.ts) de proposito: se essas
+  // fossem a mesma vaga, um bug que trocasse 'live' por 'fallback' na
+  // derivacao de estado passaria despercebido pelos testes (finding A).
   vi.mocked(publicJobsService.getRecentJobs).mockResolvedValue({
     jobs: [
       {
-        title: 'Senior Software Engineer - IAM',
-        company: 'QuintoAndar Carreiras',
-        logo_url: 'https://cdn/qa.png',
+        title: 'Analista de Dados Pleno',
+        company: 'Ambev Carreiras',
+        logo_url: 'https://cdn/ambev.png',
         posted_hours_ago: 5
       }
     ],
@@ -58,10 +61,16 @@ describe('HeroNorteSection', () => {
     ).toBeInTheDocument()
     expect(screen.getByText('Veja vagas de')).toBeInTheDocument()
 
-    await waitFor(() =>
-      expect(screen.getByText('Senior Software Engineer - IAM')).toBeInTheDocument()
-    )
-    expect(screen.getByText('QuintoAndar')).toBeInTheDocument()
+    await waitFor(() => expect(screen.getByText('Analista de Dados Pleno')).toBeInTheDocument())
+    expect(screen.getByText('Ambev')).toBeInTheDocument()
+    // Marcadores do estado 'live': sem eles, trocar a derivacao de estado por
+    // 'fallback' (ou a bolha por chatDigestGeneric) passaria despercebido,
+    // ja que a vaga de fixture acima nao aparece em FALLBACK_JOBS de
+    // qualquer forma (finding A).
+    expect(screen.getByText('ao vivo')).toBeInTheDocument()
+    expect(screen.getByText(/312 vagas/)).toBeInTheDocument()
+    expect(screen.getByText('1 vaga nova pra você hoje')).toBeInTheDocument()
+    expect(screen.getByText('demonstração')).toBeInTheDocument()
     expect(screen.queryByText(/Empresa A|Empresa B/)).not.toBeInTheDocument()
     expect(screen.queryByText(/CV_Nubank\.pdf|CV otimizado|92% match/i)).not.toBeInTheDocument()
     expect(screen.queryByText('online')).not.toBeInTheDocument()
@@ -93,6 +102,13 @@ describe('HeroNorteSection', () => {
     )
   })
 
+  it('does not report a no-op click on the already-selected chip', () => {
+    const track = vi.spyOn(analytics, 'trackLanding').mockImplementation(() => {})
+    renderHero()
+    fireEvent.click(screen.getByRole('button', { name: 'Todas' }))
+    expect(track).not.toHaveBeenCalled()
+  })
+
   it('refetches for the clicked area and reports it to analytics', async () => {
     const track = vi.spyOn(analytics, 'trackLanding').mockImplementation(() => {})
     renderHero()
@@ -117,6 +133,9 @@ describe('HeroNorteSection', () => {
     })
     expect(screen.queryByText('ao vivo')).not.toBeInTheDocument()
     expect(screen.getByText('SRE Sênior | Cartões')).toBeInTheDocument()
+    // Metade da troca de honestidade que a live-marker acima cobre: fora do
+    // estado 'live' a bolha usa a versão genérica, sem número (finding A).
+    expect(screen.getByText('Suas vagas novas chegam por aqui')).toBeInTheDocument()
   })
 
   it('shows the empty state only when an area filter is applied', async () => {
@@ -128,5 +147,47 @@ describe('HeroNorteSection', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'RH' }))
     await waitFor(() => expect(screen.getByText(/Nenhuma vaga nova em RH/)).toBeInTheDocument())
+  })
+
+  it('does not claim an unfetched area has no jobs while its request is in flight', async () => {
+    let resolveDesign: (value: PublicRecentJobs) => void = () => {}
+    const designPromise = new Promise<PublicRecentJobs>((resolve) => {
+      resolveDesign = resolve
+    })
+
+    // 'rh' resolve vazio na hora; 'design' fica pendurado ate resolveDesign
+    // ser chamado, pra observar o estado enquanto o fetch da area nova ainda
+    // esta em voo e o placeholder (keepPreviousData) e o resultado vazio da
+    // area anterior.
+    vi.mocked(publicJobsService.getRecentJobs).mockImplementation((area: string) => {
+      if (area === 'rh') return Promise.resolve({ jobs: [], today_count: 0 })
+      if (area === 'design') return designPromise
+      return Promise.resolve({
+        jobs: [
+          {
+            title: 'Analista de Dados Pleno',
+            company: 'Ambev Carreiras',
+            logo_url: '',
+            posted_hours_ago: 5
+          }
+        ],
+        today_count: 312
+      })
+    })
+
+    renderHero()
+    await waitFor(() => expect(publicJobsService.getRecentJobs).toHaveBeenCalledWith('all'))
+
+    fireEvent.click(screen.getByRole('button', { name: 'RH' }))
+    await waitFor(() => expect(screen.getByText(/Nenhuma vaga nova em RH/)).toBeInTheDocument())
+
+    fireEvent.click(screen.getByRole('button', { name: 'Design' }))
+    // Sem o gate de isPlaceholderData, o placeholder vazio de RH vazaria
+    // aqui, na mesma renderizacao sincrona do clique, como "Nenhuma vaga
+    // nova em Design" — citando uma area que nem foi consultada ainda.
+    expect(screen.queryByText(/Nenhuma vaga nova em Design/)).not.toBeInTheDocument()
+
+    resolveDesign({ jobs: [], today_count: 0 })
+    await waitFor(() => expect(screen.getByText(/Nenhuma vaga nova em Design/)).toBeInTheDocument())
   })
 })

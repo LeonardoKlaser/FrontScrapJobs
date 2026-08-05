@@ -15,7 +15,7 @@ import { WhatsAppCtaButton } from './whatsapp-cta-button'
 export function HeroNorteSection() {
   const { t } = useTranslation('landing')
   const [area, setArea] = useState<HeroAreaId>('all')
-  const { data, isPending, isError } = usePublicRecentJobs(area)
+  const { data, isPending, isError, isPlaceholderData } = usePublicRecentJobs(area)
 
   const jobs = data?.jobs ?? []
   const areaLabel = t(HERO_AREAS.find((a) => a.id === area)?.labelKey ?? 'hero.areas.all')
@@ -25,11 +25,19 @@ export function HeroNorteSection() {
   let panelState: PanelState = 'live'
   if (isPending) panelState = 'loading'
   else if (isError) panelState = 'fallback'
-  else if (jobs.length === 0) panelState = area === 'all' ? 'fallback' : 'empty'
+  else if (jobs.length === 0 && isPlaceholderData) {
+    // Com keepPreviousData, um jobs.length === 0 aqui pode ser o resultado
+    // real da área atual OU o placeholder vazio da área anterior enquanto o
+    // fetch da nova área ainda está em voo. isPlaceholderData distingue os
+    // dois — sem isso, "Nenhuma vaga nova em <área>" citaria uma área que
+    // nem foi consultada ainda.
+    panelState = 'loading'
+  } else if (jobs.length === 0) panelState = area === 'all' ? 'fallback' : 'empty'
 
   const panelJobs = panelState === 'fallback' ? FALLBACK_JOBS : jobs
 
   const handleArea = (next: HeroAreaId) => {
+    if (next === area) return
     setArea(next)
     trackLanding('lp_hero_area', { area: next })
   }
