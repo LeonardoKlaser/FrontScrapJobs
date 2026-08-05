@@ -93,6 +93,7 @@ export type LandingEvent =
   | 'lp_plan_click'
   | 'lp_faq_open'
   | 'lp_plans_load_error'
+  | 'lp_hero_area'
 
 export function trackLanding(event: LandingEvent, payload: Record<string, unknown> = {}): void {
   if (typeof window === 'undefined') return
