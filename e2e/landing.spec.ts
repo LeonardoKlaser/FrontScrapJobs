@@ -141,9 +141,8 @@ test.describe('landing page', () => {
       .getByRole('heading', { level: 2, name: 'Pare de procurar vaga todos os dias.' })
       .locator('xpath=ancestor::section')
     await closing.scrollIntoViewIfNeeded()
-    await expect(closing.getByRole('button', { name: 'Receber vagas no WhatsApp' })).toBeVisible()
+    await expect(closing.getByRole('button', { name: 'Começar grátis' })).toBeVisible()
     await expect(page.getByText('NÃO DEVE APARECER')).toHaveCount(0)
-    await expect(page.getByText('Começar grátis')).toHaveCount(0)
 
     const proof = statsLine.locator('xpath=ancestor::section')
     const footer = page.locator('footer')
@@ -163,7 +162,7 @@ test.describe('landing page', () => {
       { name: 'footer', locator: footer }
     ])
 
-    await hero.getByRole('button', { name: 'Receber vagas no WhatsApp' }).click()
+    await hero.getByRole('button', { name: 'Começar grátis' }).click()
 
     const dialog = page.getByRole('dialog')
     await expect(dialog).toBeVisible()
@@ -192,7 +191,7 @@ test.describe('landing page', () => {
         name: 'Receba as vagas mais recentes no seu WhatsApp.'
       })
     ).toBeVisible()
-    await expect(hero.getByRole('button', { name: 'Receber vagas no WhatsApp' })).toBeVisible()
+    await expect(hero.getByRole('button', { name: 'Começar grátis' })).toBeVisible()
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(
       await page.evaluate(() => document.documentElement.clientWidth)
     )

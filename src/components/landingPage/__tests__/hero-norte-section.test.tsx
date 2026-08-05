@@ -48,7 +48,7 @@ describe('HeroNorteSection', () => {
   it('tracks section:hero and opens the WhatsApp modal on CTA click', () => {
     const track = vi.spyOn(analytics, 'trackLanding').mockImplementation(() => {})
     renderHero()
-    fireEvent.click(screen.getByRole('button', { name: /Receber vagas no WhatsApp/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Começar grátis/ }))
     expect(track).toHaveBeenCalledWith('lp_whatsapp_click', {
       section: 'hero',
       device: 'desktop',

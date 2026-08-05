@@ -23,7 +23,7 @@
       "design": "Design",
       "data": "Dados"
     },
-    "cta": "Receber vagas no WhatsApp",
+    "cta": "Começar grátis",
     "microcopy": "Responda 3 perguntas e descubra quantas vagas encontramos para você.",
     "loginPrompt": "Já é assinante?",
     "loginLink": "Entrar",
@@ -132,7 +132,7 @@
   "ctaFinal": {
     "title": "Pare de procurar vaga todos os dias.",
     "subtitle": "Conte o que você busca e deixe o ScrapJobs acompanhar as páginas das empresas para você.",
-    "cta": "Receber vagas no WhatsApp",
+    "cta": "Começar grátis",
     "microcopy": "Comece com 3 perguntas e veja o resultado antes de escolher um plano."
   },
   "pricing": {

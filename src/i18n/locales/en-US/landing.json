@@ -23,7 +23,7 @@
       "design": "Design",
       "data": "Data"
     },
-    "cta": "Get jobs on WhatsApp",
+    "cta": "Start free",
     "microcopy": "Answer 3 questions and see how many jobs we found for you.",
     "loginPrompt": "Already a subscriber?",
     "loginLink": "Sign in",
@@ -132,7 +132,7 @@
   "ctaFinal": {
     "title": "Stop searching for jobs every day.",
     "subtitle": "Tell us what you want and let ScrapJobs monitor company career pages for you.",
-    "cta": "Get jobs on WhatsApp",
+    "cta": "Start free",
     "microcopy": "Start with 3 questions and see the result before choosing a plan."
   },
   "pricing": {
