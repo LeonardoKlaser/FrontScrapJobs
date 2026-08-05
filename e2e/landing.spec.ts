@@ -272,7 +272,7 @@ test.describe('landing page', () => {
     await expect(
       page.getByRole('heading', { level: 2, name: 'Choose how much you want to monitor' })
     ).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Get jobs on WhatsApp' }).first()).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Start free' }).first()).toBeVisible()
     await expect(page.getByText('Receba as vagas mais recentes no seu WhatsApp.')).toHaveCount(0)
     await expect(page.getByText('O que está incluído')).toHaveCount(0)
   })
