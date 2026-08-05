@@ -38,6 +38,7 @@ export function LiveJobsPanel({
   return (
     <div
       ref={ref}
+      role="region"
       aria-label={t('hero.panel.ariaLabel')}
       className="overflow-hidden rounded-2xl border border-border bg-card shadow-xl"
     >
@@ -54,7 +55,12 @@ export function LiveJobsPanel({
         )}
         {showCounter && (
           <span className="text-xs font-semibold text-emerald-600">
-            {t('hero.panel.count', { count })}
+            {/* count || todayCount: se o IntersectionObserver nunca disparar (ref
+                quebrado, viewport que nunca cruza o rootMargin), count fica travado
+                em 0 pra sempre — e "0 vaga · últimas 24h" é exatamente a contradição
+                que a amendment 1 existe pra evitar, só que chegando por outra porta.
+                A animação continua rodando normalmente; o valor de repouso nunca mente. */}
+            {t('hero.panel.count', { count: count || todayCount })}
           </span>
         )}
       </div>
@@ -75,7 +81,12 @@ export function LiveJobsPanel({
         )}
 
         {state === 'empty' && (
-          <div className="px-4 py-10 text-center">
+          // min-h-60: mesma altura aproximada das 4 linhas populadas (4 × 60px).
+          // Sem isso o painel encolhe ~100px no estado empty, reabrindo o buraco
+          // visual que esse componente existe pra fechar — e Task 9 liga os chips
+          // de área, então um usuário filtrando cai aqui direto, na interação mais
+          // visível possível.
+          <div className="flex min-h-60 flex-col items-center justify-center px-4 text-center">
             <p className="text-sm text-muted-foreground">
               {t('hero.panel.empty', { area: areaLabel })}
             </p>

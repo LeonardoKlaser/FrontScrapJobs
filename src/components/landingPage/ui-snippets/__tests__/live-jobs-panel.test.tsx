@@ -4,8 +4,17 @@ import type { RecentJob } from '@/services/publicJobsService'
 
 // jsdom nao dispara o IntersectionObserver (o polyfill de setup.ts tem observe()
 // noop), entao inView nunca vira true e useCountUp ficaria travado em 0. Mesmo
-// mock usado em proof-band-section.test.tsx pra testar o valor final do contador.
-vi.mock('@/hooks/useCountUp', () => ({ useCountUp: ({ target }: { target: number }) => target }))
+// padrao usado em proof-band-section.test.tsx: um mock controlavel por teste, pra
+// tambem poder simular o cenario da finding D (ref quebrado, count travado em 0
+// mesmo com todayCount > 0).
+const useCountUpMock = vi.fn(({ target }: { target: number }) => target)
+vi.mock('@/hooks/useCountUp', () => ({
+  useCountUp: (args: { target: number }) => useCountUpMock(args)
+}))
+
+beforeEach(() => {
+  useCountUpMock.mockImplementation(({ target }) => target)
+})
 
 const JOBS: RecentJob[] = [
   {
@@ -60,6 +69,61 @@ describe('LiveJobsPanel', () => {
     expect(screen.queryByText(/vagas? · últimas 24h/)).not.toBeInTheDocument()
   })
 
+  it('never shows a stuck "0 vaga" badge if the count-up animation never starts', () => {
+    // finding D: se o IntersectionObserver nunca disparar em produção (ref
+    // quebrado, viewport que nunca cruza o rootMargin), inView fica false pra
+    // sempre e useCountUp trava em 0 — mesmo com todayCount > 0. Simulamos
+    // exatamente isso: o mock ignora o target e sempre devolve 0.
+    useCountUpMock.mockReturnValue(0)
+    render(
+      <LiveJobsPanel
+        state="live"
+        jobs={JOBS}
+        todayCount={312}
+        areaLabel="Todas"
+        onClearFilter={() => {}}
+      />
+    )
+    expect(screen.queryByText(/0 vaga/)).not.toBeInTheDocument()
+    expect(screen.getByText(/312 vagas/)).toBeInTheDocument()
+  })
+
+  it('exposes the panel as an accessible region (aria-label reaches AT)', () => {
+    // finding C: aria-label numa <div> pura mapeia pro role ARIA "generic",
+    // cujo nome acessível é proibido — o navegador descarta a string. Sem
+    // role="region", getByRole('region', { name }) não encontraria nada aqui.
+    render(
+      <LiveJobsPanel
+        state="live"
+        jobs={JOBS}
+        todayCount={1}
+        areaLabel="Todas"
+        onClearFilter={() => {}}
+      />
+    )
+    expect(
+      screen.getByRole('region', { name: 'Vagas recentes encontradas pelo ScrapJobs' })
+    ).toBeInTheDocument()
+  })
+
+  it('keeps the empty state at the same height as the populated states', () => {
+    // finding B: sem min-h, o estado empty (um parágrafo + botão) encolhe uns
+    // 100px em relação às 4 linhas dos outros três estados, reabrindo o buraco
+    // visual que o painel existe pra fechar — e é alcançável direto pela
+    // interação mais comum (Task 9 liga os chips de área a esse estado).
+    render(
+      <LiveJobsPanel
+        state="empty"
+        jobs={[]}
+        todayCount={0}
+        areaLabel="RH"
+        onClearFilter={() => {}}
+      />
+    )
+    const message = screen.getByText(/Nenhuma vaga nova em RH/)
+    expect(message.parentElement).toHaveClass('min-h-60')
+  })
+
   it('falls back to the company initial when the logo is missing', () => {
     const { container } = render(
       <LiveJobsPanel
@@ -77,18 +141,25 @@ describe('LiveJobsPanel', () => {
     expect(images[0]).toHaveAttribute('src', 'https://cdn/quintoandar.png')
   })
 
-  it('renders four skeleton rows while loading, with no job text', () => {
+  it('renders exactly four skeleton rows while loading, with no job text', () => {
+    // jobs=JOBS (nao []) de proposito: se o estado loading algum dia vazar e
+    // renderizar as vagas reais em vez do skeleton, esse teste pega.
     const { container } = render(
       <LiveJobsPanel
         state="loading"
-        jobs={[]}
+        jobs={JOBS}
         todayCount={0}
         areaLabel="Todas"
         onClearFilter={() => {}}
       />
     )
-    expect(container.querySelectorAll('[data-slot="skeleton"]').length).toBeGreaterThanOrEqual(4)
+    // Conta <li> (linhas), nao [data-slot="skeleton"]: cada linha tem 3
+    // skeletons + 1 no cabecalho, entao contar skeletons soltos (>=4) passaria
+    // igual com SKELETON_ROWS=1 (1+3=4) — o que anularia a garantia de altura
+    // constante entre os quatro estados que motivou SKELETON_ROWS=4.
+    expect(container.querySelectorAll('li')).toHaveLength(4)
     expect(screen.queryByText('ao vivo')).not.toBeInTheDocument()
+    expect(screen.queryByText('Senior Software Engineer - IAM')).not.toBeInTheDocument()
   })
 
   it('labels the fallback as an example and hides relative time', () => {
