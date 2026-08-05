@@ -6,12 +6,14 @@ import type { RecentJob } from '@/services/publicJobsService'
 const COMPANY_SUFFIX = /\s+(Carreiras|Careers|Carreira|Vagas|Jobs)$/i
 
 export function cleanCompanyName(name: string): string {
-  return name.replace(COMPANY_SUFFIX, '').trim()
+  return name.trim().replace(COMPANY_SUFFIX, '')
 }
+
+type PostedAgoKey = 'hero.panel.now' | 'hero.panel.hoursAgo' | 'hero.panel.daysAgo'
 
 // Devolve a chave i18n e o número a interpolar — a tradução em si fica no
 // componente, que é quem tem o `t`.
-export function postedAgoKey(hours: number): { key: string; count: number } {
+export function postedAgoKey(hours: number): { key: PostedAgoKey; count: number } {
   if (hours <= 0) return { key: 'hero.panel.now', count: 0 }
   if (hours < 24) return { key: 'hero.panel.hoursAgo', count: hours }
   return { key: 'hero.panel.daysAgo', count: Math.floor(hours / 24) }

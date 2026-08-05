@@ -18,6 +18,7 @@ describe('cleanCompanyName', () => {
 
   it('only strips the suffix at the end, never inside the name', () => {
     expect(cleanCompanyName('Carreiras do Sul')).toBe('Carreiras do Sul')
+    expect(cleanCompanyName('Grupo Carreiras Brasil')).toBe('Grupo Carreiras Brasil')
   })
 })
 
