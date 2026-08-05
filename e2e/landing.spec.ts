@@ -46,7 +46,7 @@ test.describe('landing page', () => {
           jobs: [
             {
               title: area === 'design' ? 'Product Designer Pleno' : 'Senior Software Engineer',
-              company: 'QuintoAndar Carreiras',
+              company: 'Ambev Carreiras',
               logo_url: '',
               posted_hours_ago: 5
             }
@@ -111,12 +111,14 @@ test.describe('landing page', () => {
       'Design',
       'Dados'
     ])
-    // exact: true é obrigatório aqui — FALLBACK_JOBS[0] é "Senior Software
-    // Engineer - IAM" da empresa "QuintoAndar", então com match por substring
-    // estas duas asserções passariam também no estado `fallback`, ou seja com
-    // a interceptação registrada depois do goto e o backend inalcançável.
+    // exact: true no título é obrigatório aqui — FALLBACK_JOBS[0] é "Senior
+    // Software Engineer - IAM", então com match por substring essa asserção
+    // passaria também no estado `fallback` (interceptação registrada depois
+    // do goto, backend inalcançável). A empresa do mock é "Ambev", que não
+    // aparece em nenhum item de FALLBACK_JOBS — então essa asserção já
+    // discrimina os dois estados mesmo sem exact: true.
     await expect(hero.getByText('Senior Software Engineer', { exact: true })).toBeVisible()
-    await expect(hero.getByText('QuintoAndar', { exact: true })).toBeVisible()
+    await expect(hero.getByText('Ambev', { exact: true })).toBeVisible()
     // Estas duas só existem em `live`: o fallback não rende tempo relativo, e o
     // contador exige state === 'live' && todayCount > 0.
     await expect(hero.getByText('há 5h')).toBeVisible()

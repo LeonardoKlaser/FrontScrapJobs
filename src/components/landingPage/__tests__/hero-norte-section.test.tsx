@@ -69,7 +69,7 @@ describe('HeroNorteSection', () => {
     // qualquer forma (finding A).
     expect(screen.getByText('ao vivo')).toBeInTheDocument()
     expect(screen.getByText(/312 vagas/)).toBeInTheDocument()
-    expect(screen.getByText('1 vaga nova pra você hoje')).toBeInTheDocument()
+    expect(screen.getByText('1 vaga nova pra você')).toBeInTheDocument()
     expect(screen.getByText('demonstração')).toBeInTheDocument()
     expect(screen.queryByText(/Empresa A|Empresa B/)).not.toBeInTheDocument()
     expect(screen.queryByText(/CV_Nubank\.pdf|CV otimizado|92% match/i)).not.toBeInTheDocument()

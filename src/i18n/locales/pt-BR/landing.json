@@ -29,9 +29,9 @@
     "loginPrompt": "Já é assinante?",
     "loginLink": "Entrar",
     "chatSubtitle": "demonstração",
-    "chatDigest": "{{count}} vagas novas pra você hoje",
-    "chatDigest_one": "{{count}} vaga nova pra você hoje",
-    "chatDigest_other": "{{count}} vagas novas pra você hoje",
+    "chatDigest": "{{count}} vagas novas pra você",
+    "chatDigest_one": "{{count}} vaga nova pra você",
+    "chatDigest_other": "{{count}} vagas novas pra você",
     "chatDigestGeneric": "Suas vagas novas chegam por aqui",
     "panel": {
       "live": "ao vivo",

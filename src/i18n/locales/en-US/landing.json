@@ -29,9 +29,9 @@
     "loginPrompt": "Already a subscriber?",
     "loginLink": "Sign in",
     "chatSubtitle": "demo",
-    "chatDigest": "{{count}} new jobs for you today",
-    "chatDigest_one": "{{count}} new job for you today",
-    "chatDigest_other": "{{count}} new jobs for you today",
+    "chatDigest": "{{count}} new jobs for you",
+    "chatDigest_one": "{{count}} new job for you",
+    "chatDigest_other": "{{count}} new jobs for you",
     "chatDigestGeneric": "Your new jobs arrive here",
     "panel": {
       "live": "live",
