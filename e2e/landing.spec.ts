@@ -32,6 +32,29 @@ test.describe('landing page', () => {
       route.fulfill({ json: { monitored_sites: 101, total_jobs: 2840 } })
     )
     await page.route('**/api/public/sites/logos', (route) => route.fulfill({ json: [] }))
+    // Fica no beforeEach, não em cada teste: a hero busca vagas no mount, então
+    // sem esta rota o painel renderiza vagas reais (com backend local) ou o
+    // fallback congelado (em CI) — e o teste de overflow mobile assere layout,
+    // que não pode depender da máquina. O título varia por área pra provar que
+    // clicar no chip troca o que é renderizado, e não só que houve request.
+    await page.route('**/api/public/jobs/recent**', async (route) => {
+      const area = new URL(route.request().url()).searchParams.get('area')
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          jobs: [
+            {
+              title: area === 'design' ? 'Product Designer Pleno' : 'Senior Software Engineer',
+              company: 'QuintoAndar Carreiras',
+              logo_url: '',
+              posted_hours_ago: 5
+            }
+          ],
+          today_count: 312
+        })
+      })
+    })
     await page.route('**/api/plans', (route) =>
       route.fulfill({
         json: [
@@ -61,24 +84,6 @@ test.describe('landing page', () => {
   })
 
   test('covers the complete desktop journey and conversion paths', async ({ page }) => {
-    await page.route('**/api/public/jobs/recent**', async (route) => {
-      const area = new URL(route.request().url()).searchParams.get('area')
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          jobs: [
-            {
-              title: area === 'design' ? 'Product Designer Pleno' : 'Senior Software Engineer',
-              company: 'QuintoAndar Carreiras',
-              logo_url: '',
-              posted_hours_ago: 5
-            }
-          ],
-          today_count: 312
-        })
-      })
-    })
     await page.goto('/')
 
     await expect(page).toHaveTitle('ScrapJobs — Vagas recentes no seu WhatsApp')
@@ -106,8 +111,16 @@ test.describe('landing page', () => {
       'Design',
       'Dados'
     ])
-    await expect(hero.getByText('Senior Software Engineer')).toBeVisible()
-    await expect(hero.getByText('QuintoAndar')).toBeVisible()
+    // exact: true é obrigatório aqui — FALLBACK_JOBS[0] é "Senior Software
+    // Engineer - IAM" da empresa "QuintoAndar", então com match por substring
+    // estas duas asserções passariam também no estado `fallback`, ou seja com
+    // a interceptação registrada depois do goto e o backend inalcançável.
+    await expect(hero.getByText('Senior Software Engineer', { exact: true })).toBeVisible()
+    await expect(hero.getByText('QuintoAndar', { exact: true })).toBeVisible()
+    // Estas duas só existem em `live`: o fallback não rende tempo relativo, e o
+    // contador exige state === 'live' && todayCount > 0.
+    await expect(hero.getByText('há 5h')).toBeVisible()
+    await expect(hero.getByText('312 vagas · últimas 24h')).toBeVisible()
 
     const statsLine = page
       .locator('section')
@@ -222,28 +235,10 @@ test.describe('landing page', () => {
   })
 
   test('filters the hero panel by area', async ({ page }) => {
-    await page.route('**/api/public/jobs/recent**', async (route) => {
-      const area = new URL(route.request().url()).searchParams.get('area')
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          jobs: [
-            {
-              title: area === 'design' ? 'Product Designer Pleno' : 'Senior Software Engineer',
-              company: 'QuintoAndar Carreiras',
-              logo_url: '',
-              posted_hours_ago: 5
-            }
-          ],
-          today_count: 312
-        })
-      })
-    })
     await page.goto('/')
 
     const hero = page.locator('section').first()
-    await expect(hero.getByText('Senior Software Engineer')).toBeVisible()
+    await expect(hero.getByText('Senior Software Engineer', { exact: true })).toBeVisible()
 
     await hero.getByRole('button', { name: 'Design' }).click()
 
