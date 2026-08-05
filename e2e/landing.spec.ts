@@ -32,6 +32,29 @@ test.describe('landing page', () => {
       route.fulfill({ json: { monitored_sites: 101, total_jobs: 2840 } })
     )
     await page.route('**/api/public/sites/logos', (route) => route.fulfill({ json: [] }))
+    // Fica no beforeEach, não em cada teste: a hero busca vagas no mount, então
+    // sem esta rota o painel renderiza vagas reais (com backend local) ou o
+    // fallback congelado (em CI) — e o teste de overflow mobile assere layout,
+    // que não pode depender da máquina. O título varia por área pra provar que
+    // clicar no chip troca o que é renderizado, e não só que houve request.
+    await page.route('**/api/public/jobs/recent**', async (route) => {
+      const area = new URL(route.request().url()).searchParams.get('area')
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          jobs: [
+            {
+              title: area === 'design' ? 'Product Designer Pleno' : 'Senior Software Engineer',
+              company: 'Ambev Carreiras',
+              logo_url: '',
+              posted_hours_ago: 5
+            }
+          ],
+          today_count: 312
+        })
+      })
+    })
     await page.route('**/api/plans', (route) =>
       route.fulfill({
         json: [
@@ -75,7 +98,11 @@ test.describe('landing page', () => {
     })
     const hero = heroHeading.locator('xpath=ancestor::section')
     await expect(heroHeading).toBeVisible()
-    await expect(hero.locator('ul > li')).toHaveText([
+    // Escopado ao ul dos chips de área via aria-labelledby: "ul > li" sozinho
+    // também pega os <li> das vagas do LiveJobsPanel, que reusa a mesma tag.
+    const areaChips = hero.locator('ul[aria-labelledby="hero-areas-label"] > li')
+    await expect(areaChips).toHaveText([
+      'Todas',
       'Tecnologia',
       'Marketing',
       'Vendas',
@@ -84,6 +111,18 @@ test.describe('landing page', () => {
       'Design',
       'Dados'
     ])
+    // exact: true no título é obrigatório aqui — FALLBACK_JOBS[0] é "Senior
+    // Software Engineer - IAM", então com match por substring essa asserção
+    // passaria também no estado `fallback` (interceptação registrada depois
+    // do goto, backend inalcançável). A empresa do mock é "Ambev", que não
+    // aparece em nenhum item de FALLBACK_JOBS — então essa asserção já
+    // discrimina os dois estados mesmo sem exact: true.
+    await expect(hero.getByText('Senior Software Engineer', { exact: true })).toBeVisible()
+    await expect(hero.getByText('Ambev', { exact: true })).toBeVisible()
+    // Estas duas só existem em `live`: o fallback não rende tempo relativo, e o
+    // contador exige state === 'live' && todayCount > 0.
+    await expect(hero.getByText('há 5h')).toBeVisible()
+    await expect(hero.getByText('312 vagas · últimas 24h')).toBeVisible()
 
     const statsLine = page
       .locator('section')
@@ -141,9 +180,8 @@ test.describe('landing page', () => {
       .getByRole('heading', { level: 2, name: 'Pare de procurar vaga todos os dias.' })
       .locator('xpath=ancestor::section')
     await closing.scrollIntoViewIfNeeded()
-    await expect(closing.getByRole('button', { name: 'Receber vagas no WhatsApp' })).toBeVisible()
+    await expect(closing.getByRole('button', { name: 'Começar grátis' })).toBeVisible()
     await expect(page.getByText('NÃO DEVE APARECER')).toHaveCount(0)
-    await expect(page.getByText('Começar grátis')).toHaveCount(0)
 
     const proof = statsLine.locator('xpath=ancestor::section')
     const footer = page.locator('footer')
@@ -163,7 +201,7 @@ test.describe('landing page', () => {
       { name: 'footer', locator: footer }
     ])
 
-    await hero.getByRole('button', { name: 'Receber vagas no WhatsApp' }).click()
+    await hero.getByRole('button', { name: 'Começar grátis' }).click()
 
     const dialog = page.getByRole('dialog')
     await expect(dialog).toBeVisible()
@@ -192,9 +230,24 @@ test.describe('landing page', () => {
         name: 'Receba as vagas mais recentes no seu WhatsApp.'
       })
     ).toBeVisible()
-    await expect(hero.getByRole('button', { name: 'Receber vagas no WhatsApp' })).toBeVisible()
+    await expect(hero.getByRole('button', { name: 'Começar grátis' })).toBeVisible()
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(
       await page.evaluate(() => document.documentElement.clientWidth)
+    )
+  })
+
+  test('filters the hero panel by area', async ({ page }) => {
+    await page.goto('/')
+
+    const hero = page.locator('section').first()
+    await expect(hero.getByText('Senior Software Engineer', { exact: true })).toBeVisible()
+
+    await hero.getByRole('button', { name: 'Design' }).click()
+
+    await expect(hero.getByText('Product Designer Pleno')).toBeVisible()
+    await expect(hero.getByRole('button', { name: 'Design' })).toHaveAttribute(
+      'aria-pressed',
+      'true'
     )
   })
 
@@ -216,7 +269,7 @@ test.describe('landing page', () => {
     await expect(
       page.getByRole('heading', { level: 2, name: 'Choose how much you want to monitor' })
     ).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Get jobs on WhatsApp' }).first()).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Start free' }).first()).toBeVisible()
     await expect(page.getByText('Receba as vagas mais recentes no seu WhatsApp.')).toHaveCount(0)
     await expect(page.getByText('O que está incluído')).toHaveCount(0)
   })

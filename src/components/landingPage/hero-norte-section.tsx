@@ -1,25 +1,56 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { ArrowRight, ShieldCheck } from 'lucide-react'
 import { PATHS } from '@/router/paths'
+import { trackLanding } from '@/lib/analytics'
+import { usePublicRecentJobs } from '@/hooks/usePublicRecentJobs'
 import { NorteChat, type NorteMessage } from './ui-snippets/norte-chat'
+import { LiveJobsPanel, type PanelState } from './ui-snippets/live-jobs-panel'
+import { FALLBACK_JOBS } from './ui-snippets/live-jobs-helpers'
+import { HERO_AREAS, type HeroAreaId } from './hero-areas'
 import { LANDING_CTA_CLASS } from './landing-cta'
 import { WhatsAppCtaButton } from './whatsapp-cta-button'
 
-const AREA_KEYS = [
-  'hero.areas.technology',
-  'hero.areas.marketing',
-  'hero.areas.sales',
-  'hero.areas.hr',
-  'hero.areas.finance',
-  'hero.areas.design',
-  'hero.areas.data'
-] as const
-
 export function HeroNorteSection() {
   const { t } = useTranslation('landing')
+  const [area, setArea] = useState<HeroAreaId>('all')
+  const { data, isPending, isError, isPlaceholderData } = usePublicRecentJobs(area)
 
-  const messages: NorteMessage[] = [{ from: 'norte', text: t('hero.chatDigest') }]
+  const jobs = data?.jobs ?? []
+  const areaLabel = t(HERO_AREAS.find((a) => a.id === area)?.labelKey ?? 'hero.areas.all')
+
+  // Lista vazia sem filtro aplicado não é "área sem resultado": é falha de
+  // coleta, e não há filtro pra limpar. Cai no exemplo rotulado.
+  let panelState: PanelState = 'live'
+  if (isPending) panelState = 'loading'
+  else if (isError) panelState = 'fallback'
+  else if (jobs.length === 0 && isPlaceholderData) {
+    // Com keepPreviousData, um jobs.length === 0 aqui pode ser o resultado
+    // real da área atual OU o placeholder vazio da área anterior enquanto o
+    // fetch da nova área ainda está em voo. isPlaceholderData distingue os
+    // dois — sem isso, "Nenhuma vaga nova em <área>" citaria uma área que
+    // nem foi consultada ainda.
+    panelState = 'loading'
+  } else if (jobs.length === 0) panelState = area === 'all' ? 'fallback' : 'empty'
+
+  const panelJobs = panelState === 'fallback' ? FALLBACK_JOBS : jobs
+
+  const handleArea = (next: HeroAreaId) => {
+    if (next === area) return
+    setArea(next)
+    trackLanding('lp_hero_area', { area: next })
+  }
+
+  const messages: NorteMessage[] = [
+    {
+      from: 'norte',
+      text:
+        panelState === 'live'
+          ? t('hero.chatDigest', { count: jobs.length })
+          : t('hero.chatDigestGeneric')
+    }
+  ]
 
   return (
     <section className="bg-background px-6 pt-24 pb-16 sm:px-8 lg:pb-20">
@@ -43,15 +74,25 @@ export function HeroNorteSection() {
           </p>
 
           <div className="mt-6">
-            <p className="text-sm font-medium text-muted-foreground">{t('hero.areasLabel')}</p>
-            <ul className="mt-2 flex flex-wrap gap-2">
-              {AREA_KEYS.map((key) => (
-                <li
-                  key={key}
-                  className="rounded-full border border-border bg-background px-3 py-1 text-xs
-                    font-medium text-muted-foreground"
-                >
-                  {t(key)}
+            <p id="hero-areas-label" className="text-sm font-medium text-muted-foreground">
+              {t('hero.areasLabel')}
+            </p>
+            <ul aria-labelledby="hero-areas-label" className="mt-2 flex flex-wrap gap-2">
+              {HERO_AREAS.map(({ id, labelKey }) => (
+                <li key={id}>
+                  <button
+                    type="button"
+                    aria-pressed={area === id}
+                    onClick={() => handleArea(id)}
+                    className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors
+                      ${
+                        area === id
+                          ? 'border-primary bg-primary text-primary-foreground'
+                          : 'border-border bg-background text-muted-foreground hover:border-primary'
+                      }`}
+                  >
+                    {t(labelKey)}
+                  </button>
                 </li>
               ))}
             </ul>
@@ -80,8 +121,19 @@ export function HeroNorteSection() {
           </div>
         </div>
 
-        <div className="mx-auto w-full max-w-sm">
-          <NorteChat messages={messages} headerSubtitle={t('hero.chatSubtitle')} />
+        <div className="relative mx-auto w-full max-w-md sm:pb-10">
+          <LiveJobsPanel
+            state={panelState}
+            jobs={panelJobs}
+            todayCount={data?.today_count ?? 0}
+            areaLabel={areaLabel}
+            onClearFilter={() => handleArea('all')}
+          />
+          {/* Em mobile a bolha entra no fluxo: absolute com deslocamento
+              negativo estoura a largura da viewport (e2e trava isso em 390px). */}
+          <div className="mt-4 w-full sm:absolute sm:-bottom-2 sm:-left-6 sm:mt-0 sm:w-64">
+            <NorteChat messages={messages} headerSubtitle={t('hero.chatSubtitle')} />
+          </div>
         </div>
       </div>
     </section>

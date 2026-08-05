@@ -13,8 +13,9 @@
     "headingLead": "Receba as vagas mais recentes no seu",
     "headingHighlight": "WhatsApp.",
     "subheading": "O ScrapJobs monitora páginas de carreira, encontra oportunidades compatíveis com o seu perfil e envia as novidades diretamente para você.",
-    "areasLabel": "Vagas em áreas como",
+    "areasLabel": "Veja vagas de",
     "areas": {
+      "all": "Todas",
       "technology": "Tecnologia",
       "marketing": "Marketing",
       "sales": "Vendas",
@@ -23,12 +24,28 @@
       "design": "Design",
       "data": "Dados"
     },
-    "cta": "Receber vagas no WhatsApp",
+    "cta": "Começar grátis",
     "microcopy": "Responda 3 perguntas e descubra quantas vagas encontramos para você.",
     "loginPrompt": "Já é assinante?",
     "loginLink": "Entrar",
     "chatSubtitle": "demonstração",
-    "chatDigest": "8 vagas novas hoje — Empresa A, Empresa B. Abre: scrapjobs.com.br/d/..."
+    "chatDigest": "{{count}} vagas novas pra você",
+    "chatDigest_one": "{{count}} vaga nova pra você",
+    "chatDigest_other": "{{count}} vagas novas pra você",
+    "chatDigestGeneric": "Suas vagas novas chegam por aqui",
+    "panel": {
+      "live": "ao vivo",
+      "example": "exemplo",
+      "count": "{{count}} vagas · últimas 24h",
+      "count_one": "{{count}} vaga · últimas 24h",
+      "count_other": "{{count}} vagas · últimas 24h",
+      "now": "agora",
+      "hoursAgo": "há {{count}}h",
+      "daysAgo": "há {{count}}d",
+      "empty": "Nenhuma vaga nova em {{area}} nas últimas horas.",
+      "clearFilter": "Ver todas as áreas",
+      "ariaLabel": "Vagas recentes encontradas pelo ScrapJobs"
+    }
   },
   "proofBand": {
     "sites": "empresas monitoradas",
@@ -132,7 +149,7 @@
   "ctaFinal": {
     "title": "Pare de procurar vaga todos os dias.",
     "subtitle": "Conte o que você busca e deixe o ScrapJobs acompanhar as páginas das empresas para você.",
-    "cta": "Receber vagas no WhatsApp",
+    "cta": "Começar grátis",
     "microcopy": "Comece com 3 perguntas e veja o resultado antes de escolher um plano."
   },
   "pricing": {

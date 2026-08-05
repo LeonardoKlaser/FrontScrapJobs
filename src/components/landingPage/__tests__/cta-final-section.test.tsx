@@ -25,13 +25,13 @@ describe('CtaFinalSection', () => {
     expect(
       screen.getByText('Comece com 3 perguntas e veja o resultado antes de escolher um plano.')
     ).toBeInTheDocument()
-    expect(screen.getByText('Receber vagas no WhatsApp')).toBeInTheDocument()
+    expect(screen.getByText('Começar grátis')).toBeInTheDocument()
   })
 
   it('tracks section:final and opens the WhatsApp modal on click', () => {
     const track = vi.spyOn(analytics, 'trackLanding').mockImplementation(() => {})
     render(<CtaFinalSection />)
-    fireEvent.click(screen.getByRole('button', { name: /Receber vagas no WhatsApp/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Começar grátis/ }))
     expect(track).toHaveBeenCalledWith('lp_whatsapp_click', {
       section: 'final',
       device: 'desktop',
