@@ -61,6 +61,24 @@ test.describe('landing page', () => {
   })
 
   test('covers the complete desktop journey and conversion paths', async ({ page }) => {
+    await page.route('**/api/public/jobs/recent**', async (route) => {
+      const area = new URL(route.request().url()).searchParams.get('area')
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          jobs: [
+            {
+              title: area === 'design' ? 'Product Designer Pleno' : 'Senior Software Engineer',
+              company: 'QuintoAndar Carreiras',
+              logo_url: '',
+              posted_hours_ago: 5
+            }
+          ],
+          today_count: 312
+        })
+      })
+    })
     await page.goto('/')
 
     await expect(page).toHaveTitle('ScrapJobs — Vagas recentes no seu WhatsApp')
@@ -75,7 +93,11 @@ test.describe('landing page', () => {
     })
     const hero = heroHeading.locator('xpath=ancestor::section')
     await expect(heroHeading).toBeVisible()
-    await expect(hero.locator('ul > li')).toHaveText([
+    // Escopado ao ul dos chips de área via aria-labelledby: "ul > li" sozinho
+    // também pega os <li> das vagas do LiveJobsPanel, que reusa a mesma tag.
+    const areaChips = hero.locator('ul[aria-labelledby="hero-areas-label"] > li')
+    await expect(areaChips).toHaveText([
+      'Todas',
       'Tecnologia',
       'Marketing',
       'Vendas',
@@ -84,6 +106,8 @@ test.describe('landing page', () => {
       'Design',
       'Dados'
     ])
+    await expect(hero.getByText('Senior Software Engineer')).toBeVisible()
+    await expect(hero.getByText('QuintoAndar')).toBeVisible()
 
     const statsLine = page
       .locator('section')
@@ -194,6 +218,39 @@ test.describe('landing page', () => {
     await expect(hero.getByRole('button', { name: 'Começar grátis' })).toBeVisible()
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(
       await page.evaluate(() => document.documentElement.clientWidth)
+    )
+  })
+
+  test('filters the hero panel by area', async ({ page }) => {
+    await page.route('**/api/public/jobs/recent**', async (route) => {
+      const area = new URL(route.request().url()).searchParams.get('area')
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          jobs: [
+            {
+              title: area === 'design' ? 'Product Designer Pleno' : 'Senior Software Engineer',
+              company: 'QuintoAndar Carreiras',
+              logo_url: '',
+              posted_hours_ago: 5
+            }
+          ],
+          today_count: 312
+        })
+      })
+    })
+    await page.goto('/')
+
+    const hero = page.locator('section').first()
+    await expect(hero.getByText('Senior Software Engineer')).toBeVisible()
+
+    await hero.getByRole('button', { name: 'Design' }).click()
+
+    await expect(hero.getByText('Product Designer Pleno')).toBeVisible()
+    await expect(hero.getByRole('button', { name: 'Design' })).toHaveAttribute(
+      'aria-pressed',
+      'true'
     )
   })
 
